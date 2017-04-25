@@ -1,0 +1,7 @@
+version: '2.0'
+services:
+  api:
+    container_name: finance-webapi
+    build: .
+    ports:
+      - "5000:5000"
