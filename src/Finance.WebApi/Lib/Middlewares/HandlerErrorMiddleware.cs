@@ -28,8 +28,6 @@ namespace Finance.WebApi.Lib.Middlewares
 
         public async Task Invoke(HttpContext context)
         {
-            context.Response.ContentType = "application/json; charset=utf-8";
-
             try
             {
                 await this.next(context);
@@ -47,6 +45,7 @@ namespace Finance.WebApi.Lib.Middlewares
 
                 this.statusCode.TryGetValue(exception.GetType().Name, out int code);
                 context.Response.StatusCode = code;
+                context.Response.ContentType = "application/json; charset=utf-8";
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(model));
             }
         }
