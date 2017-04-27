@@ -3,6 +3,7 @@
     using AutoMapper;
 
     using Finance.Entities;
+
     using Model = Finance.WebApi.Models.Account.Post;
 
     public class AccountProfile : Profile

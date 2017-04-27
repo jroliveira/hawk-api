@@ -1,10 +1,10 @@
 namespace Finance.WebApi.Controllers
 {
-    using System;
     using System.Threading.Tasks;
 
     using AutoMapper;
 
+    using Finance.Infrastructure;
     using Finance.Infrastructure.Data.Commands.Transaction;
     using Finance.Infrastructure.Data.Queries.Transaction;
     using Finance.Infrastructure.Exceptions;
@@ -18,6 +18,7 @@ namespace Finance.WebApi.Controllers
     [Route("/transactions")]
     public class TransactionsController : Controller
     {
+        private readonly GetAllQuery getAll;
         private readonly GetByIdQuery getById;
         private readonly CreateCommand create;
         private readonly ExcludeCommand exclude;
@@ -25,12 +26,14 @@ namespace Finance.WebApi.Controllers
         private readonly IMapper mapper;
 
         public TransactionsController(
+            GetAllQuery getAll,
             GetByIdQuery getById,
             CreateCommand create,
             ExcludeCommand exclude,
             TransactionValidator validator,
             IMapper mapper)
         {
+            this.getAll = getAll;
             this.getById = getById;
             this.create = create;
             this.exclude = exclude;
@@ -53,9 +56,12 @@ namespace Finance.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAsync()
         {
-            throw new NotImplementedException();
+            var entities = await this.getAll.GetResultAsync(this.Request.QueryString.Value);
+            var model = this.mapper.Map<Paged<Model.Get.Transaction>>(entities);
+
+            return this.Ok(model);
         }
 
         [HttpPost]

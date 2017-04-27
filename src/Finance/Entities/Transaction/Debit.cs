@@ -9,8 +9,8 @@
         {
         }
 
-        public Debit(Payment.Payment payment, Account account)
-            : base(payment, account)
+        public Debit(int id, decimal value, DateTime date, Account account)
+            : base(id, value, date, account)
         {
         }
     }
