@@ -10,16 +10,22 @@
     {
         private readonly ICollection<Tag> tags;
 
-        protected Transaction(decimal value, DateTime date, Account account)
-            : this(new Payment.Payment(value, date), account)
+        internal Transaction(int id, Payment.Payment payment, Account account)
         {
-        }
-
-        protected Transaction(Payment.Payment payment, Account account)
-        {
+            this.Id = id;
             this.Payment = payment;
             this.Account = account;
             this.tags = new List<Tag>();
+        }
+
+        protected Transaction(int id, decimal value, DateTime date, Account account)
+            : this(id, new Payment.Payment(value, date), account)
+        {
+        }
+
+        protected Transaction(decimal value, DateTime date, Account account)
+            : this(default(int), new Payment.Payment(value, date), account)
+        {
         }
 
         public Payment.Payment Payment { get; }

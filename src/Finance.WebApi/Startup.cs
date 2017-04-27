@@ -5,9 +5,14 @@
 
     using AutoMapper;
 
+    using Finance.Entities.Transaction;
     using Finance.Infrastructure;
+    using Finance.Infrastructure.Data.Filter;
+    using Finance.Infrastructure.Data.Filter.Linq;
     using Finance.WebApi.Lib.Middlewares;
     using Finance.WebApi.Lib.Validators;
+
+    using Http.Query.Filter;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
@@ -44,6 +49,11 @@
 
             services.AddScoped<PartialUpdater>();
 
+            // Fields
+            services.AddScoped<ISkip<int, Filter>, Skip>();
+            services.AddScoped<ILimit<int, Filter>, Limit>();
+            services.AddScoped<IWhere<bool, Filter, Transaction>, Where>();
+
             // Commands
             services.AddScoped<Data.Commands.Account.CreateCommand>();
             services.AddScoped<Data.Commands.Account.UpdateCommand>();
@@ -53,6 +63,7 @@
 
             // Queries
             services.AddScoped<Data.Queries.Account.GetByEmailQuery>();
+            services.AddScoped<Data.Queries.Transaction.GetAllQuery>();
             services.AddScoped<Data.Queries.Transaction.GetByIdQuery>();
 
             // Validators
