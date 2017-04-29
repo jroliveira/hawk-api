@@ -8,12 +8,12 @@ namespace Finance.Entities
     {
         public Entity()
         {
-            this.CreationDate = Clock.Now();
+            this.CreationAt = Clock.Now();
         }
 
         public TId Id { get; protected set; }
 
-        public DateTime CreationDate { get; }
+        public DateTime CreationAt { get; }
 
         public bool Deleted { get; private set; }
 

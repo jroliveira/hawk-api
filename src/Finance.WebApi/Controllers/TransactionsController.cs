@@ -5,8 +5,8 @@ namespace Finance.WebApi.Controllers
     using AutoMapper;
 
     using Finance.Infrastructure;
-    using Finance.Infrastructure.Data.Commands.Transaction;
-    using Finance.Infrastructure.Data.Queries.Transaction;
+    using Finance.Infrastructure.Data.Neo4j.Commands.Transaction;
+    using Finance.Infrastructure.Data.Neo4j.Queries.Transaction;
     using Finance.Infrastructure.Exceptions;
     using Finance.WebApi.Lib.Exceptions;
     using Finance.WebApi.Lib.Validators;
@@ -44,7 +44,7 @@ namespace Finance.WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
         {
-            var entity = await this.getById.GetResultAsync(id);
+            var entity = await this.getById.GetResultAsync(id, "junolive@gmail.com");
             if (entity == null)
             {
                 throw new NotFoundException($"Resource 'transactions' with id {id} could not be found");
@@ -58,31 +58,32 @@ namespace Finance.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            var entities = await this.getAll.GetResultAsync(this.Request.QueryString.Value);
+            var entities = await this.getAll.GetResultAsync("junolive@gmail.com", this.Request.QueryString.Value);
             var model = this.mapper.Map<Paged<Model.Get.Transaction>>(entities);
 
             return this.Ok(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] Model.Post.Transaction model)
+        public async Task<IActionResult> CreateAsync([FromBody] Model.Post.Transaction request)
         {
-            var validateResult = this.validator.Validate(model);
+            var validateResult = this.validator.Validate(request);
             if (!validateResult.IsValid)
             {
                 throw new ValidationException(validateResult.Errors);
             }
 
-            var entity = this.mapper.Map<Entities.Transaction.Transaction>(model);
-            await this.create.ExecuteAsync(entity);
+            var entity = this.mapper.Map<Entities.Transaction.Transaction>(request);
+            var inserted = await this.create.ExecuteAsync(entity);
+            var response = this.mapper.Map<Model.Get.Transaction>(inserted);
 
-            return this.StatusCode(201);
+            return this.StatusCode(201, response);
         }
 
         [HttpDelete("{id}")]
         public async Task ExcludeAsync([FromRoute] int id)
         {
-            var entity = await this.getById.GetResultAsync(id);
+            var entity = await this.getById.GetResultAsync(id, "junolive@gmail.com");
             if (entity == null)
             {
                 throw new NotFoundException($"Resource 'transactions' with id {id} could not be found");
