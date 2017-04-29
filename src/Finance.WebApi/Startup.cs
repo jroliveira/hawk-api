@@ -5,10 +5,8 @@
 
     using AutoMapper;
 
-    using Finance.Entities.Transaction;
     using Finance.Infrastructure;
-    using Finance.Infrastructure.Data.Filter;
-    using Finance.Infrastructure.Data.Filter.Linq;
+    using Finance.Infrastructure.Filter;
     using Finance.WebApi.Lib.Middlewares;
     using Finance.WebApi.Lib.Validators;
 
@@ -24,7 +22,7 @@
 
     using Newtonsoft.Json;
 
-    using Data = Finance.Infrastructure.Data;
+    using Neo4j = Finance.Infrastructure.Data.Neo4j;
 
     public class Startup
     {
@@ -47,28 +45,39 @@
         {
             services.AddOptions();
 
-            services.AddScoped<PartialUpdater>();
+            services.Configure<Neo4j.Config>(this.Configuration.GetSection("Neo4j"));
+            services.AddSingleton<Neo4j.Database>();
+            services.AddSingleton<File, Neo4j.GetScript>();
+            services.AddSingleton<PartialUpdater>();
 
-            // Fields
-            services.AddScoped<ISkip<int, Filter>, Skip>();
-            services.AddScoped<ILimit<int, Filter>, Limit>();
-            services.AddScoped<IWhere<bool, Filter, Transaction>, Where>();
+            // Filters
+            services.AddSingleton<IWhere<string, Filter>, Neo4j.Filter.Where>();
+            services.AddSingleton<ISkip<int, Filter>, Neo4j.Filter.Skip>();
+            services.AddSingleton<ILimit<int, Filter>, Neo4j.Filter.Limit>();
 
             // Commands
-            services.AddScoped<Data.Commands.Account.CreateCommand>();
-            services.AddScoped<Data.Commands.Account.UpdateCommand>();
-            services.AddScoped<Data.Commands.Account.ExcludeCommand>();
-            services.AddScoped<Data.Commands.Transaction.CreateCommand>();
-            services.AddScoped<Data.Commands.Transaction.ExcludeCommand>();
+            services.AddSingleton<Neo4j.Commands.Account.CreateCommand>();
+            services.AddSingleton<Neo4j.Commands.Transaction.CreateCommand>();
+            services.AddSingleton<Neo4j.Commands.Transaction.ExcludeCommand>();
 
             // Queries
-            services.AddScoped<Data.Queries.Account.GetByEmailQuery>();
-            services.AddScoped<Data.Queries.Transaction.GetAllQuery>();
-            services.AddScoped<Data.Queries.Transaction.GetByIdQuery>();
+            services.AddSingleton<Neo4j.Queries.Account.GetByEmailQuery>();
+            services.AddSingleton<Neo4j.Queries.Transaction.GetAllQuery>();
+            services.AddSingleton<Neo4j.Queries.Transaction.GetByIdQuery>();
+
+            // Mappings
+            services.AddSingleton<Neo4j.Mappings.AccountMapping>();
+            services.AddSingleton<Neo4j.Mappings.Transaction.TransactionMapping>();
+            services.AddSingleton<Neo4j.Mappings.Transaction.ParcelMapping>();
+            services.AddSingleton<Neo4j.Mappings.Transaction.StoreMapping>();
+            services.AddSingleton<Neo4j.Mappings.Transaction.TagMapping>();
+            services.AddSingleton<Neo4j.Mappings.Transaction.TransactionMapping>();
+            services.AddSingleton<Neo4j.Mappings.Transaction.Payment.MethodMapping>();
+            services.AddSingleton<Neo4j.Mappings.Transaction.Payment.PaymentMapping>();
 
             // Validators
-            services.AddScoped<AccountValidator>();
-            services.AddScoped<TransactionValidator>();
+            services.AddSingleton<AccountValidator>();
+            services.AddSingleton<TransactionValidator>();
 
             services.AddAutoMapper();
             services

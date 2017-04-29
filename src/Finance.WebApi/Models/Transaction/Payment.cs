@@ -4,7 +4,7 @@
 
     public class Payment
     {
-        public virtual decimal Value { get; set; }
+        public virtual double Value { get; set; }
 
         public virtual DateTime Date { get; set; }
 

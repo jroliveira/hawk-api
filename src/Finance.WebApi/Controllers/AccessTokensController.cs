@@ -5,7 +5,7 @@ namespace Finance.WebApi.Controllers
     using System.Security.Claims;
     using System.Threading.Tasks;
 
-    using Finance.Infrastructure.Data.Queries.Account;
+    using Finance.Infrastructure.Data.Neo4j.Queries.Account;
     using Finance.WebApi.Models.AccessToken.Post;
 
     using Microsoft.AspNetCore.Authorization;

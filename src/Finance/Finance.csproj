@@ -5,13 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Infrastructure\Security\RijndaelEncryption.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.0.2" />
-    <PackageReference Include="Dapper" Version="1.50.2" />
+    <PackageReference Include="DeepCloner" Version="0.10.0" />
     <PackageReference Include="Http.Query.Filter" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="1.1.1" />
+    <PackageReference Include="Neo4j.Driver" Version="1.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
     <PackageReference Include="StructureMap" Version="4.4.4" />
   </ItemGroup>

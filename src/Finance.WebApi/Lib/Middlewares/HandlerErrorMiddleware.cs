@@ -44,7 +44,7 @@ namespace Finance.WebApi.Lib.Middlewares
                 };
 
                 this.statusCode.TryGetValue(exception.GetType().Name, out int code);
-                context.Response.StatusCode = code;
+                context.Response.StatusCode = code != 0 ? code : 500;
                 context.Response.ContentType = "application/json; charset=utf-8";
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(model));
             }
