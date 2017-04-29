@@ -21,13 +21,13 @@
 
             this.CreateMap<Transaction, Model.Get.Transaction>()
                 .ForMember(destination => destination.Type, origin => origin.MapFrom(source => source.GetType().Name))
-                .ForMember(destination => destination.Store, origin => origin.MapFrom(source => source.Store))
-                .ForMember(destination => destination.Tags, origin => origin.MapFrom(source => source.Tags));
+                .ForMember(destination => destination.Store, origin => origin.MapFrom(source => source.Store.Name))
+                .ForMember(destination => destination.Tags, origin => origin.MapFrom(source => source.Tags.Select(tag => tag.Name)));
         }
 
         private static Transaction ConstructWith(Model.Post.Transaction model)
         {
-            var account = new Account(string.Empty, string.Empty);
+            var account = new Account("junolive@gmail.com", null);
             var payment = new Payment(model.Payment.Value, model.Payment.Date)
             {
                 Method = model.Payment.Method
@@ -47,7 +47,7 @@
             }
 
             model.Tags.ToList().ForEach(tag => transaction.AddTag(tag));
-            transaction.UpdateStore(model.Store);
+            transaction.Store = model.Store;
 
             if (model.Parcel == null)
             {
