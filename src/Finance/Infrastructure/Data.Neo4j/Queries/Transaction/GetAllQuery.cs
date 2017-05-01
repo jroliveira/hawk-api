@@ -46,7 +46,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
 
             var entities = await this.database.ExecuteAsync(this.mapping.MapFrom, query, parameters);
 
-            return new Paged<Transaction>(entities, filter.Skip, filter.Limit);
+            return new Paged<Transaction>(entities, parameters.skip, parameters.limit);
         }
     }
 }
