@@ -18,32 +18,5 @@ ON CREATE
 CREATE UNIQUE
   (account)-[:HAS]->(transaction)
 
-WITH
-  account, 
-  transaction
-
-UNWIND
-  {tags} AS tagName
-MERGE
-  (tag:Tag { 
-    name: tagName
-  })
-CREATE UNIQUE
-  (transaction)-[:HAS]-(tag)
-
-MERGE 
-  (store:Store { 
-    name: {store}
-  })
-CREATE UNIQUE
-  (transaction)-[:IN]->(store)
-
-MERGE 
-  (paymentMethod:PaymentMethod { 
-    name: {paymentMethod}
-  })
-CREATE UNIQUE
-  (transaction)-[:PAY]->(paymentMethod)
-
 RETURN 
   id(transaction) as id;

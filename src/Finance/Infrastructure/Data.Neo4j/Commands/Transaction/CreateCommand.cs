@@ -21,28 +21,87 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
 
         public virtual async Task<Transaction> ExecuteAsync(Transaction entity)
         {
-            var query = this.file.ReadAllText(@"Transaction\create.cql");
-            var parameters = new
+            var transactionQuery = this.file.ReadAllText(@"Transaction\create.cql");
+            var transactionData = new
             {
                 type = entity.GetType().Name,
                 email = entity.Account.Email,
                 value = entity.Payment.Value,
                 date = entity.Payment.Date.Date.ToString(CultureInfo.InvariantCulture),
-                paymentMethod = entity.Payment.Method.Name,
-                store = entity.Store.Name,
-                parcel = entity.Parcel.Number,
-                parcels = entity.Parcel.Total,
+                parcel = entity.Parcel?.Number,
+                parcels = entity.Parcel?.Total
+            };
+
+            return await this.database.ExecuteAsync(async session => await Task.Run(() =>
+            {
+                using (var trans = session.BeginTransaction())
+                {
+                    var id = trans
+                        .Run(transactionQuery, transactionData)
+                        .Select(record => record["id"].As<int>())
+                        .FirstOrDefault();
+
+                    entity.SetId(id);
+
+                    this.CreatePaymentMethod(trans, entity);
+                    this.CreateStore(trans, entity);
+                    this.CreateTags(trans, entity);
+
+                    trans.Success();
+                    return entity;
+                }
+            }));
+        }
+
+        private void CreatePaymentMethod(IStatementRunner trans, Transaction entity)
+        {
+            if (entity.Payment.Method == null)
+            {
+                return;
+            }
+
+            var query = this.file.ReadAllText(@"Transaction\Payment\create-method.cql");
+            var parameters = new
+            {
+                transaction = entity.Id,
+                method = entity.Payment.Method.Name
+            };
+
+            trans.Run(query, parameters);
+        }
+
+        private void CreateStore(IStatementRunner trans, Transaction entity)
+        {
+            if (entity.Store == null)
+            {
+                return;
+            }
+
+            var query = this.file.ReadAllText(@"Transaction\Details\create-store.cql");
+            var parameters = new
+            {
+                transaction = entity.Id,
+                store = entity.Store.Name
+            };
+
+            trans.Run(query, parameters);
+        }
+
+        private void CreateTags(IStatementRunner trans, Transaction entity)
+        {
+            if (entity.Tags == null || !entity.Tags.Any())
+            {
+                return;
+            }
+
+            var query = this.file.ReadAllText(@"Transaction\Details\create-tags.cql");
+            var parameters = new
+            {
+                transaction = entity.Id,
                 tags = entity.Tags.Select(tag => tag.Name).ToArray()
             };
 
-            var id = await this.database.ExecuteAsync(async session => await Task.Run(() =>
-                session
-                    .Run(query, parameters)
-                    .Select(record => record["id"].As<int>())
-                    .FirstOrDefault()));
-
-            entity.SetId(id);
-            return entity;
+            trans.Run(query, parameters);
         }
     }
 }

@@ -6,7 +6,7 @@
     {
         public Store MapFrom(Record record)
         {
-            if (record == null)
+            if (record == null || !record.Any())
             {
                 return null;
             }
