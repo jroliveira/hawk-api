@@ -59,5 +59,10 @@ namespace Finance.Infrastructure.Data.Neo4j
         {
             return this.data.ContainsKey(key);
         }
+
+        public bool Any()
+        {
+            return this.data != null;
+        }
     }
 }
