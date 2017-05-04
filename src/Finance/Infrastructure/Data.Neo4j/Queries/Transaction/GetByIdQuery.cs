@@ -28,7 +28,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
                 email
             };
 
-            var entities = await this.database.ExecuteAsync(this.mapping.MapFrom, query, parameters);
+            var entities = this.database.Execute(this.mapping.MapFrom, query, parameters);
 
             return entities.FirstOrDefault();
         }

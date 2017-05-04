@@ -32,7 +32,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Account
                 creationDate = entity.CreationAt.ToString(CultureInfo.InvariantCulture)
             };
 
-            var inserted = await this.database.ExecuteAsync(this.mapping.MapFrom, query, parameters);
+            var inserted = this.database.Execute(this.mapping.MapFrom, query, parameters);
 
             return inserted.FirstOrDefault();
         }

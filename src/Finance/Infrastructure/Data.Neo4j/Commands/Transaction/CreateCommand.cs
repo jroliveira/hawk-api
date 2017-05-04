@@ -21,8 +21,8 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
 
         public virtual async Task<Transaction> ExecuteAsync(Transaction entity)
         {
-            var transactionQuery = this.file.ReadAllText(@"Transaction\create.cql");
-            var transactionData = new
+            var query = this.file.ReadAllText(@"Transaction\create.cql");
+            var parameters = new
             {
                 type = entity.GetType().Name,
                 email = entity.Account.Email,
@@ -32,12 +32,12 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
                 parcels = entity.Parcel?.Total
             };
 
-            return await this.database.ExecuteAsync(async session => await Task.Run(() =>
+            return this.database.Execute(session =>
             {
                 using (var trans = session.BeginTransaction())
                 {
                     var id = trans
-                        .Run(transactionQuery, transactionData)
+                        .Run(query, parameters)
                         .Select(record => record["id"].As<int>())
                         .FirstOrDefault();
 
@@ -50,7 +50,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
                     trans.Success();
                     return entity;
                 }
-            }));
+            });
         }
 
         private void CreatePaymentMethod(IStatementRunner trans, Transaction entity)

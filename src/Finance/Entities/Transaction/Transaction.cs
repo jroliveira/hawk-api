@@ -1,6 +1,7 @@
 ﻿namespace Finance.Entities.Transaction
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     using Finance.Entities.Transaction.Details;
     using Finance.Entities.Transaction.Installment;
@@ -26,6 +27,18 @@
         public Store Store { get; set; }
 
         public IEnumerable<Tag> Tags => this.tags;
+
+        public virtual void AddTags(IEnumerable<Tag> tags)
+        {
+            if (tags == null || !tags.Any())
+            {
+                return;
+            }
+
+            tags
+                .ToList()
+                .ForEach(this.AddTag);
+        }
 
         public virtual void AddTag(Tag tag)
         {
