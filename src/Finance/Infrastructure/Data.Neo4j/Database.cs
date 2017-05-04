@@ -3,7 +3,6 @@ namespace Finance.Infrastructure.Data.Neo4j
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
 
     using Microsoft.Extensions.Options;
 
@@ -22,27 +21,23 @@ namespace Finance.Infrastructure.Data.Neo4j
         {
         }
 
-        public virtual async Task<TResult> ExecuteAsync<TResult>(Func<ISession, Task<TResult>> commandAsync)
+        public virtual TResult Execute<TResult>(Func<ISession, TResult> commandAsync)
         {
             var auth = AuthTokens.Basic(this.graphDbConfig.Username, this.graphDbConfig.Password);
 
             using (var driver = GraphDatabase.Driver(this.graphDbConfig.Uri, auth))
             using (var session = driver.Session())
             {
-                return await commandAsync(session);
+                return commandAsync(session);
             }
         }
 
-        public virtual async Task<ICollection<TResult>> ExecuteAsync<TResult>(Func<IRecord, TResult> mapping, string query, object parameters)
+        public virtual ICollection<TResult> Execute<TResult>(Func<IRecord, TResult> mapping, string query, object parameters)
         {
-            return await this
-                .ExecuteAsync(async session => await Task
-                    .Run(() => session
-                        .Run(query, parameters)
-                        .Select(mapping)
-                        .ToList())
-                    .ConfigureAwait(false))
-                .ConfigureAwait(false);
+            return this.Execute(session => session
+                .Run(query, parameters)
+                .Select(mapping)
+                .ToList());
         }
     }
 }

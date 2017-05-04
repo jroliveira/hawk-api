@@ -22,6 +22,15 @@ WITH
   store,
   paymentMethod
 
+OPTIONAL MATCH
+  (transaction)<-[:HAS]-(tag:Tag)
+WITH
+  account,
+  transaction,
+  store,
+  paymentMethod,
+  tag
+
 RETURN 
 { 
   id: id(transaction),
@@ -44,5 +53,6 @@ RETURN
     method: CASE WHEN paymentMethod IS null THEN NULL ELSE {
 	  name: paymentMethod.name
 	} END
-  }
+  },
+  tags: collect(tag.name)
 } as data;
