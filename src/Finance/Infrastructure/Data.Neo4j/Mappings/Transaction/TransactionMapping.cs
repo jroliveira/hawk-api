@@ -6,6 +6,7 @@
 
     using Finance.Entities;
     using Finance.Entities.Transaction;
+    using Finance.Entities.Transaction.Details;
     using Finance.Infrastructure.Data.Neo4j.Extensions;
     using Finance.Infrastructure.Data.Neo4j.Mappings.Transaction.Payment;
 
@@ -20,20 +21,16 @@
         private readonly StoreMapping storeMapping;
         private readonly ParcelMapping parcelMapping;
 
-        private readonly TagMapping tagMapping;
-
         public TransactionMapping(
             AccountMapping accountMapping,
             PaymentMapping paymentMapping,
             StoreMapping storeMapping,
-            ParcelMapping parcelMapping,
-            TagMapping tagMapping)
+            ParcelMapping parcelMapping)
         {
             this.accountMapping = accountMapping;
             this.paymentMapping = paymentMapping;
             this.storeMapping = storeMapping;
             this.parcelMapping = parcelMapping;
-            this.tagMapping = tagMapping;
 
             this.types = new Dictionary<string, Func<int, Entities.Transaction.Payment.Payment, Account, Transaction>>
             {
@@ -66,8 +63,10 @@
                 payment,
                 account);
 
-            var tag = this.tagMapping.MapFrom(record.GetRecord("tag"));
-            transaction.AddTag(tag);
+            var tags = record
+                .GetList("tags")
+                ?.Select(name => new Tag(name));
+            transaction.AddTags(tags);
 
             transaction.Parcel = this.parcelMapping.MapFrom(record.GetRecord("parcel"));
             transaction.Store = this.storeMapping.MapFrom(record.GetRecord("store"));

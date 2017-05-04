@@ -81,7 +81,7 @@ namespace Finance.WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task ExcludeAsync([FromRoute] int id)
+        public async Task<IActionResult> ExcludeAsync([FromRoute] int id)
         {
             var entity = await this.getById.GetResultAsync(id, "junolive@gmail.com");
             if (entity == null)
@@ -90,6 +90,8 @@ namespace Finance.WebApi.Controllers
             }
 
             await this.exclude.ExecuteAsync(entity);
+
+            return this.NoContent();
         }
     }
 }

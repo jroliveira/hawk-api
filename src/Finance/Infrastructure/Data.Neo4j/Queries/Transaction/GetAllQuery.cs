@@ -1,5 +1,6 @@
 namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
 {
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Finance.Entities.Transaction;
@@ -44,7 +45,11 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
                 limit = this.limit.Apply(filter)
             };
 
-            var entities = await this.database.ExecuteAsync(this.mapping.MapFrom, query, parameters);
+            var data = this.database.Execute(this.mapping.MapFrom, query, parameters);
+            var entities = data
+                .OrderBy(item => item.Payment.Date)
+                .ThenBy(item => item.Id)
+                .ToList();
 
             return new Paged<Transaction>(entities, parameters.skip, parameters.limit);
         }
