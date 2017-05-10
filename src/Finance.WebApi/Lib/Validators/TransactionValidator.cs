@@ -14,8 +14,9 @@
                 .NotEmpty()
                 .WithMessage("Tipo da transação deve ser informado.");
 
-            this.RuleFor(model => model.Tags.Count())
-                .GreaterThan(0)
+            this.RuleFor(model => model.Tags)
+                .NotNull()
+                .NotEmpty()
                 .WithMessage("Deve ser uma informado pelo menos uma tag para a transação.");
 
             this.RuleFor(model => model.Parcel)
