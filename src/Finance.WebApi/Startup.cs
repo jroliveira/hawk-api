@@ -15,6 +15,8 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Cors.Internal;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
@@ -44,6 +46,16 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    "CorsPolicy",
+                    builder => builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+            });
 
             services.Configure<Neo4j.Config>(this.Configuration.GetSection("Neo4j"));
             services.AddSingleton<Neo4j.Database>();
@@ -96,6 +108,11 @@
                     opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 });
 
+            services.Configure<MvcOptions>(options =>
+            {
+                options.Filters.Add(new CorsAuthorizationFilterFactory("CorsPolicy"));
+            });
+
             // Get options from app settings
             var jwtAppSettingOptions = this.Configuration.GetSection(nameof(JwtIssuerOptions));
 
@@ -139,6 +156,8 @@
                 AutomaticChallenge = true,
                 TokenValidationParameters = tokenValidationParameters
             });
+
+            app.UseCors("CorsPolicy");
 
             app.UseMvc();
         }
