@@ -17,6 +17,10 @@ namespace Finance.WebApi.Lib.Validators
             this.RuleFor(model => model.Value)
                 .GreaterThan(0)
                 .WithMessage("Valor do pagamento deve ser informado.");
+
+            this.RuleFor(model => model.Currency)
+                .NotEmpty()
+                .WithMessage("Moeda do pagamento deve ser informado.");
         }
     }
 }

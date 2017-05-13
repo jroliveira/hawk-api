@@ -1,7 +1,5 @@
 ﻿namespace Finance.WebApi.Lib.Validators
 {
-    using System.Linq;
-
     using Finance.WebApi.Models.Transaction.Post;
 
     using FluentValidation;

@@ -4,8 +4,8 @@
 
     public sealed class Credit : Transaction
     {
-        public Credit(double value, DateTime date, Account account)
-            : this(new Payment.Payment(value, date), account)
+        public Credit(double value, DateTime date, string currency, Account account)
+            : this(new Payment.Payment(value, date, currency), account)
         {
         }
 

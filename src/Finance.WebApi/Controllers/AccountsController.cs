@@ -1,7 +1,5 @@
 namespace Finance.WebApi.Controllers
 {
-    using System.Threading.Tasks;
-
     using AutoMapper;
 
     using Finance.Infrastructure.Data.Neo4j.Commands.Account;
@@ -36,9 +34,9 @@ namespace Finance.WebApi.Controllers
         }
 
         [HttpGet("{email}")]
-        public async Task<IActionResult> GetByEmailAsync([FromRoute] string email)
+        public IActionResult GetByEmail([FromRoute] string email)
         {
-            var entity = await this.getByEmail.GetResultAsync(email);
+            var entity = this.getByEmail.GetResult(email);
             if (entity == null)
             {
                 throw new NotFoundException($"Resource 'accounts' with email {email} could not be found");
@@ -51,7 +49,7 @@ namespace Finance.WebApi.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> CreateAsync([FromBody] Model.Post.Account request)
+        public IActionResult Create([FromBody] Model.Post.Account request)
         {
             var validateResult = this.validator.Validate(request);
             if (!validateResult.IsValid)
@@ -60,7 +58,7 @@ namespace Finance.WebApi.Controllers
             }
 
             var entity = this.mapper.Map<Entities.Account>(request);
-            var inserted = await this.create.ExecuteAsync(entity);
+            var inserted = this.create.Execute(entity);
             var response = this.mapper.Map<Model.Get.Account>(inserted);
 
             return this.StatusCode(201, response);

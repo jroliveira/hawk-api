@@ -9,10 +9,14 @@
         public PaymentProfile()
         {
             this.CreateMap<Models.Transaction.Payment, Payment>()
-                .ConstructUsing(model => new Payment(model.Value, model.Date));
+                .ConstructUsing(model => new Payment(model.Value, model.Date, model.Currency)
+                {
+                    Method = model.Method
+                });
 
             this.CreateMap<Payment, Models.Transaction.Payment>()
-                .ForMember(destination => destination.Method, origin => origin.MapFrom(source => source.Method.Name));
+                .ForMember(destination => destination.Method, origin => origin.MapFrom(source => source.Method.Name))
+                .ForMember(destination => destination.Currency, origin => origin.MapFrom(source => source.Currency.Name));
         }
     }
 }
