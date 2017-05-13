@@ -2,7 +2,6 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Account
 {
     using System.Globalization;
     using System.Linq;
-    using System.Threading.Tasks;
 
     using Finance.Entities;
     using Finance.Infrastructure.Data.Neo4j.Mappings;
@@ -20,11 +19,11 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Account
             this.file = file;
         }
 
-        public virtual async Task<Account> ExecuteAsync(Account entity)
+        public virtual Account Execute(Account entity)
         {
             entity.HashPassword();
 
-            var query = this.file.ReadAllText(@"Account\create.cql");
+            var query = this.file.ReadAllText(@"Account\Create.cql");
             var parameters = new
             {
                 email = entity.Email,

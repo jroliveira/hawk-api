@@ -1,7 +1,5 @@
 namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
 {
-    using System.Threading.Tasks;
-
     using Finance.Entities.Transaction;
 
     public class ExcludeCommand
@@ -15,9 +13,9 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
             this.file = file;
         }
 
-        public virtual async Task ExecuteAsync(Transaction entity)
+        public virtual void Execute(Transaction entity)
         {
-            var query = this.file.ReadAllText(@"Transaction\exclude.cql");
+            var query = this.file.ReadAllText(@"Transaction\Exclude.cql");
             var parameters = new
             {
                 email = entity.Account.Email,

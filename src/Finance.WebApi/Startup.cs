@@ -71,6 +71,10 @@
             services.AddSingleton<Neo4j.Commands.Account.CreateCommand>();
             services.AddSingleton<Neo4j.Commands.Transaction.CreateCommand>();
             services.AddSingleton<Neo4j.Commands.Transaction.ExcludeCommand>();
+            services.AddSingleton<Neo4j.Commands.Currency.CreateCommand>();
+            services.AddSingleton<Neo4j.Commands.PaymentMethod.CreateCommand>();
+            services.AddSingleton<Neo4j.Commands.Store.CreateCommand>();
+            services.AddSingleton<Neo4j.Commands.Tag.CreateCommand>();
 
             // Queries
             services.AddSingleton<Neo4j.Queries.Account.GetByEmailQuery>();
@@ -83,6 +87,7 @@
             services.AddSingleton<Neo4j.Mappings.Transaction.ParcelMapping>();
             services.AddSingleton<Neo4j.Mappings.Transaction.StoreMapping>();
             services.AddSingleton<Neo4j.Mappings.Transaction.TransactionMapping>();
+            services.AddSingleton<Neo4j.Mappings.Transaction.Payment.CurrencyMapping>();
             services.AddSingleton<Neo4j.Mappings.Transaction.Payment.MethodMapping>();
             services.AddSingleton<Neo4j.Mappings.Transaction.Payment.PaymentMapping>();
 

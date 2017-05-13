@@ -28,7 +28,7 @@
         private static Transaction ConstructWith(Model.Post.Transaction model)
         {
             var account = new Account("junolive@gmail.com", null);
-            var payment = new Payment(model.Payment.Value, model.Payment.Date)
+            var payment = new Payment(model.Payment.Value, model.Payment.Date, model.Payment.Currency)
             {
                 Method = model.Payment.Method
             };

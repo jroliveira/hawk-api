@@ -1,7 +1,6 @@
 namespace Finance.Infrastructure.Data.Neo4j.Queries.Account
 {
     using System.Linq;
-    using System.Threading.Tasks;
 
     using Finance.Entities;
     using Finance.Infrastructure.Data.Neo4j.Mappings;
@@ -19,9 +18,9 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Account
             this.file = file;
         }
 
-        public virtual async Task<Account> GetResultAsync(string email)
+        public virtual Account GetResult(string email)
         {
-            var query = this.file.ReadAllText(@"Account\get-by-email.cql");
+            var query = this.file.ReadAllText(@"Account\GetByEmail.cql");
             var parameters = new
             {
                 email

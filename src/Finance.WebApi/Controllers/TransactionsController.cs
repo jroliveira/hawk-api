@@ -1,7 +1,5 @@
 namespace Finance.WebApi.Controllers
 {
-    using System.Threading.Tasks;
-
     using AutoMapper;
 
     using Finance.Infrastructure;
@@ -42,9 +40,9 @@ namespace Finance.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetByIdAsync([FromRoute] int id)
+        public IActionResult GetById([FromRoute] int id)
         {
-            var entity = await this.getById.GetResultAsync(id, "junolive@gmail.com");
+            var entity = this.getById.GetResult(id, "junolive@gmail.com");
             if (entity == null)
             {
                 throw new NotFoundException($"Resource 'transactions' with id {id} could not be found");
@@ -56,16 +54,16 @@ namespace Finance.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAsync()
+        public IActionResult Get()
         {
-            var entities = await this.getAll.GetResultAsync("junolive@gmail.com", this.Request.QueryString.Value);
+            var entities = this.getAll.GetResult("junolive@gmail.com", this.Request.QueryString.Value);
             var model = this.mapper.Map<Paged<Model.Get.Transaction>>(entities);
 
             return this.Ok(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] Model.Post.Transaction request)
+        public IActionResult Create([FromBody] Model.Post.Transaction request)
         {
             var validateResult = this.validator.Validate(request);
             if (!validateResult.IsValid)
@@ -74,22 +72,22 @@ namespace Finance.WebApi.Controllers
             }
 
             var entity = this.mapper.Map<Entities.Transaction.Transaction>(request);
-            var inserted = await this.create.ExecuteAsync(entity);
+            var inserted = this.create.Execute(entity);
             var response = this.mapper.Map<Model.Get.Transaction>(inserted);
 
             return this.StatusCode(201, response);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> ExcludeAsync([FromRoute] int id)
+        public IActionResult Exclude([FromRoute] int id)
         {
-            var entity = await this.getById.GetResultAsync(id, "junolive@gmail.com");
+            var entity = this.getById.GetResult(id, "junolive@gmail.com");
             if (entity == null)
             {
                 throw new NotFoundException($"Resource 'transactions' with id {id} could not be found");
             }
 
-            await this.exclude.ExecuteAsync(entity);
+            this.exclude.Execute(entity);
 
             return this.NoContent();
         }

@@ -1,7 +1,6 @@
 namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
 {
     using System.Linq;
-    using System.Threading.Tasks;
 
     using Finance.Entities.Transaction;
     using Finance.Infrastructure.Data.Neo4j.Mappings.Transaction;
@@ -35,9 +34,9 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
             this.where = where;
         }
 
-        public virtual async Task<Paged<Transaction>> GetResultAsync(string email, Filter filter)
+        public virtual Paged<Transaction> GetResult(string email, Filter filter)
         {
-            var query = this.file.ReadAllText(@"Transaction\get-all.cql");
+            var query = this.file.ReadAllText(@"Transaction\GetAll.cql");
             var parameters = new
             {
                 email,
