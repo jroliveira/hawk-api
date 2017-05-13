@@ -28,7 +28,7 @@ namespace Finance.WebApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> CreateAsync([FromForm] Account model)
         {
-            var entity = await this.getByEmail.GetResultAsync(model.Email);
+            var entity = this.getByEmail.GetResult(model.Email);
             if (entity == null || entity.ValidatePassword(model.Password))
             {
                 return this.BadRequest("Invalid credentials");

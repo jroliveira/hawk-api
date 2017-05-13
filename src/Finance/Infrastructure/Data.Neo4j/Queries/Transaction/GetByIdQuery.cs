@@ -1,7 +1,6 @@
 namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
 {
     using System.Linq;
-    using System.Threading.Tasks;
 
     using Finance.Entities.Transaction;
     using Finance.Infrastructure.Data.Neo4j.Mappings.Transaction;
@@ -19,9 +18,9 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
             this.file = file;
         }
 
-        public virtual async Task<Transaction> GetResultAsync(int id, string email)
+        public virtual Transaction GetResult(int id, string email)
         {
-            var query = this.file.ReadAllText(@"Transaction\get-by-id.cql");
+            var query = this.file.ReadAllText(@"Transaction\GetById.cql");
             var parameters = new
             {
                 id,
