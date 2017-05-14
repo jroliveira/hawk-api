@@ -15,7 +15,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.PaymentMethod
 
         public virtual void Execute(Transaction entity, IStatementRunner trans)
         {
-            if (entity.Payment.Method == null)
+            if (string.IsNullOrWhiteSpace(entity.Payment.Method?.Name))
             {
                 return;
             }

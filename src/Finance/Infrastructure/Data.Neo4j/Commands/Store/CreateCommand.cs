@@ -15,7 +15,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Store
 
         public virtual void Execute(Transaction entity, IStatementRunner trans)
         {
-            if (entity.Store == null)
+            if (string.IsNullOrWhiteSpace(entity.Store?.Name))
             {
                 return;
             }
