@@ -17,11 +17,6 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Tag
 
         public virtual void Execute(Transaction entity, IStatementRunner trans)
         {
-            if (entity.Tags == null || !entity.Tags.Any())
-            {
-                return;
-            }
-
             var query = this.file.ReadAllText(@"Tag\Create.cql");
             var parameters = new
             {
