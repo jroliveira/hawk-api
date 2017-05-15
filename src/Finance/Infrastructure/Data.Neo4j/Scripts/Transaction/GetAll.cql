@@ -1,5 +1,5 @@
 ﻿MATCH 
-  (account:Account)-[:HAS]->(transaction:Transaction)-[:PAY]->(currency:Currency)
+  (account:Account)-[:HAS]->(transaction:Transaction)-[:PAID_IN]->(currency:Currency)
 WHERE
   account.email = {email}
 WITH
@@ -16,7 +16,7 @@ WITH
   store
 
 OPTIONAL MATCH 
-  (transaction)-[:PAY]->(paymentMethod:PaymentMethod)
+  (transaction)-[:PAID_WITH]->(paymentMethod:PaymentMethod)
 WITH
   account,
   currency,

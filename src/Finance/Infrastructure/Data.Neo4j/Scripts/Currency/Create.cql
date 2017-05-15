@@ -8,4 +8,4 @@ MERGE
     name: {currency}
   })
 CREATE UNIQUE
-  (transaction)-[:PAY]->(currency)
+  (transaction)-[:PAID_IN]->(currency)

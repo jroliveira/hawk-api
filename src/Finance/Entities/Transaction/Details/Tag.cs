@@ -9,6 +9,8 @@
 
         public string Name { get; }
 
+        public int Total { get; set; }
+
         public static implicit operator string(Tag tag)
         {
             return tag.Name;
