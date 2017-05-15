@@ -8,4 +8,4 @@ MERGE
     name: {method}
   })
 CREATE UNIQUE
-  (transaction)-[:PAY]->(paymentMethod)
+  (transaction)-[:PAID_WITH]->(paymentMethod)
