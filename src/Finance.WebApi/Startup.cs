@@ -80,6 +80,7 @@
             services.AddSingleton<Neo4j.Queries.Account.GetByEmailQuery>();
             services.AddSingleton<Neo4j.Queries.Transaction.GetAllQuery>();
             services.AddSingleton<Neo4j.Queries.Transaction.GetByIdQuery>();
+            services.AddSingleton<Neo4j.Queries.Tag.GetAllQuery>();
 
             // Mappings
             services.AddSingleton<Neo4j.Mappings.AccountMapping>();
@@ -87,6 +88,7 @@
             services.AddSingleton<Neo4j.Mappings.Transaction.ParcelMapping>();
             services.AddSingleton<Neo4j.Mappings.Transaction.StoreMapping>();
             services.AddSingleton<Neo4j.Mappings.Transaction.TransactionMapping>();
+            services.AddSingleton<Neo4j.Mappings.Transaction.TagMapping>();
             services.AddSingleton<Neo4j.Mappings.Transaction.Payment.CurrencyMapping>();
             services.AddSingleton<Neo4j.Mappings.Transaction.Payment.MethodMapping>();
             services.AddSingleton<Neo4j.Mappings.Transaction.Payment.PaymentMapping>();
