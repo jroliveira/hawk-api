@@ -1,18 +1,18 @@
-namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
+namespace Finance.Infrastructure.Data.Neo4j.Queries.Store
 {
     using System.Linq;
 
-    using Finance.Entities.Transaction;
+    using Finance.Entities.Transaction.Details;
     using Finance.Infrastructure.Data.Neo4j.Mappings;
     using Finance.Infrastructure.Filter;
 
     using Http.Query.Filter;
 
-    public class GetAllQuery : GetAllQueryBase<Transaction>
+    public class GetAllQuery : GetAllQueryBase<Store>
     {
         public GetAllQuery(
             Database database,
-            IMapping<Transaction> mapping,
+            IMapping<Store> mapping,
             File file,
             ILimit<int, Filter> limit,
             ISkip<int, Filter> skip,
@@ -21,9 +21,9 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
         {
         }
 
-        public virtual Paged<Transaction> GetResult(string email, Filter filter)
+        public virtual Paged<Store> GetResult(string email, Filter filter)
         {
-            var query = this.File.ReadAllText(@"Transaction\GetAll.cql");
+            var query = this.File.ReadAllText(@"Store\GetAll.cql");
             var parameters = new
             {
                 email,
@@ -33,11 +33,10 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
 
             var data = this.Database.Execute(this.Mapping.MapFrom, query, parameters);
             var entities = data
-                .OrderBy(item => item.Payment.Date)
-                .ThenBy(item => item.Id)
+                .OrderBy(item => item.Name)
                 .ToList();
 
-            return new Paged<Transaction>(entities, parameters.skip, parameters.limit);
+            return new Paged<Store>(entities, parameters.skip, parameters.limit);
         }
     }
 }

@@ -5,28 +5,22 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Account
     using Finance.Entities;
     using Finance.Infrastructure.Data.Neo4j.Mappings;
 
-    public class GetByEmailQuery
+    public class GetByEmailQuery : QueryBase<Account>
     {
-        private readonly Database database;
-        private readonly AccountMapping mapping;
-        private readonly File file;
-
-        public GetByEmailQuery(Database database, AccountMapping mapping, File file)
+        public GetByEmailQuery(Database database, IMapping<Account> mapping, File file)
+            : base(database, mapping, file)
         {
-            this.database = database;
-            this.mapping = mapping;
-            this.file = file;
         }
 
         public virtual Account GetResult(string email)
         {
-            var query = this.file.ReadAllText(@"Account\GetByEmail.cql");
+            var query = this.File.ReadAllText(@"Account\GetByEmail.cql");
             var parameters = new
             {
                 email
             };
 
-            var entities = this.database.Execute(this.mapping.MapFrom, query, parameters);
+            var entities = this.Database.Execute(this.Mapping.MapFrom, query, parameters);
 
             return entities.FirstOrDefault();
         }
