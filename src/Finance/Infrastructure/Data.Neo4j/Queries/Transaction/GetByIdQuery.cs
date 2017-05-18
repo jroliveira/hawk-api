@@ -3,31 +3,26 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
     using System.Linq;
 
     using Finance.Entities.Transaction;
+    using Finance.Infrastructure.Data.Neo4j.Mappings;
     using Finance.Infrastructure.Data.Neo4j.Mappings.Transaction;
 
-    public class GetByIdQuery
+    public class GetByIdQuery : QueryBase<Transaction>
     {
-        private readonly Database database;
-        private readonly TransactionMapping mapping;
-        private readonly File file;
-
-        public GetByIdQuery(Database database, TransactionMapping mapping, File file)
+        public GetByIdQuery(Database database, IMapping<Transaction> mapping, File file)
+            : base(database, mapping, file)
         {
-            this.database = database;
-            this.mapping = mapping;
-            this.file = file;
         }
 
         public virtual Transaction GetResult(int id, string email)
         {
-            var query = this.file.ReadAllText(@"Transaction\GetById.cql");
+            var query = this.File.ReadAllText(@"Transaction\GetById.cql");
             var parameters = new
             {
                 id,
                 email
             };
 
-            var entities = this.database.Execute(this.mapping.MapFrom, query, parameters);
+            var entities = this.Database.Execute(this.Mapping.MapFrom, query, parameters);
 
             return entities.FirstOrDefault();
         }

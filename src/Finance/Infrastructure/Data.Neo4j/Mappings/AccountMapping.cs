@@ -5,7 +5,7 @@
 
     using global::Neo4j.Driver.V1;
 
-    public class AccountMapping
+    public class AccountMapping : IMapping<Account>
     {
         public Account MapFrom(IRecord record)
         {
