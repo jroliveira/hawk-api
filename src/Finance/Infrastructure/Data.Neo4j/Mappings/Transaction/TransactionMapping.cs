@@ -12,7 +12,7 @@
 
     using global::Neo4j.Driver.V1;
 
-    public class TransactionMapping
+    public class TransactionMapping : IMapping<Transaction>
     {
         private readonly IDictionary<string, Func<int, Entities.Transaction.Payment.Payment, Account, Transaction>> types;
 

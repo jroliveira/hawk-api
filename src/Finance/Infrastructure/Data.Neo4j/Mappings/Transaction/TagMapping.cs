@@ -5,7 +5,7 @@
 
     using global::Neo4j.Driver.V1;
 
-    public class TagMapping
+    public class TagMapping : IMapping<Tag>
     {
         public Tag MapFrom(IRecord record)
         {
