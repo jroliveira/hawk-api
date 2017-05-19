@@ -1,9 +1,11 @@
 ﻿namespace Finance.WebApi.Configuration
 {
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Cors;
     using Microsoft.AspNetCore.Mvc.Cors.Internal;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
 
     using Newtonsoft.Json;
 
@@ -12,6 +14,7 @@
         internal static IServiceCollection ConfigureApi(this IServiceCollection services, IConfigurationRoot configuration)
         {
             // Cors
+            services.TryAddTransient<CorsAuthorizationFilter, CorsAuthorizationFilter>();
             services.AddOptions();
             services.AddCors(options =>
             {
@@ -27,11 +30,13 @@
 
             // Config
             services
-                .AddMvc(config =>
+                .AddMvcCore(config =>
                 {
                     // var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                     // config.Filters.Add(new AuthorizeFilter(policy));
                 })
+                .AddApiExplorer()
+                .AddJsonFormatters()
                 .AddJsonOptions(opt =>
                 {
                     opt.SerializerSettings.Formatting = Formatting.Indented;

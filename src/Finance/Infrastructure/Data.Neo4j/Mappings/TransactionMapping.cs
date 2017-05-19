@@ -1,4 +1,4 @@
-﻿namespace Finance.Infrastructure.Data.Neo4j.Mappings.Transaction
+﻿namespace Finance.Infrastructure.Data.Neo4j.Mappings
 {
     using System;
     using System.Collections.Generic;
@@ -8,7 +8,7 @@
     using Finance.Entities.Transaction;
     using Finance.Entities.Transaction.Details;
     using Finance.Infrastructure.Data.Neo4j.Extensions;
-    using Finance.Infrastructure.Data.Neo4j.Mappings.Transaction.Payment;
+    using Finance.Infrastructure.Data.Neo4j.Mappings.Payment;
 
     using global::Neo4j.Driver.V1;
 

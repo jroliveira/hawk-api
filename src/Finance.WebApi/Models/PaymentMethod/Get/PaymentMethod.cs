@@ -1,6 +1,6 @@
-﻿namespace Finance.WebApi.Models.Store.Get
+﻿namespace Finance.WebApi.Models.PaymentMethod.Get
 {
-    public class Store
+    public class PaymentMethod
     {
         public virtual string Name { get; set; }
 

@@ -4,7 +4,6 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
 
     using Finance.Entities.Transaction;
     using Finance.Infrastructure.Data.Neo4j.Mappings;
-    using Finance.Infrastructure.Data.Neo4j.Mappings.Transaction;
 
     public class GetByIdQuery : QueryBase<Transaction>
     {
