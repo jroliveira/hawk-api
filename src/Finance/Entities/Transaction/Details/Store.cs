@@ -9,6 +9,8 @@
 
         public string Name { get; }
 
+        public int Total { get; set; }
+
         public static implicit operator string(Store store)
         {
             return store.Name;

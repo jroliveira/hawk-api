@@ -3,6 +3,7 @@
     using Finance.Entities;
     using Finance.Entities.Transaction;
     using Finance.Entities.Transaction.Details;
+    using Finance.Entities.Transaction.Payment;
     using Finance.Infrastructure.Filter;
     using Finance.WebApi.Lib.Validators;
 
@@ -33,6 +34,7 @@
 
             // Queries
             services.AddSingleton<Neo4j.Queries.Account.GetByEmailQuery>();
+            services.AddSingleton<Neo4j.Queries.PaymentMethod.GetAllQuery>();
             services.AddSingleton<Neo4j.Queries.Store.GetAllQuery>();
             services.AddSingleton<Neo4j.Queries.Tag.GetAllQuery>();
             services.AddSingleton<Neo4j.Queries.Transaction.GetAllQuery>();
@@ -40,18 +42,19 @@
 
             // Mappings
             services.AddSingleton<Neo4j.Mappings.IMapping<Account>, Neo4j.Mappings.AccountMapping>();
-            services.AddSingleton<Neo4j.Mappings.IMapping<Store>, Neo4j.Mappings.Transaction.StoreMapping>();
-            services.AddSingleton<Neo4j.Mappings.IMapping<Tag>, Neo4j.Mappings.Transaction.TagMapping>();
-            services.AddSingleton<Neo4j.Mappings.IMapping<Transaction>, Neo4j.Mappings.Transaction.TransactionMapping>();
+            services.AddSingleton<Neo4j.Mappings.IMapping<Method>, Neo4j.Mappings.Payment.MethodMapping>();
+            services.AddSingleton<Neo4j.Mappings.IMapping<Store>, Neo4j.Mappings.StoreMapping>();
+            services.AddSingleton<Neo4j.Mappings.IMapping<Tag>, Neo4j.Mappings.TagMapping>();
+            services.AddSingleton<Neo4j.Mappings.IMapping<Transaction>, Neo4j.Mappings.TransactionMapping>();
 
             services.AddSingleton<Neo4j.Mappings.AccountMapping>();
-            services.AddSingleton<Neo4j.Mappings.Transaction.Payment.CurrencyMapping>();
-            services.AddSingleton<Neo4j.Mappings.Transaction.Payment.MethodMapping>();
-            services.AddSingleton<Neo4j.Mappings.Transaction.Payment.PaymentMapping>();
-            services.AddSingleton<Neo4j.Mappings.Transaction.ParcelMapping>();
-            services.AddSingleton<Neo4j.Mappings.Transaction.StoreMapping>();
-            services.AddSingleton<Neo4j.Mappings.Transaction.TagMapping>();
-            services.AddSingleton<Neo4j.Mappings.Transaction.TransactionMapping>();
+            services.AddSingleton<Neo4j.Mappings.Payment.CurrencyMapping>();
+            services.AddSingleton<Neo4j.Mappings.Payment.MethodMapping>();
+            services.AddSingleton<Neo4j.Mappings.Payment.PaymentMapping>();
+            services.AddSingleton<Neo4j.Mappings.ParcelMapping>();
+            services.AddSingleton<Neo4j.Mappings.StoreMapping>();
+            services.AddSingleton<Neo4j.Mappings.TagMapping>();
+            services.AddSingleton<Neo4j.Mappings.TransactionMapping>();
 
             // Validators
             services.AddSingleton<AccountValidator>();

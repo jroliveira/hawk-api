@@ -3,12 +3,13 @@
 WHERE
   account.email = {email}
 WITH
-  distinct store.name as store
+{ 
+  name: store.name,
+  total: count(store.name)
+} as store
 
 RETURN 
-{
-  name: store
-} as data
+  store as data
 
 SKIP 
   {skip} 

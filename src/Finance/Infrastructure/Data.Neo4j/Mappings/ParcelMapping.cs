@@ -1,4 +1,4 @@
-﻿namespace Finance.Infrastructure.Data.Neo4j.Mappings.Transaction
+﻿namespace Finance.Infrastructure.Data.Neo4j.Mappings
 {
     using Finance.Entities.Transaction.Installment;
 
