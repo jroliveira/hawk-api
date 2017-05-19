@@ -1,4 +1,4 @@
-﻿namespace Finance.Infrastructure.Data.Neo4j.Mappings.Transaction
+﻿namespace Finance.Infrastructure.Data.Neo4j.Mappings
 {
     using Finance.Entities.Transaction.Details;
     using Finance.Infrastructure.Data.Neo4j.Extensions;
@@ -14,6 +14,11 @@
 
         public Tag MapFrom(Record record)
         {
+            if (record == null || !record.Any())
+            {
+                return null;
+            }
+
             var name = record.Get("name");
             return new Tag(name)
             {

@@ -1,4 +1,4 @@
-﻿namespace Finance.Infrastructure.Data.Neo4j.Mappings.Transaction.Payment
+﻿namespace Finance.Infrastructure.Data.Neo4j.Mappings.Payment
 {
     using System;
     using System.Globalization;

@@ -1,4 +1,4 @@
-﻿namespace Finance.Infrastructure.Data.Neo4j.Mappings.Transaction
+﻿namespace Finance.Infrastructure.Data.Neo4j.Mappings
 {
     using Finance.Entities.Transaction.Details;
     using Finance.Infrastructure.Data.Neo4j.Extensions;
@@ -19,8 +19,11 @@
                 return null;
             }
 
-            return new Store(
-                record.Get("name"));
+            var name = record.Get("name");
+            return new Store(name)
+            {
+                Total = record.Get<int>("total")
+            };
         }
     }
 }
