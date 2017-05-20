@@ -5,11 +5,14 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
     using Finance.Entities.Transaction;
     using Finance.Infrastructure.Data.Neo4j.Mappings;
 
-    public class GetByIdQuery : QueryBase<Transaction>
+    public class GetByIdQuery : QueryBase
     {
-        public GetByIdQuery(Database database, IMapping<Transaction> mapping, File file)
-            : base(database, mapping, file)
+        private readonly TransactionMapping mapping;
+
+        public GetByIdQuery(Database database, TransactionMapping mapping, File file)
+            : base(database, file)
         {
+            this.mapping = mapping;
         }
 
         public virtual Transaction GetResult(int id, string email)
@@ -21,7 +24,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
                 email
             };
 
-            var entities = this.Database.Execute(this.Mapping.MapFrom, query, parameters);
+            var entities = this.Database.Execute(this.mapping.MapFrom, query, parameters);
 
             return entities.FirstOrDefault();
         }

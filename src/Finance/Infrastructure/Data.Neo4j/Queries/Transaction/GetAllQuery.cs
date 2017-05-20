@@ -8,17 +8,20 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
 
     using Http.Query.Filter;
 
-    public class GetAllQuery : GetAllQueryBase<Transaction>
+    public class GetAllQuery : GetAllQueryBase
     {
+        private readonly TransactionMapping mapping;
+
         public GetAllQuery(
             Database database,
-            IMapping<Transaction> mapping,
+            TransactionMapping mapping,
             File file,
             ILimit<int, Filter> limit,
             ISkip<int, Filter> skip,
             IWhere<string, Filter> where)
-            : base(database, mapping, file, limit, skip, where)
+            : base(database, file, limit, skip, where)
         {
+            this.mapping = mapping;
         }
 
         public virtual Paged<Transaction> GetResult(string email, Filter filter)
@@ -31,7 +34,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
                 limit = this.Limit.Apply(filter)
             };
 
-            var data = this.Database.Execute(this.Mapping.MapFrom, query, parameters);
+            var data = this.Database.Execute(this.mapping.MapFrom, query, parameters);
             var entities = data
                 .OrderBy(item => item.Payment.Date)
                 .ThenBy(item => item.Id)
