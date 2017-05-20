@@ -5,7 +5,7 @@
 
     using global::Neo4j.Driver.V1;
 
-    public class StoreMapping : IMapping<Store>
+    public class StoreMapping
     {
         public Store MapFrom(IRecord record)
         {

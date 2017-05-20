@@ -5,7 +5,7 @@
 
     using global::Neo4j.Driver.V1;
 
-    public class MethodMapping : IMapping<Method>
+    public class MethodMapping
     {
         public Method MapFrom(IRecord record)
         {

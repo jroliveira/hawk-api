@@ -14,12 +14,5 @@ namespace Finance.Entities
         public TId Id { get; protected set; }
 
         public DateTime CreationAt { get; }
-
-        public bool Deleted { get; private set; }
-
-        public virtual void MarkAsDeleted()
-        {
-            this.Deleted = true;
-        }
     }
 }
