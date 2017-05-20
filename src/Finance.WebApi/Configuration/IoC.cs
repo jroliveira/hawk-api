@@ -1,9 +1,5 @@
 ﻿namespace Finance.WebApi.Configuration
 {
-    using Finance.Entities;
-    using Finance.Entities.Transaction;
-    using Finance.Entities.Transaction.Details;
-    using Finance.Entities.Transaction.Payment;
     using Finance.Infrastructure.Filter;
     using Finance.WebApi.Lib.Validators;
 
@@ -41,12 +37,6 @@
             services.AddSingleton<Neo4j.Queries.Transaction.GetByIdQuery>();
 
             // Mappings
-            services.AddSingleton<Neo4j.Mappings.IMapping<Account>, Neo4j.Mappings.AccountMapping>();
-            services.AddSingleton<Neo4j.Mappings.IMapping<Method>, Neo4j.Mappings.Payment.MethodMapping>();
-            services.AddSingleton<Neo4j.Mappings.IMapping<Store>, Neo4j.Mappings.StoreMapping>();
-            services.AddSingleton<Neo4j.Mappings.IMapping<Tag>, Neo4j.Mappings.TagMapping>();
-            services.AddSingleton<Neo4j.Mappings.IMapping<Transaction>, Neo4j.Mappings.TransactionMapping>();
-
             services.AddSingleton<Neo4j.Mappings.AccountMapping>();
             services.AddSingleton<Neo4j.Mappings.Payment.CurrencyMapping>();
             services.AddSingleton<Neo4j.Mappings.Payment.MethodMapping>();
