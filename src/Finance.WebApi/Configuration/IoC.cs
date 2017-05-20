@@ -1,5 +1,6 @@
 ﻿namespace Finance.WebApi.Configuration
 {
+    using Finance.Infrastructure;
     using Finance.Infrastructure.Filter;
     using Finance.WebApi.Lib.Validators;
 
@@ -14,6 +15,8 @@
     {
         internal static IServiceCollection ConfigureIoC(this IServiceCollection services, IConfigurationRoot configuration)
         {
+            services.AddSingleton<PartialUpdater>();
+
             // Filters
             services.AddSingleton<IWhere<string, Filter>, Neo4j.Filter.Where>();
             services.AddSingleton<ISkip<int, Filter>, Neo4j.Filter.Skip>();

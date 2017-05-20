@@ -14,8 +14,7 @@
             services.Configure<Neo4j.Config>(configuration.GetSection("Neo4j"));
             services.AddSingleton<Neo4j.Database>();
             services.AddSingleton<File, Neo4j.GetScript>();
-            services.AddSingleton<PartialUpdater>();
-
+            
             return services;
         }
     }
