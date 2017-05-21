@@ -10,6 +10,30 @@
 $ git clone https://github.com/jroliveira/finance-api.git
 ```
 
+#### Configuration file (src\Finance.WebApi\appsettings.json)
+
+``` json
+{
+  "JwtIssuerOptions": {
+    "Issuer": "SuperAwesomeTokenServer",
+    "Audience": "http://localhost:48285"
+  },
+  "Logging": {
+    "IncludeScopes": false,
+    "LogLevel": {
+      "Default": "Debug",
+      "System": "Information",
+      "Microsoft": "Information"
+    }
+  },
+  "Neo4j": {
+    "Uri": "bolt://localhost:24786",
+    "Username": "neo4j",
+    "Password": "neo4j"
+  }
+}
+```
+
 ### How to use it
 
 ``` bash

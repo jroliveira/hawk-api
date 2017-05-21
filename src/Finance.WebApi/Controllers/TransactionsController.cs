@@ -13,7 +13,7 @@ namespace Finance.WebApi.Controllers
 
     using Model = Finance.WebApi.Models.Transaction;
 
-    [Route("/transactions")]
+    [Route("")]
     public class TransactionsController : Controller
     {
         private readonly GetAllQuery getAll;
@@ -39,7 +39,7 @@ namespace Finance.WebApi.Controllers
             this.mapper = mapper;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("transactions/{id:int}")]
         public IActionResult GetById([FromRoute] int id)
         {
             var entity = this.getById.GetResult(id, "junolive@gmail.com");
@@ -53,7 +53,7 @@ namespace Finance.WebApi.Controllers
             return this.Ok(model);
         }
 
-        [HttpGet]
+        [HttpGet("transactions")]
         public IActionResult Get()
         {
             var entities = this.getAll.GetResult("junolive@gmail.com", this.Request.QueryString.Value);
@@ -62,7 +62,7 @@ namespace Finance.WebApi.Controllers
             return this.Ok(model);
         }
 
-        [HttpPost]
+        [HttpPost("transactions")]
         public IActionResult Create([FromBody] Model.Post.Transaction request)
         {
             var validateResult = this.validator.Validate(request);
@@ -78,7 +78,7 @@ namespace Finance.WebApi.Controllers
             return this.StatusCode(201, response);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("transactions/{id:int}")]
         public IActionResult Exclude([FromRoute] int id)
         {
             var entity = this.getById.GetResult(id, "junolive@gmail.com");
