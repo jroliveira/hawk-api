@@ -8,7 +8,7 @@ namespace Finance.WebApi.Controllers
 
     using Microsoft.AspNetCore.Mvc;
 
-    [Route("/stores")]
+    [Route("stores")]
     public class StoresController : Controller
     {
         private readonly GetAllQuery getAll;

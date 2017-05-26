@@ -8,7 +8,6 @@ namespace Finance.WebApi.Controllers
 
     using Microsoft.AspNetCore.Mvc;
 
-    [Route("/tags")]
     public class TagsController : Controller
     {
         private readonly GetAllQuery getAll;
@@ -22,7 +21,16 @@ namespace Finance.WebApi.Controllers
             this.mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet("stores/{store}/tags")]
+        public IActionResult GetBy(string store)
+        {
+            var entities = this.getAll.GetResult("junolive@gmail.com", this.Request.QueryString.Value);
+            var model = this.mapper.Map<Paged<Tag>>(entities);
+
+            return this.Ok(model);
+        }
+
+        [HttpGet("tags")]
         public IActionResult Get()
         {
             var entities = this.getAll.GetResult("junolive@gmail.com", this.Request.QueryString.Value);

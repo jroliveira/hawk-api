@@ -8,7 +8,7 @@ namespace Finance.WebApi.Controllers
 
     using Microsoft.AspNetCore.Mvc;
 
-    [Route("/payment-methods")]
+    [Route("payment-methods")]
     public class PaymentMethodsController : Controller
     {
         private readonly GetAllQuery getAll;
