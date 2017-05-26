@@ -1,5 +1,5 @@
 ﻿MATCH 
-  (account:Account)-[:HAS]->(:Transaction)<-[:HAS]-(tag:Tag)
+  (account:Account)-[:HAS]->(:Transaction)<-[:BELONGS]-(tag:Tag)
 WHERE
   account.email = {email}
 WITH

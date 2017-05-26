@@ -13,7 +13,7 @@ namespace Finance.WebApi.Controllers
 
     using Model = Finance.WebApi.Models.Account;
 
-    [Route("/accounts")]
+    [Route("accounts")]
     public class AccountsController : Controller
     {
         private readonly GetByEmailQuery getByEmail;

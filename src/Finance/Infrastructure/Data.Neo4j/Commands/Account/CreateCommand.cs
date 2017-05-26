@@ -10,9 +10,9 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Account
     {
         private readonly Database database;
         private readonly AccountMapping mapping;
-        private readonly File file;
+        private readonly GetScript file;
 
-        public CreateCommand(Database database, AccountMapping mapping, File file)
+        public CreateCommand(Database database, AccountMapping mapping, GetScript file)
         {
             this.database = database;
             this.mapping = mapping;

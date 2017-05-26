@@ -1,20 +1,20 @@
-namespace Finance.Infrastructure.Data.Neo4j.Queries.PaymentMethod
+namespace Finance.Infrastructure.Data.Neo4j.Queries.Tag
 {
     using System.Linq;
 
-    using Finance.Entities.Transaction.Payment;
-    using Finance.Infrastructure.Data.Neo4j.Mappings.Payment;
+    using Finance.Entities.Transaction.Details;
+    using Finance.Infrastructure.Data.Neo4j.Mappings;
     using Finance.Infrastructure.Filter;
 
     using Http.Query.Filter;
 
-    public class GetAllQuery : GetAllQueryBase
+    public class GetAllByStoreQuery : GetAllQueryBase
     {
-        private readonly MethodMapping mapping;
+        private readonly TagMapping mapping;
 
-        public GetAllQuery(
+        public GetAllByStoreQuery(
             Database database,
-            MethodMapping mapping,
+            TagMapping mapping,
             GetScript file,
             ILimit<int, Filter> limit,
             ISkip<int, Filter> skip,
@@ -24,12 +24,13 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.PaymentMethod
             this.mapping = mapping;
         }
 
-        public virtual Paged<Method> GetResult(string email, Filter filter)
+        public virtual Paged<Tag> GetResult(string email, string store, Filter filter)
         {
-            var query = this.File.ReadAllText(@"PaymentMethod\GetAll.cql");
+            var query = this.File.ReadAllText(@"Tag\GetAllByStore.cql");
             var parameters = new
             {
                 email,
+                store,
                 skip = this.Skip.Apply(filter),
                 limit = this.Limit.Apply(filter)
             };
@@ -39,7 +40,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.PaymentMethod
                 .OrderBy(item => item.Name)
                 .ToList();
 
-            return new Paged<Method>(entities, parameters.skip, parameters.limit);
+            return new Paged<Tag>(entities, parameters.skip, parameters.limit);
         }
     }
 }

@@ -6,9 +6,9 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Store
 
     public class CreateCommand
     {
-        private readonly File file;
+        private readonly GetScript file;
 
-        public CreateCommand(File file)
+        public CreateCommand(GetScript file)
         {
             this.file = file;
         }

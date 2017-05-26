@@ -25,7 +25,7 @@ WITH
   paymentMethod
 
 OPTIONAL MATCH
-  (transaction)<-[:HAS]-(tag:Tag)
+  (transaction)<-[:BELONGS]-(tag:Tag)
 WITH
   account,
   currency,

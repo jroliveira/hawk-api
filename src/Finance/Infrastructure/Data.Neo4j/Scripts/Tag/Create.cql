@@ -13,4 +13,4 @@ MERGE
     name: tagName
   })
 CREATE UNIQUE
-  (transaction)-[:HAS]-(tag)
+  (transaction)<-[:BELONGS]-(tag)

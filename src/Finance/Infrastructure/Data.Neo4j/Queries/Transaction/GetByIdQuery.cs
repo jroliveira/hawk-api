@@ -9,7 +9,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
     {
         private readonly TransactionMapping mapping;
 
-        public GetByIdQuery(Database database, TransactionMapping mapping, File file)
+        public GetByIdQuery(Database database, TransactionMapping mapping, GetScript file)
             : base(database, file)
         {
             this.mapping = mapping;
