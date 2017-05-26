@@ -5,9 +5,9 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
     public class ExcludeCommand
     {
         private readonly Database database;
-        private readonly File file;
+        private readonly GetScript file;
 
-        public ExcludeCommand(Database database, File file)
+        public ExcludeCommand(Database database, GetScript file)
         {
             this.database = database;
             this.file = file;

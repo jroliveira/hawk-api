@@ -15,7 +15,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
         public GetAllQuery(
             Database database,
             TransactionMapping mapping,
-            File file,
+            GetScript file,
             ILimit<int, Filter> limit,
             ISkip<int, Filter> skip,
             IWhere<string, Filter> where)

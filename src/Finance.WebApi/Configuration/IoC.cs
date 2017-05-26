@@ -36,6 +36,7 @@
             services.AddSingleton<Neo4j.Queries.PaymentMethod.GetAllQuery>();
             services.AddSingleton<Neo4j.Queries.Store.GetAllQuery>();
             services.AddSingleton<Neo4j.Queries.Tag.GetAllQuery>();
+            services.AddSingleton<Neo4j.Queries.Tag.GetAllByStoreQuery>();
             services.AddSingleton<Neo4j.Queries.Transaction.GetAllQuery>();
             services.AddSingleton<Neo4j.Queries.Transaction.GetByIdQuery>();
 
@@ -48,6 +49,11 @@
             services.AddSingleton<Neo4j.Mappings.StoreMapping>();
             services.AddSingleton<Neo4j.Mappings.TagMapping>();
             services.AddSingleton<Neo4j.Mappings.TransactionMapping>();
+
+            // Reports
+            services.AddSingleton<Neo4j.Reports.GetAmountGroupByTag.GetQuery>();
+            services.AddSingleton<Neo4j.Reports.GetAmountGroupByTag.TagMapping>();
+            services.AddSingleton<Neo4j.Reports.GetAmountGroupByTag.TransactionsMapping>();
 
             // Validators
             services.AddSingleton<AccountValidator>();
