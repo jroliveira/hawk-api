@@ -9,7 +9,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Account
     {
         private readonly AccountMapping mapping;
 
-        public GetByEmailQuery(Database database, AccountMapping mapping, File file)
+        public GetByEmailQuery(Database database, AccountMapping mapping, GetScript file)
             : base(database, file)
         {
             this.mapping = mapping;

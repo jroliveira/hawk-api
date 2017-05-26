@@ -11,18 +11,21 @@ namespace Finance.WebApi.Controllers
     public class TagsController : Controller
     {
         private readonly GetAllQuery getAll;
+        private readonly GetAllByStoreQuery getAllByStore;
         private readonly IMapper mapper;
 
         public TagsController(
             GetAllQuery getAll,
+            GetAllByStoreQuery getAllByStore,
             IMapper mapper)
         {
             this.getAll = getAll;
+            this.getAllByStore = getAllByStore;
             this.mapper = mapper;
         }
 
-        [HttpGet("stores/{store}/tags")]
-        public IActionResult GetBy(string store)
+        [HttpGet("tags")]
+        public IActionResult Get()
         {
             var entities = this.getAll.GetResult("junolive@gmail.com", this.Request.QueryString.Value);
             var model = this.mapper.Map<Paged<Tag>>(entities);
@@ -30,10 +33,10 @@ namespace Finance.WebApi.Controllers
             return this.Ok(model);
         }
 
-        [HttpGet("tags")]
-        public IActionResult Get()
+        [HttpGet("stores/{store}/tags")]
+        public IActionResult GetByStore(string store)
         {
-            var entities = this.getAll.GetResult("junolive@gmail.com", this.Request.QueryString.Value);
+            var entities = this.getAllByStore.GetResult("junolive@gmail.com", store, this.Request.QueryString.Value);
             var model = this.mapper.Map<Paged<Tag>>(entities);
 
             return this.Ok(model);

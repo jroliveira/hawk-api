@@ -1,7 +1,5 @@
 ﻿namespace Finance.WebApi.Configuration
 {
-    using Finance.Infrastructure;
-
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -13,8 +11,9 @@
         {
             services.Configure<Neo4j.Config>(configuration.GetSection("Neo4j"));
             services.AddSingleton<Neo4j.Database>();
-            services.AddSingleton<File, Neo4j.GetScript>();
-            
+            services.AddSingleton<Neo4j.GetScript>();
+            services.AddSingleton<Neo4j.Reports.GetScript>();
+
             return services;
         }
     }

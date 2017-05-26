@@ -1,20 +1,20 @@
-namespace Finance.Infrastructure.Data.Neo4j.Queries.PaymentMethod
+namespace Finance.Infrastructure.Data.Neo4j.Reports.GetAmountGroupByTag
 {
     using System.Linq;
 
-    using Finance.Entities.Transaction.Payment;
-    using Finance.Infrastructure.Data.Neo4j.Mappings.Payment;
+    using Finance.Infrastructure.Data.Neo4j.Queries;
     using Finance.Infrastructure.Filter;
+    using Finance.Reports.GetAmountGroupByTag;
 
     using Http.Query.Filter;
 
-    public class GetAllQuery : GetAllQueryBase
+    public class GetQuery : GetAllQueryBase
     {
-        private readonly MethodMapping mapping;
+        private readonly TagMapping mapping;
 
-        public GetAllQuery(
+        public GetQuery(
             Database database,
-            MethodMapping mapping,
+            TagMapping mapping,
             GetScript file,
             ILimit<int, Filter> limit,
             ISkip<int, Filter> skip,
@@ -24,9 +24,9 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.PaymentMethod
             this.mapping = mapping;
         }
 
-        public virtual Paged<Method> GetResult(string email, Filter filter)
+        public virtual Paged<Tag> GetResult(string email, Filter filter)
         {
-            var query = this.File.ReadAllText(@"PaymentMethod\GetAll.cql");
+            var query = this.File.ReadAllText(@"GetAmountGroupByTag\Query.cql");
             var parameters = new
             {
                 email,
@@ -39,7 +39,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.PaymentMethod
                 .OrderBy(item => item.Name)
                 .ToList();
 
-            return new Paged<Method>(entities, parameters.skip, parameters.limit);
+            return new Paged<Tag>(entities, parameters.skip, parameters.limit);
         }
     }
 }

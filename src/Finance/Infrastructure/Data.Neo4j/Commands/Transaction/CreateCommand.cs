@@ -15,7 +15,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
         private readonly Tag.CreateCommand createTag;
 
         private readonly Database database;
-        private readonly File file;
+        private readonly GetScript file;
 
         public CreateCommand(
             Currency.CreateCommand createCurrency,
@@ -23,7 +23,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
             Store.CreateCommand createStore,
             Tag.CreateCommand createTag,
             Database database,
-            File file)
+            GetScript file)
         {
             this.createCurrency = createCurrency;
             this.createPaymentMethod = createPaymentMethod;

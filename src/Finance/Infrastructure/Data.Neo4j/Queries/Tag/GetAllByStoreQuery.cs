@@ -15,7 +15,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Tag
         public GetAllByStoreQuery(
             Database database,
             TagMapping mapping,
-            File file,
+            GetScript file,
             ILimit<int, Filter> limit,
             ISkip<int, Filter> skip,
             IWhere<string, Filter> where)

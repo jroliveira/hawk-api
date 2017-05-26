@@ -14,7 +14,7 @@
 
     public class TransactionMapping
     {
-        private readonly IDictionary<string, Func<int, Entities.Transaction.Payment.Payment, Account, Transaction>> types;
+        private readonly IDictionary<string, Func<int, Finance.Entities.Transaction.Payment.Payment, Account, Transaction>> types;
 
         private readonly AccountMapping accountMapping;
         private readonly PaymentMapping paymentMapping;
@@ -32,7 +32,7 @@
             this.storeMapping = storeMapping;
             this.parcelMapping = parcelMapping;
 
-            this.types = new Dictionary<string, Func<int, Entities.Transaction.Payment.Payment, Account, Transaction>>
+            this.types = new Dictionary<string, Func<int, Finance.Entities.Transaction.Payment.Payment, Account, Transaction>>
             {
                 { "Debit", (id, payment, account) => new Debit(id, payment, account) },
                 { "Credit", (id, payment, account) => new Credit(id, payment, account) }
