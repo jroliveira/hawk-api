@@ -2,14 +2,11 @@
   (account:Account)-[:HAS]->(:Transaction)-[:IN]->(store:Store)
 WHERE
   account.email = {email}
-WITH
+RETURN
 { 
   name: store.name,
   total: count(store.name)
-} as store
-
-RETURN 
-  store as data
+} as data
 
 SKIP 
   {skip} 

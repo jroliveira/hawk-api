@@ -2,14 +2,11 @@
   (account:Account)-[:HAS]->(:Transaction)<-[:BELONGS]-(tag:Tag)
 WHERE
   account.email = {email}
-WITH
+RETURN
 { 
   name: tag.name,
   total: count(tag.name)
-} as tag
-
-RETURN 
-  tag as data
+} as data
 
 SKIP 
   {skip} 

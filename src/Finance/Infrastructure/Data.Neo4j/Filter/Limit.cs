@@ -10,12 +10,12 @@
         {
             if (filter.Limit == null)
             {
-                return 100;
+                return 10000;
             }
 
             if (filter.Limit < 1)
             {
-                return 100;
+                return 10000;
             }
 
             return filter.Limit;
