@@ -7,11 +7,11 @@ WITH
   transaction
 
 MATCH
-  (transaction)<-[:BELONGS]-(tag:Tag)
+  (transaction)-[:PAID_WITH]->(paymentMethod:PaymentMethod)
 RETURN
 { 
-  name: tag.name,
-  total: count(tag.name)
+  name: paymentMethod.name,
+  total: count(paymentMethod.name)
 } as data
 
 SKIP 

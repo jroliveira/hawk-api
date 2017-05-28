@@ -36,9 +36,9 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
         public virtual Transaction Execute(Transaction entity)
         {
             var query = this.file.ReadAllText(@"Transaction\Create.cql");
+            query = query.Replace("#type#", entity.GetType().Name);
             var parameters = new
             {
-                type = entity.GetType().Name,
                 email = entity.Account.Email,
                 value = entity.Payment.Value,
                 date = entity.Payment.Date.Date.ToString(CultureInfo.InvariantCulture),

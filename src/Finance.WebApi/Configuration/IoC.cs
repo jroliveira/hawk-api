@@ -34,6 +34,7 @@
             // Queries
             services.AddSingleton<Neo4j.Queries.Account.GetByEmailQuery>();
             services.AddSingleton<Neo4j.Queries.PaymentMethod.GetAllQuery>();
+            services.AddSingleton<Neo4j.Queries.PaymentMethod.GetAllByStoreQuery>();
             services.AddSingleton<Neo4j.Queries.Store.GetAllQuery>();
             services.AddSingleton<Neo4j.Queries.Tag.GetAllQuery>();
             services.AddSingleton<Neo4j.Queries.Tag.GetAllByStoreQuery>();
