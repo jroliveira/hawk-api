@@ -3,17 +3,14 @@
 WHERE
   account.email = {email}
 
-MERGE 
-  (transaction:Transaction { 
+CREATE 
+  (transaction:Transaction:#type# { 
     value: {value},
     date: {date},
-    email: {email}
+    email: {email},
+    parcels: {parcels},
+    parcel: {parcel}
   })
-ON CREATE 
-  SET
-    transaction: Debit,
-    transaction.parcels = {parcels},
-    transaction.parcel = {parcel}
 
 CREATE UNIQUE
   (account)-[:HAS]->(transaction)
