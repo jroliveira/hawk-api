@@ -1,20 +1,20 @@
-namespace Finance.Infrastructure.Data.Neo4j.Reports.GetAmountGroupByTag
+namespace Finance.Infrastructure.Data.Neo4j.Reports.GetAmountGroupBy
 {
     using System.Linq;
 
     using Finance.Infrastructure.Data.Neo4j.Queries;
     using Finance.Infrastructure.Filter;
-    using Finance.Reports.GetAmountGroupByTag;
+    using Finance.Reports.GetAmountGroupBy;
 
     using Http.Query.Filter;
 
-    public class GetQuery : GetAllQueryBase
+    public abstract class GetQueryBase : GetAllQueryBase
     {
-        private readonly TagMapping mapping;
+        private readonly ItemMapping mapping;
 
-        public GetQuery(
+        protected GetQueryBase(
             Database database,
-            TagMapping mapping,
+            ItemMapping mapping,
             GetScript file,
             ILimit<int, Filter> limit,
             ISkip<int, Filter> skip,
@@ -24,9 +24,9 @@ namespace Finance.Infrastructure.Data.Neo4j.Reports.GetAmountGroupByTag
             this.mapping = mapping;
         }
 
-        public virtual Paged<Tag> GetResult(string email, Filter filter)
+        public virtual Paged<Item> GetResult(string email, Filter filter)
         {
-            var query = this.File.ReadAllText(@"GetAmountGroupByTag\Query.cql");
+            var query = this.GetQueryString();
             var parameters = new
             {
                 email,
@@ -39,7 +39,9 @@ namespace Finance.Infrastructure.Data.Neo4j.Reports.GetAmountGroupByTag
                 .OrderBy(item => item.Name)
                 .ToList();
 
-            return new Paged<Tag>(entities, parameters.skip, parameters.limit);
+            return new Paged<Item>(entities, parameters.skip, parameters.limit);
         }
+
+        protected abstract string GetQueryString();
     }
 }

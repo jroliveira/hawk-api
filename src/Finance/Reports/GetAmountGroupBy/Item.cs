@@ -1,6 +1,6 @@
-﻿namespace Finance.Reports.GetAmountGroupByTag
+﻿namespace Finance.Reports.GetAmountGroupBy
 {
-    public class Tag
+    public class Item
     {
         public string Name { get; set; }
 

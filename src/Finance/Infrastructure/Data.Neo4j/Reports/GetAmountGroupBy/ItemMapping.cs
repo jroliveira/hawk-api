@@ -1,29 +1,29 @@
-﻿namespace Finance.Infrastructure.Data.Neo4j.Reports.GetAmountGroupByTag
+﻿namespace Finance.Infrastructure.Data.Neo4j.Reports.GetAmountGroupBy
 {
     using Finance.Infrastructure.Data.Neo4j.Extensions;
-    using Finance.Reports.GetAmountGroupByTag;
+    using Finance.Reports.GetAmountGroupBy;
 
     using global::Neo4j.Driver.V1;
 
-    public class TagMapping
+    public class ItemMapping
     {
         private readonly TransactionsMapping transactionsMapping;
 
-        public TagMapping(TransactionsMapping transactionsMapping)
+        public ItemMapping(TransactionsMapping transactionsMapping)
         {
             this.transactionsMapping = transactionsMapping;
         }
 
-        public Tag MapFrom(IRecord record)
+        public Item MapFrom(IRecord record)
         {
             return this.MapFrom(record.GetRecord("data"));
         }
 
-        public Tag MapFrom(Record record)
+        public Item MapFrom(Record record)
         {
             var transactions = this.transactionsMapping.MapFrom(record.GetRecord("transactions"));
 
-            return new Tag
+            return new Item
             {
                 Name = record.Get("name"),
                 Transactions = transactions

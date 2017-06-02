@@ -1,6 +1,6 @@
-﻿namespace Finance.Infrastructure.Data.Neo4j.Reports.GetAmountGroupByTag
+﻿namespace Finance.Infrastructure.Data.Neo4j.Reports.GetAmountGroupBy
 {
-    using Finance.Reports.GetAmountGroupByTag;
+    using Finance.Reports.GetAmountGroupBy;
 
     public class TransactionsMapping
     {

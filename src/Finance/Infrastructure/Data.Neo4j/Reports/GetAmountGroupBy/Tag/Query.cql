@@ -10,10 +10,10 @@ WITH
   	amount: sum(transaction.value),
   	quantity: count(transaction)
   }
-} as tag
+} as data
 
 RETURN 
-  tag as data
+  data
 
 SKIP 
   {skip} 
