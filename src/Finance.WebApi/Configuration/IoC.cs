@@ -52,9 +52,10 @@
             services.AddSingleton<Neo4j.Mappings.TransactionMapping>();
 
             // Reports
-            services.AddSingleton<Neo4j.Reports.GetAmountGroupByTag.GetQuery>();
-            services.AddSingleton<Neo4j.Reports.GetAmountGroupByTag.TagMapping>();
-            services.AddSingleton<Neo4j.Reports.GetAmountGroupByTag.TransactionsMapping>();
+            services.AddSingleton<Neo4j.Reports.GetAmountGroupBy.Store.GetQuery>();
+            services.AddSingleton<Neo4j.Reports.GetAmountGroupBy.Tag.GetQuery>();
+            services.AddSingleton<Neo4j.Reports.GetAmountGroupBy.ItemMapping>();
+            services.AddSingleton<Neo4j.Reports.GetAmountGroupBy.TransactionsMapping>();
 
             // Validators
             services.AddSingleton<AccountValidator>();
