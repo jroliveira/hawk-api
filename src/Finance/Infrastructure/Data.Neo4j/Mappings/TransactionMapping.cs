@@ -65,7 +65,8 @@
 
             var tags = record
                 .GetList("tags")
-                ?.Select(name => new Tag(name));
+                ?.Select(name => new Tag(name))
+                .OrderBy(tag => tag.Name);
             transaction.AddTags(tags);
 
             transaction.Parcel = this.parcelMapping.MapFrom(record.GetRecord("parcel"));

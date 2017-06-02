@@ -1,4 +1,4 @@
-﻿namespace Finance.Reports.GetAmountGroupByTag
+﻿namespace Finance.Reports.GetAmountGroupBy
 {
     public class Transactions
     {
