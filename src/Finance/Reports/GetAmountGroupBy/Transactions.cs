@@ -7,5 +7,7 @@
         public int Quantity { get; set; }
 
         public string Period { get; set; }
+
+        public string Type { get; set; }
     }
 }
