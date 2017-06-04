@@ -8,7 +8,8 @@ WITH
   transactions: {
 	period: substring(transaction.date, 6, 4)+"/"+left(transaction.date, 2),
   	amount: sum(transaction.value),
-  	quantity: count(transaction)
+  	quantity: count(transaction),
+	type: labels(transaction)
   }
 } as data
 
