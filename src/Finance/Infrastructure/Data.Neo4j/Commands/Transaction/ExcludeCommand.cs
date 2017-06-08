@@ -15,7 +15,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
 
         public virtual void Execute(Transaction entity)
         {
-            var query = this.file.ReadAllText(@"Transaction\Exclude.cql");
+            var query = this.file.ReadAllText(@"Transaction.Exclude.cql");
             var parameters = new
             {
                 email = entity.Account.Email,

@@ -17,7 +17,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
 
         public virtual Transaction GetResult(int id, string email)
         {
-            var query = this.File.ReadAllText(@"Transaction\GetById.cql");
+            var query = this.File.ReadAllText(@"Transaction.GetById.cql");
             var parameters = new
             {
                 id,

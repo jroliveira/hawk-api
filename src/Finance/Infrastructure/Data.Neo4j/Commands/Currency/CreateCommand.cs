@@ -20,7 +20,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Currency
                 return;
             }
 
-            var query = this.file.ReadAllText(@"Currency\Create.cql");
+            var query = this.file.ReadAllText(@"Currency.Create.cql");
             var parameters = new
             {
                 transaction = entity.Id,

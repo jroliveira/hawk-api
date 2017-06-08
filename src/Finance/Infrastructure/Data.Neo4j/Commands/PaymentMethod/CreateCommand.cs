@@ -20,7 +20,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.PaymentMethod
                 return;
             }
 
-            var query = this.file.ReadAllText(@"PaymentMethod\Create.cql");
+            var query = this.file.ReadAllText(@"PaymentMethod.Create.cql");
             var parameters = new
             {
                 transaction = entity.Id,

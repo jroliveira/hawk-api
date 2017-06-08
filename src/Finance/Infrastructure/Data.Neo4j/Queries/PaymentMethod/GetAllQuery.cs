@@ -26,7 +26,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.PaymentMethod
 
         public virtual Paged<Method> GetResult(string email, Filter filter)
         {
-            var query = this.File.ReadAllText(@"PaymentMethod\GetAll.cql");
+            var query = this.File.ReadAllText(@"PaymentMethod.GetAll.cql");
             var parameters = new
             {
                 email,

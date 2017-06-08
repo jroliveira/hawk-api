@@ -35,7 +35,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
 
         public virtual Transaction Execute(Transaction entity)
         {
-            var query = this.file.ReadAllText(@"Transaction\Create.cql");
+            var query = this.file.ReadAllText(@"Transaction.Create.cql");
             query = query.Replace("#type#", entity.GetType().Name);
             var parameters = new
             {
