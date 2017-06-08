@@ -17,7 +17,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Account
 
         public virtual Account GetResult(string email)
         {
-            var query = this.File.ReadAllText(@"Account\GetByEmail.cql");
+            var query = this.File.ReadAllText("Account.GetByEmail.cql");
             var parameters = new
             {
                 email

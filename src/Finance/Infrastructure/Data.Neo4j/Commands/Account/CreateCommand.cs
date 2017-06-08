@@ -23,7 +23,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Account
         {
             entity.HashPassword();
 
-            var query = this.file.ReadAllText(@"Account\Create.cql");
+            var query = this.file.ReadAllText(@"Account.Create.cql");
             var parameters = new
             {
                 email = entity.Email,

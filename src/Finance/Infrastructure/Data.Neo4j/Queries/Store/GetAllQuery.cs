@@ -26,7 +26,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Store
 
         public virtual Paged<Store> GetResult(string email, Filter filter)
         {
-            var query = this.File.ReadAllText(@"Store\GetAll.cql");
+            var query = this.File.ReadAllText(@"Store.GetAll.cql");
             var parameters = new
             {
                 email,

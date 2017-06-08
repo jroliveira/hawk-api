@@ -2,11 +2,11 @@
 {
     public class GetScript : File
     {
-        public override string ReadAllText(string path)
+        public override string ReadAllText(string name)
         {
-            path = $@"..\Finance\Infrastructure\Data.Neo4j\Scripts\{path}";
+            name = $@"Finance.Infrastructure.Data.Neo4j.Scripts.{name}";
 
-            return base.ReadAllText(path);
+            return base.ReadAllText(name);
         }
     }
 }
