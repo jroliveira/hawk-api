@@ -5,6 +5,72 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Infrastructure\Data.Neo4j\Scripts\Account\Create.cql" />
+    <None Remove="Infrastructure\Data.Neo4j\Scripts\Account\GetByEmail.cql" />
+    <None Remove="Infrastructure\Data.Neo4j\Scripts\Currency\Create.cql" />
+    <None Remove="Infrastructure\Data.Neo4j\Scripts\PaymentMethod\Create.cql" />
+    <None Remove="Infrastructure\Data.Neo4j\Scripts\PaymentMethod\GetAll.cql" />
+    <None Remove="Infrastructure\Data.Neo4j\Scripts\PaymentMethod\GetAllByStore.cql" />
+    <None Remove="Infrastructure\Data.Neo4j\Scripts\Store\Create.cql" />
+    <None Remove="Infrastructure\Data.Neo4j\Scripts\Store\GetAll.cql" />
+    <None Remove="Infrastructure\Data.Neo4j\Scripts\Tag\Create.cql" />
+    <None Remove="Infrastructure\Data.Neo4j\Scripts\Tag\GetAll.cql" />
+    <None Remove="Infrastructure\Data.Neo4j\Scripts\Tag\GetAllByStore.cql" />
+    <None Remove="Infrastructure\Data.Neo4j\Scripts\Transaction\Create.cql" />
+    <None Remove="Infrastructure\Data.Neo4j\Scripts\Transaction\Exclude.cql" />
+    <None Remove="Infrastructure\Data.Neo4j\Scripts\Transaction\GetAll.cql" />
+    <None Remove="Infrastructure\Data.Neo4j\Scripts\Transaction\GetById.cql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Account\Create.cql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Account\GetByEmail.cql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Currency\Create.cql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\PaymentMethod\Create.cql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\PaymentMethod\GetAll.cql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\PaymentMethod\GetAllByStore.cql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Store\Create.cql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Store\GetAll.cql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Tag\Create.cql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Tag\GetAll.cql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Tag\GetAllByStore.cql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Transaction\Create.cql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Transaction\Exclude.cql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Transaction\GetAll.cql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Transaction\GetById.cql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.0.2" />
     <PackageReference Include="DeepCloner" Version="0.10.0" />
     <PackageReference Include="Http.Query.Filter" Version="3.0.0" />
