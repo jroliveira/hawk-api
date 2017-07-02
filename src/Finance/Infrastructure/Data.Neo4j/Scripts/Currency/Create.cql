@@ -1,7 +1,7 @@
 ﻿MATCH 
   (transaction:Transaction)
 WHERE
-  id(transaction) = {transaction}
+  transaction.id = {transaction}
 
 MERGE 
   (currency:Currency { 

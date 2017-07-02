@@ -4,7 +4,7 @@
 
     public class Transaction
     {
-        public virtual int Id { get; set; }
+        public virtual string Id { get; set; }
 
         public virtual string Type { get; set; }
 

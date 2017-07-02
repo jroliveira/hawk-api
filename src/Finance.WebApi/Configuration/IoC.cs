@@ -26,6 +26,7 @@
             services.AddSingleton<Neo4j.Commands.Account.CreateCommand>();
             services.AddSingleton<Neo4j.Commands.Transaction.CreateCommand>();
             services.AddSingleton<Neo4j.Commands.Transaction.ExcludeCommand>();
+            services.AddSingleton<Neo4j.Commands.Adjust._2017._07._03.AdjustCommand>();
             services.AddSingleton<Neo4j.Commands.Currency.CreateCommand>();
             services.AddSingleton<Neo4j.Commands.PaymentMethod.CreateCommand>();
             services.AddSingleton<Neo4j.Commands.Store.CreateCommand>();

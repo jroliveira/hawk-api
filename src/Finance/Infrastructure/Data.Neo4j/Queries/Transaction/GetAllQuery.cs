@@ -26,7 +26,10 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
 
         public virtual Paged<Transaction> GetResult(string email, Filter filter)
         {
+            var where = this.Where.Apply(filter, "transaction");
             var query = this.File.ReadAllText(@"Transaction.GetAll.cql");
+            query = query.Replace("#where#", where);
+
             var parameters = new
             {
                 email,
@@ -37,7 +40,6 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Transaction
             var data = this.Database.Execute(this.mapping.MapFrom, query, parameters);
             var entities = data
                 .OrderBy(item => item.Payment.Date)
-                .ThenBy(item => item.Id)
                 .ToList();
 
             return new Paged<Transaction>(entities, parameters.skip, parameters.limit);

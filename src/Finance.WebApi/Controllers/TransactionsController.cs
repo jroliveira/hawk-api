@@ -16,6 +16,7 @@ namespace Finance.WebApi.Controllers
     [Route("")]
     public class TransactionsController : Controller
     {
+        private readonly PartialUpdater partialUpdater;
         private readonly GetAllQuery getAll;
         private readonly GetByIdQuery getById;
         private readonly CreateCommand create;
@@ -24,6 +25,7 @@ namespace Finance.WebApi.Controllers
         private readonly IMapper mapper;
 
         public TransactionsController(
+            PartialUpdater partialUpdater,
             GetAllQuery getAll,
             GetByIdQuery getById,
             CreateCommand create,
@@ -31,6 +33,7 @@ namespace Finance.WebApi.Controllers
             TransactionValidator validator,
             IMapper mapper)
         {
+            this.partialUpdater = partialUpdater;
             this.getAll = getAll;
             this.getById = getById;
             this.create = create;
@@ -39,8 +42,8 @@ namespace Finance.WebApi.Controllers
             this.mapper = mapper;
         }
 
-        [HttpGet("transactions/{id:int}")]
-        public IActionResult GetById([FromRoute] int id)
+        [HttpGet("transactions/{id}")]
+        public IActionResult GetById([FromRoute] string id)
         {
             var entity = this.getById.GetResult(id, "junolive@gmail.com");
             if (entity == null)
@@ -78,8 +81,25 @@ namespace Finance.WebApi.Controllers
             return this.StatusCode(201, response);
         }
 
-        [HttpDelete("transactions/{id:int}")]
-        public IActionResult Exclude([FromRoute] int id)
+        [HttpPut("transactions/{id}")]
+        public IActionResult Update(
+            [FromRoute] string id,
+            [FromBody] dynamic request)
+        {
+            var entity = this.getById.GetResult(id, "junolive@gmail.com");
+            if (entity == null)
+            {
+                throw new NotFoundException($"Resource 'transactions' with id {id} could not be found");
+            }
+
+            this.partialUpdater.Apply(request, entity);
+            this.create.Execute(entity);
+
+            return this.NoContent();
+        }
+
+        [HttpDelete("transactions/{id}")]
+        public IActionResult Exclude([FromRoute] string id)
         {
             var entity = this.getById.GetResult(id, "junolive@gmail.com");
             if (entity == null)

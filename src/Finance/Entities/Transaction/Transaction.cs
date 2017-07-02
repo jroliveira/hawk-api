@@ -1,16 +1,17 @@
 ﻿namespace Finance.Entities.Transaction
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
     using Finance.Entities.Transaction.Details;
     using Finance.Entities.Transaction.Installment;
 
-    public abstract class Transaction : Entity<int>
+    public abstract class Transaction : Entity<Guid>
     {
         private readonly ICollection<Tag> tags;
 
-        protected Transaction(int id, Payment.Payment payment, Account account)
+        protected Transaction(Guid id, Payment.Payment payment, Account account)
         {
             this.Id = id;
             this.Payment = payment;
@@ -28,14 +29,15 @@
 
         public IEnumerable<Tag> Tags => this.tags;
 
-        public virtual void AddTags(IEnumerable<Tag> tags)
+        public virtual void AddTags(IEnumerable<Tag> newTags)
         {
-            if (tags == null || !tags.Any())
+            var tagsList = newTags as IList<Tag> ?? newTags.ToList();
+            if (newTags == null || !tagsList.Any())
             {
                 return;
             }
 
-            tags
+            tagsList
                 .ToList()
                 .ForEach(this.AddTag);
         }
@@ -55,7 +57,7 @@
             this.Parcel = parcel;
         }
 
-        public virtual void SetId(int id)
+        public virtual void SetId(Guid id)
         {
             this.Id = id;
         }

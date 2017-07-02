@@ -21,14 +21,14 @@ namespace Finance.Infrastructure.Data.Neo4j
         {
         }
 
-        public virtual TResult Execute<TResult>(Func<ISession, TResult> commandAsync)
+        public virtual TResult Execute<TResult>(Func<ISession, TResult> command)
         {
             var auth = AuthTokens.Basic(this.graphDbConfig.Username, this.graphDbConfig.Password);
 
             using (var driver = GraphDatabase.Driver(this.graphDbConfig.Uri, auth))
             using (var session = driver.Session())
             {
-                return commandAsync(session);
+                return command(session);
             }
         }
 

@@ -19,7 +19,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
             var parameters = new
             {
                 email = entity.Account.Email,
-                id = entity.Id
+                id = entity.Id.ToString()
             };
 
             this.database.Execute(session => session.Run(query, parameters));

@@ -15,7 +15,7 @@
         public Account MapFrom(Record record)
         {
             return new Account(
-                record.Get<int>("id"),
+                record.GetGuid(),
                 record.Get("email"),
                 record.Get("password"));
         }

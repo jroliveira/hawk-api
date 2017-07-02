@@ -6,12 +6,13 @@
     using Finance.Infrastructure.Filter;
 
     using Http.Query.Filter;
-    using Http.Query.Filter.Filters.Condition;
     using Http.Query.Filter.Filters.Condition.Operators;
+
+    using static System.Int32;
 
     public class Where : IWhere<string, Filter>
     {
-        public string Apply(Filter filter)
+        public string Apply(Filter filter, string node)
         {
             if (!filter.HasCondition)
             {
@@ -20,10 +21,20 @@
 
             var condition = filter.Where.FirstOrDefault();
 
-            return $"{condition.Name} {GetOperator(condition)} {condition.Value}";
+            return $"{node}.{condition.Field} {GetOperator(condition.Comparison)} {GetValue(condition.Value)}";
         }
 
-        private static string GetOperator(Field field)
+        private static object GetValue(object value)
+        {
+            switch (value)
+            {
+                case string s when TryParse(s, out int i): return i;
+                case string s: return $"\"{s}\"";
+                default: return value;
+            }
+        }
+
+        private static string GetOperator(Comparison comparison)
         {
             var operations = new Dictionary<Comparison, string>
             {
@@ -32,7 +43,7 @@
                 { Comparison.Equal, "=" }
             };
 
-            return operations[field.Comparison];
+            return operations[comparison];
         }
     }
 }

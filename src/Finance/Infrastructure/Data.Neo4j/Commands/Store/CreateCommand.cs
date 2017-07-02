@@ -23,7 +23,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Store
             var query = this.file.ReadAllText(@"Store.Create.cql");
             var parameters = new
             {
-                transaction = entity.Id,
+                transaction = entity.Id.ToString(),
                 store = entity.Store.Name
             };
 
