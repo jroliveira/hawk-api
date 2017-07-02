@@ -2,15 +2,13 @@
   (account:Account { 
     email: {email}
   })
-
-ON CREATE 
-  SET 
-    account.password = {password},
-    account.creationDate = {creationDate}
+SET 
+  account.password = {password},
+  account.creationDate = {creationDate}
 
 RETURN 
 { 
-  id: id(account),
+  id: account.id,
   email: account.email,
   password: account.password,
   creationDate: account.creationDate

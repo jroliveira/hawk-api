@@ -19,7 +19,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Reports.GetAmountGroupBy.Tag
 
         protected override string GetQueryString()
         {
-            return this.File.ReadAllText(@"GetAmountGroupBy\Tag\Query.cql");
+            return this.File.ReadAllText(@"GetAmountGroupBy.Tag.Query.cql");
         }
     }
 }

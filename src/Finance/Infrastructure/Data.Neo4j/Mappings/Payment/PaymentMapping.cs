@@ -1,7 +1,6 @@
 ﻿namespace Finance.Infrastructure.Data.Neo4j.Mappings.Payment
 {
     using System;
-    using System.Globalization;
 
     using Finance.Entities.Transaction.Payment;
 
@@ -20,11 +19,13 @@
         {
             var currency = this.currencyMapping.MapFrom(record.GetRecord("currency"));
             var method = this.methodMapping.MapFrom(record.GetRecord("method"));
-            var date = record.Get("date");
+            var year = record.Get<int>("year");
+            var month = record.Get<int>("month");
+            var day = record.Get<int>("day");
 
             return new Payment(
                 record.Get<double>("value"),
-                DateTime.ParseExact(date, "MM/dd/yyyy hh:mm:ss", CultureInfo.InvariantCulture),
+                new DateTime(year, month, day),
                 currency)
             {
                 Method = method

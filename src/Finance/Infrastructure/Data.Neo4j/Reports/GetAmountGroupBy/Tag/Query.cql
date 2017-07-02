@@ -6,7 +6,7 @@ WITH
 { 
   name: tag.name,
   transactions: {
-	period: substring(transaction.date, 6, 4)+"/"+left(transaction.date, 2),
+	period: transaction.year + "/" + transaction.month,
   	amount: sum(transaction.value),
   	quantity: count(transaction),
 	type: labels(transaction)

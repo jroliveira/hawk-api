@@ -23,7 +23,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Currency
             var query = this.file.ReadAllText(@"Currency.Create.cql");
             var parameters = new
             {
-                transaction = entity.Id,
+                transaction = entity.Id.ToString(),
                 currency = entity.Payment.Currency.Name
             };
 

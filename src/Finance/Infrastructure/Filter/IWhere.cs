@@ -5,6 +5,6 @@
     public interface IWhere<out TReturn, in TFilter>
         where TFilter : Filter
     {
-        TReturn Apply(TFilter filter);
+        TReturn Apply(TFilter filter, string node);
     }
 }

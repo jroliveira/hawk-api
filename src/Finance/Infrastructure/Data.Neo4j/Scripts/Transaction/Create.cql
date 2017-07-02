@@ -3,17 +3,21 @@
 WHERE
   account.email = {email}
 
-CREATE 
+MERGE
   (transaction:Transaction:#type# { 
-    value: {value},
-    date: {date},
-    email: {email},
-    parcels: {parcels},
-    parcel: {parcel}
+    id: {id}
   })
+SET
+  transaction.value = {value},
+  transaction.year = {year},
+  transaction.month = {month},
+  transaction.day = {day},
+  transaction.email = {email},
+  transaction.parcels = {parcels},
+  transaction.parcel = {parcel}
 
 CREATE UNIQUE
   (account)-[:HAS]->(transaction)
 
 RETURN 
-  id(transaction) as id;
+  transaction.id as id;
