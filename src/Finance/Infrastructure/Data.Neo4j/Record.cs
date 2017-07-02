@@ -1,5 +1,6 @@
 namespace Finance.Infrastructure.Data.Neo4j
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -63,6 +64,13 @@ namespace Finance.Infrastructure.Data.Neo4j
         public bool Any()
         {
             return this.data != null;
+        }
+
+        public Guid GetGuid()
+        {
+            var id = this.Get("id");
+
+            return new Guid(id);
         }
     }
 }

@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Infrastructure\Data.Neo4j\Reports\GetAmountGroupBy\Store\Query.cql" />
+    <None Remove="Infrastructure\Data.Neo4j\Reports\GetAmountGroupBy\Tag\Query.cql" />
     <None Remove="Infrastructure\Data.Neo4j\Scripts\Account\Create.cql" />
     <None Remove="Infrastructure\Data.Neo4j\Scripts\Account\GetByEmail.cql" />
     <None Remove="Infrastructure\Data.Neo4j\Scripts\Currency\Create.cql" />
@@ -23,6 +25,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Reports\GetAmountGroupBy\Store\Query.cql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Reports\GetAmountGroupBy\Tag\Query.cql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Account\Create.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -71,13 +79,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="6.0.2" />
-    <PackageReference Include="DeepCloner" Version="0.10.0" />
-    <PackageReference Include="Http.Query.Filter" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="1.1.1" />
-    <PackageReference Include="Neo4j.Driver" Version="1.1.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
-    <PackageReference Include="StructureMap" Version="4.4.4" />
+    <PackageReference Include="AutoMapper" Version="6.1.1" />
+    <PackageReference Include="Http.Query.Filter" Version="3.0.23" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="1.1.2" />
+    <PackageReference Include="Neo4j.Driver" Version="1.4.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 ﻿MATCH 
   (account:Account)-[:HAS]->(transaction:Transaction)-[:PAID_IN]->(currency:Currency)
 WHERE
-  id(transaction) = {id}
+  transaction.id = {id}
   AND account.email = {email}
 WITH
   account,
@@ -37,10 +37,10 @@ WITH
 
 RETURN 
 { 
-  id: id(transaction),
+  id: transaction.id,
   type: labels(transaction),
   account: {
-    id: id(account),
+    id: account.id,
 	email: account.email,
 	password: account.password
   },
@@ -53,7 +53,9 @@ RETURN
   } END,
   payment: {
     value: transaction.value,
-    date: transaction.date,
+    year: transaction.year,
+    month: transaction.month,
+    day: transaction.day,
 	currency: {
 	  name: currency.name
 	},

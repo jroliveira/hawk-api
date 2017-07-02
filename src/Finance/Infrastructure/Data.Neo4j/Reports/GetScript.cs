@@ -4,7 +4,7 @@
     {
         public override string ReadAllText(string path)
         {
-            path = $@"..\Finance\Infrastructure\Data.Neo4j\Reports\{path}";
+            path = $@"Finance.Infrastructure.Data.Neo4j.Reports.{path}";
 
             return base.ReadAllText(path);
         }

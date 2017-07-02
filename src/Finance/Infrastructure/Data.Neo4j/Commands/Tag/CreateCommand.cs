@@ -20,7 +20,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Tag
             var query = this.file.ReadAllText(@"Tag.Create.cql");
             var parameters = new
             {
-                transaction = entity.Id,
+                transaction = entity.Id.ToString(),
                 tags = entity.Tags.Select(tag => tag.Name).ToArray()
             };
 

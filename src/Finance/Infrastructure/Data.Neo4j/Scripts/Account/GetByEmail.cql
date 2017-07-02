@@ -6,7 +6,7 @@ WHERE
 
 RETURN 
 { 
-  id: id(account),
+  id: account.id,
   email: account.email,
   password: account.password,
   creationDate: account.creationDate

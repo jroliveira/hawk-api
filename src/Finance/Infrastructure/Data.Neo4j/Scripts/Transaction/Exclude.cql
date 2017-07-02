@@ -1,10 +1,7 @@
 ﻿MATCH 
-  (account:Account)-[has:HAS]->(transaction:Transaction)-[relation]-()
+  (account:Account)-[:HAS]->(transaction:Transaction)
 WHERE
   account.email = {email}
-  AND id(transaction) = {id}
+  AND transaction.id = {id}
 
-DELETE
-  relation,
-  transaction,
-  has
+DETACH DELETE transaction

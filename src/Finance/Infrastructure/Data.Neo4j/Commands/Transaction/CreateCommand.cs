@@ -1,5 +1,6 @@
 namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
 {
+    using System;
     using System.Globalization;
     using System.Linq;
 
@@ -39,9 +40,12 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
             query = query.Replace("#type#", entity.GetType().Name);
             var parameters = new
             {
+                id = entity.Id.ToString(),
                 email = entity.Account.Email,
                 value = entity.Payment.Value,
-                date = entity.Payment.Date.Date.ToString(CultureInfo.InvariantCulture),
+                year = entity.Payment.Date.Date.Year,
+                month = entity.Payment.Date.Date.Month,
+                day = entity.Payment.Date.Date.Day,
                 parcel = entity.Parcel?.Number,
                 parcels = entity.Parcel?.Total
             };
@@ -52,7 +56,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
                 {
                     var id = trans
                         .Run(query, parameters)
-                        .Select(record => record["id"].As<int>())
+                        .Select(record => new Guid(record["id"].As<string>()))
                         .FirstOrDefault();
 
                     entity.SetId(id);

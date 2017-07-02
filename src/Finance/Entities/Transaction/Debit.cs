@@ -10,11 +10,11 @@
         }
 
         public Debit(Payment.Payment payment, Account account)
-            : this(default(int), payment, account)
+            : this(Guid.NewGuid(), payment, account)
         {
         }
 
-        public Debit(int id, Payment.Payment payment, Account account)
+        public Debit(Guid id, Payment.Payment payment, Account account)
             : base(id, payment, account)
         {
         }

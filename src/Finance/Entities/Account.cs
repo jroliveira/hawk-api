@@ -1,22 +1,24 @@
 ﻿namespace Finance.Entities
 {
+    using System;
+
     using Finance.Infrastructure.Security;
 
-    public class Account : Entity<int>
+    public class Account : Entity<Guid>
     {
         private readonly IHashAlgorithm hashAlgorithm;
 
         public Account(string email, string password)
-            : this(default(int), email, password)
+            : this(Guid.Empty, email, password)
         {
         }
 
-        public Account(int id, string email, string password)
+        public Account(Guid id, string email, string password)
             : this(new Md5HashAlgorithm(), id, email, password)
         {
         }
 
-        internal Account(IHashAlgorithm hashAlgorithm, int id, string email, string password)
+        internal Account(IHashAlgorithm hashAlgorithm, Guid id, string email, string password)
         {
             this.hashAlgorithm = hashAlgorithm;
             this.Id = id;
