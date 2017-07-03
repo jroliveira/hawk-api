@@ -43,9 +43,9 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
                 id = entity.Id.ToString(),
                 email = entity.Account.Email,
                 value = entity.Payment.Value,
-                year = entity.Payment.Date.Date.Year,
-                month = entity.Payment.Date.Date.Month,
-                day = entity.Payment.Date.Date.Day,
+                year = entity.Payment.Date.Year,
+                month = entity.Payment.Date.Month,
+                day = entity.Payment.Date.Day,
                 parcel = entity.Parcel?.Number,
                 parcels = entity.Parcel?.Total
             };

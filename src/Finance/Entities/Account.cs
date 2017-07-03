@@ -9,7 +9,7 @@
         private readonly IHashAlgorithm hashAlgorithm;
 
         public Account(string email, string password)
-            : this(Guid.Empty, email, password)
+            : this(Guid.NewGuid(), email, password)
         {
         }
 
