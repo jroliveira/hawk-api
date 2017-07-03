@@ -16,12 +16,17 @@
         {
             if (!filter.HasCondition)
             {
-                return "1 = 1";
+                return "1=1";
             }
 
-            var condition = filter.Where.FirstOrDefault();
+            var result = new List<string> { "1=1" };
 
-            return $"{node}.{condition.Field} {GetOperator(condition.Comparison)} {GetValue(condition.Value)}";
+            result.AddRange(filter
+                .Where
+                .Select(condition => $"{node}.{condition.Field} {GetOperator(condition.Comparison)} {GetValue(condition.Value)}")
+                .ToList());
+
+            return string.Join(" AND ", result);
         }
 
         private static object GetValue(object value)
