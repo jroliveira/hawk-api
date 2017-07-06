@@ -92,7 +92,9 @@ namespace Finance.WebApi.Controllers
                 throw new NotFoundException($"Resource 'transactions' with id {id} could not be found");
             }
 
-            this.partialUpdater.Apply(request, entity);
+            var model = this.mapper.Map<Model.Get.Transaction>(entity);
+            this.partialUpdater.Apply(request, model);
+            entity = this.mapper.Map<Entities.Transaction.Transaction>(model);
             this.create.Execute(entity);
 
             return this.NoContent();

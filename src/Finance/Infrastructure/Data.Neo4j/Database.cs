@@ -8,13 +8,24 @@ namespace Finance.Infrastructure.Data.Neo4j
 
     using global::Neo4j.Driver.V1;
 
-    public class Database
+    public class Database : IDisposable
     {
         private readonly Config graphDbConfig;
+        private readonly IDriver driver;
 
         public Database(IOptions<Config> config)
         {
             this.graphDbConfig = config.Value;
+            var auth = AuthTokens.Basic(this.graphDbConfig.Username, this.graphDbConfig.Password);
+
+            try
+            {
+                this.driver = GraphDatabase.Driver(this.graphDbConfig.Uri, auth);
+            }
+            catch (Exception exception)
+            {
+                throw new Exception($"Unable to connect to database {this.graphDbConfig.Uri}", exception);
+            }
         }
 
         protected Database()
@@ -23,12 +34,16 @@ namespace Finance.Infrastructure.Data.Neo4j
 
         public virtual TResult Execute<TResult>(Func<ISession, TResult> command)
         {
-            var auth = AuthTokens.Basic(this.graphDbConfig.Username, this.graphDbConfig.Password);
-
-            using (var driver = GraphDatabase.Driver(this.graphDbConfig.Uri, auth))
-            using (var session = driver.Session())
+            using (var session = this.driver.Session())
             {
-                return command(session);
+                try
+                {
+                    return command(session);
+                }
+                catch (Exception exception)
+                {
+                    throw new Exception("Could not run command in database", exception);
+                }
             }
         }
 
@@ -38,6 +53,11 @@ namespace Finance.Infrastructure.Data.Neo4j
                 .Run(query, parameters)
                 .Select(mapping)
                 .ToList());
+        }
+
+        public void Dispose()
+        {
+            this.driver.Dispose();
         }
     }
 }
