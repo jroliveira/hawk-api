@@ -7,6 +7,5 @@ RUN ["dotnet", "restore"]
 RUN ["dotnet", "build"]
 
 EXPOSE 5000/tcp
-ENV ASPNETCORE_URLS http://*:5000
 
-ENTRYPOINT ["dotnet", "run", "--project", "src/Finance.WebApi/Finance.WebApi.csproj"]
+CMD ["dotnet", "run", "--project", "src/Finance.WebApi/Finance.WebApi.csproj"]

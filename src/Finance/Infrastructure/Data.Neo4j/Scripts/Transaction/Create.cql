@@ -4,10 +4,13 @@ WHERE
   account.email = {email}
 
 MERGE
-  (transaction:Transaction:#type# { 
+  (transaction:Transaction { 
     id: {id}
   })
+REMOVE 
+  transaction :Credit:Debit
 SET
+  transaction :#type#,
   transaction.value = {value},
   transaction.year = {year},
   transaction.month = {month},

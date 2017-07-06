@@ -19,6 +19,9 @@
             this.CreateMap<Model.Post.Transaction, Transaction>()
                 .ConstructUsing(ConstructWith);
 
+            this.CreateMap<Model.Get.Transaction, Transaction>()
+                .ConstructUsing(ConstructWith);
+
             this.CreateMap<Transaction, Model.Get.Transaction>()
                 .ForMember(destination => destination.Type, origin => origin.MapFrom(source => source.GetType().Name))
                 .ForMember(destination => destination.Store, origin => origin.MapFrom(source => source.Store.Name))
@@ -46,6 +49,42 @@
                 throw new NullReferenceException("A transação esta nula.");
             }
 
+            model.Tags.ToList().ForEach(tag => transaction.AddTag(tag));
+            transaction.Store = model.Store;
+
+            if (model.Parcel == null)
+            {
+                return transaction;
+            }
+
+            var parcel = new Parcel(model.Parcel.Total, model.Parcel.Number);
+            transaction.SplittedIn(parcel);
+
+            return transaction;
+        }
+
+        private static Transaction ConstructWith(Model.Get.Transaction model)
+        {
+            var account = new Account("junolive@gmail.com", null);
+            var payment = new Payment(model.Payment.Value, model.Payment.Date, model.Payment.Currency)
+            {
+                Method = model.Payment.Method
+            };
+
+            var type = Type.GetType($"Finance.Entities.Transaction.{model.Type}, Finance");
+            if (type == null)
+            {
+                throw new NullReferenceException("O tipo da transação esta nula.");
+            }
+
+            var args = new object[] { payment, account };
+            var transaction = Activator.CreateInstance(type, args) as Transaction;
+            if (transaction == null)
+            {
+                throw new NullReferenceException("A transação esta nula.");
+            }
+
+            transaction.SetId(new Guid(model.Id));
             model.Tags.ToList().ForEach(tag => transaction.AddTag(tag));
             transaction.Store = model.Store;
 

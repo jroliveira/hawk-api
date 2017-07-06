@@ -40,7 +40,7 @@ namespace Finance.WebApi.Lib.Middlewares
             {
                 var model = new Error
                 {
-                    Message = exception.Message
+                    Message = $"Exception: {exception.Message}. Inner exception: {exception.InnerException?.Message}"
                 };
 
                 this.statusCode.TryGetValue(exception.GetType().Name, out int code);
