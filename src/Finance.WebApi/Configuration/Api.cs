@@ -30,11 +30,8 @@
 
             // Config
             services
-                .AddMvcCore(config =>
-                {
-                    // var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-                    // config.Filters.Add(new AuthorizeFilter(policy));
-                })
+                .AddMvcCore()
+                .AddAuthorization()
                 .AddApiExplorer()
                 .AddJsonFormatters()
                 .AddJsonOptions(opt =>

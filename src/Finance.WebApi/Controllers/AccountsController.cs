@@ -13,6 +13,7 @@ namespace Finance.WebApi.Controllers
 
     using Model = Finance.WebApi.Models.Account;
 
+    [Authorize]
     [Route("accounts")]
     public class AccountsController : Controller
     {
