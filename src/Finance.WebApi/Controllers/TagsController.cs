@@ -1,13 +1,17 @@
 namespace Finance.WebApi.Controllers
 {
+    using System;
+
     using AutoMapper;
 
     using Finance.Infrastructure;
     using Finance.Infrastructure.Data.Neo4j.Queries.Tag;
     using Finance.WebApi.Models.Tag.Get;
 
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    [Authorize]
     public class TagsController : Controller
     {
         private readonly GetAllQuery getAll;
@@ -40,6 +44,12 @@ namespace Finance.WebApi.Controllers
             var model = this.mapper.Map<Paged<Tag>>(entities);
 
             return this.Ok(model);
+        }
+
+        [HttpPut("tags/{tag}")]
+        public IActionResult Update(string tag)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,56 +1,17 @@
 namespace Finance.WebApi.Configuration
 {
-    using System;
-    using System.Text;
-
     using Microsoft.AspNetCore.Builder;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.IdentityModel.Tokens;
 
     internal static class Authentication
     {
-        private const string SecretKey = "needtogetthisfromenvironment";
-        private static readonly SymmetricSecurityKey SigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
-
-        internal static IServiceCollection ConfigureAuthentication(this IServiceCollection services, IConfigurationRoot configuration)
+        internal static IApplicationBuilder UseAuthentication(this IApplicationBuilder app)
         {
-            var jwtAppSettingOptions = configuration.GetSection(nameof(JwtIssuerOptions));
-            services.Configure<JwtIssuerOptions>(options =>
+            app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
             {
-                options.Issuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)];
-                options.Audience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)];
-                options.SigningCredentials = new SigningCredentials(SigningKey, SecurityAlgorithms.HmacSha256);
-            });
+                Authority = "http://localhost:35653",
+                RequireHttpsMetadata = false,
 
-            return services;
-        }
-
-        internal static IApplicationBuilder UseAuthentication(this IApplicationBuilder app, IConfigurationRoot configuration)
-        {
-            var jwtAppSettingOptions = configuration.GetSection(nameof(JwtIssuerOptions));
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)],
-
-                ValidateAudience = true,
-                ValidAudience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)],
-
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = SigningKey,
-
-                RequireExpirationTime = true,
-                ValidateLifetime = true,
-
-                ClockSkew = TimeSpan.Zero
-            };
-
-            app.UseJwtBearerAuthentication(new JwtBearerOptions
-            {
-                AutomaticAuthenticate = true,
-                AutomaticChallenge = true,
-                TokenValidationParameters = tokenValidationParameters
+                ApiName = "api1"
             });
 
             return app;

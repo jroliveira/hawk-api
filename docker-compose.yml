@@ -8,6 +8,15 @@ services:
       - "7687:7687"
     volumes:
       - /data
+    environment:
+      NEO4J_AUTH: neo4j/123456
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
   api:
     container_name: finance-api
@@ -18,3 +27,4 @@ services:
       - api.env
     depends_on:
       - graphdb
+      - rabbitmq
