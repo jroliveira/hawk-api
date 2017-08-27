@@ -31,8 +31,7 @@
                 .AddAutoMapper()
                 .ConfigureDatabase(this.Configuration)
                 .ConfigureIoC(this.Configuration)
-                .ConfigureApi(this.Configuration)
-                .ConfigureAuthentication(this.Configuration);
+                .ConfigureApi(this.Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -43,7 +42,7 @@
 
             app
                 .UseMiddleware<HandlerErrorMiddleware>()
-                .UseAuthentication(this.Configuration)
+                .UseAuthentication()
                 .UseCors("CorsPolicy")
                 .UseMvc();
         }

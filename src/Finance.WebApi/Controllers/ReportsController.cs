@@ -1,9 +1,12 @@
 namespace Finance.WebApi.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     using Report = Finance.Infrastructure.Data.Neo4j.Reports.GetAmountGroupBy;
 
+    [Authorize]
+    [Route("reports")]
     public class ReportsController : Controller
     {
         private readonly Report.Store.GetQuery getByStore;
@@ -17,7 +20,7 @@ namespace Finance.WebApi.Controllers
             this.getByTag = getByTag;
         }
 
-        [HttpGet("reports/amount-group-by-store")]
+        [HttpGet("amount-group-by-store")]
         public IActionResult GetByStore()
         {
             var model = this.getByStore.GetResult("junolive@gmail.com", this.Request.QueryString.Value);
@@ -25,7 +28,7 @@ namespace Finance.WebApi.Controllers
             return this.Ok(model);
         }
 
-        [HttpGet("reports/amount-group-by-tag")]
+        [HttpGet("amount-group-by-tag")]
         public IActionResult Get()
         {
             var model = this.getByTag.GetResult("junolive@gmail.com", this.Request.QueryString.Value);

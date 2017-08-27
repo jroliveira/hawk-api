@@ -9,10 +9,12 @@ namespace Finance.WebApi.Controllers
     using Finance.WebApi.Lib.Exceptions;
     using Finance.WebApi.Lib.Validators;
 
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     using Model = Finance.WebApi.Models.Transaction;
 
+    [Authorize]
     [Route("")]
     public class TransactionsController : Controller
     {

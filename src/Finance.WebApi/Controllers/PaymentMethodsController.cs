@@ -6,8 +6,10 @@ namespace Finance.WebApi.Controllers
     using Finance.Infrastructure;
     using Finance.Infrastructure.Data.Neo4j.Queries.PaymentMethod;
 
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    [Authorize]
     public class PaymentMethodsController : Controller
     {
         private readonly GetAllQuery getAll;
