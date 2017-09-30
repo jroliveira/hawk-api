@@ -4,16 +4,8 @@ namespace Finance.WebApi.Configuration
 
     internal static class Authentication
     {
-        internal static IApplicationBuilder UseAuthentication(this IApplicationBuilder app)
+        internal static IApplicationBuilder UseIdentityServer(this IApplicationBuilder app)
         {
-            app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
-            {
-                Authority = "http://localhost:35653",
-                RequireHttpsMetadata = false,
-
-                ApiName = "api1"
-            });
-
             return app;
         }
     }
