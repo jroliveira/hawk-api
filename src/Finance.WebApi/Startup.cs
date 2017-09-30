@@ -42,7 +42,9 @@
 
             app
                 .UseMiddleware<HandlerErrorMiddleware>()
-                .UseAuthentication()
+                .UseGraphQl()
+                .UseGraphiQl()
+                .UseIdentityServer()
                 .UseCors("CorsPolicy")
                 .UseMvc();
         }

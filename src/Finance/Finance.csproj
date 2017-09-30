@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.6</TargetFramework>
+    <TargetFramework>netstandard2</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -81,8 +81,8 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.1.1" />
     <PackageReference Include="Http.Query.Filter" Version="3.0.23" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="1.1.2" />
-    <PackageReference Include="Neo4j.Driver" Version="1.4.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0" />
+    <PackageReference Include="Neo4j.Driver" Version="1.4.1" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
 
