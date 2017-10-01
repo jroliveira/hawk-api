@@ -1,11 +1,11 @@
 namespace Finance.WebApi.Controllers
 {
-    using Microsoft.AspNetCore.Authorization;
+    using System.Threading.Tasks;
+
     using Microsoft.AspNetCore.Mvc;
 
     using Report = Finance.Infrastructure.Data.Neo4j.Reports.GetAmountGroupBy;
 
-    [Authorize]
     [Route("reports")]
     public class ReportsController : Controller
     {
@@ -21,17 +21,17 @@ namespace Finance.WebApi.Controllers
         }
 
         [HttpGet("amount-group-by-store")]
-        public IActionResult GetByStore()
+        public async Task<IActionResult> GetByStoreAsync()
         {
-            var model = this.getByStore.GetResult("junolive@gmail.com", this.Request.QueryString.Value);
+            var model = await this.getByStore.GetResultAsync("junolive@gmail.com", this.Request.QueryString.Value).ConfigureAwait(false);
 
             return this.Ok(model);
         }
 
         [HttpGet("amount-group-by-tag")]
-        public IActionResult Get()
+        public async Task<IActionResult> GetAsync()
         {
-            var model = this.getByTag.GetResult("junolive@gmail.com", this.Request.QueryString.Value);
+            var model = await this.getByTag.GetResultAsync("junolive@gmail.com", this.Request.QueryString.Value).ConfigureAwait(false);
 
             return this.Ok(model);
         }

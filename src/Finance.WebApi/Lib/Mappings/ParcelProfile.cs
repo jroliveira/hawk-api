@@ -12,6 +12,8 @@
                 .ConstructUsing(model => new Parcel(model.Total, model.Number));
 
             this.CreateMap<Parcel, Models.Transaction.Parcel>();
+
+            this.CreateMap<Parcel, GraphQl.Sources.Parcel>();
         }
     }
 }

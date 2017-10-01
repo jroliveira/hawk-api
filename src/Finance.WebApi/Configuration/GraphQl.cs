@@ -1,16 +1,15 @@
 namespace Finance.WebApi.Configuration
 {
-    using Finance.WebApi.GraphQl.Schemas;
     using Finance.WebApi.Lib.Middlewares.GraphQl;
+
+    using GraphQL.Types;
 
     using Microsoft.AspNetCore.Builder;
 
     internal static class GraphQl
     {
-        public static IApplicationBuilder UseGraphQl(this IApplicationBuilder builder)
+        public static IApplicationBuilder UseGraphQl(this IApplicationBuilder builder, Schema schema)
         {
-            var schema = new StarWarsSchema();
-
             return builder.UseMiddleware<GraphQlMiddleware>(schema);
         }
 

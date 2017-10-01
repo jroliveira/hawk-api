@@ -1,5 +1,7 @@
 namespace Finance.Infrastructure.Data.Neo4j.Commands.PaymentMethod
 {
+    using System.Threading.Tasks;
+
     using Finance.Entities.Transaction;
 
     using global::Neo4j.Driver.V1;
@@ -13,8 +15,13 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.PaymentMethod
             this.file = file;
         }
 
-        public virtual void Execute(Transaction entity, IStatementRunner trans)
+        public virtual async Task ExecuteAsync(Transaction entity, IStatementRunner trans)
         {
+            if (entity?.Payment?.Method == null)
+            {
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(entity.Payment.Method?.Name))
             {
                 return;
@@ -27,7 +34,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.PaymentMethod
                 method = entity.Payment.Method.Name
             };
 
-            trans.Run(query, parameters);
+            await trans.RunAsync(query, parameters).ConfigureAwait(false);
         }
     }
 }

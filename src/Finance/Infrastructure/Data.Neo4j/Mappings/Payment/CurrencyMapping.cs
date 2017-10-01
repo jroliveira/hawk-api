@@ -11,8 +11,7 @@
                 return null;
             }
 
-            return new Currency(
-                record.Get("name"));
+            return new Currency(record.Get("name"));
         }
     }
 }

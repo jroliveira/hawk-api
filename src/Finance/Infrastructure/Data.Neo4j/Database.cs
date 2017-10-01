@@ -3,6 +3,7 @@ namespace Finance.Infrastructure.Data.Neo4j
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using Microsoft.Extensions.Options;
 
@@ -10,21 +11,20 @@ namespace Finance.Infrastructure.Data.Neo4j
 
     public class Database : IDisposable
     {
-        private readonly Config graphDbConfig;
         private readonly IDriver driver;
 
         public Database(IOptions<Config> config)
         {
-            this.graphDbConfig = config.Value;
-            var auth = AuthTokens.Basic(this.graphDbConfig.Username, this.graphDbConfig.Password);
+            var graphDbConfig = config.Value;
+            var auth = AuthTokens.Basic(graphDbConfig.Username, graphDbConfig.Password);
 
             try
             {
-                this.driver = GraphDatabase.Driver(this.graphDbConfig.Uri, auth);
+                this.driver = GraphDatabase.Driver(graphDbConfig.Uri, auth);
             }
             catch (Exception exception)
             {
-                throw new Exception($"Unable to connect to database {this.graphDbConfig.Uri}", exception);
+                throw new Exception($"Unable to connect to database {graphDbConfig.Uri}", exception);
             }
         }
 
@@ -32,13 +32,13 @@ namespace Finance.Infrastructure.Data.Neo4j
         {
         }
 
-        public virtual TResult Execute<TResult>(Func<ISession, TResult> command)
+        public virtual async Task<TResult> ExecuteAsync<TResult>(Func<ISession, Task<TResult>> commandAsync)
         {
             using (var session = this.driver.Session())
             {
                 try
                 {
-                    return command(session);
+                    return await commandAsync(session).ConfigureAwait(false);
                 }
                 catch (Exception exception)
                 {
@@ -47,12 +47,15 @@ namespace Finance.Infrastructure.Data.Neo4j
             }
         }
 
-        public virtual ICollection<TResult> Execute<TResult>(Func<IRecord, TResult> mapping, string query, object parameters)
+        public virtual async Task<ICollection<TResult>> ExecuteAsync<TResult>(Func<IRecord, TResult> mapping, string query, object parameters)
         {
-            return this.Execute(session => session
-                .Run(query, parameters)
-                .Select(mapping)
-                .ToList());
+            return await this.ExecuteAsync(async session =>
+            {
+                var cursor = await session.RunAsync(query, parameters).ConfigureAwait(false);
+                var data = await cursor.ToListAsync().ConfigureAwait(false);
+
+                return data.Select(mapping).ToList();
+            });
         }
 
         public void Dispose()
