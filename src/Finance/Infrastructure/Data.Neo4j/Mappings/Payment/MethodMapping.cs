@@ -7,9 +7,9 @@
 
     public class MethodMapping
     {
-        public Method MapFrom(IRecord record)
+        public Method MapFrom(IRecord data)
         {
-            return this.MapFrom(record.GetRecord("data"));
+            return this.MapFrom(data.GetRecord("data"));
         }
 
         public Method MapFrom(Record record)

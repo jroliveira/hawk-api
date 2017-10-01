@@ -7,9 +7,9 @@
 
     public class StoreMapping
     {
-        public Store MapFrom(IRecord record)
+        public Store MapFrom(IRecord data)
         {
-            return this.MapFrom(record.GetRecord("data"));
+            return this.MapFrom(data.GetRecord("data"));
         }
 
         public Store MapFrom(Record record)

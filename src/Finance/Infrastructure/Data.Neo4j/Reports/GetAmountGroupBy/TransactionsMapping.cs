@@ -1,11 +1,8 @@
 ﻿namespace Finance.Infrastructure.Data.Neo4j.Reports.GetAmountGroupBy
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    using Finance.Entities;
-    using Finance.Entities.Transaction;
     using Finance.Reports.GetAmountGroupBy;
 
     public class TransactionsMapping

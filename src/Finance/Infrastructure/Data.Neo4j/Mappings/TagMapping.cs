@@ -7,13 +7,9 @@
 
     public class TagMapping
     {
-        public Tag MapFrom(IRecord record)
+        public Tag MapFrom(IRecord data)
         {
-            return this.MapFrom(record.GetRecord("data"));
-        }
-
-        public Tag MapFrom(Record record)
-        {
+            var record = data.GetRecord("data");
             if (record == null || !record.Any())
             {
                 return null;

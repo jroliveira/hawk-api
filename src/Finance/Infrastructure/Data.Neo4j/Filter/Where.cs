@@ -33,7 +33,7 @@
         {
             switch (value)
             {
-                case string s when TryParse(s, out int i): return i;
+                case string s when TryParse(s, out var i): return i;
                 case string s: return $"\"{s}\"";
                 default: return value;
             }

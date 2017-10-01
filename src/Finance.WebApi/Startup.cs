@@ -2,7 +2,9 @@
 {
     using AutoMapper;
 
+    using Finance.Infrastructure.Data.Neo4j.Queries.Transaction;
     using Finance.WebApi.Configuration;
+    using Finance.WebApi.GraphQl.Schemas;
     using Finance.WebApi.Lib.Middlewares;
 
     using Microsoft.AspNetCore.Builder;
@@ -34,7 +36,11 @@
                 .ConfigureApi(this.Configuration);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(
+            IApplicationBuilder app,
+            IHostingEnvironment env,
+            ILoggerFactory loggerFactory,
+            TransactionSchema schema)
         {
             loggerFactory
                 .AddConsole(this.Configuration.GetSection("Logging"))
@@ -42,7 +48,7 @@
 
             app
                 .UseMiddleware<HandlerErrorMiddleware>()
-                .UseGraphQl()
+                .UseGraphQl(schema)
                 .UseGraphiQl()
                 .UseIdentityServer()
                 .UseCors("CorsPolicy")

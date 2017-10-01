@@ -1,5 +1,7 @@
 namespace Finance.WebApi.Controllers
 {
+    using System.Threading.Tasks;
+
     using AutoMapper;
 
     using Finance.Infrastructure.Data.Neo4j.Commands.Account;
@@ -8,12 +10,10 @@ namespace Finance.WebApi.Controllers
     using Finance.WebApi.Lib.Exceptions;
     using Finance.WebApi.Lib.Validators;
 
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     using Model = Finance.WebApi.Models.Account;
 
-    [Authorize]
     [Route("accounts")]
     public class AccountsController : Controller
     {
@@ -35,9 +35,9 @@ namespace Finance.WebApi.Controllers
         }
 
         [HttpGet("{email}")]
-        public IActionResult GetByEmail([FromRoute] string email)
+        public async Task<IActionResult> GetByEmailAsync([FromRoute] string email)
         {
-            var entity = this.getByEmail.GetResult(email);
+            var entity = await this.getByEmail.GetResultAsync(email).ConfigureAwait(false);
             if (entity == null)
             {
                 throw new NotFoundException($"Resource 'accounts' with email {email} could not be found");
@@ -49,17 +49,16 @@ namespace Finance.WebApi.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
-        public IActionResult Create([FromBody] Model.Post.Account request)
+        public async Task<IActionResult> CreateAsync([FromBody] Model.Post.Account request)
         {
-            var validateResult = this.validator.Validate(request);
+            var validateResult = await this.validator.ValidateAsync(request).ConfigureAwait(false);
             if (!validateResult.IsValid)
             {
                 throw new ValidationException(validateResult.Errors);
             }
 
             var entity = this.mapper.Map<Entities.Account>(request);
-            var inserted = this.create.Execute(entity);
+            var inserted = await this.create.ExecuteAsync(entity).ConfigureAwait(false);
             var response = this.mapper.Map<Model.Get.Account>(inserted);
 
             return this.StatusCode(201, response);

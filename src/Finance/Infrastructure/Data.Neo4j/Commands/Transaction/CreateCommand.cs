@@ -1,8 +1,8 @@
 namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
 {
     using System;
-    using System.Globalization;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using Finance.Entities.Transaction;
 
@@ -34,7 +34,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
             this.file = file;
         }
 
-        public virtual Transaction Execute(Transaction entity)
+        public virtual async Task<Transaction> ExecuteAsync(Transaction entity)
         {
             var query = this.file.ReadAllText(@"Transaction.Create.cql");
             query = query.Replace("#type#", entity.GetType().Name);
@@ -50,26 +50,25 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
                 parcels = entity.Parcel?.Total
             };
 
-            return this.database.Execute(session =>
+            return await this.database.ExecuteAsync(async session =>
             {
                 using (var trans = session.BeginTransaction())
                 {
-                    var id = trans
-                        .Run(query, parameters)
-                        .Select(record => new Guid(record["id"].As<string>()))
-                        .FirstOrDefault();
+                    var cursor = await trans.RunAsync(query, parameters).ConfigureAwait(false);
+                    var data = await cursor.ToListAsync().ConfigureAwait(false);
+                    var id = data.Select(record => new Guid(record["id"].As<string>())).FirstOrDefault();
 
                     entity.SetId(id);
 
-                    this.createCurrency.Execute(entity, trans);
-                    this.createPaymentMethod.Execute(entity, trans);
-                    this.createStore.Execute(entity, trans);
-                    this.createTag.Execute(entity, trans);
+                    await this.createCurrency.ExecuteAsync(entity, trans).ConfigureAwait(false);
+                    await this.createPaymentMethod.ExecuteAsync(entity, trans).ConfigureAwait(false);
+                    await this.createStore.ExecuteAsync(entity, trans).ConfigureAwait(false);
+                    await this.createTag.ExecuteAsync(entity, trans).ConfigureAwait(false);
 
                     trans.Success();
                     return entity;
                 }
-            });
+            }).ConfigureAwait(false);
         }
     }
 }

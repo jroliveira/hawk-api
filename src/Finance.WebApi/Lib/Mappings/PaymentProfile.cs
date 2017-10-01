@@ -17,6 +17,10 @@
             this.CreateMap<Payment, Models.Transaction.Payment>()
                 .ForMember(destination => destination.Method, origin => origin.MapFrom(source => source.Method.Name))
                 .ForMember(destination => destination.Currency, origin => origin.MapFrom(source => source.Currency.Name));
+
+            this.CreateMap<Payment, GraphQl.Sources.Payment>()
+                .ForMember(destination => destination.Method, origin => origin.MapFrom(source => source.Method.Name))
+                .ForMember(destination => destination.Currency, origin => origin.MapFrom(source => source.Currency.Name));
         }
     }
 }

@@ -1,15 +1,15 @@
 namespace Finance.WebApi.Controllers
 {
+    using System.Threading.Tasks;
+
     using AutoMapper;
 
     using Finance.Infrastructure;
     using Finance.Infrastructure.Data.Neo4j.Queries.Store;
     using Finance.WebApi.Models.Store.Get;
 
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    [Authorize]
     [Route("stores")]
     public class StoresController : Controller
     {
@@ -25,9 +25,9 @@ namespace Finance.WebApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> GetAsync()
         {
-            var entities = this.getAll.GetResult("junolive@gmail.com", this.Request.QueryString.Value);
+            var entities = await this.getAll.GetResultAsync("junolive@gmail.com", this.Request.QueryString.Value).ConfigureAwait(false);
             var model = this.mapper.Map<Paged<Store>>(entities);
 
             return this.Ok(model);
