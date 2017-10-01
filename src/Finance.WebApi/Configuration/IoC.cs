@@ -2,6 +2,8 @@
 {
     using Finance.Infrastructure;
     using Finance.Infrastructure.Filter;
+    using Finance.WebApi.GraphQl.Queries;
+    using Finance.WebApi.GraphQl.Schemas;
     using Finance.WebApi.Lib.Validators;
 
     using Http.Query.Filter;
@@ -26,7 +28,6 @@
             services.AddSingleton<Neo4j.Commands.Account.CreateCommand>();
             services.AddSingleton<Neo4j.Commands.Transaction.CreateCommand>();
             services.AddSingleton<Neo4j.Commands.Transaction.ExcludeCommand>();
-            services.AddSingleton<Neo4j.Commands.Adjust._2017._07._03.AdjustCommand>();
             services.AddSingleton<Neo4j.Commands.Currency.CreateCommand>();
             services.AddSingleton<Neo4j.Commands.PaymentMethod.CreateCommand>();
             services.AddSingleton<Neo4j.Commands.Store.CreateCommand>();
@@ -61,6 +62,12 @@
             // Validators
             services.AddSingleton<AccountValidator>();
             services.AddSingleton<TransactionValidator>();
+
+            // GraphQL
+            services.AddSingleton<TransactionQuery>();
+            services.AddSingleton<TransactionSchema>();
+            services.AddSingleton<Neo4j.GraphQl.GetQuery>();
+            services.AddSingleton<Neo4j.GraphQl.GetAllQuery>();
 
             return services;
         }

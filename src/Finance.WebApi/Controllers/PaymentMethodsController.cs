@@ -1,15 +1,15 @@
 namespace Finance.WebApi.Controllers
 {
+    using System.Threading.Tasks;
+
     using AutoMapper;
 
     using Finance.Entities.Transaction.Payment;
     using Finance.Infrastructure;
     using Finance.Infrastructure.Data.Neo4j.Queries.PaymentMethod;
 
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    [Authorize]
     public class PaymentMethodsController : Controller
     {
         private readonly GetAllQuery getAll;
@@ -27,18 +27,18 @@ namespace Finance.WebApi.Controllers
         }
 
         [HttpGet("payment-methods")]
-        public IActionResult Get()
+        public async Task<IActionResult> GetAsync()
         {
-            var entities = this.getAll.GetResult("junolive@gmail.com", this.Request.QueryString.Value);
+            var entities = await this.getAll.GetResultAsync("junolive@gmail.com", this.Request.QueryString.Value).ConfigureAwait(false);
             var model = this.mapper.Map<Paged<Method>>(entities);
 
             return this.Ok(model);
         }
 
         [HttpGet("stores/{store}/payment-methods")]
-        public IActionResult GetByStore(string store)
+        public async Task<IActionResult> GetByStoreSync(string store)
         {
-            var entities = this.getAllByStore.GetResult("junolive@gmail.com", store, this.Request.QueryString.Value);
+            var entities = await this.getAllByStore.GetResultAsync("junolive@gmail.com", store, this.Request.QueryString.Value).ConfigureAwait(false);
             var model = this.mapper.Map<Paged<Method>>(entities);
 
             return this.Ok(model);

@@ -7,9 +7,9 @@
 
     public class AccountMapping
     {
-        public Account MapFrom(IRecord record)
+        public Account MapFrom(IRecord data)
         {
-            return this.MapFrom(record.GetRecord("data"));
+            return this.MapFrom(data.GetRecord("data"));
         }
 
         public Account MapFrom(Record record)

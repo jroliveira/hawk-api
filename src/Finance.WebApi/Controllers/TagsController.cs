@@ -1,6 +1,6 @@
 namespace Finance.WebApi.Controllers
 {
-    using System;
+    using System.Threading.Tasks;
 
     using AutoMapper;
 
@@ -8,10 +8,8 @@ namespace Finance.WebApi.Controllers
     using Finance.Infrastructure.Data.Neo4j.Queries.Tag;
     using Finance.WebApi.Models.Tag.Get;
 
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    [Authorize]
     public class TagsController : Controller
     {
         private readonly GetAllQuery getAll;
@@ -29,27 +27,21 @@ namespace Finance.WebApi.Controllers
         }
 
         [HttpGet("tags")]
-        public IActionResult Get()
+        public async Task<IActionResult> GetAsync()
         {
-            var entities = this.getAll.GetResult("junolive@gmail.com", this.Request.QueryString.Value);
+            var entities = await this.getAll.GetResultAsync("junolive@gmail.com", this.Request.QueryString.Value).ConfigureAwait(false);
             var model = this.mapper.Map<Paged<Tag>>(entities);
 
             return this.Ok(model);
         }
 
         [HttpGet("stores/{store}/tags")]
-        public IActionResult GetByStore(string store)
+        public async Task<IActionResult> GetByStoreAsync(string store)
         {
-            var entities = this.getAllByStore.GetResult("junolive@gmail.com", store, this.Request.QueryString.Value);
+            var entities = await this.getAllByStore.GetResultAsync("junolive@gmail.com", store, this.Request.QueryString.Value).ConfigureAwait(false);
             var model = this.mapper.Map<Paged<Tag>>(entities);
 
             return this.Ok(model);
-        }
-
-        [HttpPut("tags/{tag}")]
-        public IActionResult Update(string tag)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -1,6 +1,7 @@
 namespace Finance.Infrastructure.Data.Neo4j.Queries.Tag
 {
     using System.Linq;
+    using System.Threading.Tasks;
 
     using Finance.Entities.Transaction.Details;
     using Finance.Infrastructure.Data.Neo4j.Mappings;
@@ -24,7 +25,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Tag
             this.mapping = mapping;
         }
 
-        public virtual Paged<Tag> GetResult(string email, string store, Filter filter)
+        public virtual async Task<Paged<Tag>> GetResultAsync(string email, string store, Filter filter)
         {
             var query = this.File.ReadAllText(@"Tag.GetAllByStore.cql");
             var parameters = new
@@ -35,7 +36,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Queries.Tag
                 limit = this.Limit.Apply(filter)
             };
 
-            var data = this.Database.Execute(this.mapping.MapFrom, query, parameters);
+            var data = await this.Database.ExecuteAsync(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
             var entities = data
                 .OrderBy(item => item.Name)
                 .ToList();

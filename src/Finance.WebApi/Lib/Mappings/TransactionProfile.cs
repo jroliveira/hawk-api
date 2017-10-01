@@ -10,25 +10,28 @@
     using Finance.Entities.Transaction.Installment;
     using Finance.Entities.Transaction.Payment;
 
-    using Model = Finance.WebApi.Models.Transaction;
-
     public class TransactionProfile : Profile
     {
         public TransactionProfile()
         {
-            this.CreateMap<Model.Post.Transaction, Transaction>()
+            this.CreateMap<Models.Transaction.Post.Transaction, Transaction>()
                 .ConstructUsing(ConstructWith);
 
-            this.CreateMap<Model.Get.Transaction, Transaction>()
+            this.CreateMap<Models.Transaction.Get.Transaction, Transaction>()
                 .ConstructUsing(ConstructWith);
 
-            this.CreateMap<Transaction, Model.Get.Transaction>()
+            this.CreateMap<Transaction, Models.Transaction.Get.Transaction>()
+                .ForMember(destination => destination.Type, origin => origin.MapFrom(source => source.GetType().Name))
+                .ForMember(destination => destination.Store, origin => origin.MapFrom(source => source.Store.Name))
+                .ForMember(destination => destination.Tags, origin => origin.MapFrom(source => source.Tags.Select(tag => tag.Name)));
+
+            this.CreateMap<Transaction, GraphQl.Sources.Transaction>()
                 .ForMember(destination => destination.Type, origin => origin.MapFrom(source => source.GetType().Name))
                 .ForMember(destination => destination.Store, origin => origin.MapFrom(source => source.Store.Name))
                 .ForMember(destination => destination.Tags, origin => origin.MapFrom(source => source.Tags.Select(tag => tag.Name)));
         }
 
-        private static Transaction ConstructWith(Model.Post.Transaction model)
+        private static Transaction ConstructWith(Models.Transaction.Post.Transaction model)
         {
             var account = new Account("junolive@gmail.com", null);
             var payment = new Payment(model.Payment.Value, model.Payment.Date, model.Payment.Currency)
@@ -43,8 +46,7 @@
             }
 
             var args = new object[] { payment, account };
-            var transaction = Activator.CreateInstance(type, args) as Transaction;
-            if (transaction == null)
+            if (!(Activator.CreateInstance(type, args) is Transaction transaction))
             {
                 throw new NullReferenceException("A transação esta nula.");
             }
@@ -63,7 +65,7 @@
             return transaction;
         }
 
-        private static Transaction ConstructWith(Model.Get.Transaction model)
+        private static Transaction ConstructWith(Models.Transaction.Get.Transaction model)
         {
             var account = new Account("junolive@gmail.com", null);
             var payment = new Payment(model.Payment.Value, model.Payment.Date, model.Payment.Currency)
@@ -78,8 +80,7 @@
             }
 
             var args = new object[] { payment, account };
-            var transaction = Activator.CreateInstance(type, args) as Transaction;
-            if (transaction == null)
+            if (!(Activator.CreateInstance(type, args) is Transaction transaction))
             {
                 throw new NullReferenceException("A transação esta nula.");
             }

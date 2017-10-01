@@ -2,6 +2,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Account
 {
     using System.Globalization;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using Finance.Entities;
     using Finance.Infrastructure.Data.Neo4j.Mappings;
@@ -19,7 +20,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Account
             this.file = file;
         }
 
-        public virtual Account Execute(Account entity)
+        public virtual async Task<Account> ExecuteAsync(Account entity)
         {
             entity.HashPassword();
 
@@ -31,7 +32,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Account
                 creationDate = entity.CreationAt.ToString(CultureInfo.InvariantCulture)
             };
 
-            var inserted = this.database.Execute(this.mapping.MapFrom, query, parameters);
+            var inserted = await this.database.ExecuteAsync(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
 
             return inserted.FirstOrDefault();
         }

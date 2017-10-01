@@ -1,5 +1,7 @@
 namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
 {
+    using System.Threading.Tasks;
+
     using Finance.Entities.Transaction;
 
     public class ExcludeCommand
@@ -13,7 +15,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
             this.file = file;
         }
 
-        public virtual void Execute(Transaction entity)
+        public virtual async Task ExecuteAsync(Transaction entity)
         {
             var query = this.file.ReadAllText(@"Transaction.Exclude.cql");
             var parameters = new
@@ -22,7 +24,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Transaction
                 id = entity.Id.ToString()
             };
 
-            this.database.Execute(session => session.Run(query, parameters));
+            await this.database.ExecuteAsync(async session => await session.RunAsync(query, parameters).ConfigureAwait(false)).ConfigureAwait(false);
         }
     }
 }

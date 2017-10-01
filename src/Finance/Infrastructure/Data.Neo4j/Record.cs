@@ -12,8 +12,7 @@ namespace Finance.Infrastructure.Data.Neo4j
 
         public Record(object record)
         {
-            var node = record as IEntity;
-            if (node != null)
+            if (record is IEntity node)
             {
                 this.data = node.Properties.ToDictionary(item => item.Key, item => item.Value);
                 return;

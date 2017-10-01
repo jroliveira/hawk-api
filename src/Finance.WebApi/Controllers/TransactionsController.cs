@@ -1,5 +1,7 @@
 namespace Finance.WebApi.Controllers
 {
+    using System.Threading.Tasks;
+
     using AutoMapper;
 
     using Finance.Infrastructure;
@@ -9,13 +11,11 @@ namespace Finance.WebApi.Controllers
     using Finance.WebApi.Lib.Exceptions;
     using Finance.WebApi.Lib.Validators;
 
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     using Model = Finance.WebApi.Models.Transaction;
 
-    [Authorize]
-    [Route("")]
+    [Route("transactions")]
     public class TransactionsController : Controller
     {
         private readonly PartialUpdater partialUpdater;
@@ -44,10 +44,10 @@ namespace Finance.WebApi.Controllers
             this.mapper = mapper;
         }
 
-        [HttpGet("transactions/{id}")]
-        public IActionResult GetById([FromRoute] string id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetByIdAsync([FromRoute] string id)
         {
-            var entity = this.getById.GetResult(id, "junolive@gmail.com");
+            var entity = await this.getById.GetResultAsync(id, "junolive@gmail.com").ConfigureAwait(false);
             if (entity == null)
             {
                 throw new NotFoundException($"Resource 'transactions' with id {id} could not be found");
@@ -58,37 +58,37 @@ namespace Finance.WebApi.Controllers
             return this.Ok(model);
         }
 
-        [HttpGet("transactions")]
-        public IActionResult Get()
+        [HttpGet]
+        public async Task<IActionResult> GetAsync()
         {
-            var entities = this.getAll.GetResult("junolive@gmail.com", this.Request.QueryString.Value);
+            var entities = await this.getAll.GetResultAsync("junolive@gmail.com", this.Request.QueryString.Value).ConfigureAwait(false);
             var model = this.mapper.Map<Paged<Model.Get.Transaction>>(entities);
 
             return this.Ok(model);
         }
 
-        [HttpPost("transactions")]
-        public IActionResult Create([FromBody] Model.Post.Transaction request)
+        [HttpPost]
+        public async Task<IActionResult> CreateAsync([FromBody] Model.Post.Transaction request)
         {
-            var validateResult = this.validator.Validate(request);
+            var validateResult = await this.validator.ValidateAsync(request).ConfigureAwait(false);
             if (!validateResult.IsValid)
             {
                 throw new ValidationException(validateResult.Errors);
             }
 
             var entity = this.mapper.Map<Entities.Transaction.Transaction>(request);
-            var inserted = this.create.Execute(entity);
+            var inserted = await this.create.ExecuteAsync(entity).ConfigureAwait(false);
             var response = this.mapper.Map<Model.Get.Transaction>(inserted);
 
             return this.StatusCode(201, response);
         }
 
-        [HttpPut("transactions/{id}")]
-        public IActionResult Update(
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateAsync(
             [FromRoute] string id,
             [FromBody] dynamic request)
         {
-            var entity = this.getById.GetResult(id, "junolive@gmail.com");
+            var entity = await this.getById.GetResultAsync(id, "junolive@gmail.com").ConfigureAwait(false);
             if (entity == null)
             {
                 throw new NotFoundException($"Resource 'transactions' with id {id} could not be found");
@@ -97,21 +97,21 @@ namespace Finance.WebApi.Controllers
             var model = this.mapper.Map<Model.Get.Transaction>(entity);
             this.partialUpdater.Apply(request, model);
             entity = this.mapper.Map<Entities.Transaction.Transaction>(model);
-            this.create.Execute(entity);
+            await this.create.ExecuteAsync(entity).ConfigureAwait(false);
 
             return this.NoContent();
         }
 
-        [HttpDelete("transactions/{id}")]
-        public IActionResult Exclude([FromRoute] string id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> ExcludeAsync([FromRoute] string id)
         {
-            var entity = this.getById.GetResult(id, "junolive@gmail.com");
+            var entity = await this.getById.GetResultAsync(id, "junolive@gmail.com").ConfigureAwait(false);
             if (entity == null)
             {
                 throw new NotFoundException($"Resource 'transactions' with id {id} could not be found");
             }
 
-            this.exclude.Execute(entity);
+            await this.exclude.ExecuteAsync(entity).ConfigureAwait(false);
 
             return this.NoContent();
         }

@@ -82,7 +82,7 @@
     <PackageReference Include="AutoMapper" Version="6.1.1" />
     <PackageReference Include="Http.Query.Filter" Version="3.0.23" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0" />
-    <PackageReference Include="Neo4j.Driver" Version="1.4.1" />
+    <PackageReference Include="Neo4j.Driver" Version="1.5.0-rc2" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
 

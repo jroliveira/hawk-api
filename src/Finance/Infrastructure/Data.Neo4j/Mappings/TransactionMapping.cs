@@ -39,13 +39,9 @@
             };
         }
 
-        public Transaction MapFrom(IRecord record)
+        public Transaction MapFrom(IRecord data)
         {
-            return this.MapFrom(record.GetRecord("data"));
-        }
-
-        public Transaction MapFrom(Record record)
-        {
+            var record = data.GetRecord("data");
             var type = record
                 .GetList("type")
                 .FirstOrDefault(t => this.types.ContainsKey(t.ToString()));

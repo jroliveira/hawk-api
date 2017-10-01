@@ -1,5 +1,7 @@
 namespace Finance.Infrastructure.Data.Neo4j.Commands.Store
 {
+    using System.Threading.Tasks;
+
     using Finance.Entities.Transaction;
 
     using global::Neo4j.Driver.V1;
@@ -13,8 +15,13 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Store
             this.file = file;
         }
 
-        public virtual void Execute(Transaction entity, IStatementRunner trans)
+        public virtual async Task ExecuteAsync(Transaction entity, IStatementRunner trans)
         {
+            if (entity?.Store == null)
+            {
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(entity.Store?.Name))
             {
                 return;
@@ -27,7 +34,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Store
                 store = entity.Store.Name
             };
 
-            trans.Run(query, parameters);
+            await trans.RunAsync(query, parameters).ConfigureAwait(false);
         }
     }
 }

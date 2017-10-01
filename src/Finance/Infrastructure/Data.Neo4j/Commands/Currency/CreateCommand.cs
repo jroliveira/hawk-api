@@ -1,5 +1,7 @@
 namespace Finance.Infrastructure.Data.Neo4j.Commands.Currency
 {
+    using System.Threading.Tasks;
+
     using Finance.Entities.Transaction;
 
     using global::Neo4j.Driver.V1;
@@ -13,8 +15,13 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Currency
             this.file = file;
         }
 
-        public virtual void Execute(Transaction entity, IStatementRunner trans)
+        public virtual async Task ExecuteAsync(Transaction entity, IStatementRunner trans)
         {
+            if (entity?.Payment?.Currency == null)
+            {
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(entity.Payment.Currency?.Name))
             {
                 return;
@@ -27,7 +34,7 @@ namespace Finance.Infrastructure.Data.Neo4j.Commands.Currency
                 currency = entity.Payment.Currency.Name
             };
 
-            trans.Run(query, parameters);
+            await trans.RunAsync(query, parameters).ConfigureAwait(false);
         }
     }
 }
