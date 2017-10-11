@@ -8,8 +8,10 @@ namespace Finance.WebApi.Controllers
     using Finance.Infrastructure.Data.Neo4j.Queries.Store;
     using Finance.WebApi.Models.Store.Get;
 
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    [Authorize]
     [Route("stores")]
     public class StoresController : Controller
     {

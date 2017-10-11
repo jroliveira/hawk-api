@@ -2,10 +2,12 @@ namespace Finance.WebApi.Controllers
 {
     using System.Threading.Tasks;
 
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     using Report = Finance.Infrastructure.Data.Neo4j.Reports.GetAmountGroupBy;
 
+    [Authorize]
     [Route("reports")]
     public class ReportsController : Controller
     {

@@ -10,10 +10,12 @@ namespace Finance.WebApi.Controllers
     using Finance.WebApi.Lib.Exceptions;
     using Finance.WebApi.Lib.Validators;
 
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     using Model = Finance.WebApi.Models.Account;
 
+    [Authorize]
     [Route("accounts")]
     public class AccountsController : Controller
     {
@@ -49,6 +51,7 @@ namespace Finance.WebApi.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> CreateAsync([FromBody] Model.Post.Account request)
         {
             var validateResult = await this.validator.ValidateAsync(request).ConfigureAwait(false);
