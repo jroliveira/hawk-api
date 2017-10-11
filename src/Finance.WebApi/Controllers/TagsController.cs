@@ -8,8 +8,10 @@ namespace Finance.WebApi.Controllers
     using Finance.Infrastructure.Data.Neo4j.Queries.Tag;
     using Finance.WebApi.Models.Tag.Get;
 
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    [Authorize]
     public class TagsController : Controller
     {
         private readonly GetAllQuery getAll;

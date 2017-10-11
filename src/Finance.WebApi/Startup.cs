@@ -2,7 +2,6 @@
 {
     using AutoMapper;
 
-    using Finance.Infrastructure.Data.Neo4j.Queries.Transaction;
     using Finance.WebApi.Configuration;
     using Finance.WebApi.GraphQl.Schemas;
     using Finance.WebApi.Lib.Middlewares;
@@ -33,7 +32,8 @@
                 .AddAutoMapper()
                 .ConfigureDatabase(this.Configuration)
                 .ConfigureIoC(this.Configuration)
-                .ConfigureApi(this.Configuration);
+                .ConfigureApi(this.Configuration)
+                .ConfigureIdentityServer();
         }
 
         public void Configure(
@@ -50,8 +50,8 @@
                 .UseMiddleware<HandlerErrorMiddleware>()
                 .UseGraphQl(schema)
                 .UseGraphiQl()
-                .UseIdentityServer()
                 .UseCors("CorsPolicy")
+                .UseAuthentication()
                 .UseMvc();
         }
     }
