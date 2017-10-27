@@ -1,4 +1,4 @@
-# Finance (api)
+# Hawk (api)
 
 ### Pre requirements
 
@@ -10,7 +10,7 @@
 $ git clone https://github.com/jroliveira/finance-api.git
 ```
 
-#### Configuration file (src\Finance.WebApi\appsettings.json)
+#### Configuration file (src\Hawk.WebApi\appsettings.json)
 
 ``` json
 {
