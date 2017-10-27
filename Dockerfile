@@ -8,4 +8,4 @@ RUN ["dotnet", "build"]
 
 EXPOSE 5000/tcp
 
-CMD ["dotnet", "run", "--project", "src/Finance.WebApi/Finance.WebApi.csproj"]
+CMD ["dotnet", "run", "--project", "src/Hawk.WebApi/Hawk.WebApi.csproj"]
