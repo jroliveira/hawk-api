@@ -14,7 +14,7 @@ namespace Hawk.WebApi.Configuration
                     options.Authority = "http://localhost:35653";
                     options.RequireHttpsMetadata = false;
 
-                    options.ApiName = "finance";
+                    options.ApiName = "hawk";
                 });
 
             return services;
