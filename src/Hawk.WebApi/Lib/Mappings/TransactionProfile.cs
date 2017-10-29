@@ -38,7 +38,7 @@
                 Method = model.Payment.Method
             };
 
-            var type = Type.GetType($"Hawk.Entities.Transaction.{model.Type}, Finance");
+            var type = Type.GetType($"Hawk.Entities.Transaction.{model.Type}, Hawk");
             if (type == null)
             {
                 throw new NullReferenceException("O tipo da transação esta nula.");
@@ -72,7 +72,7 @@
                 Method = model.Payment.Method
             };
 
-            var type = Type.GetType($"Hawk.Entities.Transaction.{model.Type}, Finance");
+            var type = Type.GetType($"Hawk.Entities.Transaction.{model.Type}, Hawk");
             if (type == null)
             {
                 throw new NullReferenceException("O tipo da transação esta nula.");
