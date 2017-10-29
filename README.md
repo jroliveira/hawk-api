@@ -1,10 +1,12 @@
 # Hawk (api)
 
+![Hawk - logo][hawk_anime]
+
 Hawk is a personal finance control. The name Hawk is the name of pig in the anime "The Seven Deadly Sins" (Nanatsu no Taizai).
 
 ### Pre requirements
 
-* [Visual Studio 2017](https://www.visualstudio.com/vs/whatsnew/)
+* [Visual Studio 2017][vs2017]
 
 ### Installing
 
@@ -19,14 +21,6 @@ $ git clone https://github.com/jroliveira/hawk-api.git
   "jwtIssuerOptions": {
     "issuer": "SuperAwesomeTokenServer",
     "audience": "http://localhost:48285"
-  },
-  "logging": {
-    "includeScopes": false,
-    "logLevel": {
-      "default": "Debug",
-      "system": "Information",
-      "microsoft": "Information"
-    }
   },
   "neo4j": {
     "uri": "bolt://localhost:7687",
@@ -51,7 +45,7 @@ F5
 
 #### Manual
 
-Using custom buildpack [dotnetcore-buildpack](https://github.com/jincod/dotnetcore-buildpack)
+Using custom buildpack [dotnetcore-buildpack]()
 
 ``` bash
 $ heroku buildpacks:set https://github.com/jincod/dotnetcore-buildpack
@@ -59,7 +53,7 @@ $ heroku buildpacks:set https://github.com/jincod/dotnetcore-buildpack
 
 #### Automatic
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/jroliveira/hawk-api)
+[![Deploy][heroku_button]][heroku_template]
 
 ### Contributions
 
@@ -68,3 +62,12 @@ $ heroku buildpacks:set https://github.com/jincod/dotnetcore-buildpack
 3. git add --all && git commit -m "feature description"
 4. git push origin <branch-name>
 5. Create a pull request
+
+### License
+
+The code is available under the [MIT license](LICENSE).
+
+[hawk_anime]: hawk_anime.png "Hawk - logo"
+[vs2017]: https://www.visualstudio.com/vs/whatsnew/
+[heroku_button]: https://www.herokucdn.com/deploy/button.svg
+[heroku_template]: https://heroku.com/deploy?template=https://github.com/jroliveira/hawk-api
