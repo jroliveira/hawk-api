@@ -11,7 +11,6 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
 
     public class Startup
@@ -42,14 +41,9 @@
         public void Configure(
             IApplicationBuilder app,
             IHostingEnvironment env,
-            ILoggerFactory loggerFactory,
             HawkSchema schema,
             IOptions<GraphQlConfig> graphQlConfig)
         {
-            loggerFactory
-                .AddConsole(this.Configuration.GetSection("logging"))
-                .AddDebug();
-
             app
                 .UseMiddleware<HandlerErrorMiddleware>()
                 .UseGraphQl(schema, graphQlConfig)

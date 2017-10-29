@@ -15,7 +15,6 @@
         {
             // Cors
             services.TryAddTransient<CorsAuthorizationFilter, CorsAuthorizationFilter>();
-            services.AddOptions();
             services.AddCors(options =>
             {
                 options.AddPolicy(
@@ -32,15 +31,13 @@
             services
                 .AddMvcCore()
                 .AddAuthorization()
-                .AddApiExplorer()
-                .AddJsonFormatters()
-                .AddJsonOptions(opt =>
+                .AddJsonFormatters(serializerSettings =>
                 {
-                    opt.SerializerSettings.Formatting = Formatting.Indented;
-                    opt.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                    opt.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-                    opt.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-                    opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                    serializerSettings.Formatting = Formatting.Indented;
+                    serializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                    serializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+                    serializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                    serializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 });
 
             return services;
