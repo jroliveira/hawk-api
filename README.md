@@ -18,19 +18,18 @@ $ git clone https://github.com/jroliveira/hawk-api.git
 
 ``` json
 {
-  "jwtIssuerOptions": {
-    "issuer": "SuperAwesomeTokenServer",
-    "audience": "http://localhost:48285"
-  },
-  "neo4j": {
-    "uri": "bolt://localhost:7687",
-    "username": "neo4j",
-    "password": "neo4j"
+  "authentication": {
+    "authority": "http://localhost"
   },
   "graphql": {
     "enabled": false,
     "path": "/graphql",
     "managerPath": "/graphiql"
+  },
+  "neo4j": {
+    "uri": "bolt://localhost:7687",
+    "username": "neo4j",
+    "password": "neo4j"
   }
 }
 ```
