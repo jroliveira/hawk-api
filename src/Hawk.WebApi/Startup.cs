@@ -35,7 +35,7 @@
                 .ConfigureGraphQl(this.Configuration)
                 .ConfigureIoC(this.Configuration)
                 .ConfigureApi(this.Configuration)
-                .ConfigureIdentityServer();
+                .ConfigureIdentityServer(this.Configuration);
         }
 
         public void Configure(

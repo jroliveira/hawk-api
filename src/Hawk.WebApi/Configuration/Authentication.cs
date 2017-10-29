@@ -1,20 +1,28 @@
 namespace Hawk.WebApi.Configuration
 {
+    using Hawk.Infrastructure.Authentication;
+
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
     internal static class Authentication
     {
-        internal static IServiceCollection ConfigureIdentityServer(this IServiceCollection services)
+        internal static IServiceCollection ConfigureIdentityServer(
+            this IServiceCollection services,
+            IConfigurationRoot configuration)
         {
+            var authConfig = configuration
+                .GetSection("authentication")
+                .Get<AuthenticationConfig>();
+
             services
                 .AddAuthentication("Bearer")
-                .AddIdentityServerAuthentication(options =>
+                .AddIdentityServerAuthentication(opt =>
                 {
-                    options.Authority = "http://localhost:35653";
-                    options.RequireHttpsMetadata = false;
-
-                    options.ApiName = "hawk";
+                    opt.ApiName = "hawk";
+                    opt.Authority = authConfig.Authority;
+                    opt.RequireHttpsMetadata = false;
                 });
 
             return services;
