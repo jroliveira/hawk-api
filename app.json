@@ -1,0 +1,15 @@
+{
+  "name": "Hawk API",
+  "description": "Personal finance control",
+  "repository": "https://github.com/jroliveira/hawk-api",
+  "keywords": [ "aspnet", "core" ],
+  "stack": "heroku-16",
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-nodejs"
+    },
+    {
+      "url": "https://github.com/jincod/dotnetcore-buildpack"
+    }
+  ]
+}

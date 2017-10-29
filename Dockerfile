@@ -1,11 +1,11 @@
-FROM microsoft/dotnet:1.1.1-sdk
+FROM microsoft/aspnetcore-build:1.1 AS builder
+WORKDIR /source
 
-COPY . /app
+COPY . .
+RUN dotnet restore
+RUN dotnet publish --output /app/ --configuration Release
+
+FROM microsoft/aspnetcore:1.1
 WORKDIR /app
-
-RUN ["dotnet", "restore"]
-RUN ["dotnet", "build"]
-
-EXPOSE 5000/tcp
-
-CMD ["dotnet", "run", "--project", "src/Finance.WebApi/Finance.WebApi.csproj"]
+COPY --from=builder /app .
+ENTRYPOINT ["dotnet", "Hawk.WebApi.dll"]

@@ -1,4 +1,6 @@
-# Finance (api)
+# Hawk (api)
+
+Hawk is a personal finance control. The name Hawk is the name of pig in the anime "The Seven Deadly Sins" (Nanatsu no Taizai).
 
 ### Pre requirements
 
@@ -7,29 +9,34 @@
 ### Installing
 
 ``` bash
-$ git clone https://github.com/jroliveira/finance-api.git
+$ git clone https://github.com/jroliveira/hawk-api.git
 ```
 
-#### Configuration file (src\Finance.WebApi\appsettings.json)
+#### Configuration file (src\Hawk.WebApi\appsettings.json)
 
 ``` json
 {
-  "JwtIssuerOptions": {
-    "Issuer": "SuperAwesomeTokenServer",
-    "Audience": "http://localhost:48285"
+  "jwtIssuerOptions": {
+    "issuer": "SuperAwesomeTokenServer",
+    "audience": "http://localhost:48285"
   },
-  "Logging": {
-    "IncludeScopes": false,
-    "LogLevel": {
-      "Default": "Debug",
-      "System": "Information",
-      "Microsoft": "Information"
+  "logging": {
+    "includeScopes": false,
+    "logLevel": {
+      "default": "Debug",
+      "system": "Information",
+      "microsoft": "Information"
     }
   },
-  "Neo4j": {
-    "Uri": "bolt://localhost:24786",
-    "Username": "neo4j",
-    "Password": "neo4j"
+  "neo4j": {
+    "uri": "bolt://localhost:7687",
+    "username": "neo4j",
+    "password": "neo4j"
+  },
+  "graphql": {
+    "enabled": false,
+    "path": "/graphql",
+    "managerPath": "/graphiql"
   }
 }
 ```
@@ -39,6 +46,20 @@ $ git clone https://github.com/jroliveira/finance-api.git
 ``` bash
 F5
 ```
+
+### Deploy to Heroku
+
+#### Manual
+
+Using custom buildpack [dotnetcore-buildpack](https://github.com/jincod/dotnetcore-buildpack)
+
+``` bash
+$ heroku buildpacks:set https://github.com/jincod/dotnetcore-buildpack
+```
+
+#### Automatic
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/jroliveira/hawk-api)
 
 ### Contributions
 
