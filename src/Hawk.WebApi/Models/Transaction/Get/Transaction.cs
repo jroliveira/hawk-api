@@ -15,5 +15,7 @@
         public virtual string Store { get; set; }
 
         public virtual IEnumerable<string> Tags { get; set; }
+
+        public virtual Account Account { get; set; }
     }
 }
