@@ -1,5 +1,8 @@
 # Hawk (api)
 
+[![CircleCI](https://circleci.com/gh/jroliveira/hawk-api/tree/master.svg?style=svg)](https://circleci.com/gh/jroliveira/hawk-api/tree/master)
+[![CodeFactor](https://www.codefactor.io/repository/github/jroliveira/hawk-api/badge)](https://www.codefactor.io/repository/github/jroliveira/hawk-api)
+
 ![Hawk - logo][hawk_anime]
 
 Hawk is a personal finance control. The name Hawk is the name of pig in the anime "The Seven Deadly Sins" (Nanatsu no Taizai).
