@@ -6,6 +6,7 @@ namespace Hawk.WebApi.Controllers
 
     using Hawk.Infrastructure;
     using Hawk.Infrastructure.Data.Neo4j.Queries.Store;
+    using Hawk.WebApi.Lib.Extensions;
     using Hawk.WebApi.Models.Store.Get;
 
     using Microsoft.AspNetCore.Authorization;
@@ -29,7 +30,7 @@ namespace Hawk.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            var entities = await this.getAll.GetResultAsync("junolive@gmail.com", this.Request.QueryString.Value).ConfigureAwait(false);
+            var entities = await this.getAll.GetResultAsync(this.User.GetClientId(), this.Request.QueryString.Value).ConfigureAwait(false);
             var model = this.mapper.Map<Paged<Store>>(entities);
 
             return this.Ok(model);

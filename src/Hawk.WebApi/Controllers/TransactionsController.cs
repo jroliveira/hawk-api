@@ -9,7 +9,9 @@ namespace Hawk.WebApi.Controllers
     using Hawk.Infrastructure.Data.Neo4j.Queries.Transaction;
     using Hawk.Infrastructure.Exceptions;
     using Hawk.WebApi.Lib.Exceptions;
+    using Hawk.WebApi.Lib.Extensions;
     using Hawk.WebApi.Lib.Validators;
+    using Hawk.WebApi.Models.Transaction;
     using Hawk.WebApi.Models.Transaction.Get;
 
     using Microsoft.AspNetCore.Authorization;
@@ -48,7 +50,7 @@ namespace Hawk.WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByIdAsync([FromRoute] string id)
         {
-            var entity = await this.getById.GetResultAsync(id, "junolive@gmail.com").ConfigureAwait(false);
+            var entity = await this.getById.GetResultAsync(id, this.User.GetClientId()).ConfigureAwait(false);
             if (entity == null)
             {
                 throw new NotFoundException($"Resource 'transactions' with id {id} could not be found");
@@ -62,7 +64,7 @@ namespace Hawk.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            var entities = await this.getAll.GetResultAsync("junolive@gmail.com", this.Request.QueryString.Value).ConfigureAwait(false);
+            var entities = await this.getAll.GetResultAsync(this.User.GetClientId(), this.Request.QueryString.Value).ConfigureAwait(false);
             var model = this.mapper.Map<Paged<Transaction>>(entities);
 
             return this.Ok(model);
@@ -77,6 +79,7 @@ namespace Hawk.WebApi.Controllers
                 throw new ValidationException(validateResult.Errors);
             }
 
+            request.Account = new Account { Email = this.User.GetClientId() };
             var entity = this.mapper.Map<Entities.Transaction.Transaction>(request);
             var inserted = await this.create.ExecuteAsync(entity).ConfigureAwait(false);
             var response = this.mapper.Map<Transaction>(inserted);
@@ -89,7 +92,7 @@ namespace Hawk.WebApi.Controllers
             [FromRoute] string id,
             [FromBody] dynamic request)
         {
-            var entity = await this.getById.GetResultAsync(id, "junolive@gmail.com").ConfigureAwait(false);
+            var entity = await this.getById.GetResultAsync(id, this.User.GetClientId()).ConfigureAwait(false);
             if (entity == null)
             {
                 throw new NotFoundException($"Resource 'transactions' with id {id} could not be found");
@@ -106,7 +109,7 @@ namespace Hawk.WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> ExcludeAsync([FromRoute] string id)
         {
-            var entity = await this.getById.GetResultAsync(id, "junolive@gmail.com").ConfigureAwait(false);
+            var entity = await this.getById.GetResultAsync(id, this.User.GetClientId()).ConfigureAwait(false);
             if (entity == null)
             {
                 throw new NotFoundException($"Resource 'transactions' with id {id} could not be found");

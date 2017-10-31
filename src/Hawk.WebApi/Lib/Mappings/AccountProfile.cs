@@ -12,6 +12,7 @@
                 .ConstructUsing(model => new Account(model.Email, model.Password));
 
             this.CreateMap<Account, Models.Account.Get.Account>();
+            this.CreateMap<Account, Models.Transaction.Account>();
         }
     }
 }
