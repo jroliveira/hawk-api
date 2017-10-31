@@ -7,6 +7,7 @@ namespace Hawk.WebApi.Controllers
     using Hawk.Entities.Transaction.Payment;
     using Hawk.Infrastructure;
     using Hawk.Infrastructure.Data.Neo4j.Queries.PaymentMethod;
+    using Hawk.WebApi.Lib.Extensions;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,7 @@ namespace Hawk.WebApi.Controllers
         [HttpGet("payment-methods")]
         public async Task<IActionResult> GetAsync()
         {
-            var entities = await this.getAll.GetResultAsync("junolive@gmail.com", this.Request.QueryString.Value).ConfigureAwait(false);
+            var entities = await this.getAll.GetResultAsync(this.User.GetClientId(), this.Request.QueryString.Value).ConfigureAwait(false);
             var model = this.mapper.Map<Paged<Method>>(entities);
 
             return this.Ok(model);
@@ -40,7 +41,7 @@ namespace Hawk.WebApi.Controllers
         [HttpGet("stores/{store}/payment-methods")]
         public async Task<IActionResult> GetByStoreSync(string store)
         {
-            var entities = await this.getAllByStore.GetResultAsync("junolive@gmail.com", store, this.Request.QueryString.Value).ConfigureAwait(false);
+            var entities = await this.getAllByStore.GetResultAsync(this.User.GetClientId(), store, this.Request.QueryString.Value).ConfigureAwait(false);
             var model = this.mapper.Map<Paged<Method>>(entities);
 
             return this.Ok(model);

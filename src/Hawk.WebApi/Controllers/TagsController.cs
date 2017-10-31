@@ -6,6 +6,7 @@ namespace Hawk.WebApi.Controllers
 
     using Hawk.Infrastructure;
     using Hawk.Infrastructure.Data.Neo4j.Queries.Tag;
+    using Hawk.WebApi.Lib.Extensions;
     using Hawk.WebApi.Models.Tag.Get;
 
     using Microsoft.AspNetCore.Authorization;
@@ -31,7 +32,7 @@ namespace Hawk.WebApi.Controllers
         [HttpGet("tags")]
         public async Task<IActionResult> GetAsync()
         {
-            var entities = await this.getAll.GetResultAsync("junolive@gmail.com", this.Request.QueryString.Value).ConfigureAwait(false);
+            var entities = await this.getAll.GetResultAsync(this.User.GetClientId(), this.Request.QueryString.Value).ConfigureAwait(false);
             var model = this.mapper.Map<Paged<Tag>>(entities);
 
             return this.Ok(model);
@@ -40,7 +41,7 @@ namespace Hawk.WebApi.Controllers
         [HttpGet("stores/{store}/tags")]
         public async Task<IActionResult> GetByStoreAsync(string store)
         {
-            var entities = await this.getAllByStore.GetResultAsync("junolive@gmail.com", store, this.Request.QueryString.Value).ConfigureAwait(false);
+            var entities = await this.getAllByStore.GetResultAsync(this.User.GetClientId(), store, this.Request.QueryString.Value).ConfigureAwait(false);
             var model = this.mapper.Map<Paged<Tag>>(entities);
 
             return this.Ok(model);
