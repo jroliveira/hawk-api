@@ -33,6 +33,38 @@ $ git clone https://github.com/jroliveira/hawk-api.git
     "uri": "bolt://localhost:7687",
     "username": "neo4j",
     "password": "neo4j"
+  },
+  "ipRateLimiting": {
+    "enableEndpointRateLimiting": false,
+    "stackBlockedRequests": false,
+    "realIpHeader": "X-Real-IP",
+    "clientIdHeader": "X-ClientId",
+    "httpStatusCode": 429,
+    "ipWhitelist": [],
+    "endpointWhitelist": [],
+    "clientWhitelist": [],
+    "generalRules": [
+      {
+        "endpoint": "*",
+        "period": "1s",
+        "limit": 2
+      },
+      {
+        "endpoint": "*",
+        "period": "15m",
+        "limit": 100
+      },
+      {
+        "endpoint": "*",
+        "period": "12h",
+        "limit": 1000
+      },
+      {
+        "endpoint": "*",
+        "period": "7d",
+        "limit": 10000
+      }
+    ]
   }
 }
 ```
