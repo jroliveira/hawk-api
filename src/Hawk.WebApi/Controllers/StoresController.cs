@@ -14,7 +14,7 @@ namespace Hawk.WebApi.Controllers
 
     [Authorize]
     [Route("stores")]
-    public class StoresController : Controller
+    public class StoresController : BaseController
     {
         private readonly GetAllQuery getAll;
         private readonly IMapper mapper;
@@ -28,9 +28,9 @@ namespace Hawk.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAsync()
+        public async Task<IActionResult> Get()
         {
-            var entities = await this.getAll.GetResultAsync(this.User.GetClientId(), this.Request.QueryString.Value).ConfigureAwait(false);
+            var entities = await this.getAll.GetResult(this.User.GetClientId(), this.Request.QueryString.Value).ConfigureAwait(false);
             var model = this.mapper.Map<Paged<Store>>(entities);
 
             return this.Ok(model);

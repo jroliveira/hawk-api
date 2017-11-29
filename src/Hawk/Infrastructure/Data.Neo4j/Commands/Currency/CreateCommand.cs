@@ -15,7 +15,7 @@ namespace Hawk.Infrastructure.Data.Neo4j.Commands.Currency
             this.file = file;
         }
 
-        public virtual async Task ExecuteAsync(Transaction entity, IStatementRunner trans)
+        public virtual async Task Execute(Transaction entity, IStatementRunner trans)
         {
             if (entity?.Payment?.Currency == null)
             {

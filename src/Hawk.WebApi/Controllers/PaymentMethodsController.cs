@@ -13,7 +13,7 @@ namespace Hawk.WebApi.Controllers
     using Microsoft.AspNetCore.Mvc;
 
     [Authorize]
-    public class PaymentMethodsController : Controller
+    public class PaymentMethodsController : BaseController
     {
         private readonly GetAllQuery getAll;
         private readonly GetAllByStoreQuery getAllByStore;
@@ -30,18 +30,18 @@ namespace Hawk.WebApi.Controllers
         }
 
         [HttpGet("payment-methods")]
-        public async Task<IActionResult> GetAsync()
+        public async Task<IActionResult> Get()
         {
-            var entities = await this.getAll.GetResultAsync(this.User.GetClientId(), this.Request.QueryString.Value).ConfigureAwait(false);
+            var entities = await this.getAll.GetResult(this.User.GetClientId(), this.Request.QueryString.Value).ConfigureAwait(false);
             var model = this.mapper.Map<Paged<Method>>(entities);
 
             return this.Ok(model);
         }
 
         [HttpGet("stores/{store}/payment-methods")]
-        public async Task<IActionResult> GetByStoreSync(string store)
+        public async Task<IActionResult> GetByStore(string store)
         {
-            var entities = await this.getAllByStore.GetResultAsync(this.User.GetClientId(), store, this.Request.QueryString.Value).ConfigureAwait(false);
+            var entities = await this.getAllByStore.GetResult(this.User.GetClientId(), store, this.Request.QueryString.Value).ConfigureAwait(false);
             var model = this.mapper.Map<Paged<Method>>(entities);
 
             return this.Ok(model);

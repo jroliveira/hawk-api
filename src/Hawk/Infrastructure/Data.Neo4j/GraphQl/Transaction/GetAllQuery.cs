@@ -22,7 +22,7 @@ namespace Hawk.Infrastructure.Data.Neo4j.GraphQl.Transaction
             this.file = file;
         }
 
-        public virtual async Task<IEnumerable<Transaction>> GetResultAsync(string email)
+        public virtual async Task<IEnumerable<Transaction>> GetResult(string email)
         {
             var query = this.file.ReadAllText(@"Transaction.GetAll.cql");
             query = query.Replace("#where#", "1=1");
@@ -34,7 +34,7 @@ namespace Hawk.Infrastructure.Data.Neo4j.GraphQl.Transaction
                 limit = 10000
             };
 
-            return await this.database.ExecuteAsync(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
+            return await this.database.Execute(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
         }
     }
 }

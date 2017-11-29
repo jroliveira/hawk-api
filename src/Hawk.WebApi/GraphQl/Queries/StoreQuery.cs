@@ -29,12 +29,12 @@
             query
                 .Field<ListGraphType<StoreType>>(
                 "stores",
-                resolve: this.GetAllAsync);
+                resolve: this.GetAll);
         }
 
-        private async Task<IEnumerable<Store>> GetAllAsync(ResolveFieldContext<object> context)
+        private async Task<IEnumerable<Store>> GetAll(ResolveFieldContext<object> context)
         {
-            var entities = await this.getAll.GetResultAsync("junolive@gmail.com").ConfigureAwait(false);
+            var entities = await this.getAll.GetResult("junolive@gmail.com").ConfigureAwait(false);
 
             return this.mapper.Map<IEnumerable<Store>>(entities);
         }

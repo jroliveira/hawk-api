@@ -11,7 +11,7 @@ namespace Hawk.WebApi.Controllers
 
     [Authorize]
     [Route("reports")]
-    public class ReportsController : Controller
+    public class ReportsController : BaseController
     {
         private readonly Report.Store.GetQuery getByStore;
         private readonly Report.Tag.GetQuery getByTag;
@@ -25,17 +25,17 @@ namespace Hawk.WebApi.Controllers
         }
 
         [HttpGet("amount-group-by-store")]
-        public async Task<IActionResult> GetByStoreAsync()
+        public async Task<IActionResult> GetByStore()
         {
-            var model = await this.getByStore.GetResultAsync(this.User.GetClientId(), this.Request.QueryString.Value).ConfigureAwait(false);
+            var model = await this.getByStore.GetResult(this.User.GetClientId(), this.Request.QueryString.Value).ConfigureAwait(false);
 
             return this.Ok(model);
         }
 
         [HttpGet("amount-group-by-tag")]
-        public async Task<IActionResult> GetAsync()
+        public async Task<IActionResult> Get()
         {
-            var model = await this.getByTag.GetResultAsync(this.User.GetClientId(), this.Request.QueryString.Value).ConfigureAwait(false);
+            var model = await this.getByTag.GetResult(this.User.GetClientId(), this.Request.QueryString.Value).ConfigureAwait(false);
 
             return this.Ok(model);
         }

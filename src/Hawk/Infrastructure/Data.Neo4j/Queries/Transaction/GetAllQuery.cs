@@ -25,7 +25,7 @@ namespace Hawk.Infrastructure.Data.Neo4j.Queries.Transaction
             this.mapping = mapping;
         }
 
-        public virtual async Task<Paged<Transaction>> GetResultAsync(string email, Filter filter)
+        public virtual async Task<Paged<Transaction>> GetResult(string email, Filter filter)
         {
             var where = this.Where.Apply(filter, "transaction");
             var query = this.File.ReadAllText(@"Transaction.GetAll.cql");
@@ -38,7 +38,7 @@ namespace Hawk.Infrastructure.Data.Neo4j.Queries.Transaction
                 limit = this.Limit.Apply(filter)
             };
 
-            var data = await this.Database.ExecuteAsync(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
+            var data = await this.Database.Execute(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
             var entities = data
                 .OrderBy(item => item.Payment.Date)
                 .ToList();

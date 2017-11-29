@@ -15,7 +15,7 @@ namespace Hawk.Infrastructure.Data.Neo4j.Commands.Store
             this.file = file;
         }
 
-        public virtual async Task ExecuteAsync(Transaction entity, IStatementRunner trans)
+        public virtual async Task Execute(Transaction entity, IStatementRunner trans)
         {
             if (entity?.Store == null)
             {

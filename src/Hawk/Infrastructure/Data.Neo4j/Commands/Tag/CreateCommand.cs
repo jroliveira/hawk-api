@@ -16,7 +16,7 @@ namespace Hawk.Infrastructure.Data.Neo4j.Commands.Tag
             this.file = file;
         }
 
-        public virtual async Task ExecuteAsync(Transaction entity, IStatementRunner trans)
+        public virtual async Task Execute(Transaction entity, IStatementRunner trans)
         {
             if (entity?.Tags == null || !entity.Tags.Any())
             {

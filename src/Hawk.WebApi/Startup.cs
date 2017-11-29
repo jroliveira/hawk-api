@@ -31,6 +31,7 @@
         {
             services
                 .AddAutoMapper()
+                .AddResponseCompression()
                 .ConfigureDatabase(this.Configuration)
                 .ConfigureGraphQl(this.Configuration)
                 .ConfigureIoC(this.Configuration)
@@ -45,9 +46,11 @@
             IOptions<GraphQlConfig> graphQlConfig)
         {
             app
+                .UseResponseCompression()
                 .UseMiddleware<HandlerErrorMiddleware>()
                 .UseGraphQl(schema, graphQlConfig)
                 .UseGraphiQl(graphQlConfig)
+                .UseSecurityHeaders()
                 .UseCors("CorsPolicy")
                 .UseAuthentication()
                 .UseMvc();
