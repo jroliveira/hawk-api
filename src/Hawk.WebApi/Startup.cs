@@ -1,5 +1,7 @@
 ﻿namespace Hawk.WebApi
 {
+    using AspNetCoreRateLimit;
+
     using AutoMapper;
 
     using Hawk.Infrastructure.GraphQl;
@@ -32,6 +34,8 @@
             services
                 .AddAutoMapper()
                 .AddResponseCompression()
+                .AddResponseCaching()
+                .ConfigureIpRateLimiting(this.Configuration)
                 .ConfigureDatabase(this.Configuration)
                 .ConfigureGraphQl(this.Configuration)
                 .ConfigureIoC(this.Configuration)
@@ -46,7 +50,9 @@
             IOptions<GraphQlConfig> graphQlConfig)
         {
             app
+                .UseResponseCaching()
                 .UseResponseCompression()
+                .UseIpRateLimiting()
                 .UseMiddleware<HandlerErrorMiddleware>()
                 .UseGraphQl(schema, graphQlConfig)
                 .UseGraphiQl(graphQlConfig)

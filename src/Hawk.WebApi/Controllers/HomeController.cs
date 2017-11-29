@@ -14,6 +14,7 @@
         }
 
         [HttpGet]
+        [ResponseCache(Duration = 60)]
         public IActionResult Get()
         {
             var response = new
