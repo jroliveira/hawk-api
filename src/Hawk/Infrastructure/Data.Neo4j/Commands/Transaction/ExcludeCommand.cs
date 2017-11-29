@@ -15,7 +15,7 @@ namespace Hawk.Infrastructure.Data.Neo4j.Commands.Transaction
             this.file = file;
         }
 
-        public virtual async Task ExecuteAsync(Transaction entity)
+        public virtual async Task Execute(Transaction entity)
         {
             var query = this.file.ReadAllText(@"Transaction.Exclude.cql");
             var parameters = new
@@ -24,7 +24,7 @@ namespace Hawk.Infrastructure.Data.Neo4j.Commands.Transaction
                 id = entity.Id.ToString()
             };
 
-            await this.database.ExecuteAsync(async session => await session.RunAsync(query, parameters).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.database.Execute(async session => await session.RunAsync(query, parameters).ConfigureAwait(false)).ConfigureAwait(false);
         }
     }
 }

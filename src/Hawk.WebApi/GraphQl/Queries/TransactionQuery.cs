@@ -33,25 +33,25 @@
                 .Field<TransactionType>(
                 "transaction",
                 arguments: new QueryArguments(new QueryArgument<StringGraphType> { Name = "id" }),
-                resolve: this.GetByIdAsync);
+                resolve: this.GetById);
 
             query
                 .Field<ListGraphType<TransactionType>>(
                 "transactions",
-                resolve: this.GetAllAsync);
+                resolve: this.GetAll);
         }
 
-        private async Task<Transaction> GetByIdAsync(ResolveFieldContext<object> context)
+        private async Task<Transaction> GetById(ResolveFieldContext<object> context)
         {
             var id = context.GetArgument<string>("id");
-            var entity = await this.get.GetResultAsync(id, "junolive@gmail.com").ConfigureAwait(false);
+            var entity = await this.get.GetResult(id, "junolive@gmail.com").ConfigureAwait(false);
 
             return this.mapper.Map<Transaction>(entity);
         }
 
-        private async Task<IEnumerable<Transaction>> GetAllAsync(ResolveFieldContext<object> context)
+        private async Task<IEnumerable<Transaction>> GetAll(ResolveFieldContext<object> context)
         {
-            var entities = await this.getAll.GetResultAsync("junolive@gmail.com").ConfigureAwait(false);
+            var entities = await this.getAll.GetResult("junolive@gmail.com").ConfigureAwait(false);
 
             return this.mapper.Map<IEnumerable<Transaction>>(entities);
         }

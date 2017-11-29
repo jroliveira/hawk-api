@@ -16,7 +16,7 @@ namespace Hawk.Infrastructure.Data.Neo4j.Queries.Account
             this.mapping = mapping;
         }
 
-        public virtual async Task<Account> GetResultAsync(string email)
+        public virtual async Task<Account> GetResult(string email)
         {
             var query = this.File.ReadAllText("Account.GetByEmail.cql");
             var parameters = new
@@ -24,7 +24,7 @@ namespace Hawk.Infrastructure.Data.Neo4j.Queries.Account
                 email
             };
 
-            var entities = await this.Database.ExecuteAsync(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
+            var entities = await this.Database.Execute(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
 
             return entities.FirstOrDefault();
         }

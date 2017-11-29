@@ -34,7 +34,7 @@ namespace Hawk.Infrastructure.Data.Neo4j.Commands.Transaction
             this.file = file;
         }
 
-        public virtual async Task<Transaction> ExecuteAsync(Transaction entity)
+        public virtual async Task<Transaction> Execute(Transaction entity)
         {
             var query = this.file.ReadAllText(@"Transaction.Create.cql");
             query = query.Replace("#type#", entity.GetType().Name);
@@ -50,7 +50,7 @@ namespace Hawk.Infrastructure.Data.Neo4j.Commands.Transaction
                 parcels = entity.Parcel?.Total
             };
 
-            return await this.database.ExecuteAsync(async session =>
+            return await this.database.Execute(async session =>
             {
                 using (var trans = session.BeginTransaction())
                 {
@@ -60,10 +60,10 @@ namespace Hawk.Infrastructure.Data.Neo4j.Commands.Transaction
 
                     entity.SetId(id);
 
-                    await this.createCurrency.ExecuteAsync(entity, trans).ConfigureAwait(false);
-                    await this.createPaymentMethod.ExecuteAsync(entity, trans).ConfigureAwait(false);
-                    await this.createStore.ExecuteAsync(entity, trans).ConfigureAwait(false);
-                    await this.createTag.ExecuteAsync(entity, trans).ConfigureAwait(false);
+                    await this.createCurrency.Execute(entity, trans).ConfigureAwait(false);
+                    await this.createPaymentMethod.Execute(entity, trans).ConfigureAwait(false);
+                    await this.createStore.Execute(entity, trans).ConfigureAwait(false);
+                    await this.createTag.Execute(entity, trans).ConfigureAwait(false);
 
                     trans.Success();
                     return entity;

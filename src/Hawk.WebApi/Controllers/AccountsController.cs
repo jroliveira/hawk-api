@@ -16,7 +16,7 @@ namespace Hawk.WebApi.Controllers
 
     [Authorize]
     [Route("accounts")]
-    public class AccountsController : Controller
+    public class AccountsController : BaseController
     {
         private readonly GetByEmailQuery getByEmail;
         private readonly CreateCommand create;
@@ -36,9 +36,9 @@ namespace Hawk.WebApi.Controllers
         }
 
         [HttpGet("{email}")]
-        public async Task<IActionResult> GetByEmailAsync([FromRoute] string email)
+        public async Task<IActionResult> GetByEmail([FromRoute] string email)
         {
-            var entity = await this.getByEmail.GetResultAsync(email).ConfigureAwait(false);
+            var entity = await this.getByEmail.GetResult(email).ConfigureAwait(false);
             if (entity == null)
             {
                 throw new NotFoundException($"Resource 'accounts' with email {email} could not be found");
@@ -51,7 +51,7 @@ namespace Hawk.WebApi.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> CreateAsync([FromBody] Models.Account.Post.Account request)
+        public async Task<IActionResult> Create([FromBody] Models.Account.Post.Account request)
         {
             var validateResult = await this.validator.ValidateAsync(request).ConfigureAwait(false);
             if (!validateResult.IsValid)
@@ -60,10 +60,10 @@ namespace Hawk.WebApi.Controllers
             }
 
             var entity = this.mapper.Map<Entities.Account>(request);
-            var inserted = await this.create.ExecuteAsync(entity).ConfigureAwait(false);
+            var inserted = await this.create.Execute(entity).ConfigureAwait(false);
             var response = this.mapper.Map<Account>(inserted);
-
-            return this.StatusCode(201, response);
+            
+            return this.Created(response.Email, response);
         }
     }
 }
