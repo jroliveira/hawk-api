@@ -9,17 +9,14 @@
     {
         internal static IServiceCollection ConfigureApi(this IServiceCollection services, IConfigurationRoot configuration)
         {
-            // Cors
-            services.AddCors(options => options.AddPolicy(
-                "CorsPolicy",
-                builder => builder
-                    .AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials()));
-
-            // Config
             services
+                .AddCors(options => options.AddPolicy(
+                    "CorsPolicy",
+                    builder => builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials()))
                 .AddMvcCore()
                 .AddAuthorization()
                 .AddJsonFormatters(serializerSettings =>
