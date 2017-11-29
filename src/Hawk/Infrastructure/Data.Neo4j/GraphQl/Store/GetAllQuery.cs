@@ -23,7 +23,7 @@ namespace Hawk.Infrastructure.Data.Neo4j.GraphQl.Store
             this.file = file;
         }
 
-        public virtual async Task<IEnumerable<Store>> GetResultAsync(string email)
+        public virtual async Task<IEnumerable<Store>> GetResult(string email)
         {
             var query = this.file.ReadAllText(@"Store.GetAll.graphql.cql");
             var parameters = new
@@ -31,7 +31,7 @@ namespace Hawk.Infrastructure.Data.Neo4j.GraphQl.Store
                 email
             };
 
-            var entities = await this.database.ExecuteAsync(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
+            var entities = await this.database.Execute(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
 
             return entities.OrderBy(item => item.Name).ToList();
         }

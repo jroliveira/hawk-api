@@ -25,7 +25,7 @@ namespace Hawk.Infrastructure.Data.Neo4j.Queries.PaymentMethod
             this.mapping = mapping;
         }
 
-        public virtual async Task<Paged<Method>> GetResultAsync(string email, string store, Filter filter)
+        public virtual async Task<Paged<Method>> GetResult(string email, string store, Filter filter)
         {
             var query = this.File.ReadAllText(@"PaymentMethod.GetAllByStore.cql");
             var parameters = new
@@ -36,7 +36,7 @@ namespace Hawk.Infrastructure.Data.Neo4j.Queries.PaymentMethod
                 limit = this.Limit.Apply(filter)
             };
 
-            var data = await this.Database.ExecuteAsync(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
+            var data = await this.Database.Execute(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
             var entities = data
                 .OrderBy(item => item.Name)
                 .ToList();

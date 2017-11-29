@@ -32,13 +32,13 @@ namespace Hawk.Infrastructure.Data.Neo4j
         {
         }
 
-        public virtual async Task<TResult> ExecuteAsync<TResult>(Func<ISession, Task<TResult>> commandAsync)
+        public virtual async Task<TResult> Execute<TResult>(Func<ISession, Task<TResult>> command)
         {
             using (var session = this.driver.Session())
             {
                 try
                 {
-                    return await commandAsync(session).ConfigureAwait(false);
+                    return await command(session).ConfigureAwait(false);
                 }
                 catch (Exception exception)
                 {
@@ -47,9 +47,9 @@ namespace Hawk.Infrastructure.Data.Neo4j
             }
         }
 
-        public virtual async Task<ICollection<TResult>> ExecuteAsync<TResult>(Func<IRecord, TResult> mapping, string query, object parameters)
+        public virtual async Task<ICollection<TResult>> Execute<TResult>(Func<IRecord, TResult> mapping, string query, object parameters)
         {
-            return await this.ExecuteAsync(async session =>
+            return await this.Execute(async session =>
             {
                 var cursor = await session.RunAsync(query, parameters).ConfigureAwait(false);
                 var data = await cursor.ToListAsync().ConfigureAwait(false);

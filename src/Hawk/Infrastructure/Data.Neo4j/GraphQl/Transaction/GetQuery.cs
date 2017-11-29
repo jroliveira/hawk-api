@@ -19,7 +19,7 @@ namespace Hawk.Infrastructure.Data.Neo4j.GraphQl.Transaction
             this.file = file;
         }
 
-        public virtual async Task<Transaction> GetResultAsync(string id, string email)
+        public virtual async Task<Transaction> GetResult(string id, string email)
         {
             var query = this.file.ReadAllText(@"Transaction.GetById.cql");
             var parameters = new
@@ -28,7 +28,7 @@ namespace Hawk.Infrastructure.Data.Neo4j.GraphQl.Transaction
                 email
             };
 
-            var entities = await this.database.ExecuteAsync(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
+            var entities = await this.database.Execute(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
 
             return entities.FirstOrDefault();
         }

@@ -4,7 +4,7 @@
     using Microsoft.AspNetCore.Mvc;
 
     [Route("")]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly IHostingEnvironment environment;
 

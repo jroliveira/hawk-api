@@ -19,7 +19,7 @@ namespace Hawk.WebApi.Controllers
 
     [Authorize]
     [Route("transactions")]
-    public class TransactionsController : Controller
+    public class TransactionsController : BaseController
     {
         private readonly PartialUpdater partialUpdater;
         private readonly GetAllQuery getAll;
@@ -48,9 +48,9 @@ namespace Hawk.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetByIdAsync([FromRoute] string id)
+        public async Task<IActionResult> GetById([FromRoute] string id)
         {
-            var entity = await this.getById.GetResultAsync(id, this.User.GetClientId()).ConfigureAwait(false);
+            var entity = await this.getById.GetResult(id, this.User.GetClientId()).ConfigureAwait(false);
             if (entity == null)
             {
                 throw new NotFoundException($"Resource 'transactions' with id {id} could not be found");
@@ -62,16 +62,16 @@ namespace Hawk.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAsync()
+        public async Task<IActionResult> Get()
         {
-            var entities = await this.getAll.GetResultAsync(this.User.GetClientId(), this.Request.QueryString.Value).ConfigureAwait(false);
+            var entities = await this.getAll.GetResult(this.User.GetClientId(), this.Request.QueryString.Value).ConfigureAwait(false);
             var model = this.mapper.Map<Paged<Transaction>>(entities);
 
             return this.Ok(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] Models.Transaction.Post.Transaction request)
+        public async Task<IActionResult> Create([FromBody] Models.Transaction.Post.Transaction request)
         {
             var validateResult = await this.validator.ValidateAsync(request).ConfigureAwait(false);
             if (!validateResult.IsValid)
@@ -81,18 +81,18 @@ namespace Hawk.WebApi.Controllers
 
             request.Account = new Account { Email = this.User.GetClientId() };
             var entity = this.mapper.Map<Entities.Transaction.Transaction>(request);
-            var inserted = await this.create.ExecuteAsync(entity).ConfigureAwait(false);
+            var inserted = await this.create.Execute(entity).ConfigureAwait(false);
             var response = this.mapper.Map<Transaction>(inserted);
 
-            return this.StatusCode(201, response);
+            return this.Created(response.Id, response);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync(
+        public async Task<IActionResult> Update(
             [FromRoute] string id,
             [FromBody] dynamic request)
         {
-            var entity = await this.getById.GetResultAsync(id, this.User.GetClientId()).ConfigureAwait(false);
+            var entity = await this.getById.GetResult(id, this.User.GetClientId()).ConfigureAwait(false);
             if (entity == null)
             {
                 throw new NotFoundException($"Resource 'transactions' with id {id} could not be found");
@@ -101,21 +101,21 @@ namespace Hawk.WebApi.Controllers
             var model = this.mapper.Map<Transaction>(entity);
             this.partialUpdater.Apply(request, model);
             entity = this.mapper.Map<Entities.Transaction.Transaction>(model);
-            await this.create.ExecuteAsync(entity).ConfigureAwait(false);
+            await this.create.Execute(entity).ConfigureAwait(false);
 
             return this.NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> ExcludeAsync([FromRoute] string id)
+        public async Task<IActionResult> Exclude([FromRoute] string id)
         {
-            var entity = await this.getById.GetResultAsync(id, this.User.GetClientId()).ConfigureAwait(false);
+            var entity = await this.getById.GetResult(id, this.User.GetClientId()).ConfigureAwait(false);
             if (entity == null)
             {
                 throw new NotFoundException($"Resource 'transactions' with id {id} could not be found");
             }
 
-            await this.exclude.ExecuteAsync(entity).ConfigureAwait(false);
+            await this.exclude.Execute(entity).ConfigureAwait(false);
 
             return this.NoContent();
         }
