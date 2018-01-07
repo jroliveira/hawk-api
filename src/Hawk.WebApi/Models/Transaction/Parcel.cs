@@ -1,9 +1,27 @@
 ﻿namespace Hawk.WebApi.Models.Transaction
 {
-    public class Parcel
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class Parcel
     {
-        public virtual int Number { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public Parcel(int number, int total)
+        {
+            this.Number = number;
+            this.Total = total;
+        }
 
-        public virtual int Total { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Number { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Total { get; }
     }
 }

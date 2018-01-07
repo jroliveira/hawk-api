@@ -2,7 +2,7 @@
 {
     using System.Security.Claims;
 
-    public static class ClaimsPrincipalExtensions
+    internal static class ClaimsPrincipalExtensions
     {
         public static string GetClientId(this ClaimsPrincipal claims)
         {

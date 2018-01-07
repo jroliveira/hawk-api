@@ -4,7 +4,7 @@
 
     using Hawk.WebApi.Models.Transaction.Post;
 
-    public class TransactionValidator : AbstractValidator<Transaction>
+    internal sealed class TransactionValidator : AbstractValidator<Transaction>
     {
         public TransactionValidator()
         {

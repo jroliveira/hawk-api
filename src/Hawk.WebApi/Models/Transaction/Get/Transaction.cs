@@ -2,20 +2,20 @@
 {
     using System.Collections.Generic;
 
-    public class Transaction
+    internal sealed class Transaction
     {
-        public virtual string Id { get; set; }
+        public string Id { get; set; }
 
-        public virtual string Type { get; set; }
+        public string Type { get; set; }
 
-        public virtual Payment Payment { get; set; }
+        public Payment Payment { get; set; }
 
-        public virtual Parcel Parcel { get; set; }
+        public Parcel Parcel { get; set; }
 
-        public virtual string Store { get; set; }
+        public string Store { get; set; }
 
-        public virtual IEnumerable<string> Tags { get; set; }
+        public IEnumerable<string> Tags { get; set; }
 
-        public virtual Account Account { get; set; }
+        public Account Account { get; set; }
     }
 }

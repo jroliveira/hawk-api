@@ -7,23 +7,30 @@ namespace Hawk.WebApi.Controllers
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    using Report = Hawk.Infrastructure.Data.Neo4j.Reports.GetAmountGroupBy;
+    using Reports = Hawk.Reports;
 
+    /// <inheritdoc />
     [Authorize]
+    [ApiVersion("1")]
     [Route("reports")]
     public class ReportsController : BaseController
     {
-        private readonly Report.Store.GetQuery getByStore;
-        private readonly Report.Tag.GetQuery getByTag;
+        private readonly Reports.AmountGroupByStore.IGetQuery getByStore;
+        private readonly Reports.AmountGroupByTag.IGetQuery getByTag;
 
+        /// <inheritdoc />
         public ReportsController(
-            Report.Store.GetQuery getByStore,
-            Report.Tag.GetQuery getByTag)
+            Reports.AmountGroupByStore.IGetQuery getByStore,
+            Reports.AmountGroupByTag.IGetQuery getByTag)
         {
             this.getByStore = getByStore;
             this.getByTag = getByTag;
         }
 
+        /// <summary>
+        /// Get by store
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("amount-group-by-store")]
         public async Task<IActionResult> GetByStore()
         {
@@ -32,8 +39,12 @@ namespace Hawk.WebApi.Controllers
             return this.Ok(model);
         }
 
+        /// <summary>
+        /// Get by tag
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("amount-group-by-tag")]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetByTag()
         {
             var model = await this.getByTag.GetResult(this.User.GetClientId(), this.Request.QueryString.Value).ConfigureAwait(false);
 

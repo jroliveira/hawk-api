@@ -2,14 +2,40 @@
 {
     using System;
 
-    public class Payment
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class Payment
     {
-        public virtual double Value { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public Payment(double value, DateTime date, string method, string currency)
+        {
+            this.Value = value;
+            this.Date = date;
+            this.Method = method;
+            this.Currency = currency;
+        }
 
-        public virtual DateTime Date { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public double Value { get; }
 
-        public virtual string Method { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime Date { get; }
 
-        public virtual string Currency { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Method { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Currency { get; }
     }
 }

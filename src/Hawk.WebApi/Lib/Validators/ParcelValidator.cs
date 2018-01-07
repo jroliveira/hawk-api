@@ -4,7 +4,7 @@ namespace Hawk.WebApi.Lib.Validators
 
     using Hawk.WebApi.Models.Transaction;
 
-    public class ParcelValidator : AbstractValidator<Parcel>
+    internal sealed class ParcelValidator : AbstractValidator<Parcel>
     {
         public ParcelValidator()
         {

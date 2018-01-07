@@ -5,79 +5,59 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Infrastructure\Data.Neo4j\Reports\GetAmountGroupBy\Store\Query.cql" />
-    <None Remove="Infrastructure\Data.Neo4j\Reports\GetAmountGroupBy\Tag\Query.cql" />
-    <None Remove="Infrastructure\Data.Neo4j\Scripts\Account\Create.cql" />
-    <None Remove="Infrastructure\Data.Neo4j\Scripts\Account\GetByEmail.cql" />
-    <None Remove="Infrastructure\Data.Neo4j\Scripts\Currency\Create.cql" />
-    <None Remove="Infrastructure\Data.Neo4j\Scripts\PaymentMethod\Create.cql" />
-    <None Remove="Infrastructure\Data.Neo4j\Scripts\PaymentMethod\GetAll.cql" />
-    <None Remove="Infrastructure\Data.Neo4j\Scripts\PaymentMethod\GetAllByStore.cql" />
-    <None Remove="Infrastructure\Data.Neo4j\Scripts\Store\Create.cql" />
-    <None Remove="Infrastructure\Data.Neo4j\Scripts\Store\GetAll.cql" />
-    <None Remove="Infrastructure\Data.Neo4j\Scripts\Store\GetAll.graphql.cql" />
-    <None Remove="Infrastructure\Data.Neo4j\Scripts\Tag\Create.cql" />
-    <None Remove="Infrastructure\Data.Neo4j\Scripts\Tag\GetAll.cql" />
-    <None Remove="Infrastructure\Data.Neo4j\Scripts\Tag\GetAllByStore.cql" />
-    <None Remove="Infrastructure\Data.Neo4j\Scripts\Transaction\Create.cql" />
-    <None Remove="Infrastructure\Data.Neo4j\Scripts\Transaction\Exclude.cql" />
-    <None Remove="Infrastructure\Data.Neo4j\Scripts\Transaction\GetAll.cql" />
-    <None Remove="Infrastructure\Data.Neo4j\Scripts\Transaction\GetById.cql" />
+    <None Remove="Reports\AmountGroupByStore\Query.cql" />
+    <None Remove="Reports\AmountGroupByTag\Query.cql" />
+    <None Remove="Infrastructure\Data.Neo4J\Scripts\Account\Create.cql" />
+    <None Remove="Infrastructure\Data.Neo4J\Scripts\Account\GetByEmail.cql" />
+    <None Remove="Infrastructure\Data.Neo4J\Scripts\PaymentMethod\GetAll.cql" />
+    <None Remove="Infrastructure\Data.Neo4J\Scripts\PaymentMethod\GetAllByStore.cql" />
+    <None Remove="Infrastructure\Data.Neo4J\Scripts\Store\GetAll.cql" />
+    <None Remove="Infrastructure\Data.Neo4J\Scripts\Tag\GetAll.cql" />
+    <None Remove="Infrastructure\Data.Neo4J\Scripts\Tag\GetAllByStore.cql" />
+    <None Remove="Infrastructure\Data.Neo4J\Scripts\Transaction\Create.cql" />
+    <None Remove="Infrastructure\Data.Neo4J\Scripts\Transaction\Exclude.cql" />
+    <None Remove="Infrastructure\Data.Neo4J\Scripts\Transaction\GetAll.cql" />
+    <None Remove="Infrastructure\Data.Neo4J\Scripts\Transaction\GetById.cql" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Reports\GetAmountGroupBy\Store\Query.cql">
+    <EmbeddedResource Include="Reports\AmountGroupByStore\Query.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Reports\GetAmountGroupBy\Tag\Query.cql">
+    <EmbeddedResource Include="Reports\AmountGroupByTag\Query.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Account\Create.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\Account\Create.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Account\GetByEmail.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\Account\GetByEmail.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Currency\Create.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\PaymentMethod\GetAll.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\PaymentMethod\Create.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\PaymentMethod\GetAllByStore.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\PaymentMethod\GetAll.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\Store\GetAll.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\PaymentMethod\GetAllByStore.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\Tag\GetAll.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Store\Create.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\Tag\GetAllByStore.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Store\GetAll.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\Transaction\Create.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Store\GetAll.graphql.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\Transaction\Exclude.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Tag\Create.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\Transaction\GetAll.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Tag\GetAll.cql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Tag\GetAllByStore.cql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Transaction\Create.cql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Transaction\Exclude.cql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Transaction\GetAll.cql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4j\Scripts\Transaction\GetById.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\Transaction\GetById.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
