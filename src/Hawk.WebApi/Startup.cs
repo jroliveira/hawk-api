@@ -2,20 +2,18 @@
 {
     using AspNetCoreRateLimit;
 
-    using AutoMapper;
-
-    using Hawk.Infrastructure.GraphQl;
+    using Hawk.Domain;
+    using Hawk.Infrastructure.IoC;
     using Hawk.WebApi.Configuration;
-    using Hawk.WebApi.GraphQl.Schemas;
     using Hawk.WebApi.Lib.Middlewares;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc.ApiExplorer;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Options;
 
-    public class Startup
+    internal sealed class Startup
     {
         public Startup(IHostingEnvironment env)
         {
@@ -32,34 +30,29 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddAutoMapper()
-                .AddResponseCompression()
-                .AddResponseCaching()
                 .ConfigureIpRateLimiting(this.Configuration)
                 .ConfigureDatabase(this.Configuration)
-                .ConfigureGraphQl(this.Configuration)
-                .ConfigureIoC(this.Configuration)
-                .ConfigureApi(this.Configuration)
+                .ConfigureIoC()
+                .ConfigureApi()
+                .ConfigureSwagger()
                 .ConfigureIdentityServer(this.Configuration);
         }
 
         public void Configure(
             IApplicationBuilder app,
             IHostingEnvironment env,
-            HawkSchema schema,
-            IOptions<GraphQlConfig> graphQlConfig)
+            IApiVersionDescriptionProvider provider)
         {
             app
                 .UseResponseCaching()
                 .UseResponseCompression()
                 .UseIpRateLimiting()
-                .UseMiddleware<HandlerErrorMiddleware>()
-                .UseGraphQl(schema, graphQlConfig)
-                .UseGraphiQl(graphQlConfig)
+                .UseMiddleware<ErrorHandlingMiddleware>()
                 .UseSecurityHeaders()
-                .UseCors("CorsPolicy")
+                .UseCors(Constants.Api.Cors)
                 .UseAuthentication()
-                .UseMvc();
+                .UseMvc()
+                .UseSwagger();
         }
     }
 }

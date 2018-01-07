@@ -1,7 +1,12 @@
 ﻿namespace Hawk.WebApi.Models.Account.Get
 {
-    public class Account
+    internal sealed class Account
     {
-        public virtual string Email { get; set; }
+        public Account(string email)
+        {
+            this.Email = email;
+        }
+
+        public string Email { get; }
     }
 }

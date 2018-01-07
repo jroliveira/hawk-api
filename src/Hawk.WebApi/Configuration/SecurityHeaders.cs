@@ -6,8 +6,7 @@ namespace Hawk.WebApi.Configuration
 
     internal static class SecurityHeaders
     {
-        internal static IApplicationBuilder UseSecurityHeaders(
-            this IApplicationBuilder builder)
+        public static IApplicationBuilder UseSecurityHeaders(this IApplicationBuilder builder)
         {
             return builder.UseMiddleware<SecurityHeadersMiddleware>();
         }

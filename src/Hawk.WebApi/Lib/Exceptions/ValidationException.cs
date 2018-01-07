@@ -6,7 +6,7 @@
 
     using FluentValidation.Results;
 
-    public class ValidationException : Exception
+    internal sealed class ValidationException : Exception
     {
         public ValidationException(IEnumerable<ValidationFailure> validationFailures)
             : base(string.Join(Environment.NewLine, validationFailures.Select(c => c.ErrorMessage)))
