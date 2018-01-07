@@ -1,11 +1,23 @@
 ﻿namespace Hawk.WebApi.Models.Account.Post
 {
-    public class Account
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class Account
     {
-        public virtual string Email { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Email { get; set; }
 
-        public virtual string Password { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Password { get; set; }
 
-        public virtual string ConfirmPassword { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ConfirmPassword { get; set; }
     }
 }

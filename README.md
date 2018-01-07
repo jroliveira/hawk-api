@@ -7,27 +7,24 @@
 
 Hawk is a personal finance control. The name Hawk is the name of pig in the anime "The Seven Deadly Sins" (Nanatsu no Taizai).
 
-### Pre requirements
-
-* [Visual Studio 2017][vs2017]
-
 ### Installing
 
 ``` bash
 $ git clone https://github.com/jroliveira/hawk-api.git
 ```
 
-#### Configuration file (src\Hawk.WebApi\appsettings.json)
+### Running in Visual Studio 2017
+
+#### Pre requirements
+
+* [Visual Studio 2017][vs2017]
+
+#### Configuration file (.\src\Hawk.WebApi\appsettings.json)
 
 ``` json
 {
   "authentication": {
     "authority": "http://localhost"
-  },
-  "graphql": {
-    "enabled": false,
-    "path": "/graphql",
-    "managerPath": "/graphiql"
   },
   "neo4j": {
     "uri": "bolt://localhost:7687",
@@ -75,6 +72,36 @@ $ git clone https://github.com/jroliveira/hawk-api.git
 F5
 ```
 
+### Running in Docker
+
+#### Pre requirements
+
+* [Docker Compose][docker_compose]
+
+#### Configuration file (.\api.env)
+
+``` bash
+ASPNETCORE_URLS=http://*:5000
+
+NEO4J:URI=bolt://graphdb:7687
+NEO4J:USERNAME=neo4j
+NEO4J:PASSWORD=123456
+
+AUTHENTICATION:AUTHORITY=http://localhost:35653
+
+IPRATELIMITING:ENABLEENDPOINTRATELIMITING=false
+IPRATELIMITING:STACKBLOCKEDREQUESTS=false
+IPRATELIMITING:REALIPHEADER=X-Real-IP
+IPRATELIMITING:CLIENTIDHEADER=X-ClientId
+IPRATELIMITING:HTTPSTATUSCODE=429
+```
+
+### How to use it
+
+``` bash
+$ docker-compose up
+```
+
 ### Deploy to Heroku
 
 #### Manual
@@ -101,7 +128,8 @@ $ heroku buildpacks:set https://github.com/jincod/dotnetcore-buildpack
 
 The code is available under the [MIT license](LICENSE).
 
-[hawk_anime]: hawk_anime.png "Hawk - logo"
+[hawk_anime]: docs/images/hawk_anime.png "Hawk - logo"
 [vs2017]: https://www.visualstudio.com/vs/whatsnew/
+[docker_compose]: https://docs.docker.com/compose/
 [heroku_button]: https://www.herokucdn.com/deploy/button.svg
 [heroku_template]: https://heroku.com/deploy?template=https://github.com/jroliveira/hawk-api

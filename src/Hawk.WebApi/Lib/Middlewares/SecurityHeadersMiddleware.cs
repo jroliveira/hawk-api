@@ -5,7 +5,7 @@
 
     using Microsoft.AspNetCore.Http;
 
-    public class SecurityHeadersMiddleware
+    internal sealed class SecurityHeadersMiddleware
     {
         private readonly RequestDelegate next;
 
@@ -36,7 +36,9 @@
             headers["Strict-Transport-Security"] = $"max-age={OneYearInSeconds}; includeSubDomains; preload";
             headers["X-Content-Type-Options"] = "nosniff";
             headers["Content-Security-Policy"] = "default-src 'none'";
+            headers["X-Content-Security-Policy"] = "default-src 'none'";
             headers["Server"] = "hawk.com";
+            headers["Referrer-Policy"] = "no-referrer";
 
             await this.next(context);
         }

@@ -1,23 +1,33 @@
 ﻿namespace Hawk.WebApi.Configuration
 {
-    using Microsoft.Extensions.Configuration;
+    using AutoMapper;
+
+    using Hawk.Domain;
+    using Hawk.WebApi.Lib.Conventions;
+
+    using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.DependencyInjection;
 
     using Newtonsoft.Json;
 
     internal static class Api
     {
-        internal static IServiceCollection ConfigureApi(this IServiceCollection services, IConfigurationRoot configuration)
+        public static IServiceCollection ConfigureApi(this IServiceCollection services)
         {
             services
+                .AddAutoMapper()
+                .AddResponseCompression()
+                .AddResponseCaching()
                 .AddCors(options => options.AddPolicy(
-                    "CorsPolicy",
+                    Constants.Api.Cors,
                     builder => builder
                         .AllowAnyOrigin()
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials()))
-                .AddMvcCore()
+                .AddMvcCore(options => options.Conventions.Add(new ApiVersionRoutePrefixConvention()))
+                .AddVersionedApiExplorer(o => o.GroupNameFormat = "'v'V")
+                .AddApiExplorer()
                 .AddAuthorization()
                 .AddJsonFormatters(serializerSettings =>
                 {
@@ -27,6 +37,8 @@
                     serializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
                     serializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 });
+
+            services.AddApiVersioning(opt => opt.ReportApiVersions = true);
 
             return services;
         }

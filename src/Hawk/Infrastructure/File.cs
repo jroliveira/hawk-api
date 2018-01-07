@@ -3,7 +3,7 @@ namespace Hawk.Infrastructure
     using System.IO;
     using System.Reflection;
 
-    public class File
+    internal class File
     {
         public virtual string ReadAllText(string name)
         {

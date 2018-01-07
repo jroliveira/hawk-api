@@ -1,6 +1,6 @@
 namespace Hawk.WebApi.Configuration
 {
-    using Hawk.Infrastructure.Authentication;
+    using Hawk.WebApi.Lib.Authentication;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
@@ -8,13 +8,13 @@ namespace Hawk.WebApi.Configuration
 
     internal static class Authentication
     {
-        internal static IServiceCollection ConfigureIdentityServer(
+        public static IServiceCollection ConfigureIdentityServer(
             this IServiceCollection services,
             IConfigurationRoot configuration)
         {
             var authConfig = configuration
                 .GetSection("authentication")
-                .Get<AuthenticationConfig>();
+                .Get<Configuration>();
 
             services
                 .AddAuthentication("Bearer")

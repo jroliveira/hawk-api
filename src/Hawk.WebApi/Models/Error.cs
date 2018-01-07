@@ -1,6 +1,6 @@
 ﻿namespace Hawk.WebApi.Models
 {
-    public sealed class Error
+    internal sealed class Error
     {
         public Error(string message)
         {

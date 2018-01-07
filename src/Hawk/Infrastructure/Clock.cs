@@ -2,7 +2,7 @@
 {
     using System;
 
-    public static class Clock
+    internal static class Clock
     {
         public static Func<DateTime> Now { get; set; } = () => DateTime.Now;
 

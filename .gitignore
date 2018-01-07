@@ -91,6 +91,9 @@ AppPackages/
 # Others
 [Bb]in
 [Oo]bj
+[Tt]emp
+[Pp]ackages
+[Aa]rtifacts
 sql
 TestResults
 [Tt]est[Rr]esult*
@@ -108,4 +111,10 @@ Backup*/
 UpgradeLog*.XML
 .vs
 
+# App config related
 appsettings.json
+api.env
+
+# Build related
+cakebuild/tools/**
+!cakebuild/tools/packages.config

@@ -22,6 +22,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hawk", "src\Hawk\Hawk.cspro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hawk.WebApi", "src\Hawk.WebApi\Hawk.WebApi.csproj", "{6CF3AA48-4AF4-4D4B-A470-17CA7D326F0F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cakebuild", "cakebuild", "{1D15F9CF-6EEA-4EA9-9837-2A2D1355BAF9}"
+	ProjectSection(SolutionItems) = preProject
+		cakebuild\build.cake = cakebuild\build.cake
+		cakebuild\build.ps1 = cakebuild\build.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tasks", "tasks", "{88F81594-D86D-4424-87F1-FA73CEC46051}"
+	ProjectSection(SolutionItems) = preProject
+		cakebuild\tasks\clean.cake = cakebuild\tasks\clean.cake
+		cakebuild\tasks\publish.cake = cakebuild\tasks\publish.cake
+		cakebuild\tasks\restore.cake = cakebuild\tasks\restore.cake
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +52,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{88F81594-D86D-4424-87F1-FA73CEC46051} = {1D15F9CF-6EEA-4EA9-9837-2A2D1355BAF9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7CB3FDF8-0DA7-4D1F-B674-0261172FE8F6}

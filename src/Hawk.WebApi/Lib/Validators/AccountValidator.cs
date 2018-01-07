@@ -4,7 +4,7 @@
 
     using Hawk.WebApi.Models.Account.Post;
 
-    public class AccountValidator : AbstractValidator<Account>
+    internal sealed class AccountValidator : AbstractValidator<Account>
     {
         public AccountValidator()
         {

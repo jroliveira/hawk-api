@@ -1,7 +1,21 @@
 ﻿namespace Hawk.WebApi.Models.Transaction
 {
-    public class Account
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class Account
     {
-        public virtual string Email { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public Account(string email)
+        {
+            this.Email = email;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Email { get; }
     }
 }
