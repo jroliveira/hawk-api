@@ -14,6 +14,8 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.Transaction
         public GetByIdQuery(Database database, TransactionMapping mapping, GetScript file)
             : base(database, file)
         {
+            Guard.NotNull(mapping, nameof(mapping), "Transaction mapping cannot be null.");
+
             this.mapping = mapping;
         }
 

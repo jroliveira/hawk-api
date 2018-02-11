@@ -1,9 +1,13 @@
 namespace Hawk.Domain.Entities.Payment
 {
+    using Hawk.Infrastructure;
+
     public sealed class Method
     {
         public Method(string name, int total = 0)
         {
+            Guard.NotNullNorEmpty(name, nameof(name), "Payment method's name cannot be null or empty.");
+
             this.Name = name;
             this.Total = total;
         }

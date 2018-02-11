@@ -10,15 +10,12 @@
         public Tag MapFrom(IRecord data)
         {
             var record = data.GetRecord("data");
-            if (record == null || !record.Any())
-            {
-                return null;
-            }
 
-            var name = record.Get("name");
-            var total = record.Get<int>("total");
+            Guard.NotNull(record, nameof(record), "Tag's record cannot be null.");
 
-            return new Tag(name, total);
+            return new Tag(
+                record.Get("name"),
+                record.Get<int>("total"));
         }
     }
 }

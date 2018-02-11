@@ -6,7 +6,9 @@
     {
         public Parcel MapFrom(Record record)
         {
-            if (record == null || !record.Any())
+            Guard.NotNull(record, nameof(record), "Parcel's record cannot be null.");
+
+            if (!record.Any())
             {
                 return null;
             }

@@ -12,6 +12,9 @@ namespace Hawk.Infrastructure.Data.Neo4J.Commands.Transaction
 
         public ExcludeCommand(Database database, GetScript file)
         {
+            Guard.NotNull(database, nameof(database), "Database cannot be null.");
+            Guard.NotNull(file, nameof(file), "Get script cannot be null.");
+
             this.database = database;
             this.file = file;
         }

@@ -23,6 +23,8 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.Tag
             IWhere<string, Filter> where)
             : base(database, file, limit, skip, where)
         {
+            Guard.NotNull(mapping, nameof(mapping), "Tag mapping cannot be null.");
+
             this.mapping = mapping;
         }
 
