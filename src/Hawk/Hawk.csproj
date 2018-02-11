@@ -5,8 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Reports\AmountGroupByStore\Query.cql" />
-    <None Remove="Reports\AmountGroupByTag\Query.cql" />
     <None Remove="Infrastructure\Data.Neo4J\Scripts\Account\Create.cql" />
     <None Remove="Infrastructure\Data.Neo4J\Scripts\Account\GetByEmail.cql" />
     <None Remove="Infrastructure\Data.Neo4J\Scripts\PaymentMethod\GetAll.cql" />
@@ -21,12 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Reports\AmountGroupByStore\Query.cql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\AmountGroupByTag\Query.cql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\Account\Create.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -63,11 +55,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="6.1.1" />
+    <PackageReference Include="AutoMapper" Version="6.2.2" />
     <PackageReference Include="Http.Query.Filter" Version="3.0.23" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0" />
-    <PackageReference Include="Neo4j.Driver" Version="1.5.0-rc2" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="Neo4j.Driver" Version="1.5.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1-beta3" />
   </ItemGroup>
 
 </Project>

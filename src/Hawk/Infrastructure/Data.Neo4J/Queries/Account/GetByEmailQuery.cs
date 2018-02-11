@@ -14,6 +14,8 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.Account
         public GetByEmailQuery(Database database, AccountMapping mapping, GetScript file)
             : base(database, file)
         {
+            Guard.NotNull(mapping, nameof(mapping), "Account mapping cannot be null.");
+
             this.mapping = mapping;
         }
 

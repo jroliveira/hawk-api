@@ -23,6 +23,8 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.PaymentMethod
             IWhere<string, Filter> where)
             : base(database, file, limit, skip, where)
         {
+            Guard.NotNull(mapping, nameof(mapping), "Method mapping cannot be null.");
+
             this.mapping = mapping;
         }
 
