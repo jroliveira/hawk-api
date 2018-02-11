@@ -6,10 +6,7 @@
     {
         public Currency MapFrom(Record record)
         {
-            if (record == null || !record.Any())
-            {
-                return null;
-            }
+            Guard.NotNull(record, nameof(record), "Currency's record cannot be null.");
 
             return new Currency(record.Get("name"));
         }

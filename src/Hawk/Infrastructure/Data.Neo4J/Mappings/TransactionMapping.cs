@@ -14,7 +14,7 @@
 
     internal sealed class TransactionMapping
     {
-        private readonly IDictionary<string, Func<Guid, Pay, Account, Transaction>> types;
+        private readonly IReadOnlyDictionary<string, Func<Guid, Pay, Account, Transaction>> types;
 
         private readonly AccountMapping accountMapping;
         private readonly PayMapping payMapping;
@@ -27,6 +27,11 @@
             StoreMapping storeMapping,
             ParcelMapping parcelMapping)
         {
+            Guard.NotNull(accountMapping, nameof(accountMapping), "Account mapping cannot be null.");
+            Guard.NotNull(payMapping, nameof(payMapping), "Pay mapping cannot be null.");
+            Guard.NotNull(storeMapping, nameof(storeMapping), "Store mapping cannot be null.");
+            Guard.NotNull(parcelMapping, nameof(parcelMapping), "Parcel mapping cannot be null.");
+
             this.accountMapping = accountMapping;
             this.payMapping = payMapping;
             this.storeMapping = storeMapping;
@@ -42,13 +47,16 @@
         public Transaction MapFrom(IRecord data)
         {
             var record = data.GetRecord("data");
+
+            Guard.NotNull(record, nameof(record), "Transaction's record cannot be null.");
+
             var type = record
                 .GetList("type")
                 .FirstOrDefault(t => this.types.ContainsKey(t.ToString()));
 
             if (!this.types.TryGetValue(type, out var createWith))
             {
-                throw new KeyNotFoundException();
+                throw new KeyNotFoundException($"Transaction's type {type} not configured.");
             }
 
             var account = this.accountMapping.MapFrom(record.GetRecord("account"));
@@ -64,7 +72,12 @@
                 transaction.AddTag(new Tag(tag));
             }
 
-            transaction.SplittedIn(this.parcelMapping.MapFrom(record.GetRecord("parcel")));
+            var parcel = this.parcelMapping.MapFrom(record.GetRecord("parcel"));
+            if (parcel != null)
+            {
+                transaction.SplittedIn(parcel);
+            }
+
             transaction.UpdateStore(this.storeMapping.MapFrom(record.GetRecord("store")));
 
             return transaction;

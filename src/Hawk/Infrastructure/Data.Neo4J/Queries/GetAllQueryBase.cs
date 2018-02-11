@@ -14,6 +14,10 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries
             IWhere<string, Filter> where)
             : base(database, file)
         {
+            Guard.NotNull(limit, nameof(limit), "Limit cannot be null.");
+            Guard.NotNull(skip, nameof(skip), "Skip cannot be null.");
+            Guard.NotNull(where, nameof(where), "Where cannot be null.");
+
             this.Skip = skip;
             this.Limit = limit;
             this.Where = where;

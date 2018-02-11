@@ -23,6 +23,8 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.Transaction
             IWhere<string, Filter> where)
             : base(database, file, limit, skip, where)
         {
+            Guard.NotNull(mapping, nameof(mapping), "Transaction mapping cannot be null.");
+
             this.mapping = mapping;
         }
 

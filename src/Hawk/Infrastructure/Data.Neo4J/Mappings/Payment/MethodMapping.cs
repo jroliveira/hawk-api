@@ -14,15 +14,11 @@
 
         public Method MapFrom(Record record)
         {
-            if (record == null || !record.Any())
-            {
-                return null;
-            }
+            Guard.NotNull(record, nameof(record), "Payment method's record cannot be null.");
 
-            var name = record.Get("name");
-            var total = record.Get<int>("total");
-
-            return new Method(name, total);
+            return new Method(
+                record.Get("name"),
+                record.Get<int>("total"));
         }
     }
 }

@@ -2,6 +2,8 @@
 {
     using System;
 
+    using Hawk.Infrastructure;
+
     public sealed class Account : Entity<Guid>
     {
         public Account(string email)
@@ -11,6 +13,8 @@
 
         internal Account(Guid id, string email)
         {
+            Guard.NotNullNorEmpty(email, nameof(email), "Account's e-mail cannot be null or empty.");
+
             this.Id = id;
             this.Email = email;
         }

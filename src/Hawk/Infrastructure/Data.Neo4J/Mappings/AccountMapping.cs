@@ -14,6 +14,8 @@
 
         public Account MapFrom(Record record)
         {
+            Guard.NotNull(record, nameof(record), "Account's record cannot be null.");
+
             return new Account(
                 record.GetGuid(),
                 record.Get("email"));

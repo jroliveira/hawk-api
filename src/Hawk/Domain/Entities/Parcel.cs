@@ -8,7 +8,7 @@
         {
             if (total < 1)
             {
-                throw new ArgumentException("Total should be greather than 1", nameof(total));
+                throw new ArgumentException($"Parcel's total {total} should be greather than 1", nameof(total));
             }
 
             this.Number = number;

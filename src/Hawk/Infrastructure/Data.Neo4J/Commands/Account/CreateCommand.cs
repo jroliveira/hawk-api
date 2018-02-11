@@ -16,6 +16,10 @@ namespace Hawk.Infrastructure.Data.Neo4J.Commands.Account
 
         public CreateCommand(Database database, AccountMapping mapping, GetScript file)
         {
+            Guard.NotNull(database, nameof(database), "Database cannot be null.");
+            Guard.NotNull(mapping, nameof(mapping), "Account mapping cannot be null.");
+            Guard.NotNull(file, nameof(file), "Get script cannot be null.");
+
             this.database = database;
             this.mapping = mapping;
             this.file = file;

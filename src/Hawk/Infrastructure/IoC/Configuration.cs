@@ -45,13 +45,6 @@
             services.AddSingleton<Data.Neo4J.Mappings.TagMapping>();
             services.AddSingleton<Data.Neo4J.Mappings.TransactionMapping>();
 
-            // Reports
-            services.AddSingleton<Reports.AmountGroupByStore.IGetQuery, Reports.AmountGroupByStore.GetQuery>();
-            services.AddSingleton<Reports.AmountGroupByTag.IGetQuery, Reports.AmountGroupByTag.GetQuery>();
-            services.AddSingleton<Reports.Mappings.ItemMapping>();
-            services.AddSingleton<Reports.Mappings.TransactionsMapping>();
-            services.AddSingleton<Reports.GetScript>();
-
             return services;
         }
     }

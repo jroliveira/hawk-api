@@ -1,9 +1,13 @@
 ﻿namespace Hawk.Domain.Entities.Payment
 {
+    using Hawk.Infrastructure;
+
     public sealed class Currency
     {
         public Currency(string name)
         {
+            Guard.NotNullNorEmpty(name, nameof(name), "Currency's name cannot be null or empty.");
+
             this.Name = name;
         }
 

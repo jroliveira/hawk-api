@@ -5,6 +5,7 @@ namespace Hawk.Domain.Entities
     using System.Linq;
 
     using Hawk.Domain.Entities.Payment;
+    using Hawk.Infrastructure;
 
     public abstract class Transaction : Entity<Guid>
     {
@@ -12,6 +13,9 @@ namespace Hawk.Domain.Entities
 
         protected Transaction(Guid id, Pay pay, Account account)
         {
+            Guard.NotNull(pay, nameof(pay), "Pay cannot be null.");
+            Guard.NotNull(account, nameof(account), "Account cannot be null.");
+
             this.Id = id;
             this.Pay = pay;
             this.Account = account;
@@ -30,21 +34,22 @@ namespace Hawk.Domain.Entities
 
         public void AddTag(Tag tag)
         {
-            if (tag == null)
-            {
-                return;
-            }
+            Guard.NotNull(tag, nameof(tag), "Tag cannot be null.");
 
             this.tags.Add(tag);
         }
 
         public void SplittedIn(Parcel parcel)
         {
+            Guard.NotNull(parcel, nameof(parcel), "Parcel cannot be null.");
+
             this.Parcel = parcel;
         }
 
         public void UpdateStore(Store store)
         {
+            Guard.NotNull(store, nameof(store), "Store cannot be null.");
+
             this.Store = store;
         }
 

@@ -6,6 +6,9 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries
             Database database,
             File file)
         {
+            Guard.NotNull(database, nameof(database), "Database cannot be null.");
+            Guard.NotNull(file, nameof(file), "File cannot be null.");
+
             this.Database = database;
             this.File = file;
         }
