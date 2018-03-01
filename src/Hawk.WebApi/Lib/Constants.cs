@@ -1,4 +1,4 @@
-﻿namespace Hawk.Domain
+﻿namespace Hawk.WebApi.Lib
 {
     public static class Constants
     {

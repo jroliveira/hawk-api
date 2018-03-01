@@ -78,7 +78,7 @@
                 transaction.SplittedIn(parcel);
             }
 
-            transaction.UpdateStore(this.storeMapping.MapFrom(record.GetRecord("store")));
+            transaction.UpdateStore(this.storeMapping.MapFrom(record.GetRecord("store")).Store);
 
             return transaction;
         }

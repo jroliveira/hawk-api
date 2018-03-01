@@ -3,6 +3,7 @@
     email: {email}
   })
 SET 
+  account.id = {id},
   account.creationDate = {creationDate}
 
 RETURN 

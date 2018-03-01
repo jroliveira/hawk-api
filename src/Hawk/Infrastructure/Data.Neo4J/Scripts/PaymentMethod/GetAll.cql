@@ -1,7 +1,10 @@
 ﻿MATCH 
-  (account:Account)-[:HAS]->(:Transaction)-[:PAID_WITH]->(paymentMethod:PaymentMethod)
+  (transaction:Transaction)-[:BELONGS]->(account:Account)
+MATCH
+  (transaction)-[:PAID_WITH]->(paymentMethod:PaymentMethod)-[:BELONGS]->(account)
 WHERE
   account.email = {email}
+
 RETURN
 { 
   name: paymentMethod.name,

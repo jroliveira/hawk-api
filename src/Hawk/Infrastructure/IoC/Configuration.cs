@@ -23,12 +23,15 @@
             services.AddSingleton<Domain.Commands.Account.ICreateCommand, Data.Neo4J.Commands.Account.CreateCommand>();
             services.AddSingleton<Domain.Commands.Transaction.ICreateCommand, Data.Neo4J.Commands.Transaction.CreateCommand>();
             services.AddSingleton<Domain.Commands.Transaction.IExcludeCommand, Data.Neo4J.Commands.Transaction.ExcludeCommand>();
+            services.AddSingleton<Domain.Commands.Store.ICreateCommand, Data.Neo4J.Commands.Store.CreateCommand>();
+            services.AddSingleton<Domain.Commands.Store.IExcludeCommand, Data.Neo4J.Commands.Store.ExcludeCommand>();
 
             // Queries
             services.AddSingleton<Domain.Queries.Account.IGetByEmailQuery, Data.Neo4J.Queries.Account.GetByEmailQuery>();
             services.AddSingleton<Domain.Queries.PaymentMethod.IGetAllQuery, Data.Neo4J.Queries.PaymentMethod.GetAllQuery>();
             services.AddSingleton<Domain.Queries.PaymentMethod.IGetAllByStoreQuery, Data.Neo4J.Queries.PaymentMethod.GetAllByStoreQuery>();
             services.AddSingleton<Domain.Queries.Store.IGetAllQuery, Data.Neo4J.Queries.Store.GetAllQuery>();
+            services.AddSingleton<Domain.Queries.Store.IGetByNameQuery, Data.Neo4J.Queries.Store.GetByNameQuery>();
             services.AddSingleton<Domain.Queries.Tag.IGetAllQuery, Data.Neo4J.Queries.Tag.GetAllQuery>();
             services.AddSingleton<Domain.Queries.Tag.IGetAllByStoreQuery, Data.Neo4J.Queries.Tag.GetAllByStoreQuery>();
             services.AddSingleton<Domain.Queries.Transaction.IGetAllQuery, Data.Neo4J.Queries.Transaction.GetAllQuery>();

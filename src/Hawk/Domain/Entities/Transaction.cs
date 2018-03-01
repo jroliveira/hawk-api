@@ -9,7 +9,7 @@ namespace Hawk.Domain.Entities
 
     public abstract class Transaction : Entity<Guid>
     {
-        private readonly ICollection<Tag> tags;
+        private readonly HashSet<Tag> tags;
 
         protected Transaction(Guid id, Pay pay, Account account)
         {
@@ -19,7 +19,7 @@ namespace Hawk.Domain.Entities
             this.Id = id;
             this.Pay = pay;
             this.Account = account;
-            this.tags = new List<Tag>();
+            this.tags = new HashSet<Tag>();
         }
 
         public Pay Pay { get; }
@@ -51,12 +51,6 @@ namespace Hawk.Domain.Entities
             Guard.NotNull(store, nameof(store), "Store cannot be null.");
 
             this.Store = store;
-        }
-
-        public Transaction Clone(Guid id)
-        {
-            this.Id = id;
-            return this;
         }
     }
 }

@@ -7,17 +7,17 @@
 
     internal sealed class MethodMapping
     {
-        public Method MapFrom(IRecord data)
+        public (Method Method, int Count) MapFrom(IRecord data)
         {
             return this.MapFrom(data.GetRecord("data"));
         }
 
-        public Method MapFrom(Record record)
+        public (Method Method, int Count) MapFrom(Record record)
         {
             Guard.NotNull(record, nameof(record), "Payment method's record cannot be null.");
 
-            return new Method(
-                record.Get("name"),
+            return (
+                new Method(record.Get("name")),
                 record.Get<int>("total"));
         }
     }

@@ -7,7 +7,7 @@ namespace Hawk.WebApi.Controllers
     using Hawk.Domain.Queries.Tag;
     using Hawk.Infrastructure;
     using Hawk.WebApi.Lib.Extensions;
-    using Hawk.WebApi.Models;
+    using Hawk.WebApi.Models.Tag.Get;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -53,7 +53,7 @@ namespace Hawk.WebApi.Controllers
         /// <param name="store"></param>
         /// <returns></returns>
         [HttpGet("stores/{store}/tags")]
-        [ProducesResponseType(typeof(Tag), 200)]
+        [ProducesResponseType(typeof(Paged<Tag>), 200)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetByStore(string store)
         {

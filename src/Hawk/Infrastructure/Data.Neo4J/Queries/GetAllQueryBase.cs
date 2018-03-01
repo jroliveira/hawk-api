@@ -4,15 +4,16 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries
 
     using Http.Query.Filter;
 
-    internal class GetAllQueryBase : QueryBase
+    internal class GetAllQueryBase : Connection
     {
         public GetAllQueryBase(
             Database database,
             File file,
+            string statement,
             ILimit<int, Filter> limit,
             ISkip<int, Filter> skip,
             IWhere<string, Filter> where)
-            : base(database, file)
+            : base(database, file, statement)
         {
             Guard.NotNull(limit, nameof(limit), "Limit cannot be null.");
             Guard.NotNull(skip, nameof(skip), "Skip cannot be null.");

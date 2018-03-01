@@ -7,7 +7,7 @@ namespace Hawk.WebApi.Controllers
     using Hawk.Domain.Queries.PaymentMethod;
     using Hawk.Infrastructure;
     using Hawk.WebApi.Lib.Extensions;
-    using Hawk.WebApi.Models;
+    using Hawk.WebApi.Models.PaymentMethod.Get;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;

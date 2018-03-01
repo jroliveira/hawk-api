@@ -7,12 +7,12 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.Account
     using Hawk.Domain.Queries.Account;
     using Hawk.Infrastructure.Data.Neo4J.Mappings;
 
-    internal sealed class GetByEmailQuery : QueryBase, IGetByEmailQuery
+    internal sealed class GetByEmailQuery : Connection, IGetByEmailQuery
     {
         private readonly AccountMapping mapping;
 
-        public GetByEmailQuery(Database database, AccountMapping mapping, GetScript file)
-            : base(database, file)
+        public GetByEmailQuery(Database database, GetScript file, AccountMapping mapping)
+            : base(database, file, "Account.GetByEmail.cql")
         {
             Guard.NotNull(mapping, nameof(mapping), "Account mapping cannot be null.");
 
@@ -21,13 +21,12 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.Account
 
         public async Task<Account> GetResult(string email)
         {
-            var query = this.File.ReadAllText("Account.GetByEmail.cql");
             var parameters = new
             {
                 email
             };
 
-            var entities = await this.Database.Execute(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
+            var entities = await this.Database.Execute(this.mapping.MapFrom, this.Statement, parameters).ConfigureAwait(false);
 
             return entities.FirstOrDefault();
         }

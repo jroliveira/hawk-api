@@ -1,7 +1,37 @@
-﻿MATCH 
+﻿// (:Account)
+MATCH 
   (account:Account)
 WHERE
   account.email = {email}
+
+// (:Store)
+
+MERGE 
+  (store:Store { 
+    name: {store}
+  })
+CREATE UNIQUE
+  (store)-[:BELONGS]->(account)
+
+// (:Currency)
+
+MERGE 
+  (currency:Currency { 
+    name: {currency}
+  })
+CREATE UNIQUE
+  (currency)-[:BELONGS]->(account)
+
+// (:PaymentMethod)
+
+MERGE 
+  (paymentMethod:PaymentMethod { 
+    name: {method}
+  })
+CREATE UNIQUE
+  (paymentMethod)-[:BELONGS]->(account)
+
+// (:Transaction)
 
 MERGE
   (transaction:Transaction { 
@@ -15,14 +45,24 @@ SET
   transaction.year = {year},
   transaction.month = {month},
   transaction.day = {day},
-  transaction.email = {email},
   transaction.parcels = {parcels},
   transaction.parcel = {parcel}
 CREATE UNIQUE
-  (account)-[:HAS]->(transaction)
+  (transaction)-[:BELONGS]->(account)
+CREATE UNIQUE
+  (transaction)-[:IN]->(store)
+CREATE UNIQUE
+  (transaction)-[:PAID_IN]->(currency)
+CREATE UNIQUE
+  (transaction)-[:PAID_WITH]->(paymentMethod)
 WITH
   account,
+  store,
+  currency,
+  paymentMethod,
   transaction
+
+// (:Tag)
 
 UNWIND
   {tags} AS tagName
@@ -31,28 +71,11 @@ MERGE
     name: tagName
   })
 CREATE UNIQUE
-  (transaction)<-[:BELONGS]-(tag)
-
-MERGE 
-  (currency:Currency { 
-    name: {currency}
-  })
+  (tag)-[:BELONGS]->(account)
 CREATE UNIQUE
-  (transaction)-[:PAID_IN]->(currency)
-
-MERGE 
-  (paymentMethod:PaymentMethod { 
-    name: {method}
-  })
+  (store)-[:HAS]->(tag)
 CREATE UNIQUE
-  (transaction)-[:PAID_WITH]->(paymentMethod)
-
-MERGE 
-  (store:Store { 
-    name: {store}
-  })
-CREATE UNIQUE
-  (transaction)-[:IN]->(store)
+  (transaction)-[:HAS]->(tag)
 
 RETURN 
 { 

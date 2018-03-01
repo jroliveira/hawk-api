@@ -7,18 +7,23 @@
 
     internal sealed class StoreMapping
     {
-        public Store MapFrom(IRecord data)
+        public (Store Store, int Count) MapFrom(IRecord data)
         {
             return this.MapFrom(data.GetRecord("data"));
         }
 
-        public Store MapFrom(Record record)
+        public (Store Store, int Count) MapFrom(Record record)
         {
             Guard.NotNull(record, nameof(record), "Store's record cannot be null.");
 
-            return new Store(
-                record.Get("name"),
-                record.Get<int>("total"));
+            var store = new Store(record.Get("name"));
+
+            foreach (var tag in record.GetList("tags"))
+            {
+                store.AddTag(new Tag(tag));
+            }
+
+            return (store, record.Get<int>("total"));
         }
     }
 }

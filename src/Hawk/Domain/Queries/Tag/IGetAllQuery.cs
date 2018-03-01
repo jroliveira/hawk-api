@@ -9,6 +9,6 @@
 
     public interface IGetAllQuery
     {
-        Task<Paged<Tag>> GetResult(string email, Filter filter);
+        Task<Paged<(Tag Tag, int Count)>> GetResult(string email, Filter filter);
     }
 }
