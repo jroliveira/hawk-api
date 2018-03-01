@@ -23,7 +23,7 @@
             Guard.NotNull(record, nameof(record), "Pay's record cannot be null.");
 
             var price = this.priceMapping.MapFrom(record);
-            var method = this.methodMapping.MapFrom(record.GetRecord("method"));
+            var method = this.methodMapping.MapFrom(record.GetRecord("method")).Method;
             var date = new DateTime(
                 record.Get<int>("year"),
                 record.Get<int>("month"),

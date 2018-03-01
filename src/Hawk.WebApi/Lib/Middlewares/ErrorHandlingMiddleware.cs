@@ -6,7 +6,7 @@ namespace Hawk.WebApi.Lib.Middlewares
     using System.Threading.Tasks;
 
     using Hawk.Domain;
-    using Hawk.Domain.Exceptions;
+    using Hawk.WebApi.Lib.Exceptions;
     using Hawk.WebApi.Models;
 
     using Microsoft.AspNetCore.Http;

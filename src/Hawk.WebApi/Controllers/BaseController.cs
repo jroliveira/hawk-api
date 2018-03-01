@@ -4,10 +4,15 @@ namespace Hawk.WebApi.Controllers
     using Microsoft.AspNetCore.Mvc;
 
     /// <inheritdoc />
-    public class BaseController : Controller
+    public class BaseController : ControllerBase
     {
-        /// <inheritdoc />
-        public override CreatedResult Created(string id, object value)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public CreatedResult Created(object id, object value)
         {
             var uri = $"{this.Request.GetDisplayUrl()}/{id}";
 

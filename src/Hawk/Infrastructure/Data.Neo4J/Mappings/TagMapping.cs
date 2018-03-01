@@ -7,15 +7,18 @@
 
     internal sealed class TagMapping
     {
-        public Tag MapFrom(IRecord data)
+        public (Tag Tag, int Count) MapFrom(IRecord data)
         {
-            var record = data.GetRecord("data");
+            return this.MapFrom(data.GetRecord("data"));
+        }
 
+        public (Tag Tag, int Count) MapFrom(Record record)
+        {
             Guard.NotNull(record, nameof(record), "Tag's record cannot be null.");
 
-            return new Tag(
-                record.Get("name"),
-                record.Get<int>("total"));
+            var tag = new Tag(record.Get("name"));
+
+            return (tag, record.Get<int>("total"));
         }
     }
 }

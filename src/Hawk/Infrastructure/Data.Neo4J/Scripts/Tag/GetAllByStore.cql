@@ -1,13 +1,13 @@
 ﻿MATCH 
-  (account:Account)-[:HAS]->(transaction:Transaction)-[:IN]->(store:Store)
+  (transaction:Transaction)-[:BELONGS]->(account:Account)
+MATCH
+  (transaction)-[:IN]->(store:Store)-[:BELONGS]->(account)
+MATCH 
+  (transaction)-[:HAS]->(tag:Tag)-[:BELONGS]->(account)
 WHERE
   account.email = {email}
   AND store.name = {store}
-WITH
-  transaction
 
-MATCH
-  (transaction)<-[:BELONGS]-(tag:Tag)
 RETURN
 { 
   name: tag.name,

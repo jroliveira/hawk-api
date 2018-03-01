@@ -21,7 +21,7 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.Transaction
             ILimit<int, Filter> limit,
             ISkip<int, Filter> skip,
             IWhere<string, Filter> where)
-            : base(database, file, limit, skip, where)
+            : base(database, file, "Transaction.GetAll.cql", limit, skip, where)
         {
             Guard.NotNull(mapping, nameof(mapping), "Transaction mapping cannot be null.");
 
@@ -31,8 +31,8 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.Transaction
         public async Task<Paged<Transaction>> GetResult(string email, Filter filter)
         {
             var where = this.Where.Apply(filter, "transaction");
-            var query = this.File.ReadAllText(@"Transaction.GetAll.cql");
-            query = query.Replace("#where#", where);
+            var statement = this.Statement;
+            statement = statement.Replace("#where#", where);
 
             var parameters = new
             {
@@ -41,7 +41,7 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.Transaction
                 limit = this.Limit.Apply(filter)
             };
 
-            var data = await this.Database.Execute(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
+            var data = await this.Database.Execute(this.mapping.MapFrom, statement, parameters).ConfigureAwait(false);
             var entities = data
                 .OrderBy(item => item.Pay.Date)
                 .ToList();

@@ -5,7 +5,6 @@ namespace Hawk.WebApi.Controllers
     using AutoMapper;
 
     using Hawk.Domain.Commands.Account;
-    using Hawk.Domain.Exceptions;
     using Hawk.Domain.Queries.Account;
     using Hawk.WebApi.Lib.Exceptions;
     using Hawk.WebApi.Lib.Validators;

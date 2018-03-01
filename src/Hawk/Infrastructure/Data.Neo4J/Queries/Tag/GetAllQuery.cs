@@ -21,16 +21,15 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.Tag
             ILimit<int, Filter> limit,
             ISkip<int, Filter> skip,
             IWhere<string, Filter> where)
-            : base(database, file, limit, skip, where)
+            : base(database, file, "Tag.GetAll.cql", limit, skip, where)
         {
             Guard.NotNull(mapping, nameof(mapping), "Tag mapping cannot be null.");
 
             this.mapping = mapping;
         }
 
-        public async Task<Paged<Tag>> GetResult(string email, Filter filter)
+        public async Task<Paged<(Tag Tag, int Count)>> GetResult(string email, Filter filter)
         {
-            var query = this.File.ReadAllText(@"Tag.GetAll.cql");
             var parameters = new
             {
                 email,
@@ -38,12 +37,12 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.Tag
                 limit = this.Limit.Apply(filter)
             };
 
-            var data = await this.Database.Execute(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
+            var data = await this.Database.Execute(this.mapping.MapFrom, this.Statement, parameters).ConfigureAwait(false);
             var entities = data
-                .OrderBy(item => item.Name)
+                .OrderBy(item => item.Tag.Name)
                 .ToList();
 
-            return new Paged<Tag>(entities, parameters.skip, parameters.limit);
+            return new Paged<(Tag, int)>(entities, parameters.skip, parameters.limit);
         }
     }
 }
