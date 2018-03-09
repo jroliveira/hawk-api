@@ -28,7 +28,28 @@ namespace Hawk.Infrastructure.Data.Neo4J
             }
         }
 
-        public async Task<TResult> Execute<TResult>(Func<ISession, Task<TResult>> command)
+        public async Task<IEnumerable<TReturn>> Execute<TReturn>(Func<IRecord, TReturn> mapping, string statement, object parameters)
+        {
+            return await this.Execute(async session =>
+            {
+                var cursor = await session.RunAsync(statement, parameters).ConfigureAwait(false);
+                var data = await cursor.ToListAsync().ConfigureAwait(false);
+
+                return data.Select(mapping);
+            });
+        }
+
+        public async Task Execute(string statement, object parameters)
+        {
+            await this.Execute(async session => await session.RunAsync(statement, parameters).ConfigureAwait(false));
+        }
+
+        public void Dispose()
+        {
+            this.driver.Dispose();
+        }
+
+        private async Task<TResult> Execute<TResult>(Func<ISession, Task<TResult>> command)
         {
             using (var session = this.driver.Session())
             {
@@ -41,22 +62,6 @@ namespace Hawk.Infrastructure.Data.Neo4J
                     throw new Exception("Could not run command in database", exception);
                 }
             }
-        }
-
-        public async Task<ICollection<TResult>> Execute<TResult>(Func<IRecord, TResult> mapping, string query, object parameters)
-        {
-            return await this.Execute(async session =>
-            {
-                var cursor = await session.RunAsync(query, parameters).ConfigureAwait(false);
-                var data = await cursor.ToListAsync().ConfigureAwait(false);
-
-                return data.Select(mapping).ToList();
-            });
-        }
-
-        public void Dispose()
-        {
-            this.driver.Dispose();
         }
     }
 }

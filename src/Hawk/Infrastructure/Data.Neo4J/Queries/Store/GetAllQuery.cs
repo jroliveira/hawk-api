@@ -21,16 +21,15 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.Store
             ILimit<int, Filter> limit,
             ISkip<int, Filter> skip,
             IWhere<string, Filter> where)
-            : base(database, file, limit, skip, where)
+            : base(database, file, "Store.GetAll.cql", limit, skip, where)
         {
             Guard.NotNull(mapping, nameof(mapping), "Store mapping cannot be null.");
 
             this.mapping = mapping;
         }
 
-        public async Task<Paged<Store>> GetResult(string email, Filter filter)
+        public async Task<Paged<(Store Store, int Count)>> GetResult(string email, Filter filter)
         {
-            var query = this.File.ReadAllText(@"Store.GetAll.cql");
             var parameters = new
             {
                 email,
@@ -38,12 +37,12 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.Store
                 limit = this.Limit.Apply(filter)
             };
 
-            var data = await this.Database.Execute(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
+            var data = await this.Database.Execute(this.mapping.MapFrom, this.Statement, parameters).ConfigureAwait(false);
             var entities = data
-                .OrderBy(item => item.Name)
+                .OrderBy(item => item.Store)
                 .ToList();
 
-            return new Paged<Store>(entities, parameters.skip, parameters.limit);
+            return new Paged<(Store, int)>(entities, parameters.skip, parameters.limit);
         }
     }
 }

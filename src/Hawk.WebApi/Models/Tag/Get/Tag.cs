@@ -1,8 +1,8 @@
-﻿namespace Hawk.WebApi.Models
+﻿namespace Hawk.WebApi.Models.Tag.Get
 {
-    internal sealed class Store
+    internal sealed class Tag
     {
-        public Store(string name, int total)
+        public Tag(string name, int total)
         {
             this.Name = name;
             this.Total = total;

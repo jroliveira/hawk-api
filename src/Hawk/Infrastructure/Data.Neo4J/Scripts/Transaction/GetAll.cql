@@ -1,39 +1,56 @@
 ﻿MATCH 
-  (account:Account)-[:HAS]->(transaction:Transaction)-[:PAID_IN]->(currency:Currency)
+  (transaction:Transaction)-[:BELONGS]->(account:Account)
 WHERE
   account.email = {email}
   AND #where#
 WITH
   account,
-  currency,
   transaction
 
 OPTIONAL MATCH
-  (transaction)-[:IN]->(store:Store)
+  (transaction)-[:IN]->(store:Store)-[:BELONGS]->(account)
 WITH
   account,
-  currency,
   transaction,
   store
 
 OPTIONAL MATCH 
-  (transaction)-[:PAID_WITH]->(paymentMethod:PaymentMethod)
+  (transaction)-[:PAID_WITH]->(paymentMethod:PaymentMethod)-[:BELONGS]->(account)
 WITH
   account,
-  currency,
   transaction,
   store,
   paymentMethod
-
-OPTIONAL MATCH
-  (transaction)<-[:BELONGS]-(tag:Tag)
+  
+OPTIONAL MATCH 
+  (transaction)-[:PAID_IN]->(currency:Currency)-[:BELONGS]->(account)
 WITH
   account,
-  currency,
   transaction,
   store,
   paymentMethod,
+  currency
+
+OPTIONAL MATCH
+  (transaction)-[:HAS]->(tag:Tag)-[:BELONGS]->(account)
+WITH
+  account,
+  transaction,
+  store,
+  paymentMethod,
+  currency,
   tag
+
+OPTIONAL MATCH
+  (store)-[:HAS]->(storeTag:Tag)-[:BELONGS]->(account)
+WITH
+  account,
+  transaction,
+  store,
+  paymentMethod,
+  currency,
+  tag,
+  storeTag
 
 RETURN 
 { 
@@ -48,7 +65,8 @@ RETURN
     total: transaction.parcels
   } END,
   store: CASE WHEN store IS null THEN NULL ELSE {
-    name: store.name
+    name: store.name,
+	tags: collect(storeTag.name)
   } END,
   payment: {
     value: transaction.value,

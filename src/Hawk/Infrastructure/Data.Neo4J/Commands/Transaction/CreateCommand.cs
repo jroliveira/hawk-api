@@ -7,27 +7,21 @@ namespace Hawk.Infrastructure.Data.Neo4J.Commands.Transaction
     using Hawk.Domain.Entities;
     using Hawk.Infrastructure.Data.Neo4J.Mappings;
 
-    internal sealed class CreateCommand : ICreateCommand
+    internal sealed class CreateCommand : Connection, ICreateCommand
     {
-        private readonly Database database;
         private readonly TransactionMapping mapping;
-        private readonly GetScript file;
 
-        public CreateCommand(Database database, TransactionMapping mapping, GetScript file)
+        public CreateCommand(Database database, GetScript file, TransactionMapping mapping)
+            : base(database, file, "Transaction.Create.cql")
         {
-            Guard.NotNull(database, nameof(database), "Database cannot be null.");
             Guard.NotNull(mapping, nameof(mapping), "Transaction mapping cannot be null.");
-            Guard.NotNull(file, nameof(file), "Get script cannot be null.");
 
-            this.database = database;
             this.mapping = mapping;
-            this.file = file;
         }
 
         public async Task<Transaction> Execute(Transaction entity)
         {
-            var query = this.file.ReadAllText(@"Transaction.Create.cql");
-            query = query.Replace("#type#", entity.GetType().Name);
+            var statement = this.Statement.Replace("#type#", entity.GetType().Name);
 
             var parameters = new
             {
@@ -45,7 +39,7 @@ namespace Hawk.Infrastructure.Data.Neo4J.Commands.Transaction
                 tags = entity.Tags.Select(tag => tag.Name).ToArray()
             };
 
-            var inserted = await this.database.Execute(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
+            var inserted = await this.Database.Execute(this.mapping.MapFrom, statement, parameters).ConfigureAwait(false);
 
             return inserted.FirstOrDefault();
         }

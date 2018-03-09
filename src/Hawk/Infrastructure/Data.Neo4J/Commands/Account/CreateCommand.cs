@@ -8,33 +8,28 @@ namespace Hawk.Infrastructure.Data.Neo4J.Commands.Account
     using Hawk.Domain.Entities;
     using Hawk.Infrastructure.Data.Neo4J.Mappings;
 
-    internal sealed class CreateCommand : ICreateCommand
+    internal sealed class CreateCommand : Connection, ICreateCommand
     {
-        private readonly Database database;
         private readonly AccountMapping mapping;
-        private readonly GetScript file;
 
-        public CreateCommand(Database database, AccountMapping mapping, GetScript file)
+        public CreateCommand(Database database, GetScript file, AccountMapping mapping)
+            : base(database, file, "Account.Create.cql")
         {
-            Guard.NotNull(database, nameof(database), "Database cannot be null.");
             Guard.NotNull(mapping, nameof(mapping), "Account mapping cannot be null.");
-            Guard.NotNull(file, nameof(file), "Get script cannot be null.");
 
-            this.database = database;
             this.mapping = mapping;
-            this.file = file;
         }
 
         public async Task<Account> Execute(Account entity)
         {
-            var query = this.file.ReadAllText(@"Account.Create.cql");
             var parameters = new
             {
+                id = entity.Id.ToString(),
                 email = entity.Email,
                 creationDate = entity.CreationAt.ToString(CultureInfo.InvariantCulture)
             };
 
-            var inserted = await this.database.Execute(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
+            var inserted = await this.Database.Execute(this.mapping.MapFrom, this.Statement, parameters).ConfigureAwait(false);
 
             return inserted.FirstOrDefault();
         }

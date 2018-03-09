@@ -5,7 +5,6 @@ namespace Hawk.WebApi.Controllers
     using AutoMapper;
 
     using Hawk.Domain.Commands.Transaction;
-    using Hawk.Domain.Exceptions;
     using Hawk.Domain.Queries.Transaction;
     using Hawk.Infrastructure;
     using Hawk.WebApi.Lib;
@@ -57,8 +56,22 @@ namespace Hawk.WebApi.Controllers
             this.getById = getById;
             this.create = create;
             this.exclude = exclude;
-            this.validator = validator;
             this.mapper = mapper;
+            this.validator = validator;
+        }
+
+        /// <summary>
+        /// Get
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [ProducesResponseType(typeof(Paged<Transaction>), 200)]
+        public async Task<IActionResult> Get()
+        {
+            var entities = await this.getAll.GetResult(this.User.GetClientId(), this.Request.QueryString.Value).ConfigureAwait(false);
+            var model = this.mapper.Map<Paged<Transaction>>(entities);
+
+            return this.Ok(model);
         }
 
         /// <summary>
@@ -78,20 +91,6 @@ namespace Hawk.WebApi.Controllers
             }
 
             var model = this.mapper.Map<Transaction>(entity);
-
-            return this.Ok(model);
-        }
-
-        /// <summary>
-        /// Get
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        [ProducesResponseType(typeof(Paged<Transaction>), 200)]
-        public async Task<IActionResult> Get()
-        {
-            var entities = await this.getAll.GetResult(this.User.GetClientId(), this.Request.QueryString.Value).ConfigureAwait(false);
-            var model = this.mapper.Map<Paged<Transaction>>(entities);
 
             return this.Ok(model);
         }

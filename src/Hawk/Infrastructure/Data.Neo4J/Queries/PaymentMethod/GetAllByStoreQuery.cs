@@ -21,16 +21,15 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.PaymentMethod
             ILimit<int, Filter> limit,
             ISkip<int, Filter> skip,
             IWhere<string, Filter> where)
-            : base(database, file, limit, skip, where)
+            : base(database, file, "PaymentMethod.GetAllByStore.cql", limit, skip, where)
         {
             Guard.NotNull(mapping, nameof(mapping), "Method mapping cannot be null.");
 
             this.mapping = mapping;
         }
 
-        public async Task<Paged<Method>> GetResult(string email, string store, Filter filter)
+        public async Task<Paged<(Method Method, int Count)>> GetResult(string email, string store, Filter filter)
         {
-            var query = this.File.ReadAllText(@"PaymentMethod.GetAllByStore.cql");
             var parameters = new
             {
                 email,
@@ -39,12 +38,12 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.PaymentMethod
                 limit = this.Limit.Apply(filter)
             };
 
-            var data = await this.Database.Execute(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
+            var data = await this.Database.Execute(this.mapping.MapFrom, this.Statement, parameters).ConfigureAwait(false);
             var entities = data
-                .OrderBy(item => item.Name)
+                .OrderBy(item => item.Method)
                 .ToList();
 
-            return new Paged<Method>(entities, parameters.skip, parameters.limit);
+            return new Paged<(Method, int)>(entities, parameters.skip, parameters.limit);
         }
     }
 }

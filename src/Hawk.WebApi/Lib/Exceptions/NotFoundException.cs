@@ -1,8 +1,8 @@
-﻿namespace Hawk.Domain.Exceptions
+﻿namespace Hawk.WebApi.Lib.Exceptions
 {
     using System;
 
-    public sealed class NotFoundException : Exception
+    internal sealed class NotFoundException : Exception
     {
         public NotFoundException(string message)
             : base(message)

@@ -7,12 +7,12 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.Transaction
     using Hawk.Domain.Queries.Transaction;
     using Hawk.Infrastructure.Data.Neo4J.Mappings;
 
-    internal sealed class GetByIdQuery : QueryBase, IGetByIdQuery
+    internal sealed class GetByIdQuery : Connection, IGetByIdQuery
     {
         private readonly TransactionMapping mapping;
 
-        public GetByIdQuery(Database database, TransactionMapping mapping, GetScript file)
-            : base(database, file)
+        public GetByIdQuery(Database database, GetScript file, TransactionMapping mapping)
+            : base(database, file, "Transaction.GetById.cql")
         {
             Guard.NotNull(mapping, nameof(mapping), "Transaction mapping cannot be null.");
 
@@ -21,14 +21,13 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.Transaction
 
         public async Task<Transaction> GetResult(string id, string email)
         {
-            var query = this.File.ReadAllText(@"Transaction.GetById.cql");
             var parameters = new
             {
                 id,
                 email
             };
 
-            var entities = await this.Database.Execute(this.mapping.MapFrom, query, parameters).ConfigureAwait(false);
+            var entities = await this.Database.Execute(this.mapping.MapFrom, this.Statement, parameters).ConfigureAwait(false);
 
             return entities.FirstOrDefault();
         }

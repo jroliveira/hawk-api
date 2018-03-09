@@ -8,11 +8,8 @@
     {
         public TagProfile()
         {
-            this.CreateMap<Models.Tag, Tag>()
-                .ConstructUsing(model => new Tag(model.Name));
-
-            this.CreateMap<Tag, Models.Tag>()
-                .ConstructUsing(entity => new Models.Tag(entity.Name, entity.Total));
+            this.CreateMap<(Tag Tag, int Count), Models.Tag.Get.Tag>()
+                .ConstructUsing(item => new Models.Tag.Get.Tag(item.Tag.Name, item.Count));
         }
     }
 }

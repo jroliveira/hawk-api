@@ -8,11 +8,11 @@
     {
         public StoreProfile()
         {
-            this.CreateMap<Models.Store, Store>()
+            this.CreateMap<Models.Store.Post.Store, Store>()
                 .ConstructUsing(model => new Store(model.Name));
 
-            this.CreateMap<Store, Models.Store>()
-                .ConstructUsing(entity => new Models.Store(entity.Name, entity.Total));
+            this.CreateMap<(Store Store, int Count), Models.Store.Get.Store>()
+                .ConstructUsing(entity => new Models.Store.Get.Store(entity.Store.Name, entity.Count));
         }
     }
 }

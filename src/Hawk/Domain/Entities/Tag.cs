@@ -1,20 +1,19 @@
 ﻿namespace Hawk.Domain.Entities
 {
+    using System;
+
     using Hawk.Infrastructure;
 
-    public sealed class Tag
+    public sealed class Tag : IEquatable<Tag>
     {
-        public Tag(string name, int total = 0)
+        public Tag(string name)
         {
             Guard.NotNullNorEmpty(name, nameof(name), "Tag's name cannot be null or empty.");
 
             this.Name = name;
-            this.Total = total;
         }
 
         public string Name { get; }
-
-        public int Total { get; }
 
         public static implicit operator string(Tag tag)
         {
@@ -24,6 +23,41 @@
         public static implicit operator Tag(string name)
         {
             return new Tag(name);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            return obj is Tag tag && this.Equals(tag);
+        }
+
+        public bool Equals(Tag other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return string.Equals(this.Name, other.Name);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Name != null ? this.Name.GetHashCode() : 0;
         }
     }
 }
