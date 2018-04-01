@@ -5,21 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Infrastructure\Data.Neo4J\Scripts\Account\Create.cql" />
-    <None Remove="Infrastructure\Data.Neo4J\Scripts\Account\GetByEmail.cql" />
-    <None Remove="Infrastructure\Data.Neo4J\Scripts\PaymentMethod\GetAll.cql" />
-    <None Remove="Infrastructure\Data.Neo4J\Scripts\PaymentMethod\GetAllByStore.cql" />
-    <None Remove="Infrastructure\Data.Neo4J\Scripts\Store\GetAll.cql" />
-    <None Remove="Infrastructure\Data.Neo4J\Scripts\Store\GetByName.cql" />
-    <None Remove="Infrastructure\Data.Neo4J\Scripts\Tag\GetAll.cql" />
-    <None Remove="Infrastructure\Data.Neo4J\Scripts\Tag\GetAllByStore.cql" />
-    <None Remove="Infrastructure\Data.Neo4J\Scripts\Transaction\Create.cql" />
-    <None Remove="Infrastructure\Data.Neo4J\Scripts\Transaction\Exclude.cql" />
-    <None Remove="Infrastructure\Data.Neo4J\Scripts\Transaction\GetAll.cql" />
-    <None Remove="Infrastructure\Data.Neo4J\Scripts\Transaction\GetById.cql" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\Account\Create.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -61,9 +46,12 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.2.2" />
     <PackageReference Include="Http.Query.Filter" Version="3.0.23" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.1" />
     <PackageReference Include="Neo4j.Driver" Version="1.5.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1-beta3" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Serilog" Version="2.6.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
   </ItemGroup>
 
 </Project>

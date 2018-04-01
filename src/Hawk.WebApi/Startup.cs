@@ -1,8 +1,6 @@
 ﻿namespace Hawk.WebApi
 {
     using AspNetCoreRateLimit;
-
-    using Hawk.Domain;
     using Hawk.Infrastructure.IoC;
     using Hawk.WebApi.Configuration;
     using Hawk.WebApi.Lib;
@@ -33,6 +31,7 @@
             services
                 .ConfigureIpRateLimiting(this.Configuration)
                 .ConfigureDatabase(this.Configuration)
+                .ConfigureLog(this.Configuration)
                 .ConfigureIoC()
                 .ConfigureApi()
                 .ConfigureSwagger()
@@ -49,7 +48,8 @@
                 .UseResponseCompression()
                 .UseIpRateLimiting()
                 .UseMiddleware<ErrorHandlingMiddleware>()
-                .UseSecurityHeaders()
+                .UseMiddleware<SecurityHeadersMiddleware>()
+                .UseMiddleware<HttpLogMiddleware>()
                 .UseCors(Constants.Api.Cors)
                 .UseAuthentication()
                 .UseMvc()

@@ -6,6 +6,7 @@ namespace Hawk.WebApi.Lib.Middlewares
     using System.Threading.Tasks;
 
     using Hawk.Domain;
+    using Hawk.Infrastructure.Logging;
     using Hawk.WebApi.Lib.Exceptions;
     using Hawk.WebApi.Models;
 
@@ -16,11 +17,17 @@ namespace Hawk.WebApi.Lib.Middlewares
     internal sealed class ErrorHandlingMiddleware
     {
         private readonly RequestDelegate next;
+
+        private readonly Logger logger;
+        private readonly IHttpContextAccessor contextAccessor;
         private readonly IReadOnlyDictionary<string, int> statusCode;
 
-        public ErrorHandlingMiddleware(RequestDelegate next)
+        public ErrorHandlingMiddleware(RequestDelegate next, Logger logger, IHttpContextAccessor contextAccessor)
         {
             this.next = next;
+            this.logger = logger;
+            this.contextAccessor = contextAccessor;
+
             this.statusCode = new Dictionary<string, int>
             {
                 { Constants.Exceptions.NotFound, 404 },
@@ -55,6 +62,7 @@ namespace Hawk.WebApi.Lib.Middlewares
                 }
 
                 var model = new Error(message.ToString());
+                this.logger.Error(new DefaultLogData(this.logger.Level, context.Request.Headers["reqId"], model));
 
                 this.statusCode.TryGetValue(exception.GetType().Name, out var code);
                 context.Response.StatusCode = code != 0 ? code : 500;
