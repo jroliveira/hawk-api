@@ -2,7 +2,6 @@
 {
     using AutoMapper;
 
-    using Hawk.Domain;
     using Hawk.WebApi.Lib;
     using Hawk.WebApi.Lib.Conventions;
 
