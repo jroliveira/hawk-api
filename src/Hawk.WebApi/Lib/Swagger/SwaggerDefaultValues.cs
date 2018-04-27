@@ -1,7 +1,6 @@
 ﻿namespace Hawk.WebApi.Lib.Swagger
 {
     using System.Linq;
-
     using Swashbuckle.AspNetCore.Swagger;
     using Swashbuckle.AspNetCore.SwaggerGen;
 

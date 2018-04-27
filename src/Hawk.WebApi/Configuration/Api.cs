@@ -1,21 +1,20 @@
 ﻿namespace Hawk.WebApi.Configuration
 {
-    using AutoMapper;
-
     using Hawk.WebApi.Lib;
     using Hawk.WebApi.Lib.Conventions;
-
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.DependencyInjection;
-
+    using Microsoft.Extensions.DependencyInjection.Extensions;
     using Newtonsoft.Json;
 
     internal static class Api
     {
-        public static IServiceCollection ConfigureApi(this IServiceCollection services)
+        public static IServiceCollection ConfigureApi(this IServiceCollection @this)
         {
-            services
-                .AddAutoMapper()
+            @this.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            @this
                 .AddResponseCompression()
                 .AddResponseCaching()
                 .AddCors(options => options.AddPolicy(
@@ -38,9 +37,9 @@
                     serializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 });
 
-            services.AddApiVersioning(opt => opt.ReportApiVersions = true);
+            @this.AddApiVersioning(opt => opt.ReportApiVersions = true);
 
-            return services;
+            return @this;
         }
     }
 }

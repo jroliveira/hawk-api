@@ -2,13 +2,10 @@
 {
     using System.IO;
     using System.Reflection;
-
     using Hawk.WebApi.Lib.Swagger;
-
     using Microsoft.AspNetCore.Mvc.ApiExplorer;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.PlatformAbstractions;
-
     using Swashbuckle.AspNetCore.Swagger;
 
     internal static class Swagger
@@ -24,11 +21,11 @@
             }
         }
 
-        public static IServiceCollection ConfigureSwagger(this IServiceCollection services)
+        public static IServiceCollection ConfigureSwagger(this IServiceCollection @this)
         {
-            services.AddSwaggerGen(options =>
+            @this.AddSwaggerGen(options =>
             {
-                using (var provider = services.BuildServiceProvider())
+                using (var provider = @this.BuildServiceProvider())
                 {
                     var versionDescriptionProvider = provider.GetRequiredService<IApiVersionDescriptionProvider>();
 
@@ -43,7 +40,7 @@
                 }
             });
 
-            return services;
+            return @this;
         }
 
         private static Info CreateInfoForApiVersion(ApiVersionDescription description)
@@ -56,13 +53,13 @@
                 Contact = new Contact
                 {
                     Name = "Junior Oliveira",
-                    Email = "junolive@gmail.com"
+                    Email = "junolive@gmail.com",
                 },
                 License = new License
                 {
                     Name = "MIT",
-                    Url = "https://opensource.org/licenses/MIT"
-                }
+                    Url = "https://opensource.org/licenses/MIT",
+                },
             };
 
             if (description.IsDeprecated)

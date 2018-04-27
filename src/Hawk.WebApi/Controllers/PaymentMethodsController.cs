@@ -1,18 +1,15 @@
 namespace Hawk.WebApi.Controllers
 {
     using System.Threading.Tasks;
-
-    using AutoMapper;
-
     using Hawk.Domain.Queries.PaymentMethod;
     using Hawk.Infrastructure;
     using Hawk.WebApi.Lib.Extensions;
+    using Hawk.WebApi.Lib.Mappings;
+    using Hawk.WebApi.Models;
     using Hawk.WebApi.Models.PaymentMethod.Get;
-
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    /// <inheritdoc />
     [ApiVersion("1")]
     [Authorize]
     [Route("")]
@@ -20,35 +17,32 @@ namespace Hawk.WebApi.Controllers
     {
         private readonly IGetAllQuery getAll;
         private readonly IGetAllByStoreQuery getAllByStore;
-        private readonly IMapper mapper;
 
-        /// <inheritdoc />
         public PaymentMethodsController(
             IGetAllQuery getAll,
-            IGetAllByStoreQuery getAllByStore,
-            IMapper mapper)
+            IGetAllByStoreQuery getAllByStore)
         {
             this.getAll = getAll;
             this.getAllByStore = getAllByStore;
-            this.mapper = mapper;
         }
 
         /// <summary>
-        /// Get
+        /// Get.
         /// </summary>
         /// <returns></returns>
         [HttpGet("payment-methods")]
         [ProducesResponseType(typeof(Paged<PaymentMethod>), 200)]
         public async Task<IActionResult> Get()
         {
-            var entities = await this.getAll.GetResult(this.User.GetClientId(), this.Request.QueryString.Value).ConfigureAwait(false);
-            var model = this.mapper.Map<Paged<PaymentMethod>>(entities);
+            var entities = await this.getAll.GetResult(this.GetUser(), this.Request.QueryString.Value).ConfigureAwait(false);
 
-            return this.Ok(model);
+            return entities.Match(
+                failure => this.StatusCode(500, new Error(failure.Message)),
+                paged => this.Ok(paged.ToModel()));
         }
 
         /// <summary>
-        /// Get by store
+        /// Get by store.
         /// </summary>
         /// <param name="store"></param>
         /// <returns></returns>
@@ -57,10 +51,11 @@ namespace Hawk.WebApi.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetByStore(string store)
         {
-            var entities = await this.getAllByStore.GetResult(this.User.GetClientId(), store, this.Request.QueryString.Value).ConfigureAwait(false);
-            var model = this.mapper.Map<Paged<PaymentMethod>>(entities);
+            var entities = await this.getAllByStore.GetResult(this.GetUser(), store, this.Request.QueryString.Value).ConfigureAwait(false);
 
-            return this.Ok(model);
+            return entities.Match(
+                failure => this.StatusCode(500, new Error(failure.Message)),
+                paged => this.Ok(paged.ToModel()));
         }
     }
 }

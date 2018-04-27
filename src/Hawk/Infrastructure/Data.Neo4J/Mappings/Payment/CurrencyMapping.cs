@@ -1,14 +1,16 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Mappings.Payment
 {
+    using System;
     using Hawk.Domain.Entities.Payment;
+    using Hawk.Infrastructure.Monad;
+    using static Hawk.Domain.Entities.Payment.Currency;
 
-    internal sealed class CurrencyMapping
+    internal static class CurrencyMapping
     {
-        public Currency MapFrom(Record record)
-        {
-            Guard.NotNull(record, nameof(record), "Currency's record cannot be null.");
+        private const string Name = "name";
 
-            return new Currency(record.Get("name"));
-        }
+        public static Try<Currency> MapFrom(Option<Record> recordOption) => recordOption.Match(
+            record => CreateWith(record.Get<string>(Name)),
+            () => new NullReferenceException("Currency cannot be null."));
     }
 }

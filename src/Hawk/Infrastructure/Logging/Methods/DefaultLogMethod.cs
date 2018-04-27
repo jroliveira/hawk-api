@@ -6,16 +6,10 @@
     {
         private readonly ILogger logger;
 
-        public DefaultLogMethod(string path)
-        {
-            this.logger = new LoggerConfiguration()
-                .WriteTo.File(path, rollingInterval: RollingInterval.Day, outputTemplate: "{Message}{NewLine}")
-                .CreateLogger();
-        }
+        public DefaultLogMethod(string path) => this.logger = new LoggerConfiguration()
+            .WriteTo.File(path, rollingInterval: RollingInterval.Day, outputTemplate: "{Message}{NewLine}")
+            .CreateLogger();
 
-        public void Write(string data)
-        {
-            this.logger.Information(data);
-        }
+        public void Write(string data) => this.logger.Information(data);
     }
 }

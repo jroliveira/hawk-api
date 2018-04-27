@@ -1,30 +1,20 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Extensions
 {
-    using System.Collections.Generic;
     using System.Linq;
-
+    using Hawk.Infrastructure.Monad;
     using Neo4j.Driver.V1;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal static class RecordExtension
     {
-        public static Record GetRecord(this IRecord record)
+        public static Option<Record> GetRecord(this IRecord @this, string key)
         {
-            if (record == null)
+            if (@this == null || !@this.Keys.Contains(key))
             {
-                return null;
+                return None;
             }
 
-            return new Record(record.As<IDictionary<string, object>>());
-        }
-
-        public static Record GetRecord(this IRecord record, string key)
-        {
-            if (record == null || !record.Keys.Contains(key))
-            {
-                return null;
-            }
-
-            return new Record(record[key]);
+            return new Record(@this[key]);
         }
     }
 }

@@ -1,23 +1,18 @@
 ﻿namespace Hawk.WebApi.Models.Account.Post
 {
-    /// <summary>
-    /// 
-    /// </summary>
+    using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Monad.Extensions;
+
     public sealed class Account
     {
-        /// <summary>
-        /// 
-        /// </summary>
         public string Email { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string Password { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string ConfirmPassword { get; set; }
+
+        public static implicit operator Option<Domain.Entities.Account>(Account model) => Domain.Entities.Account.CreateWith(model.Email);
+
+        public static implicit operator Domain.Entities.Account(Account model) => Domain.Entities.Account.CreateWith(model.Email).GetOrElse(default);
     }
 }

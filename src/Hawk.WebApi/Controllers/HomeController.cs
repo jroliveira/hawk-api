@@ -3,21 +3,16 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
 
-    /// <inheritdoc />
     [ApiVersion("1")]
     [Route("")]
     public class HomeController : BaseController
     {
         private readonly IHostingEnvironment environment;
 
-        /// <inheritdoc />
-        public HomeController(IHostingEnvironment environment)
-        {
-            this.environment = environment;
-        }
+        public HomeController(IHostingEnvironment environment) => this.environment = environment;
 
         /// <summary>
-        /// Get
+        /// Get.
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -30,7 +25,7 @@
             {
                 version = "0.0.1",
                 name = this.environment.ApplicationName,
-                env = this.environment.EnvironmentName
+                env = this.environment.EnvironmentName,
             };
 
             return this.Ok(response);

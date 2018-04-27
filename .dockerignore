@@ -1,5 +1,7 @@
 .git
 .gitignore
+.vs
+**/.vs
 docker-compose.yml
 README.md
 project.lock.json

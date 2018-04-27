@@ -4,10 +4,11 @@ namespace Hawk.Infrastructure.Data.Neo4J
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using Hawk.Infrastructure.Logging;
+    using Hawk.Infrastructure.Monad;
     using Microsoft.Extensions.Options;
-
     using Neo4j.Driver.V1;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal sealed class Database : IDisposable
     {
@@ -24,32 +25,35 @@ namespace Hawk.Infrastructure.Data.Neo4J
             }
             catch (Exception exception)
             {
-                throw new Exception($"Unable to connect to database {graphDbConfig.Uri}", exception);
+                Logger.Error($"Unable to connect to database {graphDbConfig.Uri}", exception);
             }
         }
 
-        public async Task<IEnumerable<TReturn>> Execute<TReturn>(Func<IRecord, TReturn> mapping, string statement, object parameters)
+        public Task<Try<IEnumerable<TReturn>>> Execute<TReturn>(Func<IRecord, TReturn> mapping, string statement, object parameters) => this.Execute(async session =>
         {
-            return await this.Execute(async session =>
-            {
-                var cursor = await session.RunAsync(statement, parameters).ConfigureAwait(false);
-                var data = await cursor.ToListAsync().ConfigureAwait(false);
+            var cursor = await session.RunAsync(statement, parameters).ConfigureAwait(false);
+            var data = await cursor.ToListAsync().ConfigureAwait(false);
 
-                return data.Select(mapping);
-            });
-        }
+            return data.Select(mapping);
+        });
 
-        public async Task Execute(string statement, object parameters)
+        public Task<Try<TReturn>> ExecuteScalar<TReturn>(Func<IRecord, TReturn> mapping, string statement, object parameters) => this.Execute(async session =>
         {
-            await this.Execute(async session => await session.RunAsync(statement, parameters).ConfigureAwait(false));
-        }
+            var cursor = await session.RunAsync(statement, parameters).ConfigureAwait(false);
+            var data = await cursor.ToListAsync().ConfigureAwait(false);
 
-        public void Dispose()
+            return mapping(data.FirstOrDefault());
+        });
+
+        public Task<Try<Unit>> Execute(string statement, object parameters) => this.Execute(async session =>
         {
-            this.driver.Dispose();
-        }
+            await session.RunAsync(statement, parameters).ConfigureAwait(false);
+            return Unit();
+        });
 
-        private async Task<TResult> Execute<TResult>(Func<ISession, Task<TResult>> command)
+        public void Dispose() => this.driver.Dispose();
+
+        private async Task<Try<TReturn>> Execute<TReturn>(Func<ISession, Task<TReturn>> command)
         {
             using (var session = this.driver.Session())
             {
@@ -59,7 +63,7 @@ namespace Hawk.Infrastructure.Data.Neo4J
                 }
                 catch (Exception exception)
                 {
-                    throw new Exception("Could not run command in database", exception);
+                    return new Exception("Could not run command in database", exception);
                 }
             }
         }

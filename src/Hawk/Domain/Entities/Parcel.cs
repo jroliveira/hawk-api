@@ -1,27 +1,34 @@
 ﻿namespace Hawk.Domain.Entities
 {
     using System;
+    using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Monad.Extensions;
 
     public sealed class Parcel
     {
-        public Parcel(int total, int number = 1)
+        private Parcel(uint total, uint number)
         {
-            if (total < 1)
-            {
-                throw new ArgumentException($"Parcel's total {total} should be greather than 1", nameof(total));
-            }
-
             this.Number = number;
             this.Total = total;
         }
 
-        public int Number { get; }
+        public uint Number { get; }
 
-        public int Total { get; }
+        public uint Total { get; }
 
-        public static implicit operator int(Parcel parcel)
+        public static implicit operator uint(Parcel parcel) => parcel.Number;
+
+        public static Try<Parcel> CreateWith(Option<uint> totalOption, Option<uint> numberOption)
         {
-            return parcel.Number;
+            var total = totalOption.GetOrElse(0u);
+            if (total < 1)
+            {
+                return new ArgumentException($"Parcel's total {total} should be greather than 1", nameof(total));
+            }
+
+            var number = numberOption.GetOrElse(1u);
+
+            return new Parcel(total, number);
         }
     }
 }
