@@ -1,19 +1,14 @@
 namespace Hawk.WebApi.Controllers
 {
     using System.Threading.Tasks;
-
-    using AutoMapper;
-
     using Hawk.Domain.Commands.Account;
     using Hawk.Domain.Queries.Account;
-    using Hawk.WebApi.Lib.Exceptions;
     using Hawk.WebApi.Lib.Validators;
+    using Hawk.WebApi.Models;
     using Hawk.WebApi.Models.Account.Get;
-
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    /// <inheritdoc />
     [Authorize]
     [ApiVersion("1")]
     [Route("accounts")]
@@ -22,31 +17,26 @@ namespace Hawk.WebApi.Controllers
         private readonly IGetByEmailQuery getByEmail;
         private readonly ICreateCommand create;
         private readonly AccountValidator validator;
-        private readonly IMapper mapper;
 
-        /// <inheritdoc />
         public AccountsController(
             IGetByEmailQuery getByEmail,
-            ICreateCommand create,
-            IMapper mapper)
-            : this(getByEmail, create, mapper, new AccountValidator())
+            ICreateCommand create)
+            : this(getByEmail, create, new AccountValidator())
         {
         }
 
         internal AccountsController(
             IGetByEmailQuery getByEmail,
             ICreateCommand create,
-            IMapper mapper,
             AccountValidator validator)
         {
             this.getByEmail = getByEmail;
             this.create = create;
             this.validator = validator;
-            this.mapper = mapper;
         }
 
         /// <summary>
-        /// Get by email
+        /// Get by email.
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
@@ -56,18 +46,16 @@ namespace Hawk.WebApi.Controllers
         public async Task<IActionResult> GetByEmail([FromRoute] string email)
         {
             var entity = await this.getByEmail.GetResult(email).ConfigureAwait(false);
-            if (entity == null)
-            {
-                throw new NotFoundException($"Resource 'accounts' with email {email} could not be found");
-            }
 
-            var model = this.mapper.Map<Account>(entity);
-
-            return this.Ok(model);
+            return entity.Match(
+                failure => this.StatusCode(500, new Error(failure.Message)),
+                success => success.Match<IActionResult>(
+                    account => this.Ok(new Account(account.Email)),
+                    () => this.NotFound($"Resource 'accounts' with email {email} could not be found")));
         }
 
         /// <summary>
-        /// Create
+        /// Create.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -79,14 +67,14 @@ namespace Hawk.WebApi.Controllers
             var validateResult = await this.validator.ValidateAsync(request).ConfigureAwait(false);
             if (!validateResult.IsValid)
             {
-                throw new ValidationException(validateResult.Errors);
+                return this.StatusCode(409, validateResult.Errors);
             }
 
-            var entity = this.mapper.Map<Domain.Entities.Account>(request);
-            var inserted = await this.create.Execute(entity).ConfigureAwait(false);
-            var response = this.mapper.Map<Account>(inserted);
+            var inserted = await this.create.Execute(request).ConfigureAwait(false);
 
-            return this.Created(response.Email, response);
+            return inserted.Match(
+                failure => this.StatusCode(500, new Error(failure.Message)),
+                account => this.Created(account.Email, new Account(account.Email)));
         }
     }
 }

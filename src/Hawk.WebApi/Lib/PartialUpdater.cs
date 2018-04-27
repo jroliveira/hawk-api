@@ -3,9 +3,9 @@
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
-    internal sealed class PartialUpdater
+    internal static class PartialUpdater
     {
-        public void Apply<T>(dynamic partialModel, T destination)
+        public static void Apply<T>(dynamic partialModel, T destination)
         {
             var partialModelAsJToken = JToken.FromObject(partialModel);
 

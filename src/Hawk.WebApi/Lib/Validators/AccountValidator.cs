@@ -1,7 +1,6 @@
 ﻿namespace Hawk.WebApi.Lib.Validators
 {
     using FluentValidation;
-
     using Hawk.WebApi.Models.Account.Post;
 
     internal sealed class AccountValidator : AbstractValidator<Account>

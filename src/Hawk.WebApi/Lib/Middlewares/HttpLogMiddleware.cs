@@ -3,33 +3,23 @@
     using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
-
     using Hawk.Infrastructure;
     using Hawk.Infrastructure.Logging;
-
     using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.Primitives;
 
     internal class HttpLogMiddleware
     {
         private readonly RequestDelegate next;
-        private readonly Logger logger;
 
-        public HttpLogMiddleware(RequestDelegate next, Logger logger)
+        public HttpLogMiddleware(RequestDelegate next)
         {
-            Guard.NotNull(next, nameof(next), "HttpLogMiddleware next cannot be null.");
-            Guard.NotNull(logger, nameof(logger), "HttpLogMiddleware logger cannot be null.");
+            Guard.NotNull(next, nameof(next), "Http log middleware's next cannot be null.");
 
             this.next = next;
-            this.logger = logger;
         }
 
         public async Task Invoke(HttpContext context)
         {
-            var tracking = Guid.NewGuid().ToString();
-
-            context.Request.Headers.Add("reqId", new StringValues(tracking));
-
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
@@ -37,30 +27,71 @@
 
             stopwatch.Stop();
 
-            this.logger.Info(new DefaultLogData(
-                this.logger.Level,
-                tracking,
-                new
-                {
-                    Message = "Time spent during request execution.",
-                    Elapsed = new
-                    {
-                        TimeSpan = stopwatch.Elapsed,
-                        stopwatch.Elapsed.Milliseconds
-                    },
-                    Request = new
-                    {
-                        context.Request.ContentType,
-                        context.Request.Headers,
-                        context.Request.Method
-                    },
-                    Response = new
-                    {
-                        context.Request.ContentType,
-                        context.Response.Headers,
-                        context.Response.StatusCode
-                    }
-                }));
+            Logger.Info(new LogData("Time spent during request execution.", stopwatch, context));
+        }
+
+        internal sealed class LogData
+        {
+            public LogData(string message, Stopwatch stopwatch, HttpContext context)
+            {
+                this.Message = message;
+                this.Elapse = new Elapse(stopwatch);
+                this.Request = new Request(context);
+                this.Response = new Response(context);
+            }
+
+            public string Message { get; }
+
+            public Elapse Elapse { get; }
+
+            public Request Request { get; }
+
+            public Response Response { get; }
+        }
+
+        internal class Elapse
+        {
+            public Elapse(Stopwatch stopwatch)
+            {
+                this.TimeSpan = stopwatch.Elapsed;
+                this.Milliseconds = stopwatch.Elapsed.Milliseconds;
+            }
+
+            public TimeSpan TimeSpan { get; }
+
+            public int Milliseconds { get; }
+        }
+
+        internal class Request
+        {
+            public Request(HttpContext context)
+            {
+                this.ContentType = context.Request.ContentType;
+                this.Headers = context.Request.Headers;
+                this.Method = context.Request.Method;
+            }
+
+            public string ContentType { get; }
+
+            public IHeaderDictionary Headers { get; }
+
+            public string Method { get; }
+        }
+
+        internal class Response
+        {
+            public Response(HttpContext context)
+            {
+                this.ContentType = context.Response.ContentType;
+                this.Headers = context.Response.Headers;
+                this.StatusCode = context.Response.StatusCode;
+            }
+
+            public string ContentType { get; }
+
+            public IHeaderDictionary Headers { get; }
+
+            public int StatusCode { get; }
         }
     }
 }

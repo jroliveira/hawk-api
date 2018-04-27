@@ -13,15 +13,5 @@
 
             return parameter;
         }
-
-        public static string NotNullNorEmpty(string parameter, string paramName, string message)
-        {
-            if (string.IsNullOrEmpty(parameter))
-            {
-                throw new ArgumentException(message, paramName);
-            }
-
-            return parameter;
-        }
     }
 }

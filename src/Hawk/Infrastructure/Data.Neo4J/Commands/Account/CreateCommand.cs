@@ -1,37 +1,33 @@
 namespace Hawk.Infrastructure.Data.Neo4J.Commands.Account
 {
     using System.Globalization;
-    using System.Linq;
     using System.Threading.Tasks;
-
     using Hawk.Domain.Commands.Account;
     using Hawk.Domain.Entities;
-    using Hawk.Infrastructure.Data.Neo4J.Mappings;
+    using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Monad.Extensions;
+    using static Hawk.Infrastructure.Data.Neo4J.Mappings.AccountMapping;
+    using static System.String;
 
-    internal sealed class CreateCommand : Connection, ICreateCommand
+    internal sealed class CreateCommand : ICreateCommand
     {
-        private readonly AccountMapping mapping;
+        private static readonly Option<string> Statement = CypherScript.ReadAll("Account.Create.cql");
+        private readonly Database database;
 
-        public CreateCommand(Database database, GetScript file, AccountMapping mapping)
-            : base(database, file, "Account.Create.cql")
-        {
-            Guard.NotNull(mapping, nameof(mapping), "Account mapping cannot be null.");
+        public CreateCommand(Database database) => this.database = database;
 
-            this.mapping = mapping;
-        }
-
-        public async Task<Account> Execute(Account entity)
+        public async Task<Try<Account>> Execute(Account entity)
         {
             var parameters = new
             {
                 id = entity.Id.ToString(),
                 email = entity.Email,
-                creationDate = entity.CreationAt.ToString(CultureInfo.InvariantCulture)
+                creationDate = entity.CreationAt.ToString(CultureInfo.InvariantCulture),
             };
 
-            var inserted = await this.Database.Execute(this.mapping.MapFrom, this.Statement, parameters).ConfigureAwait(false);
+            var data = await this.database.ExecuteScalar(MapFrom, Statement.GetOrElse(Empty), parameters).ConfigureAwait(false);
 
-            return inserted.FirstOrDefault();
+            return data.Lift();
         }
     }
 }

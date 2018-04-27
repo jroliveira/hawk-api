@@ -2,48 +2,47 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.Tag
 {
     using System.Linq;
     using System.Threading.Tasks;
-
     using Hawk.Domain.Entities;
     using Hawk.Domain.Queries.Tag;
     using Hawk.Infrastructure.Data.Neo4J.Mappings;
     using Hawk.Infrastructure.Filter;
-
+    using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Monad.Extensions;
     using Http.Query.Filter;
+    using static System.String;
 
-    internal sealed class GetAllByStoreQuery : GetAllQueryBase, IGetAllByStoreQuery
+    internal sealed class GetAllByStoreQuery : IGetAllByStoreQuery
     {
-        private readonly TagMapping mapping;
+        private static readonly Option<string> Statement = CypherScript.ReadAll("Tag.GetAllByStore.cql");
+        private readonly Database database;
+        private readonly ILimit<int, Filter> limit;
+        private readonly ISkip<int, Filter> skip;
 
         public GetAllByStoreQuery(
             Database database,
-            TagMapping mapping,
-            GetScript file,
             ILimit<int, Filter> limit,
-            ISkip<int, Filter> skip,
-            IWhere<string, Filter> where)
-            : base(database, file, "Tag.GetAllByStore.cql", limit, skip, where)
+            ISkip<int, Filter> skip)
         {
-            Guard.NotNull(mapping, nameof(mapping), "Tag mapping cannot be null.");
-
-            this.mapping = mapping;
+            this.database = database;
+            this.limit = limit;
+            this.skip = skip;
         }
 
-        public async Task<Paged<(Tag Tag, int Count)>> GetResult(string email, string store, Filter filter)
+        public async Task<Try<Paged<Try<(Tag Tag, uint Count)>>>> GetResult(string email, string store, Filter filter)
         {
             var parameters = new
             {
                 email,
                 store,
-                skip = this.Skip.Apply(filter),
-                limit = this.Limit.Apply(filter)
+                skip = this.skip.Apply(filter),
+                limit = this.limit.Apply(filter),
             };
 
-            var data = await this.Database.Execute(this.mapping.MapFrom, this.Statement, parameters).ConfigureAwait(false);
-            var entities = data
-                .OrderBy(item => item.Tag.Name)
-                .ToList();
+            var data = await this.database.Execute(TagMapping.MapFrom, Statement.GetOrElse(Empty), parameters).ConfigureAwait(false);
 
-            return new Paged<(Tag, int)>(entities, parameters.skip, parameters.limit);
+            return data.Match<Try<Paged<Try<(Tag, uint)>>>>(
+                _ => _,
+                items => new Paged<Try<(Tag, uint)>>(items.ToList(), parameters.skip, parameters.limit));
         }
     }
 }

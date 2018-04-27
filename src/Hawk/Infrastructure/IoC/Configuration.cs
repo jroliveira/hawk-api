@@ -8,47 +8,35 @@
 
     public static class Configuration
     {
-        public static IServiceCollection ConfigureIoC(this IServiceCollection services)
+        public static IServiceCollection ConfigureIoC(this IServiceCollection @this)
         {
             // Neo4j
-            services.AddSingleton<Data.Neo4J.Database>();
-            services.AddSingleton<Data.Neo4J.GetScript>();
+            @this.AddScoped<Data.Neo4J.Database>();
 
             // Filters
-            services.AddSingleton<IWhere<string, Filter>, Data.Neo4J.Filter.Where>();
-            services.AddSingleton<ISkip<int, Filter>, Data.Neo4J.Filter.Skip>();
-            services.AddSingleton<ILimit<int, Filter>, Data.Neo4J.Filter.Limit>();
+            @this.AddSingleton<IWhere<string, Filter>, Data.Neo4J.Filter.Where>();
+            @this.AddSingleton<ISkip<int, Filter>, Data.Neo4J.Filter.Skip>();
+            @this.AddSingleton<ILimit<int, Filter>, Data.Neo4J.Filter.Limit>();
 
             // Commands
-            services.AddSingleton<Domain.Commands.Account.ICreateCommand, Data.Neo4J.Commands.Account.CreateCommand>();
-            services.AddSingleton<Domain.Commands.Transaction.ICreateCommand, Data.Neo4J.Commands.Transaction.CreateCommand>();
-            services.AddSingleton<Domain.Commands.Transaction.IExcludeCommand, Data.Neo4J.Commands.Transaction.ExcludeCommand>();
-            services.AddSingleton<Domain.Commands.Store.ICreateCommand, Data.Neo4J.Commands.Store.CreateCommand>();
-            services.AddSingleton<Domain.Commands.Store.IExcludeCommand, Data.Neo4J.Commands.Store.ExcludeCommand>();
+            @this.AddScoped<Domain.Commands.Account.ICreateCommand, Data.Neo4J.Commands.Account.CreateCommand>();
+            @this.AddScoped<Domain.Commands.Transaction.ICreateCommand, Data.Neo4J.Commands.Transaction.CreateCommand>();
+            @this.AddScoped<Domain.Commands.Transaction.IExcludeCommand, Data.Neo4J.Commands.Transaction.ExcludeCommand>();
+            @this.AddScoped<Domain.Commands.Store.ICreateCommand, Data.Neo4J.Commands.Store.CreateCommand>();
+            @this.AddScoped<Domain.Commands.Store.IExcludeCommand, Data.Neo4J.Commands.Store.ExcludeCommand>();
 
             // Queries
-            services.AddSingleton<Domain.Queries.Account.IGetByEmailQuery, Data.Neo4J.Queries.Account.GetByEmailQuery>();
-            services.AddSingleton<Domain.Queries.PaymentMethod.IGetAllQuery, Data.Neo4J.Queries.PaymentMethod.GetAllQuery>();
-            services.AddSingleton<Domain.Queries.PaymentMethod.IGetAllByStoreQuery, Data.Neo4J.Queries.PaymentMethod.GetAllByStoreQuery>();
-            services.AddSingleton<Domain.Queries.Store.IGetAllQuery, Data.Neo4J.Queries.Store.GetAllQuery>();
-            services.AddSingleton<Domain.Queries.Store.IGetByNameQuery, Data.Neo4J.Queries.Store.GetByNameQuery>();
-            services.AddSingleton<Domain.Queries.Tag.IGetAllQuery, Data.Neo4J.Queries.Tag.GetAllQuery>();
-            services.AddSingleton<Domain.Queries.Tag.IGetAllByStoreQuery, Data.Neo4J.Queries.Tag.GetAllByStoreQuery>();
-            services.AddSingleton<Domain.Queries.Transaction.IGetAllQuery, Data.Neo4J.Queries.Transaction.GetAllQuery>();
-            services.AddSingleton<Domain.Queries.Transaction.IGetByIdQuery, Data.Neo4J.Queries.Transaction.GetByIdQuery>();
+            @this.AddScoped<Domain.Queries.Account.IGetByEmailQuery, Data.Neo4J.Queries.Account.GetByEmailQuery>();
+            @this.AddScoped<Domain.Queries.PaymentMethod.IGetAllQuery, Data.Neo4J.Queries.PaymentMethod.GetAllQuery>();
+            @this.AddScoped<Domain.Queries.PaymentMethod.IGetAllByStoreQuery, Data.Neo4J.Queries.PaymentMethod.GetAllByStoreQuery>();
+            @this.AddScoped<Domain.Queries.Store.IGetAllQuery, Data.Neo4J.Queries.Store.GetAllQuery>();
+            @this.AddScoped<Domain.Queries.Store.IGetByNameQuery, Data.Neo4J.Queries.Store.GetByNameQuery>();
+            @this.AddScoped<Domain.Queries.Tag.IGetAllQuery, Data.Neo4J.Queries.Tag.GetAllQuery>();
+            @this.AddScoped<Domain.Queries.Tag.IGetAllByStoreQuery, Data.Neo4J.Queries.Tag.GetAllByStoreQuery>();
+            @this.AddScoped<Domain.Queries.Transaction.IGetAllQuery, Data.Neo4J.Queries.Transaction.GetAllQuery>();
+            @this.AddScoped<Domain.Queries.Transaction.IGetByIdQuery, Data.Neo4J.Queries.Transaction.GetByIdQuery>();
 
-            // Mappings
-            services.AddSingleton<Data.Neo4J.Mappings.AccountMapping>();
-            services.AddSingleton<Data.Neo4J.Mappings.Payment.CurrencyMapping>();
-            services.AddSingleton<Data.Neo4J.Mappings.Payment.MethodMapping>();
-            services.AddSingleton<Data.Neo4J.Mappings.Payment.PayMapping>();
-            services.AddSingleton<Data.Neo4J.Mappings.Payment.PriceMapping>();
-            services.AddSingleton<Data.Neo4J.Mappings.ParcelMapping>();
-            services.AddSingleton<Data.Neo4J.Mappings.StoreMapping>();
-            services.AddSingleton<Data.Neo4J.Mappings.TagMapping>();
-            services.AddSingleton<Data.Neo4J.Mappings.TransactionMapping>();
-
-            return services;
+            return @this;
         }
     }
 }

@@ -2,36 +2,32 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.Store
 {
     using System.Linq;
     using System.Threading.Tasks;
-
     using Hawk.Domain.Entities;
     using Hawk.Domain.Queries.Store;
     using Hawk.Infrastructure.Data.Neo4J.Mappings;
+    using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Monad.Extensions;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
+    using static System.String;
 
-    internal sealed class GetByNameQuery : Connection, IGetByNameQuery
+    internal sealed class GetByNameQuery : IGetByNameQuery
     {
-        private readonly StoreMapping mapping;
+        private static readonly Option<string> Statement = CypherScript.ReadAll("Store.GetByName.cql");
+        private readonly Database database;
 
-        public GetByNameQuery(Database database, GetScript file, StoreMapping mapping)
-            : base(database, file, "Store.GetByName.cql")
-        {
-            Guard.NotNull(mapping, nameof(mapping), "Transaction mapping cannot be null.");
+        public GetByNameQuery(Database database) => this.database = database;
 
-            this.mapping = mapping;
-        }
-
-        public async Task<Store> GetResult(string name, string email)
+        public async Task<Try<Option<Store>>> GetResult(string name, string email)
         {
             var parameters = new
             {
                 name,
-                email
+                email,
             };
 
-            var entities = await this.Database.Execute(this.mapping.MapFrom, this.Statement, parameters).ConfigureAwait(false);
+            var data = await this.database.ExecuteScalar(StoreMapping.MapFrom, Statement.GetOrElse(Empty), parameters).ConfigureAwait(false);
 
-            return entities
-                .FirstOrDefault()
-                .Store;
+            return data.SelectMany(store => Some(store.Store));
         }
     }
 }

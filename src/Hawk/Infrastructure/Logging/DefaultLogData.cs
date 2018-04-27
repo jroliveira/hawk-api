@@ -2,7 +2,6 @@
 {
     using System;
     using System.Runtime.Serialization;
-
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
 
@@ -15,7 +14,7 @@
             DateTimeZoneHandling = DateTimeZoneHandling.Utc,
             Formatting = Formatting.Indented,
             NullValueHandling = NullValueHandling.Ignore,
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
         };
 
         public DefaultLogData(LogLevel level, string tracking, object data)

@@ -2,35 +2,30 @@ namespace Hawk.Infrastructure.Data.Neo4J.Commands.Store
 {
     using System.Linq;
     using System.Threading.Tasks;
-
     using Hawk.Domain.Commands.Store;
     using Hawk.Domain.Entities;
-    using Hawk.Infrastructure.Data.Neo4J.Mappings;
+    using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Monad.Extensions;
+    using static Hawk.Infrastructure.Data.Neo4J.Mappings.StoreMapping;
+    using static System.String;
 
-    internal sealed class CreateCommand : Connection, ICreateCommand
+    internal sealed class CreateCommand : ICreateCommand
     {
-        private readonly StoreMapping mapping;
+        private static readonly Option<string> Statement = CypherScript.ReadAll("Store.Create.cql");
+        private readonly Database database;
 
-        public CreateCommand(Database database, GetScript file, StoreMapping mapping)
-            : base(database, file, "Store.Create.cql")
-        {
-            Guard.NotNull(mapping, nameof(mapping), "Transaction mapping cannot be null.");
+        public CreateCommand(Database database) => this.database = database;
 
-            this.mapping = mapping;
-        }
-
-        public async Task<Store> Execute(Store newEntity, Store entity)
+        public async Task<Try<Store>> Execute(Store entity)
         {
             var parameters = new
             {
-                name = entity.Name
+                name = entity.Name,
             };
 
-            var inserted = await this.Database.Execute(this.mapping.MapFrom, this.Statement, parameters).ConfigureAwait(false);
+            var data = await this.database.ExecuteScalar(MapFrom, Statement.GetOrElse(Empty), parameters).ConfigureAwait(false);
 
-            return inserted
-                .FirstOrDefault()
-                .Store;
+            return data.SelectMany(store => store.Store);
         }
     }
 }

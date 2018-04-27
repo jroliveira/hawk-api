@@ -1,21 +1,17 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Mappings
 {
+    using System;
     using Hawk.Domain.Entities;
+    using Hawk.Infrastructure.Monad;
+    using static Hawk.Domain.Entities.Parcel;
 
-    internal sealed class ParcelMapping
+    internal static class ParcelMapping
     {
-        public Parcel MapFrom(Record record)
-        {
-            Guard.NotNull(record, nameof(record), "Parcel's record cannot be null.");
+        private const string Total = "total";
+        private const string Number = "number";
 
-            if (!record.Any())
-            {
-                return null;
-            }
-
-            return new Parcel(
-                record.Get<int>("total"),
-                record.Get<int>("number"));
-        }
+        public static Try<Parcel> MapFrom(Option<Record> recordOption) => recordOption.Match(
+            record => CreateWith(record.Get<uint>(Total), record.Get<uint>(Number)),
+            () => new NullReferenceException("Parcel cannot be null."));
     }
 }

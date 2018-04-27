@@ -2,33 +2,31 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.Account
 {
     using System.Linq;
     using System.Threading.Tasks;
-
     using Hawk.Domain.Entities;
     using Hawk.Domain.Queries.Account;
-    using Hawk.Infrastructure.Data.Neo4J.Mappings;
+    using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Monad.Extensions;
+    using static Hawk.Infrastructure.Data.Neo4J.Mappings.AccountMapping;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
+    using static System.String;
 
-    internal sealed class GetByEmailQuery : Connection, IGetByEmailQuery
+    internal sealed class GetByEmailQuery : IGetByEmailQuery
     {
-        private readonly AccountMapping mapping;
+        private static readonly Option<string> Statement = CypherScript.ReadAll("Account.GetByEmail.cql");
+        private readonly Database database;
 
-        public GetByEmailQuery(Database database, GetScript file, AccountMapping mapping)
-            : base(database, file, "Account.GetByEmail.cql")
-        {
-            Guard.NotNull(mapping, nameof(mapping), "Account mapping cannot be null.");
+        public GetByEmailQuery(Database database) => this.database = database;
 
-            this.mapping = mapping;
-        }
-
-        public async Task<Account> GetResult(string email)
+        public async Task<Try<Option<Account>>> GetResult(string email)
         {
             var parameters = new
             {
-                email
+                email,
             };
 
-            var entities = await this.Database.Execute(this.mapping.MapFrom, this.Statement, parameters).ConfigureAwait(false);
+            var data = await this.database.ExecuteScalar(MapFrom, Statement.GetOrElse(Empty), parameters).ConfigureAwait(false);
 
-            return entities.FirstOrDefault();
+            return data.SelectMany(Some);
         }
     }
 }

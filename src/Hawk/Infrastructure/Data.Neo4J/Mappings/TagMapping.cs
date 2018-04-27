@@ -1,24 +1,23 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Mappings
 {
+    using System;
     using Hawk.Domain.Entities;
     using Hawk.Infrastructure.Data.Neo4J.Extensions;
-
+    using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Monad.Extensions;
     using Neo4j.Driver.V1;
 
-    internal sealed class TagMapping
+    internal static class TagMapping
     {
-        public (Tag Tag, int Count) MapFrom(IRecord data)
-        {
-            return this.MapFrom(data.GetRecord("data"));
-        }
+        private const string Name = "name";
+        private const string Total = "total";
 
-        public (Tag Tag, int Count) MapFrom(Record record)
-        {
-            Guard.NotNull(record, nameof(record), "Tag's record cannot be null.");
+        public static Try<(Tag Tag, uint Count)> MapFrom(IRecord data) => MapFrom(data.GetRecord("data"));
 
-            var tag = new Tag(record.Get("name"));
-
-            return (tag, record.Get<int>("total"));
-        }
+        public static Try<(Tag Tag, uint Count)> MapFrom(Option<Record> recordOption) => recordOption.Match(
+            record => Tag.CreateWith(record.Get<string>(Name)).Match<Try<(Tag, uint)>>(
+                _ => _,
+                method => (method, record.Get<uint>(Total).GetOrElse(0u))),
+            () => new NullReferenceException("Tag cannot be null."));
     }
 }

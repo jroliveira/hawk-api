@@ -1,8 +1,8 @@
 ﻿namespace Hawk.WebApi.Models.PaymentMethod.Get
 {
-    internal sealed class PaymentMethod
+    public sealed class PaymentMethod
     {
-        public PaymentMethod(string name, int total)
+        public PaymentMethod(string name, uint total)
         {
             this.Name = name;
             this.Total = total;
@@ -10,6 +10,6 @@
 
         public string Name { get; }
 
-        public int Total { get; }
+        public uint Total { get; }
     }
 }
