@@ -1,27 +1,26 @@
 ﻿namespace Hawk.Domain.Entities
 {
     using System;
-
-    using Hawk.Infrastructure;
+    using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Monad.Extensions;
+    using static System.String;
 
     public sealed class Tag : IEquatable<Tag>
     {
-        public Tag(string name)
-        {
-            Guard.NotNullNorEmpty(name, nameof(name), "Tag's name cannot be null or empty.");
-
-            this.Name = name;
-        }
+        private Tag(string name) => this.Name = name;
 
         public string Name { get; }
 
-        public static implicit operator string(Tag tag)
-        {
-            return tag.Name;
-        }
+        public static implicit operator string(Tag tag) => tag.Name;
 
-        public static implicit operator Tag(string name)
+        public static Try<Tag> CreateWith(Option<string> nameOption)
         {
+            var name = nameOption.GetOrElse(Empty);
+            if (IsNullOrEmpty(name))
+            {
+                return new ArgumentNullException(nameof(name), "Tag's name cannot be null or empty.");
+            }
+
             return new Tag(name);
         }
 
@@ -55,9 +54,6 @@
             return string.Equals(this.Name, other.Name);
         }
 
-        public override int GetHashCode()
-        {
-            return this.Name != null ? this.Name.GetHashCode() : 0;
-        }
+        public override int GetHashCode() => this.Name != null ? this.Name.GetHashCode() : 0;
     }
 }

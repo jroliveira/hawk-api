@@ -1,38 +1,30 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Mappings.Payment
 {
     using System;
-
     using Hawk.Domain.Entities.Payment;
+    using Hawk.Infrastructure.Monad;
+    using static Hawk.Domain.Entities.Payment.Pay;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
-    internal sealed class PayMapping
+    internal static class PayMapping
     {
-        private readonly PriceMapping priceMapping;
-        private readonly MethodMapping methodMapping;
+        private const string Year = "year";
+        private const string Month = "month";
+        private const string Day = "day";
+        private const string Method = "method";
 
-        public PayMapping(PriceMapping priceMapping, MethodMapping methodMapping)
-        {
-            Guard.NotNull(priceMapping, nameof(priceMapping), "Price mapping cannot be null.");
-            Guard.NotNull(methodMapping, nameof(methodMapping), "Method mapping cannot be null.");
-
-            this.priceMapping = priceMapping;
-            this.methodMapping = methodMapping;
-        }
-
-        public Pay MapFrom(Record record)
-        {
-            Guard.NotNull(record, nameof(record), "Pay's record cannot be null.");
-
-            var price = this.priceMapping.MapFrom(record);
-            var method = this.methodMapping.MapFrom(record.GetRecord("method")).Method;
-            var date = new DateTime(
-                record.Get<int>("year"),
-                record.Get<int>("month"),
-                record.Get<int>("day"));
-
-            return new Pay(
-                price,
-                date,
-                method);
-        }
+        public static Try<Pay> MapFrom(Option<Record> recordOption) => recordOption.Match(
+            record => PriceMapping.MapFrom(record).Match(
+                _ => _,
+                price => MethodMapping.MapFrom(record.GetRecord(Method)).Match(
+                    _ => _,
+                    method => CreateWith(
+                        price,
+                        Date(
+                            record.Get<int>(Year),
+                            record.Get<int>(Month),
+                            record.Get<int>(Day)),
+                        method.Method))),
+            () => new NullReferenceException("Pay cannot be null."));
     }
 }

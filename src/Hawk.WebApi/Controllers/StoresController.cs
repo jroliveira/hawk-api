@@ -1,100 +1,89 @@
 namespace Hawk.WebApi.Controllers
 {
     using System.Threading.Tasks;
-
-    using AutoMapper;
-
     using Hawk.Domain.Commands.Store;
     using Hawk.Domain.Queries.Store;
     using Hawk.Infrastructure;
     using Hawk.WebApi.Lib;
-    using Hawk.WebApi.Lib.Exceptions;
     using Hawk.WebApi.Lib.Extensions;
+    using Hawk.WebApi.Lib.Mappings;
     using Hawk.WebApi.Lib.Validators;
-
+    using Hawk.WebApi.Models;
+    using Hawk.WebApi.Models.Store.Get;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using static System.Threading.Tasks.Util;
 
-    /// <inheritdoc />
     [Authorize]
     [ApiVersion("1")]
     [Route("stores")]
     public class StoresController : BaseController
     {
-        private readonly PartialUpdater partialUpdater;
         private readonly IGetAllQuery getAll;
         private readonly IGetByNameQuery getByName;
         private readonly ICreateCommand create;
         private readonly IExcludeCommand exclude;
         private readonly StoreValidator validator;
-        private readonly IMapper mapper;
 
-        /// <inheritdoc />
         public StoresController(
             IGetAllQuery getAll,
             IGetByNameQuery getByName,
             ICreateCommand create,
-            IExcludeCommand exclude,
-            IMapper mapper)
-            : this(new PartialUpdater(), getAll, getByName, create, exclude, mapper, new StoreValidator())
+            IExcludeCommand exclude)
+            : this(getAll, getByName, create, exclude, new StoreValidator())
         {
         }
 
         internal StoresController(
-            PartialUpdater partialUpdater,
             IGetAllQuery getAll,
             IGetByNameQuery getByName,
             ICreateCommand create,
             IExcludeCommand exclude,
-            IMapper mapper,
             StoreValidator validator)
         {
-            this.partialUpdater = partialUpdater;
             this.getAll = getAll;
             this.getByName = getByName;
             this.create = create;
             this.exclude = exclude;
-            this.mapper = mapper;
             this.validator = validator;
         }
 
         /// <summary>
-        /// Get
+        /// Get.
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ProducesResponseType(typeof(Paged<Models.Store.Get.Store>), 200)]
+        [ProducesResponseType(typeof(Paged<Store>), 200)]
         public async Task<IActionResult> Get()
         {
-            var entities = await this.getAll.GetResult(this.User.GetClientId(), this.Request.QueryString.Value).ConfigureAwait(false);
-            var model = this.mapper.Map<Paged<Models.Store.Get.Store>>(entities);
+            var entities = await this.getAll.GetResult(this.GetUser(), this.Request.QueryString.Value).ConfigureAwait(false);
 
-            return this.Ok(model);
+            return entities.Match(
+                failure => this.StatusCode(500, new Error(failure.Message)),
+                paged => this.Ok(paged.ToModel()));
         }
 
         /// <summary>
-        /// Get by name
+        /// Get by name.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
         [HttpGet("{name}")]
-        [ProducesResponseType(typeof(Models.Store.Get.Store), 200)]
+        [ProducesResponseType(typeof(Store), 200)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetByName([FromRoute] string name)
         {
-            var entity = await this.getByName.GetResult(name, this.User.GetClientId()).ConfigureAwait(false);
-            if (entity == null)
-            {
-                throw new NotFoundException($"Resource 'stores' with name {name} could not be found");
-            }
+            var entity = await this.getByName.GetResult(name, this.GetUser()).ConfigureAwait(false);
 
-            var model = this.mapper.Map<Models.Store.Get.Store>(entity);
-
-            return this.Ok(model);
+            return entity.Match(
+                failure => this.StatusCode(500, new Error(failure.Message)),
+                success => success.Match<IActionResult>(
+                    store => this.Ok(new Store(store)),
+                    () => this.NotFound($"Resource 'stores' with name {name} could not be found")));
         }
 
         /// <summary>
-        /// Create
+        /// Create.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -105,18 +94,18 @@ namespace Hawk.WebApi.Controllers
             var validateResult = await this.validator.ValidateAsync(request).ConfigureAwait(false);
             if (!validateResult.IsValid)
             {
-                throw new ValidationException(validateResult.Errors);
+                return this.StatusCode(409, validateResult.Errors);
             }
 
-            var entity = this.mapper.Map<Domain.Entities.Store>(request);
-            var inserted = await this.create.Execute(entity, null).ConfigureAwait(false);
-            var response = this.mapper.Map<Models.Store.Post.Store>(inserted);
+            var entity = await this.create.Execute(request).ConfigureAwait(false);
 
-            return this.Created(response.Name, response);
+            return entity.Match(
+                failure => this.StatusCode(500, failure.Message),
+                store => this.Created(store.Name, new Store(store.Name)));
         }
 
         /// <summary>
-        /// Update
+        /// Update.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="request"></param>
@@ -127,22 +116,24 @@ namespace Hawk.WebApi.Controllers
             [FromRoute] string name,
             [FromBody] dynamic request)
         {
-            var entity = await this.getByName.GetResult(name, this.User.GetClientId()).ConfigureAwait(false);
-            if (entity == null)
-            {
-                throw new NotFoundException($"Resource 'stores' with name {name} could not be found");
-            }
+            var entity = await this.getByName.GetResult(name, this.GetUser()).ConfigureAwait(false);
 
-            var model = this.mapper.Map<Models.Store.Get.Store>(entity);
-            this.partialUpdater.Apply(request, model);
-            var newEntity = this.mapper.Map<Domain.Entities.Store>(model);
-            await this.create.Execute(newEntity, entity).ConfigureAwait(false);
+            return await entity.Match(
+                failure => Task<IActionResult>(this.StatusCode(500, new Error(failure.Message))),
+                success => success.Match<Task<IActionResult>>(
+                    async store =>
+                    {
+                        Store model = store;
+                        PartialUpdater.Apply(request, model);
+                        await this.create.Execute(model).ConfigureAwait(false);
 
-            return this.NoContent();
+                        return this.NoContent();
+                    },
+                    () => Task<IActionResult>(this.NotFound($"Resource 'stores' with name {name} could not be found")))).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Exclude
+        /// Exclude.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -150,15 +141,17 @@ namespace Hawk.WebApi.Controllers
         [ProducesResponseType(204)]
         public async Task<IActionResult> Exclude([FromRoute] string name)
         {
-            var entity = await this.getByName.GetResult(name, this.User.GetClientId()).ConfigureAwait(false);
-            if (entity == null)
-            {
-                throw new NotFoundException($"Resource 'stores' with name {name} could not be found");
-            }
+            var entity = await this.getByName.GetResult(name, this.GetUser()).ConfigureAwait(false);
 
-            await this.exclude.Execute(entity).ConfigureAwait(false);
-
-            return this.NoContent();
+            return await entity.Match(
+                failure => Task<IActionResult>(this.StatusCode(500, new Error(failure.Message))),
+                success => success.Match<Task<IActionResult>>(
+                    async store =>
+                    {
+                        await this.exclude.Execute(store).ConfigureAwait(false);
+                        return this.NoContent();
+                    },
+                    () => Task<IActionResult>(this.NotFound($"Resource 'stores' with name {name} could not be found")))).ConfigureAwait(false);
         }
     }
 }

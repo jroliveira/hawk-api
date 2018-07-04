@@ -3,15 +3,28 @@ namespace Hawk.Infrastructure.Data.Neo4J
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Monad.Extensions;
     using Neo4j.Driver.V1;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
+    using static System.ComponentModel.TypeDescriptor;
 
     internal sealed class Record
     {
         private readonly IDictionary<string, object> data;
 
+        public Record()
+            : this(null)
+        {
+        }
+
         public Record(object record)
         {
+            if (record == null)
+            {
+                return;
+            }
+
             if (record is IEntity node)
             {
                 this.data = node.Properties.ToDictionary(item => item.Key, item => item.Value);
@@ -21,55 +34,37 @@ namespace Hawk.Infrastructure.Data.Neo4J
             this.data = record.As<IDictionary<string, object>>();
         }
 
-        public Record GetRecord(string key)
+        public Option<Record> GetRecord(string key)
         {
-            if (this.data == null || !this.data.ContainsKey(key))
+            if (!this.Has(key))
             {
-                return null;
+                return None;
             }
 
             return new Record(this.data[key]);
         }
 
-        public IEnumerable<string> GetList(string key)
-        {
-            return this
-                .Get<IList<object>>(key)
-                ?.Select(item => item.ToString()) ?? new List<string>();
-        }
+        public IEnumerable<string> GetList(string key) => this
+            .Get<IList<object>>(key)
+            .GetOrElse(new List<object>())
+            ?.Select(item => item.ToString());
 
-        public string Get(string key)
+        public Option<TValue> Get<TValue>(string key)
         {
-            return this.Get<string>(key);
-        }
-
-        public TValue Get<TValue>(string key)
-        {
-            var value = default(TValue);
-
-            if (this.data == null || !this.data.ContainsKey(key))
+            if (!this.Has(key))
             {
-                return value;
+                return None;
             }
 
-            return this.data[key].As<TValue>();
+            switch (typeof(TValue))
+            {
+                case Type guidType when guidType == typeof(Guid):
+                    return (TValue)GetConverter(typeof(Guid)).ConvertFromInvariantString(this.data[key].As<string>());
+                default:
+                    return this.data[key].As<TValue>();
+            }
         }
 
-        public bool Has(string key)
-        {
-            return this.data.ContainsKey(key);
-        }
-
-        public bool Any()
-        {
-            return this.data != null;
-        }
-
-        public Guid GetGuid()
-        {
-            var id = this.Get("id");
-
-            return new Guid(id);
-        }
+        public bool Has(string key) => this.data != null && this.data.ContainsKey(key);
     }
 }

@@ -1,81 +1,71 @@
 namespace Hawk.WebApi.Controllers
 {
     using System.Threading.Tasks;
-
-    using AutoMapper;
-
     using Hawk.Domain.Commands.Transaction;
     using Hawk.Domain.Queries.Transaction;
     using Hawk.Infrastructure;
     using Hawk.WebApi.Lib;
-    using Hawk.WebApi.Lib.Exceptions;
     using Hawk.WebApi.Lib.Extensions;
+    using Hawk.WebApi.Lib.Mappings;
     using Hawk.WebApi.Lib.Validators;
+    using Hawk.WebApi.Models;
     using Hawk.WebApi.Models.Transaction;
     using Hawk.WebApi.Models.Transaction.Get;
-
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using static System.Threading.Tasks.Util;
 
-    /// <inheritdoc />
     [Authorize]
     [ApiVersion("1")]
     [Route("transactions")]
     public class TransactionsController : BaseController
     {
-        private readonly PartialUpdater partialUpdater;
         private readonly IGetAllQuery getAll;
         private readonly IGetByIdQuery getById;
         private readonly ICreateCommand create;
         private readonly IExcludeCommand exclude;
         private readonly TransactionValidator validator;
-        private readonly IMapper mapper;
 
-        /// <inheritdoc />
         public TransactionsController(
             IGetAllQuery getAll,
             IGetByIdQuery getById,
             ICreateCommand create,
-            IExcludeCommand exclude,
-            IMapper mapper)
-            : this(new PartialUpdater(), getAll, getById, create, exclude, mapper, new TransactionValidator())
+            IExcludeCommand exclude)
+            : this(getAll, getById, create, exclude, new TransactionValidator())
         {
         }
 
         internal TransactionsController(
-            PartialUpdater partialUpdater,
             IGetAllQuery getAll,
             IGetByIdQuery getById,
             ICreateCommand create,
             IExcludeCommand exclude,
-            IMapper mapper,
             TransactionValidator validator)
         {
-            this.partialUpdater = partialUpdater;
             this.getAll = getAll;
             this.getById = getById;
             this.create = create;
             this.exclude = exclude;
-            this.mapper = mapper;
             this.validator = validator;
         }
 
         /// <summary>
-        /// Get
+        /// Get.
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(typeof(Paged<Transaction>), 200)]
         public async Task<IActionResult> Get()
         {
-            var entities = await this.getAll.GetResult(this.User.GetClientId(), this.Request.QueryString.Value).ConfigureAwait(false);
-            var model = this.mapper.Map<Paged<Transaction>>(entities);
+            var entities = await this.getAll.GetResult(this.GetUser(), this.Request.QueryString.Value).ConfigureAwait(false);
 
-            return this.Ok(model);
+            return entities.Match(
+                failure => this.StatusCode(500, new Error(failure.Message)),
+                paged => this.Ok(paged.ToModel()));
         }
 
         /// <summary>
-        /// Get by id
+        /// Get by id.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -84,19 +74,17 @@ namespace Hawk.WebApi.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetById([FromRoute] string id)
         {
-            var entity = await this.getById.GetResult(id, this.User.GetClientId()).ConfigureAwait(false);
-            if (entity == null)
-            {
-                throw new NotFoundException($"Resource 'transactions' with id {id} could not be found");
-            }
+            var entity = await this.getById.GetResult(id, this.GetUser()).ConfigureAwait(false);
 
-            var model = this.mapper.Map<Transaction>(entity);
-
-            return this.Ok(model);
+            return entity.Match(
+                failure => this.StatusCode(500, new Error(failure.Message)),
+                success => success.Match<IActionResult>(
+                    transaction => this.Ok((Transaction)transaction),
+                    () => this.NotFound($"Resource 'transactions' with id {id} could not be found")));
         }
 
         /// <summary>
-        /// Create
+        /// Create.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -107,19 +95,19 @@ namespace Hawk.WebApi.Controllers
             var validateResult = await this.validator.ValidateAsync(request).ConfigureAwait(false);
             if (!validateResult.IsValid)
             {
-                throw new ValidationException(validateResult.Errors);
+                return this.StatusCode(409, validateResult.Errors);
             }
 
-            request.Account = new Account(this.User.GetClientId());
-            var entity = this.mapper.Map<Domain.Entities.Transaction>(request);
-            var inserted = await this.create.Execute(entity).ConfigureAwait(false);
-            var response = this.mapper.Map<Transaction>(inserted);
+            request.Account = new Account(this.GetUser());
+            var entity = await this.create.Execute(request).ConfigureAwait(false);
 
-            return this.Created(response.Id, response);
+            return entity.Match(
+                failure => this.StatusCode(500, new Error(failure.Message)),
+                transaction => this.Created(transaction.Id, (Transaction)transaction));
         }
 
         /// <summary>
-        /// Update
+        /// Update.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="request"></param>
@@ -130,22 +118,24 @@ namespace Hawk.WebApi.Controllers
             [FromRoute] string id,
             [FromBody] dynamic request)
         {
-            var entity = await this.getById.GetResult(id, this.User.GetClientId()).ConfigureAwait(false);
-            if (entity == null)
-            {
-                throw new NotFoundException($"Resource 'transactions' with id {id} could not be found");
-            }
+            var entity = await this.getById.GetResult(id, this.GetUser()).ConfigureAwait(false);
 
-            var model = this.mapper.Map<Transaction>(entity);
-            this.partialUpdater.Apply(request, model);
-            entity = this.mapper.Map<Domain.Entities.Transaction>(model);
-            await this.create.Execute(entity).ConfigureAwait(false);
+            return await entity.Match(
+                failure => Task<IActionResult>(this.StatusCode(500, new Error(failure.Message))),
+                success => success.Match<Task<IActionResult>>(
+                    async transaction =>
+                    {
+                        Transaction model = transaction;
+                        PartialUpdater.Apply(request, model);
+                        await this.create.Execute(model).ConfigureAwait(false);
 
-            return this.NoContent();
+                        return this.NoContent();
+                    },
+                    () => Task<IActionResult>(this.NotFound($"Resource 'transactions' with id {id} could not be found")))).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Exclude
+        /// Exclude.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -153,15 +143,17 @@ namespace Hawk.WebApi.Controllers
         [ProducesResponseType(204)]
         public async Task<IActionResult> Exclude([FromRoute] string id)
         {
-            var entity = await this.getById.GetResult(id, this.User.GetClientId()).ConfigureAwait(false);
-            if (entity == null)
-            {
-                throw new NotFoundException($"Resource 'transactions' with id {id} could not be found");
-            }
+            var entity = await this.getById.GetResult(id, this.GetUser()).ConfigureAwait(false);
 
-            await this.exclude.Execute(entity).ConfigureAwait(false);
-
-            return this.NoContent();
+            return await entity.Match(
+                failure => Task<IActionResult>(this.StatusCode(500, new Error(failure.Message))),
+                success => success.Match<Task<IActionResult>>(
+                    async store =>
+                    {
+                        await this.exclude.Execute(store).ConfigureAwait(false);
+                        return this.NoContent();
+                    },
+                    () => Task<IActionResult>(this.NotFound($"Resource 'transactions' with id {id} could not be found"))));
         }
     }
 }

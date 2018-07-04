@@ -3,23 +3,20 @@ namespace Hawk.Domain.Entities
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
     using Hawk.Domain.Entities.Payment;
-    using Hawk.Infrastructure;
+    using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Monad.Extensions;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     public abstract class Transaction : Entity<Guid>
     {
-        private readonly HashSet<Tag> tags;
+        private readonly ICollection<Tag> tags = new HashSet<Tag>();
 
         protected Transaction(Guid id, Pay pay, Account account)
         {
-            Guard.NotNull(pay, nameof(pay), "Pay cannot be null.");
-            Guard.NotNull(account, nameof(account), "Account cannot be null.");
-
             this.Id = id;
             this.Pay = pay;
             this.Account = account;
-            this.tags = new HashSet<Tag>();
         }
 
         public Pay Pay { get; }
@@ -32,25 +29,75 @@ namespace Hawk.Domain.Entities
 
         public IReadOnlyCollection<Tag> Tags => this.tags.ToList();
 
-        public void AddTag(Tag tag)
+        public IReadOnlyCollection<Try<Unit>> AddTags(IReadOnlyCollection<Option<Tag>> tagsOption) => tagsOption
+            .Select(this.AddTag)
+            .ToList();
+
+        public Try<Unit> AddTag(Option<Tag> tagOption) => this.AddTag(tagOption.GetOrElse(default));
+
+        public Try<Unit> AddTag(Tag tag)
         {
-            Guard.NotNull(tag, nameof(tag), "Tag cannot be null.");
+            if (tag == null)
+            {
+                return new ArgumentNullException(nameof(tag), "Transaction's tag cannot be null.");
+            }
 
             this.tags.Add(tag);
+
+            return Unit();
         }
 
-        public void SplittedIn(Parcel parcel)
+        public Try<Unit> SplittedIn(Option<Parcel> parcelOption)
         {
-            Guard.NotNull(parcel, nameof(parcel), "Parcel cannot be null.");
+            var parcel = parcelOption.GetOrElse(default);
+            if (parcel == null)
+            {
+                return new ArgumentNullException(nameof(parcel), "Transaction's parcel cannot be null.");
+            }
 
             this.Parcel = parcel;
+
+            return Unit();
         }
 
-        public void UpdateStore(Store store)
+        public Try<Unit> UpdateStore(Option<Store> storeOption)
         {
-            Guard.NotNull(store, nameof(store), "Store cannot be null.");
+            var store = storeOption.GetOrElse(default);
+            if (store == null)
+            {
+                return new ArgumentNullException(nameof(store), "Transaction's store cannot be null.");
+            }
 
             this.Store = store;
+
+            return Unit();
+        }
+
+        protected static Try<Transaction> CreateWith(
+            Option<Guid> transactionIdOption,
+            Option<Pay> payOption,
+            Option<Account> accountOption,
+            Func<Guid, Pay, Account, Try<Transaction>> createTransaction)
+        {
+            var pay = payOption.GetOrElse(default);
+            if (pay == null)
+            {
+                return new ArgumentNullException(nameof(pay), "Transaction's pay cannot be null.");
+            }
+
+            var account = accountOption.GetOrElse(default);
+            if (account == null)
+            {
+                return new ArgumentNullException(nameof(account), "Transaction's account cannot be null.");
+            }
+
+            var id = transactionIdOption.GetOrElse(Guid.Empty);
+            if (id == Guid.Empty)
+            {
+                return new ArgumentNullException(nameof(id), "Transaction's id cannot be null.");
+            }
+
+            return createTransaction(id, pay, account);
         }
     }
 }

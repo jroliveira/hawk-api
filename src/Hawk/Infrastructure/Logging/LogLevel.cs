@@ -4,6 +4,6 @@
     {
         None,
         Error,
-        Info
+        Info,
     }
 }

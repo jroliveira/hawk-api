@@ -1,11 +1,11 @@
 ﻿namespace Hawk.Domain.Queries.Account
 {
     using System.Threading.Tasks;
-
     using Hawk.Domain.Entities;
+    using Hawk.Infrastructure.Monad;
 
     public interface IGetByEmailQuery
     {
-        Task<Account> GetResult(string email);
+        Task<Try<Option<Account>>> GetResult(string email);
     }
 }

@@ -1,26 +1,28 @@
 namespace Hawk.Infrastructure.Data.Neo4J.Commands.Transaction
 {
     using System.Threading.Tasks;
-
     using Hawk.Domain.Commands.Transaction;
     using Hawk.Domain.Entities;
+    using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Monad.Extensions;
+    using static System.String;
 
-    internal sealed class ExcludeCommand : Connection, IExcludeCommand
+    internal sealed class ExcludeCommand : IExcludeCommand
     {
-        public ExcludeCommand(Database database, GetScript file)
-            : base(database, file, "Transaction.Exclude.cql")
-        {
-        }
+        private static readonly Option<string> Statement = CypherScript.ReadAll("Transaction.Exclude.cql");
+        private readonly Database database;
 
-        public async Task Execute(Transaction entity)
+        public ExcludeCommand(Database database) => this.database = database;
+
+        public Task<Try<Unit>> Execute(Transaction entity)
         {
             var parameters = new
             {
                 email = entity.Account.Email,
-                id = entity.Id.ToString()
+                id = entity.Id.ToString(),
             };
 
-            await this.Database.Execute(this.Statement, parameters).ConfigureAwait(false);
+            return this.database.Execute(Statement.GetOrElse(Empty), parameters);
         }
     }
 }

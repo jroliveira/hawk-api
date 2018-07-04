@@ -1,27 +1,27 @@
 namespace Hawk.Domain.Entities.Payment
 {
     using System;
-
-    using Hawk.Infrastructure;
+    using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Monad.Extensions;
+    using static System.String;
 
     public sealed class Method : IEquatable<Method>
     {
-        public Method(string name)
-        {
-            Guard.NotNullNorEmpty(name, nameof(name), "Payment method's name cannot be null or empty.");
-
-            this.Name = name;
-        }
+        private Method(string name) => this.Name = name;
 
         public string Name { get; }
 
-        public static implicit operator string(Method method)
-        {
-            return method.Name;
-        }
+        public static implicit operator string(Method method) => method.Name;
 
-        public static implicit operator Method(string name)
+        public static Try<Method> CreateWith(Option<string> nameOption)
         {
+            var name = nameOption.GetOrElse(Empty);
+
+            if (IsNullOrEmpty(name))
+            {
+                return new ArgumentNullException(nameof(name), "Payment method's name cannot be null or empty.");
+            }
+
             return new Method(name);
         }
 
@@ -55,9 +55,6 @@ namespace Hawk.Domain.Entities.Payment
             return string.Equals(this.Name, other.Name);
         }
 
-        public override int GetHashCode()
-        {
-            return this.Name != null ? this.Name.GetHashCode() : 0;
-        }
+        public override int GetHashCode() => this.Name != null ? this.Name.GetHashCode() : 0;
     }
 }
