@@ -5,7 +5,7 @@ namespace Hawk.WebApi.Controllers
 
     public class BaseController : ControllerBase
     {
-        public CreatedResult Created(object id, object value)
+        protected CreatedResult Created(object id, object value)
         {
             var uri = $"{this.Request.GetDisplayUrl()}/{id}";
 
