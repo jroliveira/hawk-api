@@ -1,4 +1,4 @@
-version: '2.0'
+version: '3'
 services:
   swagger:
     image: swaggerapi/swagger-ui
@@ -15,7 +15,7 @@ services:
       - "7474:7474"
       - "7687:7687"
     volumes:
-      - /data
+      - $HOME/neo4j/data:/data
     environment:
       NEO4J_AUTH: neo4j/123456
 
@@ -27,4 +27,4 @@ services:
     env_file:
       - api.env
     depends_on:
-      - graphdb 
+      - graphdb
