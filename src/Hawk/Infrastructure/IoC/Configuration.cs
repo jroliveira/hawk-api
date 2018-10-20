@@ -15,8 +15,8 @@
 
             // Filters
             @this.AddSingleton<IWhere<string, Filter>, Data.Neo4J.Filter.Where>();
-            @this.AddSingleton<ISkip<int, Filter>, Data.Neo4J.Filter.Skip>();
-            @this.AddSingleton<ILimit<int, Filter>, Data.Neo4J.Filter.Limit>();
+            @this.AddSingleton<ISkip<uint, Filter>, Data.Neo4J.Filter.Skip>();
+            @this.AddSingleton<ILimit<uint, Filter>, Data.Neo4J.Filter.Limit>();
 
             // Commands
             @this.AddScoped<Domain.Commands.Account.ICreateCommand, Data.Neo4J.Commands.Account.CreateCommand>();

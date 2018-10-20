@@ -3,11 +3,11 @@
     using Hawk.Infrastructure.Filter;
     using Http.Query.Filter;
 
-    internal sealed class Limit : ILimit<int, Filter>
+    internal sealed class Limit : ILimit<uint, Filter>
     {
-        public int Apply(Filter filter)
+        public uint Apply(Filter filter)
         {
-            if (filter.Limit == null)
+            if (filter.Limit.Value == null)
             {
                 return 10000;
             }
@@ -17,7 +17,7 @@
                 return 10000;
             }
 
-            return filter.Limit;
+            return filter.Limit.Value.Value;
         }
     }
 }
