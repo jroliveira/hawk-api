@@ -1,2 +1,2 @@
 Task("Clean")
-    .Does(() => CleanDirectory(Directory("./../bin")));
+    .Does(() => CleanDirectory(outputDirectory));
