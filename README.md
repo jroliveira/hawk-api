@@ -1,25 +1,82 @@
+![Hawk - logo][hawk_anime]
+
 # Hawk (api)
 
-[![CircleCI](https://circleci.com/gh/jroliveira/hawk-api/tree/master.svg?style=svg)](https://circleci.com/gh/jroliveira/hawk-api/tree/master)
+[![CircleCI](https://circleci.com/gh/jroliveira/hawk-api/tree/master.svg?style=svg&circle-token=d587c191aee3dcb4b2ae7c23132585d36baa9808)](https://circleci.com/gh/jroliveira/hawk-api/tree/master)
 [![CodeFactor](https://www.codefactor.io/repository/github/jroliveira/hawk-api/badge)](https://www.codefactor.io/repository/github/jroliveira/hawk-api)
-
-![Hawk - logo][hawk_anime]
+[![License: MIT](http://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Hawk is a personal finance control. The name Hawk is the name of pig in the anime "The Seven Deadly Sins" (Nanatsu no Taizai).
 
-### Installing
+## Installing / Getting started
 
-``` bash
+This step is to explain what you need to run this application without having to configure the whole dev environment, but if you want to develop for this application, I will explain this step better in the following steps.
+
+### Minimum pre requirements
+
+The minimum pre requirements you need to run this application is the [Docker Compose](https://docs.docker.com/compose/install/).  
+After you install the Docker Compose, you need to run the commands below.
+
+### Running application with Docker Compose
+
+```bash
+# Clone this repository
 $ git clone https://github.com/jroliveira/hawk-api.git
+
+# Go into the repository
+$ cd hawk-api
 ```
 
-### Running in Visual Studio 2017
+Now you need to configure the [api.env](#configuring-api.env), and run the commands below to run the application.
 
-#### Pre requirements
+```bash
+# Run the application
+$ docker-compose up
+```
 
-* [Visual Studio 2017][vs2017]
+## Developing
 
-#### Configuration file (.\src\Hawk.WebApi\appsettings.json)
+### Built With
+
+ - [.NET Core](https://docs.microsoft.com/en-us/dotnet/core/)
+ - [C#](https://docs.microsoft.com/en-us/dotnet/csharp/)
+ - [ASP.NET Core](https://docs.microsoft.com/en-ca/aspnet/core/)
+ - [Neo4j](https://neo4j.com/developer/)
+ - [Docker Compose](https://docs.docker.com/compose/)
+ - [Swagger](https://swagger.io/)
+
+### Pre requisites
+
+Download and install:
+
+ - [.NET Core SDK](https://www.microsoft.com/net/download)
+ - [Neo4j](https://neo4j.com/download/)
+ - [Docker Compose](https://docs.docker.com/compose/install/)
+
+#### Installing the Cake
+
+[Cake](https://github.com/cake-build/cake) (C# Make) is a cross-platform build automation system with a C# DSL for tasks such as compiling code, copying files and folders, running unit tests, compressing files and building NuGet packages.
+
+```bash
+$ dotnet tool install -g Cake.Tool --version 0.30.0
+```
+
+### Setting up Dev
+
+```bash
+# Clone this repository
+$ git clone https://github.com/jroliveira/hawk-api.git
+
+# Go into the repository
+$ cd hawk-api
+```
+
+## Configuration
+
+### Configuring appsettings.json
+
+You must create a file `appsettings.json` on the path `./src/Hawk.WebApi/` with the context below.  
+This file is used to set the configuration to run in Visual Studio or `dotnet run` command.
 
 ``` json
 {
@@ -66,21 +123,12 @@ $ git clone https://github.com/jroliveira/hawk-api.git
 }
 ```
 
-### How to use it
+### Configuring api.env
 
-``` bash
-F5
-```
+You must create a file `api.env` on the path `.` with the context below.  
+This file is used to set the configuration to run in `docker-compose up` command.
 
-### Running in Docker
-
-#### Pre requirements
-
-* [Docker Compose][docker_compose]
-
-#### Configuration file (.\api.env)
-
-``` bash
+```bash
 ASPNETCORE_URLS=http://*:5000
 
 NEO4J:URI=bolt://graphdb:7687
@@ -96,35 +144,61 @@ IPRATELIMITING:CLIENTIDHEADER=X-ClientId
 IPRATELIMITING:HTTPSTATUSCODE=429
 ```
 
-### How to use it
+### Building
 
-``` bash
+```bash
+$ dotnet cake ./cakebuild/build.cake
+```
+
+or
+
+```bash
+# Restore dependencies
+$ dotnet restore
+
+# Build project
+$ dotnet build
+```
+
+### Running
+
+If you want to run with Docker Compose, you need to execute the command below:
+
+```bash
+# Run the application
 $ docker-compose up
 ```
 
-### Deploy to Heroku
+or
 
-#### Manual
+If you want to run with dotnet, you need to run Neo4j and before, the command below:
 
-Using custom buildpack [dotnetcore-buildpack]()
+```bash
+# Run application
+$ dotnet run --project ./src/Hawk.WebApi/
+```
+
+### Deploying / Publishing
+
+Manual
+
+Using custom buildpack [dotnetcore-buildpack](https://github.com/jincod/dotnetcore-buildpack)
 
 ``` bash
 $ heroku buildpacks:set https://github.com/jincod/dotnetcore-buildpack
 ```
 
-#### Automatic
+or 
+
+Automatic
 
 [![Deploy][heroku_button]][heroku_template]
 
-### Contributions
+## Api Reference
 
-1. Fork it
-2. git checkout -b <branch-name>
-3. git add --all && git commit -m "feature description"
-4. git push origin <branch-name>
-5. Create a pull request
+The documentation was written with [Swagger](https://swagger.io/) and you can see the API documentation on the link [localhost:5001](http://localhost:5001) after performing the previous step [Running](#running) with Docker Compose.
 
-### License
+## Licensing
 
 The code is available under the [MIT license](LICENSE).
 
