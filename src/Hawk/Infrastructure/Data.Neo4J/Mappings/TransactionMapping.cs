@@ -32,7 +32,7 @@
             { "Credit", Credit.CreateWith },
         };
 
-        public static Try<Transaction> MapFrom(IRecord data) => data.GetRecord(Data).Match(
+        internal static Try<Transaction> MapFrom(IRecord data) => data.GetRecord(Data).Match(
             record =>
             {
                 var type = record

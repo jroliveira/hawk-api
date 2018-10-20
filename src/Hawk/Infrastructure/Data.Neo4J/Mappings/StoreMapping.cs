@@ -17,9 +17,9 @@
         private const string Name = "name";
         private const string Tags = "tags";
 
-        public static Try<(Store Store, uint Count)> MapFrom(IRecord data) => MapFrom(data.GetRecord("data"));
+        internal static Try<(Store Store, uint Count)> MapFrom(IRecord data) => MapFrom(data.GetRecord("data"));
 
-        public static Try<(Store Store, uint Count)> MapFrom(Option<Record> recordOption) => recordOption.Match(
+        internal static Try<(Store Store, uint Count)> MapFrom(Option<Record> recordOption) => recordOption.Match(
             record => Store.CreateWith(record.Get<string>(Name)).Match<Try<(Store, uint)>>(
                 _ => _,
                 store =>

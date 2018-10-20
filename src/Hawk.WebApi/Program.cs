@@ -6,7 +6,7 @@
 
     internal sealed class Program
     {
-        public static void Main(string[] args) => new WebHostBuilder()
+        internal static void Main(string[] args) => new WebHostBuilder()
             .UseKestrel(options => options.AddServerHeader = false)
             .UseContentRoot(Directory.GetCurrentDirectory())
             .UseStartup<Startup>()

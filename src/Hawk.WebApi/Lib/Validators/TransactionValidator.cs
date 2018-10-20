@@ -6,7 +6,7 @@
 
     internal sealed class TransactionValidator : AbstractValidator<Transaction>
     {
-        public TransactionValidator()
+        internal TransactionValidator()
         {
             this.RuleFor(model => model.Type)
                 .NotEmpty()

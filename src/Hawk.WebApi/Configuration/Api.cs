@@ -12,7 +12,7 @@
 
     internal static class Api
     {
-        public static IServiceCollection ConfigureApi(this IServiceCollection @this)
+        internal static IServiceCollection ConfigureApi(this IServiceCollection @this)
         {
             @this.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

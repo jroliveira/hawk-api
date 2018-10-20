@@ -6,7 +6,7 @@
 
     internal sealed class StoreValidator : AbstractValidator<Store>
     {
-        public StoreValidator() => this.RuleFor(model => model.Name)
+        internal StoreValidator() => this.RuleFor(model => model.Name)
             .NotEmpty()
             .WithMessage("Nome da loja deve ser informado.");
     }

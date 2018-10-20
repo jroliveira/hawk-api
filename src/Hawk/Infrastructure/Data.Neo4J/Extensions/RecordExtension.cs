@@ -10,7 +10,7 @@
 
     internal static class RecordExtension
     {
-        public static Option<Record> GetRecord(this IRecord @this, string key)
+        internal static Option<Record> GetRecord(this IRecord @this, string key)
         {
             if (@this == null || !@this.Keys.Contains(key))
             {

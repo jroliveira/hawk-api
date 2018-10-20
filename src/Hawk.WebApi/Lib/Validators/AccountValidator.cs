@@ -6,7 +6,7 @@
 
     internal sealed class AccountValidator : AbstractValidator<Account>
     {
-        public AccountValidator()
+        internal AccountValidator()
         {
             this.RuleFor(model => model.Email)
                 .NotEmpty()

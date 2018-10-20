@@ -11,7 +11,7 @@
     {
         private const string Name = "name";
 
-        public static Try<Currency> MapFrom(Option<Record> recordOption) => recordOption.Match(
+        internal static Try<Currency> MapFrom(Option<Record> recordOption) => recordOption.Match(
             record => CreateWith(record.Get<string>(Name)),
             () => new NullReferenceException("Currency cannot be null."));
     }

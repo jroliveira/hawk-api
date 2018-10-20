@@ -34,7 +34,7 @@
 
         internal sealed class LogData
         {
-            public LogData(string message, Stopwatch stopwatch, HttpContext context)
+            internal LogData(string message, Stopwatch stopwatch, HttpContext context)
             {
                 this.Message = message;
                 this.Elapse = new Elapse(stopwatch);
@@ -42,58 +42,58 @@
                 this.Response = new Response(context);
             }
 
-            public string Message { get; }
+            internal string Message { get; }
 
-            public Elapse Elapse { get; }
+            internal Elapse Elapse { get; }
 
-            public Request Request { get; }
+            internal Request Request { get; }
 
-            public Response Response { get; }
+            internal Response Response { get; }
         }
 
         internal class Elapse
         {
-            public Elapse(Stopwatch stopwatch)
+            internal Elapse(Stopwatch stopwatch)
             {
                 this.TimeSpan = stopwatch.Elapsed;
                 this.Milliseconds = stopwatch.Elapsed.Milliseconds;
             }
 
-            public TimeSpan TimeSpan { get; }
+            internal TimeSpan TimeSpan { get; }
 
-            public int Milliseconds { get; }
+            internal int Milliseconds { get; }
         }
 
         internal class Request
         {
-            public Request(HttpContext context)
+            internal Request(HttpContext context)
             {
                 this.ContentType = context.Request.ContentType;
                 this.Headers = context.Request.Headers;
                 this.Method = context.Request.Method;
             }
 
-            public string ContentType { get; }
+            internal string ContentType { get; }
 
-            public IHeaderDictionary Headers { get; }
+            internal IHeaderDictionary Headers { get; }
 
-            public string Method { get; }
+            internal string Method { get; }
         }
 
         internal class Response
         {
-            public Response(HttpContext context)
+            internal Response(HttpContext context)
             {
                 this.ContentType = context.Response.ContentType;
                 this.Headers = context.Response.Headers;
                 this.StatusCode = context.Response.StatusCode;
             }
 
-            public string ContentType { get; }
+            internal string ContentType { get; }
 
-            public IHeaderDictionary Headers { get; }
+            internal IHeaderDictionary Headers { get; }
 
-            public int StatusCode { get; }
+            internal int StatusCode { get; }
         }
     }
 }

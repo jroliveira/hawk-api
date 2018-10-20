@@ -1,4 +1,4 @@
-namespace Hawk.Infrastructure.Data.Neo4J
+﻿namespace Hawk.Infrastructure.Data.Neo4J
 {
     using System;
     using System.Collections.Generic;
@@ -33,7 +33,9 @@ namespace Hawk.Infrastructure.Data.Neo4J
             }
         }
 
-        public Task<Try<IEnumerable<TReturn>>> Execute<TReturn>(Func<IRecord, TReturn> mapping, string statement, object parameters) => this.Execute(async session =>
+        public void Dispose() => this.driver.Dispose();
+
+        internal Task<Try<IEnumerable<TReturn>>> Execute<TReturn>(Func<IRecord, TReturn> mapping, string statement, object parameters) => this.Execute(async session =>
         {
             var cursor = await session.RunAsync(statement, parameters).ConfigureAwait(false);
             var data = await cursor.ToListAsync().ConfigureAwait(false);
@@ -41,7 +43,7 @@ namespace Hawk.Infrastructure.Data.Neo4J
             return data.Select(mapping);
         });
 
-        public Task<Try<TReturn>> ExecuteScalar<TReturn>(Func<IRecord, TReturn> mapping, string statement, object parameters) => this.Execute(async session =>
+        internal Task<Try<TReturn>> ExecuteScalar<TReturn>(Func<IRecord, TReturn> mapping, string statement, object parameters) => this.Execute(async session =>
         {
             var cursor = await session.RunAsync(statement, parameters).ConfigureAwait(false);
             var data = await cursor.ToListAsync().ConfigureAwait(false);
@@ -49,13 +51,11 @@ namespace Hawk.Infrastructure.Data.Neo4J
             return mapping(data.FirstOrDefault());
         });
 
-        public Task<Try<Unit>> Execute(string statement, object parameters) => this.Execute(async session =>
+        internal Task<Try<Unit>> Execute(string statement, object parameters) => this.Execute(async session =>
         {
             await session.RunAsync(statement, parameters).ConfigureAwait(false);
             return Unit();
         });
-
-        public void Dispose() => this.driver.Dispose();
 
         private async Task<Try<TReturn>> Execute<TReturn>(Func<ISession, Task<TReturn>> command)
         {

@@ -12,7 +12,7 @@
 
     internal static class Log
     {
-        public static IApplicationBuilder UseLog(
+        internal static IApplicationBuilder UseLog(
             this IApplicationBuilder app,
             IConfigurationRoot configuration,
             IHttpContextAccessor accessor)

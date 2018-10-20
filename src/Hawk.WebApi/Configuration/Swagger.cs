@@ -24,7 +24,7 @@
             }
         }
 
-        public static IServiceCollection ConfigureSwagger(this IServiceCollection @this)
+        internal static IServiceCollection ConfigureSwagger(this IServiceCollection @this)
         {
             @this.AddSwaggerGen(options =>
             {
@@ -46,7 +46,7 @@
             return @this;
         }
 
-        private static Info CreateInfoForApiVersion(ApiVersionDescription description)
+        internal static Info CreateInfoForApiVersion(ApiVersionDescription description)
         {
             var info = new Info
             {

@@ -10,7 +10,7 @@
 
     internal static class PaymentMethodMapping
     {
-        public static Paged<PaymentMethod> ToModel(this Paged<Try<(Method Method, uint Count)>> @this)
+        internal static Paged<PaymentMethod> ToModel(this Paged<Try<(Method Method, uint Count)>> @this)
         {
             var model = @this
                 .Data

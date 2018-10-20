@@ -8,7 +8,7 @@
     {
         private readonly AttributeRouteModel versionConstraintTemplate;
 
-        public ApiVersionRoutePrefixConvention() => this.versionConstraintTemplate = new AttributeRouteModel
+        internal ApiVersionRoutePrefixConvention() => this.versionConstraintTemplate = new AttributeRouteModel
         {
             Template = "v{api-version:apiVersion}",
         };

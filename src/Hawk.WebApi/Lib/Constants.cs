@@ -1,12 +1,12 @@
 ﻿namespace Hawk.WebApi.Lib
 {
-    public static class Constants
+    internal static class Constants
     {
-        public static class Api
+        internal static class Api
         {
-            public static string Cors => "CorsPolicy";
+            internal static string Cors => "CorsPolicy";
 
-            public static string ReqId => "reqId";
+            internal static string ReqId => "reqId";
         }
     }
 }

@@ -12,7 +12,7 @@
         private const string Total = "total";
         private const string Number = "number";
 
-        public static Try<Parcel> MapFrom(Option<Record> recordOption) => recordOption.Match(
+        internal static Try<Parcel> MapFrom(Option<Record> recordOption) => recordOption.Match(
             record => CreateWith(record.Get<uint>(Total), record.Get<uint>(Number)),
             () => new NullReferenceException("Parcel cannot be null."));
     }

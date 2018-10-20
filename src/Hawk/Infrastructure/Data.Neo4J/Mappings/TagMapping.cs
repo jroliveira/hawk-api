@@ -14,9 +14,9 @@
         private const string Name = "name";
         private const string Total = "total";
 
-        public static Try<(Tag Tag, uint Count)> MapFrom(IRecord data) => MapFrom(data.GetRecord("data"));
+        internal static Try<(Tag Tag, uint Count)> MapFrom(IRecord data) => MapFrom(data.GetRecord("data"));
 
-        public static Try<(Tag Tag, uint Count)> MapFrom(Option<Record> recordOption) => recordOption.Match(
+        internal static Try<(Tag Tag, uint Count)> MapFrom(Option<Record> recordOption) => recordOption.Match(
             record => Tag.CreateWith(record.Get<string>(Name)).Match<Try<(Tag, uint)>>(
                 _ => _,
                 method => (method, record.Get<uint>(Total).GetOrElse(0u))),
