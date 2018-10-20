@@ -3,11 +3,11 @@
     using Hawk.Infrastructure.Filter;
     using Http.Query.Filter;
 
-    internal sealed class Skip : ISkip<int, Filter>
+    internal sealed class Skip : ISkip<uint, Filter>
     {
-        public int Apply(Filter filter)
+        public uint Apply(Filter filter)
         {
-            if (filter.Skip == null)
+            if (filter.Skip.Value == null)
             {
                 return 0;
             }
@@ -17,7 +17,7 @@
                 return 0;
             }
 
-            return filter.Skip;
+            return filter.Skip.Value.Value;
         }
     }
 }

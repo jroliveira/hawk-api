@@ -3,7 +3,7 @@
     using Http.Query.Filter;
 
     internal interface ISkip<out TReturn, in TFilter>
-        where TFilter : Filter
+        where TFilter : IFilter
     {
         TReturn Apply(TFilter filter);
     }
