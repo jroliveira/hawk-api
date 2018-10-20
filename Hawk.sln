@@ -6,12 +6,16 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D4ECEBF3-43F6-4894-AC40-0C48627054B5}"
 	ProjectSection(SolutionItems) = preProject
 		.dockerignore = .dockerignore
+		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		after.Hawk.sln.targets = after.Hawk.sln.targets
 		api.env = api.env
 		app.json = app.json
 		circle.yml = circle.yml
 		code-analysis.ruleset = code-analysis.ruleset
+		CONTRIBUTING.md = CONTRIBUTING.md
 		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
 		docker-compose.yml = docker-compose.yml
 		Dockerfile = Dockerfile
 		LICENSE = LICENSE
@@ -28,13 +32,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cakebuild", "cakebuild", "{
 	ProjectSection(SolutionItems) = preProject
 		cakebuild\build.cake = cakebuild\build.cake
 		cakebuild\build.ps1 = cakebuild\build.ps1
+		cakebuild\build.sh = cakebuild\build.sh
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tasks", "tasks", "{88F81594-D86D-4424-87F1-FA73CEC46051}"
 	ProjectSection(SolutionItems) = preProject
+		cakebuild\tasks\build.cake = cakebuild\tasks\build.cake
 		cakebuild\tasks\clean.cake = cakebuild\tasks\clean.cake
 		cakebuild\tasks\publish.cake = cakebuild\tasks\publish.cake
 		cakebuild\tasks\restore.cake = cakebuild\tasks\restore.cake
+		cakebuild\tasks\test.cake = cakebuild\tasks\test.cake
 	EndProjectSection
 EndProject
 Global
