@@ -20,7 +20,7 @@
                 { "Credit", Credit.CreateWith },
             };
 
-        public static Paged<Models.Transaction.Get.Transaction> ToModel(this Paged<Transaction> @this)
+        internal static Paged<Models.Transaction.Get.Transaction> ToModel(this Paged<Transaction> @this)
         {
             var model = @this
                 .Data
@@ -30,7 +30,7 @@
             return new Paged<Models.Transaction.Get.Transaction>(model, @this.Skip, @this.Limit);
         }
 
-        public static Transaction ToEntity(this Models.Transaction.Post.Transaction @this) => Map(
+        internal static Transaction ToEntity(this Models.Transaction.Post.Transaction @this) => Map(
             @this.Type,
             Guid.NewGuid(),
             @this.Store,
@@ -39,7 +39,7 @@
             @this.Payment,
             @this.Parcel);
 
-        public static Transaction ToEntity(this Models.Transaction.Get.Transaction @this) => Map(
+        internal static Transaction ToEntity(this Models.Transaction.Get.Transaction @this) => Map(
             @this.Type,
             new Guid(@this.Id),
             @this.Store,

@@ -7,7 +7,7 @@
 
     internal static class Database
     {
-        public static IServiceCollection ConfigureDatabase(this IServiceCollection @this, IConfigurationRoot configuration)
+        internal static IServiceCollection ConfigureDatabase(this IServiceCollection @this, IConfigurationRoot configuration)
         {
             @this.Configure<Configuration>(configuration.GetSection("neo4j"));
 

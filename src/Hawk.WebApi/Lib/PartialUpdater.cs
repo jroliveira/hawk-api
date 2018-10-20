@@ -5,7 +5,7 @@
 
     internal static class PartialUpdater
     {
-        public static void Apply<T>(dynamic partialModel, T destination)
+        internal static void Apply<T>(dynamic partialModel, T destination)
         {
             var partialModelAsJToken = JToken.FromObject(partialModel);
 

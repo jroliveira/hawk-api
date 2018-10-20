@@ -16,9 +16,9 @@
         private const string Id = "id";
         private const string Email = "email";
 
-        public static Try<Account> MapFrom(IRecord data) => MapFrom(data.GetRecord(Data));
+        internal static Try<Account> MapFrom(IRecord data) => MapFrom(data.GetRecord(Data));
 
-        public static Try<Account> MapFrom(Option<Record> recordOption) => recordOption.Match(
+        internal static Try<Account> MapFrom(Option<Record> recordOption) => recordOption.Match(
             record => CreateWith(record.Get<Guid>(Id), record.Get<string>(Email)),
             () => new NullReferenceException("Account cannot be null."));
     }

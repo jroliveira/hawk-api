@@ -9,7 +9,7 @@
 
     internal static class StoreMapping
     {
-        public static Paged<Store> ToModel(this Paged<Try<(Domain.Entities.Store Store, uint Count)>> @this)
+        internal static Paged<Store> ToModel(this Paged<Try<(Domain.Entities.Store Store, uint Count)>> @this)
         {
             var model = @this
                 .Data

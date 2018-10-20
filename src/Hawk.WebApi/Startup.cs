@@ -22,7 +22,7 @@
             .AddEnvironmentVariables()
             .Build();
 
-        public IConfigurationRoot Configuration { get; }
+        internal IConfigurationRoot Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services) => services
             .ConfigureIpRateLimiting(this.Configuration)

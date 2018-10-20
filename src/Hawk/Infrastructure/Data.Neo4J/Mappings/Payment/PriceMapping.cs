@@ -12,7 +12,7 @@
         private const string Value = "value";
         private const string Currency = "currency";
 
-        public static Try<Price> MapFrom(Option<Record> recordOption) => recordOption.Match(
+        internal static Try<Price> MapFrom(Option<Record> recordOption) => recordOption.Match(
             record => CurrencyMapping.MapFrom(record.GetRecord(Currency)).Match(
                 _ => _,
                 currency => CreateWith(record.Get<double>(Value), currency)),

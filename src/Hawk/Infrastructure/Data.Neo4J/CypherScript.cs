@@ -13,7 +13,7 @@
     {
         private static readonly Assembly Assembly = typeof(CypherScript).GetTypeInfo().Assembly;
 
-        public static Option<string> ReadAll(string name)
+        internal static Option<string> ReadAll(string name)
         {
             name = $@"Hawk.Infrastructure.Data.Neo4J.Scripts.{name}";
 

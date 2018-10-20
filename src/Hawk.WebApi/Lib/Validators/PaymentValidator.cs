@@ -1,4 +1,4 @@
-namespace Hawk.WebApi.Lib.Validators
+﻿namespace Hawk.WebApi.Lib.Validators
 {
     using System;
 
@@ -8,7 +8,7 @@ namespace Hawk.WebApi.Lib.Validators
 
     internal sealed class PaymentValidator : AbstractValidator<Payment>
     {
-        public PaymentValidator()
+        internal PaymentValidator()
         {
             this.RuleFor(model => model.Date)
                 .NotEqual(default(DateTime))

@@ -8,7 +8,7 @@
 
     internal static class Authentication
     {
-        public static IServiceCollection ConfigureIdentityServer(
+        internal static IServiceCollection ConfigureIdentityServer(
             this IServiceCollection services,
             IConfigurationRoot configuration)
         {

@@ -6,7 +6,7 @@
     {
         private const string ClientId = "client_id";
 
-        public static string GetUser(this ControllerBase @this)
+        internal static string GetUser(this ControllerBase @this)
         {
             if (!@this.User.HasClaim(match => match.Type == ClientId))
             {

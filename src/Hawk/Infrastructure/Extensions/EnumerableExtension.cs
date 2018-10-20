@@ -5,7 +5,7 @@
 
     internal static class EnumerableExtension
     {
-        public static void ForEach<T>(this IEnumerable<T> @this, Action<T> action)
+        internal static void ForEach<T>(this IEnumerable<T> @this, Action<T> action)
         {
             foreach (var item in @this)
             {

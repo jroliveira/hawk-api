@@ -15,7 +15,7 @@
         private const string Day = "day";
         private const string Method = "method";
 
-        public static Try<Pay> MapFrom(Option<Record> recordOption) => recordOption.Match(
+        internal static Try<Pay> MapFrom(Option<Record> recordOption) => recordOption.Match(
             record => PriceMapping.MapFrom(record).Match(
                 _ => _,
                 price => MethodMapping.MapFrom(record.GetRecord(Method)).Match(
