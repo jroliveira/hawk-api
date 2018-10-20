@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using Hawk.Domain.Entities;
     using Hawk.Domain.Entities.Payment;
     using Hawk.Domain.Entities.Transactions;
@@ -10,6 +11,7 @@
     using Hawk.Infrastructure.Data.Neo4J.Mappings.Payment;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
+
     using Neo4j.Driver.V1;
 
     internal static class TransactionMapping

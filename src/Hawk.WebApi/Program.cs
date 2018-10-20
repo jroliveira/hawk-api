@@ -1,6 +1,7 @@
 ﻿namespace Hawk.WebApi
 {
     using System.IO;
+
     using Microsoft.AspNetCore.Hosting;
 
     internal sealed class Program

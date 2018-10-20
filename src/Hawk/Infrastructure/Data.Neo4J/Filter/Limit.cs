@@ -1,6 +1,7 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Filter
 {
     using Hawk.Infrastructure.Filter;
+
     using Http.Query.Filter;
 
     internal sealed class Limit : ILimit<uint, Filter>

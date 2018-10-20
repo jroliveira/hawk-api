@@ -1,8 +1,10 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Mappings.Payment
 {
     using System;
+
     using Hawk.Domain.Entities.Payment;
     using Hawk.Infrastructure.Monad;
+
     using static Hawk.Domain.Entities.Payment.Price;
 
     internal static class PriceMapping

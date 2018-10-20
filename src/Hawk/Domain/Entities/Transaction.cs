@@ -3,9 +3,11 @@ namespace Hawk.Domain.Entities
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using Hawk.Domain.Entities.Payment;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
+
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
     public abstract class Transaction : Entity<Guid>

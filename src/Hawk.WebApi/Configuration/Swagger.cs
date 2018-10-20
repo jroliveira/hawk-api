@@ -2,10 +2,13 @@
 {
     using System.IO;
     using System.Reflection;
+
     using Hawk.WebApi.Lib.Swagger;
+
     using Microsoft.AspNetCore.Mvc.ApiExplorer;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.PlatformAbstractions;
+
     using Swashbuckle.AspNetCore.Swagger;
 
     internal static class Swagger

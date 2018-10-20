@@ -3,10 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
-    using static Hawk.Infrastructure.Monad.Utils.Util;
+
     using static System.String;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     public sealed class Store
     {

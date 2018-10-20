@@ -1,6 +1,7 @@
 ﻿namespace Hawk.Domain.Entities
 {
     using System;
+
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
 

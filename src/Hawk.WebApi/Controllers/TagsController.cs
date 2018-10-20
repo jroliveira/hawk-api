@@ -1,12 +1,14 @@
-namespace Hawk.WebApi.Controllers
+﻿namespace Hawk.WebApi.Controllers
 {
     using System.Threading.Tasks;
+
     using Hawk.Domain.Queries.Tag;
     using Hawk.Infrastructure;
     using Hawk.WebApi.Lib.Extensions;
     using Hawk.WebApi.Lib.Mappings;
     using Hawk.WebApi.Models;
     using Hawk.WebApi.Models.Tag.Get;
+
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 

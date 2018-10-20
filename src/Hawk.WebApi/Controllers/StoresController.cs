@@ -1,6 +1,7 @@
 namespace Hawk.WebApi.Controllers
 {
     using System.Threading.Tasks;
+
     using Hawk.Domain.Commands.Store;
     using Hawk.Domain.Queries.Store;
     using Hawk.Infrastructure;
@@ -10,8 +11,10 @@ namespace Hawk.WebApi.Controllers
     using Hawk.WebApi.Lib.Validators;
     using Hawk.WebApi.Models;
     using Hawk.WebApi.Models.Store.Get;
+
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+
     using static System.Threading.Tasks.Util;
 
     [Authorize]

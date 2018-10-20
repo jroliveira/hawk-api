@@ -1,14 +1,17 @@
-namespace Hawk.Infrastructure.Data.Neo4J.Queries.Tag
+﻿namespace Hawk.Infrastructure.Data.Neo4J.Queries.Tag
 {
     using System.Linq;
     using System.Threading.Tasks;
+
     using Hawk.Domain.Entities;
     using Hawk.Domain.Queries.Tag;
     using Hawk.Infrastructure.Data.Neo4J.Mappings;
     using Hawk.Infrastructure.Filter;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
+
     using Http.Query.Filter;
+
     using static System.String;
 
     internal sealed class GetAllByStoreQuery : IGetAllByStoreQuery

@@ -1,11 +1,13 @@
-namespace Hawk.WebApi.Controllers
+﻿namespace Hawk.WebApi.Controllers
 {
     using System.Threading.Tasks;
+
     using Hawk.Domain.Commands.Account;
     using Hawk.Domain.Queries.Account;
     using Hawk.WebApi.Lib.Validators;
     using Hawk.WebApi.Models;
     using Hawk.WebApi.Models.Account.Get;
+
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 

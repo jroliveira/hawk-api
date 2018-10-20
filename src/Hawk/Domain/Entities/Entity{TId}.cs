@@ -1,6 +1,7 @@
-namespace Hawk.Domain.Entities
+﻿namespace Hawk.Domain.Entities
 {
     using System;
+
     using Hawk.Infrastructure;
 
     public abstract class Entity<TId>

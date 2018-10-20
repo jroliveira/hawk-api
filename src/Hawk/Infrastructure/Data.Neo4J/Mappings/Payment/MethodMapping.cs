@@ -1,11 +1,14 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Mappings.Payment
 {
     using System;
+
     using Hawk.Domain.Entities.Payment;
     using Hawk.Infrastructure.Data.Neo4J.Extensions;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
+
     using Neo4j.Driver.V1;
+
     using static Hawk.Domain.Entities.Payment.Method;
 
     internal static class MethodMapping

@@ -1,10 +1,12 @@
-namespace Hawk.Infrastructure.Data.Neo4J.Commands.Store
+﻿namespace Hawk.Infrastructure.Data.Neo4J.Commands.Store
 {
     using System.Threading.Tasks;
+
     using Hawk.Domain.Commands.Store;
     using Hawk.Domain.Entities;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
+
     using static System.String;
 
     internal sealed class ExcludeCommand : IExcludeCommand

@@ -3,11 +3,14 @@ namespace Hawk.Infrastructure.Data.Neo4J
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
+
     using Neo4j.Driver.V1;
-    using static Hawk.Infrastructure.Monad.Utils.Util;
+
     using static System.ComponentModel.TypeDescriptor;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal sealed class Record
     {

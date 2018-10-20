@@ -2,11 +2,13 @@
 {
     using System;
     using System.Linq;
+
     using Hawk.Domain.Entities;
     using Hawk.Infrastructure.Data.Neo4J.Extensions;
     using Hawk.Infrastructure.Extensions;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
+
     using Neo4j.Driver.V1;
 
     internal static class StoreMapping

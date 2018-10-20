@@ -1,7 +1,9 @@
 ﻿namespace Hawk.WebApi.Lib.Middlewares
 {
     using System.Threading.Tasks;
+
     using Hawk.Infrastructure;
+
     using Microsoft.AspNetCore.Http;
 
     internal sealed class SecurityHeadersMiddleware

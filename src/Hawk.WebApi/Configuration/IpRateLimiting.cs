@@ -1,6 +1,7 @@
 ﻿namespace Hawk.WebApi.Configuration
 {
     using AspNetCoreRateLimit;
+
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 

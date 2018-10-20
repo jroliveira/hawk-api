@@ -1,6 +1,7 @@
 ﻿namespace Hawk.WebApi.Lib.Mappings
 {
     using System.Linq;
+
     using Hawk.Domain.Entities.Payment;
     using Hawk.Infrastructure;
     using Hawk.Infrastructure.Monad;

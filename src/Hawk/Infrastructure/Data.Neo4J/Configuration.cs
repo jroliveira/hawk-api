@@ -1,4 +1,4 @@
-namespace Hawk.Infrastructure.Data.Neo4J
+﻿namespace Hawk.Infrastructure.Data.Neo4J
 {
     public sealed class Configuration
     {

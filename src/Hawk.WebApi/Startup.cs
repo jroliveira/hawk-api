@@ -1,10 +1,12 @@
 ﻿namespace Hawk.WebApi
 {
     using AspNetCoreRateLimit;
+
     using Hawk.Infrastructure.IoC;
     using Hawk.WebApi.Configuration;
     using Hawk.WebApi.Lib;
     using Hawk.WebApi.Lib.Middlewares;
+
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;

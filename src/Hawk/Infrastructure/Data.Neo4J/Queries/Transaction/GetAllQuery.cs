@@ -2,12 +2,14 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.Transaction
 {
     using System.Linq;
     using System.Threading.Tasks;
+
     using Hawk.Domain.Entities;
     using Hawk.Domain.Queries.Transaction;
     using Hawk.Infrastructure.Data.Neo4J.Mappings;
     using Hawk.Infrastructure.Filter;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
+
     using Http.Query.Filter;
 
     internal sealed class GetAllQuery : IGetAllQuery

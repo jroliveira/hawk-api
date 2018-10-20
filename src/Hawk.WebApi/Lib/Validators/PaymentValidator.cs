@@ -1,7 +1,9 @@
 namespace Hawk.WebApi.Lib.Validators
 {
     using System;
+
     using FluentValidation;
+
     using Hawk.WebApi.Models.Transaction;
 
     internal sealed class PaymentValidator : AbstractValidator<Payment>

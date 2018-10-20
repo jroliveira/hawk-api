@@ -1,14 +1,16 @@
-namespace Hawk.Infrastructure.Data.Neo4J.Queries.Account
+﻿namespace Hawk.Infrastructure.Data.Neo4J.Queries.Account
 {
     using System.Linq;
     using System.Threading.Tasks;
+
     using Hawk.Domain.Entities;
     using Hawk.Domain.Queries.Account;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
+
+    using static System.String;
     using static Hawk.Infrastructure.Data.Neo4J.Mappings.AccountMapping;
     using static Hawk.Infrastructure.Monad.Utils.Util;
-    using static System.String;
 
     internal sealed class GetByEmailQuery : IGetByEmailQuery
     {

@@ -1,6 +1,7 @@
 ﻿namespace Hawk.WebApi.Lib.Validators
 {
     using FluentValidation;
+
     using Hawk.WebApi.Models.Store.Post;
 
     internal sealed class StoreValidator : AbstractValidator<Store>

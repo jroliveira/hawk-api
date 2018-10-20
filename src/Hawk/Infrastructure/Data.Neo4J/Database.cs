@@ -4,10 +4,14 @@ namespace Hawk.Infrastructure.Data.Neo4J
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+
     using Hawk.Infrastructure.Logging;
     using Hawk.Infrastructure.Monad;
+
     using Microsoft.Extensions.Options;
+
     using Neo4j.Driver.V1;
+
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal sealed class Database : IDisposable

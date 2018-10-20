@@ -1,6 +1,7 @@
 ﻿namespace Hawk.Domain.Entities.Transactions
 {
     using System;
+
     using Hawk.Domain.Entities.Payment;
     using Hawk.Infrastructure.Monad;
 

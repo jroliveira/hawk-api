@@ -2,13 +2,16 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.PaymentMethod
 {
     using System.Linq;
     using System.Threading.Tasks;
+
     using Hawk.Domain.Entities.Payment;
     using Hawk.Domain.Queries.PaymentMethod;
     using Hawk.Infrastructure.Data.Neo4J.Mappings.Payment;
     using Hawk.Infrastructure.Filter;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
+
     using Http.Query.Filter;
+
     using static System.String;
 
     internal sealed class GetAllByStoreQuery : IGetAllByStoreQuery
