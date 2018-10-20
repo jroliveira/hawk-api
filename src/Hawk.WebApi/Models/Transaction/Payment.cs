@@ -1,6 +1,7 @@
 ﻿namespace Hawk.WebApi.Models.Transaction
 {
     using System;
+
     using Hawk.Infrastructure.Monad;
 
     public sealed class Payment

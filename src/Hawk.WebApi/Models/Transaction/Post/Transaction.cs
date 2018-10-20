@@ -1,6 +1,7 @@
 ﻿namespace Hawk.WebApi.Models.Transaction.Post
 {
     using System.Collections.Generic;
+
     using Hawk.WebApi.Lib.Mappings;
 
     public class Transaction

@@ -2,11 +2,13 @@ namespace Hawk.Infrastructure.Data.Neo4J.Commands.Transaction
 {
     using System.Linq;
     using System.Threading.Tasks;
+
     using Hawk.Domain.Commands.Transaction;
     using Hawk.Domain.Entities;
     using Hawk.Infrastructure.Data.Neo4J.Mappings;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
+
     using static System.String;
 
     internal sealed class CreateCommand : ICreateCommand

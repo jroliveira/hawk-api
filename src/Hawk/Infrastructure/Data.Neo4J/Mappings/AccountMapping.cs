@@ -1,10 +1,13 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Mappings
 {
     using System;
+
     using Hawk.Domain.Entities;
     using Hawk.Infrastructure.Data.Neo4J.Extensions;
     using Hawk.Infrastructure.Monad;
+
     using Neo4j.Driver.V1;
+
     using static Hawk.Domain.Entities.Account;
 
     internal static class AccountMapping

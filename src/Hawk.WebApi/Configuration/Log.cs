@@ -1,9 +1,11 @@
 ﻿namespace Hawk.WebApi.Configuration
 {
     using System;
+
     using Hawk.Infrastructure.Logging;
     using Hawk.Infrastructure.Logging.Methods;
     using Hawk.WebApi.Lib;
+
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;

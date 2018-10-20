@@ -1,6 +1,7 @@
-namespace Hawk.WebApi.Configuration
+﻿namespace Hawk.WebApi.Configuration
 {
     using Hawk.WebApi.Lib.Authentication;
+
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;

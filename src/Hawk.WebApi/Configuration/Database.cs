@@ -1,6 +1,7 @@
 ﻿namespace Hawk.WebApi.Configuration
 {
     using Hawk.Infrastructure.Data.Neo4J;
+
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 

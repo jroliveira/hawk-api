@@ -1,8 +1,11 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Extensions
 {
     using System.Linq;
+
     using Hawk.Infrastructure.Monad;
+
     using Neo4j.Driver.V1;
+
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal static class RecordExtension

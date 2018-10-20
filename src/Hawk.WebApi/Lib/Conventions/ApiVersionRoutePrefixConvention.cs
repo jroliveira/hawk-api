@@ -1,6 +1,7 @@
 ﻿namespace Hawk.WebApi.Lib.Conventions
 {
     using System.Linq;
+
     using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
     internal sealed class ApiVersionRoutePrefixConvention : IApplicationModelConvention

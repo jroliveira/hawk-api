@@ -3,8 +3,10 @@
     using System;
     using System.IO;
     using System.Reflection;
+
     using Hawk.Infrastructure.Logging;
     using Hawk.Infrastructure.Monad;
+
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal static class CypherScript

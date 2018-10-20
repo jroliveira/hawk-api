@@ -1,13 +1,15 @@
-namespace Hawk.Infrastructure.Data.Neo4J.Commands.Account
+﻿namespace Hawk.Infrastructure.Data.Neo4J.Commands.Account
 {
     using System.Globalization;
     using System.Threading.Tasks;
+
     using Hawk.Domain.Commands.Account;
     using Hawk.Domain.Entities;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
-    using static Hawk.Infrastructure.Data.Neo4J.Mappings.AccountMapping;
+
     using static System.String;
+    using static Hawk.Infrastructure.Data.Neo4J.Mappings.AccountMapping;
 
     internal sealed class CreateCommand : ICreateCommand
     {

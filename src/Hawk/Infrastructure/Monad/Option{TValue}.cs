@@ -1,7 +1,9 @@
 ﻿namespace Hawk.Infrastructure.Monad
 {
     using System;
+
     using Hawk.Infrastructure.Monad.Extensions;
+
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
     public readonly struct Option<TValue>

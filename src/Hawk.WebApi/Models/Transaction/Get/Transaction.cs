@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+
     using Hawk.Infrastructure.Monad;
     using Hawk.WebApi.Lib.Mappings;
 

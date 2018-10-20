@@ -2,7 +2,9 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+
     using Hawk.Infrastructure.Filter;
+
     using Http.Query.Filter;
     using Http.Query.Filter.Filters.Condition.Operators;
 

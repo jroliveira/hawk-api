@@ -1,8 +1,10 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Mappings.Payment
 {
     using System;
+
     using Hawk.Domain.Entities.Payment;
     using Hawk.Infrastructure.Monad;
+
     using static Hawk.Domain.Entities.Payment.Pay;
     using static Hawk.Infrastructure.Monad.Utils.Util;
 

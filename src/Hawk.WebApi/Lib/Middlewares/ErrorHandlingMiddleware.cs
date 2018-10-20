@@ -1,10 +1,13 @@
-namespace Hawk.WebApi.Lib.Middlewares
+﻿namespace Hawk.WebApi.Lib.Middlewares
 {
     using System;
     using System.Threading.Tasks;
+
     using Hawk.Infrastructure;
     using Hawk.WebApi.Models;
+
     using Microsoft.AspNetCore.Http;
+
     using static Hawk.Infrastructure.Logging.Logger;
     using static Newtonsoft.Json.JsonConvert;
 

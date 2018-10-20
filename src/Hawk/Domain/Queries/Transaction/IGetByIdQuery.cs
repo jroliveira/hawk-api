@@ -1,6 +1,7 @@
 ﻿namespace Hawk.Domain.Queries.Transaction
 {
     using System.Threading.Tasks;
+
     using Hawk.Domain.Entities;
     using Hawk.Infrastructure.Monad;
 

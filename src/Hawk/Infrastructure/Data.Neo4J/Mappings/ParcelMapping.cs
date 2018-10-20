@@ -1,8 +1,10 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Mappings
 {
     using System;
+
     using Hawk.Domain.Entities;
     using Hawk.Infrastructure.Monad;
+
     using static Hawk.Domain.Entities.Parcel;
 
     internal static class ParcelMapping

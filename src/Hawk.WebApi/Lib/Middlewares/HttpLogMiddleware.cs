@@ -3,8 +3,10 @@
     using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
+
     using Hawk.Infrastructure;
     using Hawk.Infrastructure.Logging;
+
     using Microsoft.AspNetCore.Http;
 
     internal class HttpLogMiddleware

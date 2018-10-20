@@ -1,8 +1,10 @@
 ﻿namespace Hawk.Domain.Entities
 {
     using System;
+
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
+
     using static System.String;
 
     public sealed class Tag : IEquatable<Tag>

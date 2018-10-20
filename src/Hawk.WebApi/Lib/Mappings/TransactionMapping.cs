@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using Hawk.Domain.Entities;
     using Hawk.Domain.Entities.Payment;
     using Hawk.Domain.Entities.Transactions;

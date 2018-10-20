@@ -2,13 +2,15 @@ namespace Hawk.Infrastructure.Data.Neo4J.Queries.Transaction
 {
     using System.Linq;
     using System.Threading.Tasks;
+
     using Hawk.Domain.Entities;
     using Hawk.Domain.Queries.Transaction;
     using Hawk.Infrastructure.Data.Neo4J.Mappings;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
-    using static Hawk.Infrastructure.Monad.Utils.Util;
+
     using static System.String;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal sealed class GetByIdQuery : IGetByIdQuery
     {

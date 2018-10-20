@@ -1,13 +1,15 @@
-namespace Hawk.Infrastructure.Data.Neo4J.Commands.Store
+﻿namespace Hawk.Infrastructure.Data.Neo4J.Commands.Store
 {
     using System.Linq;
     using System.Threading.Tasks;
+
     using Hawk.Domain.Commands.Store;
     using Hawk.Domain.Entities;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
-    using static Hawk.Infrastructure.Data.Neo4J.Mappings.StoreMapping;
+
     using static System.String;
+    using static Hawk.Infrastructure.Data.Neo4J.Mappings.StoreMapping;
 
     internal sealed class CreateCommand : ICreateCommand
     {

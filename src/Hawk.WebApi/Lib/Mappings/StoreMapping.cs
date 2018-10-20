@@ -1,6 +1,7 @@
 ﻿namespace Hawk.WebApi.Lib.Mappings
 {
     using System.Linq;
+
     using Hawk.Infrastructure;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
