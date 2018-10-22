@@ -26,8 +26,7 @@
 
         public void ConfigureServices(IServiceCollection services) => services
             .ConfigureIpRateLimiting(this.Configuration)
-            .ConfigureDatabase(this.Configuration)
-            .ConfigureIoC()
+            .ConfigureIoC(this.Configuration)
             .ConfigureApi()
             .ConfigureSwagger()
             .ConfigureIdentityServer(this.Configuration);

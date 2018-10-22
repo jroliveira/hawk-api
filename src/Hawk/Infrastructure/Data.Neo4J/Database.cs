@@ -5,31 +5,34 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using Hawk.Infrastructure.Logging;
     using Hawk.Infrastructure.Monad;
 
     using Microsoft.Extensions.Options;
 
     using Neo4j.Driver.V1;
 
+    using static Hawk.Infrastructure.Logging.Logger;
     using static Hawk.Infrastructure.Monad.Utils.Util;
+    using static Neo4j.Driver.V1.AuthTokens;
+    using static Neo4j.Driver.V1.GraphDatabase;
 
     internal sealed class Database : IDisposable
     {
         private readonly IDriver driver;
 
-        public Database(IOptions<Configuration> config)
+        public Database(IOptions<Configuration> configOptional)
         {
-            var graphDbConfig = config.Value;
-            var auth = AuthTokens.Basic(graphDbConfig.Username, graphDbConfig.Password);
+            var config = configOptional.Value;
+            var auth = Basic(config.Username, config.Password);
+            var uri = $"{config.Protocol}://{config.Host}:{config.Port}";
 
             try
             {
-                this.driver = GraphDatabase.Driver(graphDbConfig.Uri, auth);
+                this.driver = Driver(uri, auth);
             }
             catch (Exception exception)
             {
-                Logger.Error($"Unable to connect to database {graphDbConfig.Uri}", exception);
+                Error($"Unable to connect to database {uri}", exception);
             }
         }
 
@@ -59,16 +62,16 @@
 
         private async Task<Try<TReturn>> Execute<TReturn>(Func<ISession, Task<TReturn>> command)
         {
-            using (var session = this.driver.Session())
+            try
             {
-                try
+                using (var session = this.driver.Session())
                 {
                     return await command(session).ConfigureAwait(false);
                 }
-                catch (Exception exception)
-                {
-                    return new Exception("Could not run command in database", exception);
-                }
+            }
+            catch (Exception exception)
+            {
+                return new Exception("Could not run command in database", exception);
             }
         }
     }

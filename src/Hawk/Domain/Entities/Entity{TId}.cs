@@ -2,11 +2,11 @@
 {
     using System;
 
-    using Hawk.Infrastructure;
+    using static Hawk.Infrastructure.Clock;
 
     public abstract class Entity<TId>
     {
-        protected Entity() => this.CreationAt = Clock.Now();
+        protected Entity() => this.CreationAt = UtcNow();
 
         public TId Id { get; protected set; }
 

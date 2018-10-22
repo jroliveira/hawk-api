@@ -4,19 +4,21 @@
 
     using Http.Query.Filter;
 
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
     public static class Configuration
     {
-        public static IServiceCollection ConfigureIoC(this IServiceCollection @this)
+        public static IServiceCollection ConfigureIoC(this IServiceCollection @this, IConfigurationRoot configuration)
         {
             // Neo4j
             @this.AddScoped<Data.Neo4J.Database>();
+            @this.Configure<Data.Neo4J.Configuration>(configuration.GetSection("neo4j"));
 
             // Filters
             @this.AddSingleton<IWhere<string, Filter>, Data.Neo4J.Filter.Where>();
-            @this.AddSingleton<ISkip<uint, Filter>, Data.Neo4J.Filter.Skip>();
-            @this.AddSingleton<ILimit<uint, Filter>, Data.Neo4J.Filter.Limit>();
+            @this.AddSingleton<ISkip<int, Filter>, Data.Neo4J.Filter.Skip>();
+            @this.AddSingleton<ILimit<int, Filter>, Data.Neo4J.Filter.Limit>();
 
             // Commands
             @this.AddScoped<Domain.Commands.Account.ICreateCommand, Data.Neo4J.Commands.Account.CreateCommand>();

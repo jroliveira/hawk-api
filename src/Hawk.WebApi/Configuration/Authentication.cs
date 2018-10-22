@@ -6,6 +6,8 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
+    using static Hawk.Infrastructure.Guard;
+
     internal static class Authentication
     {
         internal static IServiceCollection ConfigureIdentityServer(
@@ -15,6 +17,8 @@
             var authConfig = configuration
                 .GetSection("authentication")
                 .Get<Configuration>();
+
+            NotNull(authConfig.Authority, "authConfig.Authority", "AuthConfig's authority cannot be null.");
 
             services
                 .AddAuthentication("Bearer")

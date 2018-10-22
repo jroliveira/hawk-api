@@ -1,4 +1,4 @@
-namespace Hawk.WebApi.Controllers
+﻿namespace Hawk.WebApi.Controllers
 {
     using System.Threading.Tasks;
 

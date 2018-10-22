@@ -9,6 +9,7 @@
     using Microsoft.Extensions.DependencyInjection.Extensions;
 
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Serialization;
 
     internal static class Api
     {
@@ -32,6 +33,7 @@
                 .AddAuthorization()
                 .AddJsonFormatters(serializerSettings =>
                 {
+                    serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                     serializerSettings.Formatting = Formatting.Indented;
                     serializerSettings.NullValueHandling = NullValueHandling.Ignore;
                     serializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;

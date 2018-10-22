@@ -8,8 +8,8 @@
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
 
-    using static System.String;
     using static Hawk.Infrastructure.Data.Neo4J.Mappings.StoreMapping;
+    using static System.String;
 
     internal sealed class CreateCommand : ICreateCommand
     {
