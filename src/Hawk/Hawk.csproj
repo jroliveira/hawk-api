@@ -44,8 +44,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Http.Query.Filter" Version="3.0.24" />
+    <PackageReference Include="Http.Query.Filter" Version="3.0.25" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.1.1" />
     <PackageReference Include="Neo4j.Driver" Version="1.7.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Serilog" Version="2.7.1" />

@@ -2,7 +2,11 @@
 {
     public sealed class Configuration
     {
-        public string Uri { get; set; }
+        public string Protocol { get; set; }
+
+        public string Host { get; set; }
+
+        public int Port { get; set; }
 
         public string Username { get; set; }
 

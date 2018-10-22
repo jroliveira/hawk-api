@@ -4,9 +4,11 @@
 
     using Http.Query.Filter;
 
-    internal sealed class Limit : ILimit<uint, Filter>
+    using static System.Convert;
+
+    internal sealed class Limit : ILimit<int, Filter>
     {
-        public uint Apply(Filter filter)
+        public int Apply(Filter filter)
         {
             if (filter.Limit.Value == null)
             {
@@ -18,7 +20,7 @@
                 return 10000;
             }
 
-            return filter.Limit.Value.Value;
+            return ToInt32(filter.Limit.Value.Value);
         }
     }
 }
