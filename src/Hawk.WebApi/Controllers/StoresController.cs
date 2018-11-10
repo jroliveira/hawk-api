@@ -1,4 +1,4 @@
-namespace Hawk.WebApi.Controllers
+﻿namespace Hawk.WebApi.Controllers
 {
     using System.Threading.Tasks;
 
@@ -59,7 +59,7 @@ namespace Hawk.WebApi.Controllers
         [ProducesResponseType(typeof(Paged<Store>), 200)]
         public async Task<IActionResult> Get()
         {
-            var entities = await this.getAll.GetResult(this.GetUser(), this.Request.QueryString.Value).ConfigureAwait(false);
+            var entities = await this.getAll.GetResult(this.GetUser(), this.Request.QueryString.Value);
 
             return entities.Match(
                 failure => this.StatusCode(500, new Error(failure.Message)),
@@ -76,7 +76,7 @@ namespace Hawk.WebApi.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetByName([FromRoute] string name)
         {
-            var entity = await this.getByName.GetResult(name, this.GetUser()).ConfigureAwait(false);
+            var entity = await this.getByName.GetResult(name, this.GetUser());
 
             return entity.Match(
                 failure => this.StatusCode(500, new Error(failure.Message)),
@@ -94,13 +94,13 @@ namespace Hawk.WebApi.Controllers
         [ProducesResponseType(typeof(Models.Store.Post.Store), 201)]
         public async Task<IActionResult> Create([FromBody] Models.Store.Post.Store request)
         {
-            var validateResult = await this.validator.ValidateAsync(request).ConfigureAwait(false);
+            var validateResult = await this.validator.ValidateAsync(request);
             if (!validateResult.IsValid)
             {
                 return this.StatusCode(409, validateResult.Errors);
             }
 
-            var entity = await this.create.Execute(request).ConfigureAwait(false);
+            var entity = await this.create.Execute(request);
 
             return entity.Match(
                 failure => this.StatusCode(500, failure.Message),
@@ -119,7 +119,7 @@ namespace Hawk.WebApi.Controllers
             [FromRoute] string name,
             [FromBody] dynamic request)
         {
-            var entity = await this.getByName.GetResult(name, this.GetUser()).ConfigureAwait(false);
+            var entity = await this.getByName.GetResult(name, this.GetUser());
 
             return await entity.Match(
                 failure => Task<IActionResult>(this.StatusCode(500, new Error(failure.Message))),
@@ -128,11 +128,11 @@ namespace Hawk.WebApi.Controllers
                     {
                         Store model = store;
                         PartialUpdater.Apply(request, model);
-                        await this.create.Execute(model).ConfigureAwait(false);
+                        await this.create.Execute(model);
 
                         return this.NoContent();
                     },
-                    () => Task<IActionResult>(this.NotFound($"Resource 'stores' with name {name} could not be found")))).ConfigureAwait(false);
+                    () => Task<IActionResult>(this.NotFound($"Resource 'stores' with name {name} could not be found"))));
         }
 
         /// <summary>
@@ -144,17 +144,17 @@ namespace Hawk.WebApi.Controllers
         [ProducesResponseType(204)]
         public async Task<IActionResult> Exclude([FromRoute] string name)
         {
-            var entity = await this.getByName.GetResult(name, this.GetUser()).ConfigureAwait(false);
+            var entity = await this.getByName.GetResult(name, this.GetUser());
 
             return await entity.Match(
                 failure => Task<IActionResult>(this.StatusCode(500, new Error(failure.Message))),
                 success => success.Match<Task<IActionResult>>(
                     async store =>
                     {
-                        await this.exclude.Execute(store).ConfigureAwait(false);
+                        await this.exclude.Execute(store);
                         return this.NoContent();
                     },
-                    () => Task<IActionResult>(this.NotFound($"Resource 'stores' with name {name} could not be found")))).ConfigureAwait(false);
+                    () => Task<IActionResult>(this.NotFound($"Resource 'stores' with name {name} could not be found"))));
         }
     }
 }

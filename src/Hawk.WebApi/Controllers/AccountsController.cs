@@ -47,7 +47,7 @@
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetByEmail([FromRoute] string email)
         {
-            var entity = await this.getByEmail.GetResult(email).ConfigureAwait(false);
+            var entity = await this.getByEmail.GetResult(email);
 
             return entity.Match(
                 failure => this.StatusCode(500, new Error(failure.Message)),
@@ -66,13 +66,13 @@
         [ProducesResponseType(typeof(Account), 201)]
         public async Task<IActionResult> Create([FromBody] Models.Account.Post.Account request)
         {
-            var validateResult = await this.validator.ValidateAsync(request).ConfigureAwait(false);
+            var validateResult = await this.validator.ValidateAsync(request);
             if (!validateResult.IsValid)
             {
                 return this.StatusCode(409, validateResult.Errors);
             }
 
-            var inserted = await this.create.Execute(request).ConfigureAwait(false);
+            var inserted = await this.create.Execute(request);
 
             return inserted.Match(
                 failure => this.StatusCode(500, new Error(failure.Message)),
