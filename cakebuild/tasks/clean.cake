@@ -1,2 +1,5 @@
 Task("Clean")
-    .Does(() => CleanDirectory(outputDirectory));
+    .Does(() => {
+        CleanDirectory(artifactsDirectory);
+        Information($"  Clean completed for directory \"{artifactsDirectory}\".");
+    });
