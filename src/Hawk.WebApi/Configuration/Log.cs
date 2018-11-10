@@ -10,6 +10,8 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
 
+    using static Hawk.Infrastructure.Logging.Logger;
+
     internal static class Log
     {
         internal static IApplicationBuilder UseLog(
@@ -24,7 +26,7 @@
 
             Action<string> logMethod = new DefaultLogMethod(configuration["log:file"]).Write;
 
-            Logger.Init(level, () => accessor.HttpContext.Request.Headers[Constants.Api.ReqId], logMethod);
+            Init(level, () => accessor.HttpContext.Request.Headers[Constants.Api.ReqId], logMethod);
 
             return app;
         }

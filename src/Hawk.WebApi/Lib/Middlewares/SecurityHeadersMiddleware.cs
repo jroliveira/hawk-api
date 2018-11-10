@@ -2,9 +2,9 @@
 {
     using System.Threading.Tasks;
 
-    using Hawk.Infrastructure;
-
     using Microsoft.AspNetCore.Http;
+
+    using static Hawk.Infrastructure.Guard;
 
     internal sealed class SecurityHeadersMiddleware
     {
@@ -13,15 +13,15 @@
 
         public SecurityHeadersMiddleware(RequestDelegate next)
         {
-            Guard.NotNull(next, nameof(next), "Security headers middleware's next cannot be null.");
+            NotNull(next, nameof(next), "Security headers middleware's next cannot be null.");
 
             this.next = next;
         }
 
         public async Task Invoke(HttpContext context)
         {
-            Guard.NotNull(context, nameof(context), "SecurityHeadersMiddleware context cannot be null.");
-            Guard.NotNull(context.Response, nameof(context.Response), "SecurityHeadersMiddleware response cannot be null.");
+            NotNull(context, nameof(context), "SecurityHeadersMiddleware context cannot be null.");
+            NotNull(context.Response, nameof(context.Response), "SecurityHeadersMiddleware response cannot be null.");
 
             context.Response.Headers["X-Frame-Options"] = "deny";
             context.Response.Headers["X-XSS-Protection"] = "1; mode=block";

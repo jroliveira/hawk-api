@@ -23,7 +23,6 @@
         {
             var response = new
             {
-                version = "0.0.1",
                 name = this.environment.ApplicationName,
                 env = this.environment.EnvironmentName,
             };

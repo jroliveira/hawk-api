@@ -24,8 +24,6 @@
             @this.AddScoped<Domain.Commands.Account.ICreateCommand, Data.Neo4J.Commands.Account.CreateCommand>();
             @this.AddScoped<Domain.Commands.Transaction.ICreateCommand, Data.Neo4J.Commands.Transaction.CreateCommand>();
             @this.AddScoped<Domain.Commands.Transaction.IExcludeCommand, Data.Neo4J.Commands.Transaction.ExcludeCommand>();
-            @this.AddScoped<Domain.Commands.Store.ICreateCommand, Data.Neo4J.Commands.Store.CreateCommand>();
-            @this.AddScoped<Domain.Commands.Store.IExcludeCommand, Data.Neo4J.Commands.Store.ExcludeCommand>();
 
             // Queries
             @this.AddScoped<Domain.Queries.Account.IGetByEmailQuery, Data.Neo4J.Queries.Account.GetByEmailQuery>();

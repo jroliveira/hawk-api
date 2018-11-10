@@ -1,17 +1,17 @@
 ﻿namespace Hawk.WebApi.Lib
 {
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
+    using static Newtonsoft.Json.JsonSerializer;
+    using static Newtonsoft.Json.Linq.JToken;
 
     internal static class PartialUpdater
     {
         internal static void Apply<T>(dynamic partialModel, T destination)
         {
-            var partialModelAsJToken = JToken.FromObject(partialModel);
+            var partialModelAsJToken = FromObject(partialModel);
 
             using (var reader = partialModelAsJToken.CreateReader())
             {
-                JsonSerializer.CreateDefault().Populate(reader, destination);
+                CreateDefault().Populate(reader, destination);
             }
         }
     }

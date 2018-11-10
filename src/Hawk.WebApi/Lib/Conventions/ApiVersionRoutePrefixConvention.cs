@@ -4,6 +4,8 @@
 
     using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
+    using static Microsoft.AspNetCore.Mvc.ApplicationModels.AttributeRouteModel;
+
     internal sealed class ApiVersionRoutePrefixConvention : IApplicationModelConvention
     {
         private readonly AttributeRouteModel versionConstraintTemplate;
@@ -19,7 +21,7 @@
                 .SelectMany(controller => controller.Selectors)
                 .Where(selector => selector.AttributeRouteModel != null))
             {
-                selector.AttributeRouteModel = AttributeRouteModel.CombineAttributeRouteModel(this.versionConstraintTemplate, selector.AttributeRouteModel);
+                selector.AttributeRouteModel = CombineAttributeRouteModel(this.versionConstraintTemplate, selector.AttributeRouteModel);
             }
         }
     }

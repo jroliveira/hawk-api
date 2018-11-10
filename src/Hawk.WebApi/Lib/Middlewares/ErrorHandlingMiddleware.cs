@@ -3,11 +3,11 @@
     using System;
     using System.Threading.Tasks;
 
-    using Hawk.Infrastructure;
     using Hawk.WebApi.Models;
 
     using Microsoft.AspNetCore.Http;
 
+    using static Hawk.Infrastructure.Guard;
     using static Hawk.Infrastructure.Logging.Logger;
     using static Newtonsoft.Json.JsonConvert;
 
@@ -17,7 +17,7 @@
 
         public ErrorHandlingMiddleware(RequestDelegate next)
         {
-            Guard.NotNull(next, nameof(next), "Error handling middleware's next cannot be null.");
+            NotNull(next, nameof(next), "Error handling middleware's next cannot be null.");
 
             this.next = next;
         }
