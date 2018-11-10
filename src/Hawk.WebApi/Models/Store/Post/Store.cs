@@ -7,8 +7,8 @@
     {
         public string Name { get; set; }
 
-        public static implicit operator Option<Domain.Entities.Store>(Store model) => Domain.Entities.Store.CreateWith(model.Name);
+        public static implicit operator Option<Domain.Store.Store>(Store model) => Domain.Store.Store.CreateWith(model.Name);
 
-        public static implicit operator Domain.Entities.Store(Store model) => Domain.Entities.Store.CreateWith(model.Name).GetOrElse(default);
+        public static implicit operator Domain.Store.Store(Store model) => Domain.Store.Store.CreateWith(model.Name).GetOrElse(default);
     }
 }

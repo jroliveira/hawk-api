@@ -32,7 +32,7 @@
             }
             catch (Exception exception)
             {
-                Error($"Unable to connect to database {uri}", exception);
+                LogError($"Unable to connect to database {uri}", exception);
             }
         }
 

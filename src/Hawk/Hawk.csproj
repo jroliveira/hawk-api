@@ -5,40 +5,40 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\Account\Create.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Entities\Account\UpsertAccount.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\Account\GetByEmail.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Entities\Account\GetAccountByEmail.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\PaymentMethod\GetAll.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Entities\PaymentMethod\GetPaymentMethods.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\PaymentMethod\GetAllByStore.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Entities\PaymentMethod\GetPaymentMethodsByStore.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\Store\GetAll.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Entities\Store\GetStores.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\Store\GetByName.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Entities\Store\GetStoreByName.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\Tag\GetAll.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Entities\Tag\GetTags.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\Tag\GetAllByStore.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Entities\Tag\GetTagsByStore.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\Transaction\Create.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Entities\Transaction\UpsertTransaction.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\Transaction\Exclude.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Entities\Transaction\DeleteTransaction.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\Transaction\GetAll.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Entities\Transaction\GetTransactions.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Scripts\Transaction\GetById.cql">
+    <EmbeddedResource Include="Infrastructure\Data.Neo4J\Entities\Transaction\GetTransactionById.cql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

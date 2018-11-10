@@ -3,6 +3,8 @@
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
 
+    using static Hawk.Domain.Account.Account;
+
     public sealed class Account
     {
         public string Email { get; set; }
@@ -11,8 +13,8 @@
 
         public string ConfirmPassword { get; set; }
 
-        public static implicit operator Option<Domain.Entities.Account>(Account model) => Domain.Entities.Account.CreateWith(model.Email);
+        public static implicit operator Option<Domain.Account.Account>(Account model) => CreateWith(model.Email);
 
-        public static implicit operator Domain.Entities.Account(Account model) => Domain.Entities.Account.CreateWith(model.Email).GetOrElse(default);
+        public static implicit operator Domain.Account.Account(Account model) => CreateWith(model.Email).GetOrElse(default);
     }
 }

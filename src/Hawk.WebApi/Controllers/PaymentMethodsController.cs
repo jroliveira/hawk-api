@@ -2,12 +2,11 @@
 {
     using System.Threading.Tasks;
 
-    using Hawk.Domain.Queries.PaymentMethod;
+    using Hawk.Domain.PaymentMethod;
     using Hawk.Infrastructure;
     using Hawk.WebApi.Lib.Extensions;
     using Hawk.WebApi.Lib.Mappings;
     using Hawk.WebApi.Models;
-    using Hawk.WebApi.Models.PaymentMethod.Get;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -17,15 +16,15 @@
     [Route("")]
     public class PaymentMethodsController : BaseController
     {
-        private readonly IGetAllQuery getAll;
-        private readonly IGetAllByStoreQuery getAllByStore;
+        private readonly IGetPaymentMethods getPaymentMethods;
+        private readonly IGetPaymentMethodsByStore getPaymentMethodsByStore;
 
         public PaymentMethodsController(
-            IGetAllQuery getAll,
-            IGetAllByStoreQuery getAllByStore)
+            IGetPaymentMethods getPaymentMethods,
+            IGetPaymentMethodsByStore getPaymentMethodsByStore)
         {
-            this.getAll = getAll;
-            this.getAllByStore = getAllByStore;
+            this.getPaymentMethods = getPaymentMethods;
+            this.getPaymentMethodsByStore = getPaymentMethodsByStore;
         }
 
         /// <summary>
@@ -33,10 +32,10 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet("payment-methods")]
-        [ProducesResponseType(typeof(Paged<PaymentMethod>), 200)]
+        [ProducesResponseType(typeof(Paged<Models.PaymentMethod.Get.PaymentMethod>), 200)]
         public async Task<IActionResult> Get()
         {
-            var entities = await this.getAll.GetResult(this.GetUser(), this.Request.QueryString.Value);
+            var entities = await this.getPaymentMethods.GetResult(this.GetUser(), this.Request.QueryString.Value);
 
             return entities.Match(
                 failure => this.StatusCode(500, new Error(failure.Message)),
@@ -49,11 +48,11 @@
         /// <param name="store"></param>
         /// <returns></returns>
         [HttpGet("stores/{store}/payment-methods")]
-        [ProducesResponseType(typeof(PaymentMethod), 200)]
+        [ProducesResponseType(typeof(Models.PaymentMethod.Get.PaymentMethod), 200)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetByStore(string store)
         {
-            var entities = await this.getAllByStore.GetResult(this.GetUser(), store, this.Request.QueryString.Value);
+            var entities = await this.getPaymentMethodsByStore.GetResult(this.GetUser(), store, this.Request.QueryString.Value);
 
             return entities.Match(
                 failure => this.StatusCode(500, new Error(failure.Message)),
