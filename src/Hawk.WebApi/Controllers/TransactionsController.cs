@@ -60,7 +60,7 @@
         [ProducesResponseType(typeof(Paged<Transaction>), 200)]
         public async Task<IActionResult> Get()
         {
-            var entities = await this.getAll.GetResult(this.GetUser(), this.Request.QueryString.Value).ConfigureAwait(false);
+            var entities = await this.getAll.GetResult(this.GetUser(), this.Request.QueryString.Value);
 
             return entities.Match(
                 failure => this.StatusCode(500, new Error(failure.Message)),
@@ -77,7 +77,7 @@
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetById([FromRoute] string id)
         {
-            var entity = await this.getById.GetResult(id, this.GetUser()).ConfigureAwait(false);
+            var entity = await this.getById.GetResult(id, this.GetUser());
 
             return entity.Match(
                 failure => this.StatusCode(500, new Error(failure.Message)),
@@ -95,14 +95,14 @@
         [ProducesResponseType(typeof(Transaction), 201)]
         public async Task<IActionResult> Create([FromBody] Models.Transaction.Post.Transaction request)
         {
-            var validateResult = await this.validator.ValidateAsync(request).ConfigureAwait(false);
+            var validateResult = await this.validator.ValidateAsync(request);
             if (!validateResult.IsValid)
             {
                 return this.StatusCode(409, validateResult.Errors);
             }
 
             request.Account = new Account(this.GetUser());
-            var entity = await this.create.Execute(request).ConfigureAwait(false);
+            var entity = await this.create.Execute(request);
 
             return entity.Match(
                 failure => this.StatusCode(500, new Error(failure.Message)),
@@ -121,7 +121,7 @@
             [FromRoute] string id,
             [FromBody] dynamic request)
         {
-            var entity = await this.getById.GetResult(id, this.GetUser()).ConfigureAwait(false);
+            var entity = await this.getById.GetResult(id, this.GetUser());
 
             return await entity.Match(
                 failure => Task<IActionResult>(this.StatusCode(500, new Error(failure.Message))),
@@ -130,11 +130,11 @@
                     {
                         Transaction model = transaction;
                         PartialUpdater.Apply(request, model);
-                        await this.create.Execute(model).ConfigureAwait(false);
+                        await this.create.Execute(model);
 
                         return this.NoContent();
                     },
-                    () => Task<IActionResult>(this.NotFound($"Resource 'transactions' with id {id} could not be found")))).ConfigureAwait(false);
+                    () => Task<IActionResult>(this.NotFound($"Resource 'transactions' with id {id} could not be found"))));
         }
 
         /// <summary>
@@ -146,14 +146,14 @@
         [ProducesResponseType(204)]
         public async Task<IActionResult> Exclude([FromRoute] string id)
         {
-            var entity = await this.getById.GetResult(id, this.GetUser()).ConfigureAwait(false);
+            var entity = await this.getById.GetResult(id, this.GetUser());
 
             return await entity.Match(
                 failure => Task<IActionResult>(this.StatusCode(500, new Error(failure.Message))),
                 success => success.Match<Task<IActionResult>>(
                     async store =>
                     {
-                        await this.exclude.Execute(store).ConfigureAwait(false);
+                        await this.exclude.Execute(store);
                         return this.NoContent();
                     },
                     () => Task<IActionResult>(this.NotFound($"Resource 'transactions' with id {id} could not be found"))));

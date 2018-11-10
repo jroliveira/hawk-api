@@ -36,7 +36,7 @@
         [ProducesResponseType(typeof(Paged<PaymentMethod>), 200)]
         public async Task<IActionResult> Get()
         {
-            var entities = await this.getAll.GetResult(this.GetUser(), this.Request.QueryString.Value).ConfigureAwait(false);
+            var entities = await this.getAll.GetResult(this.GetUser(), this.Request.QueryString.Value);
 
             return entities.Match(
                 failure => this.StatusCode(500, new Error(failure.Message)),
@@ -53,7 +53,7 @@
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetByStore(string store)
         {
-            var entities = await this.getAllByStore.GetResult(this.GetUser(), store, this.Request.QueryString.Value).ConfigureAwait(false);
+            var entities = await this.getAllByStore.GetResult(this.GetUser(), store, this.Request.QueryString.Value);
 
             return entities.Match(
                 failure => this.StatusCode(500, new Error(failure.Message)),

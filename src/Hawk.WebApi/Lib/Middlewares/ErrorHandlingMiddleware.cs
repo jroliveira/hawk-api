@@ -26,7 +26,7 @@
         {
             try
             {
-                await this.next(context).ConfigureAwait(false);
+                await this.next(context);
             }
             catch (Exception exception)
             {
@@ -34,7 +34,7 @@
 
                 context.Response.StatusCode = 500;
                 context.Response.ContentType = "application/json; charset=utf-8";
-                await context.Response.WriteAsync(SerializeObject(new Error(exception.Message))).ConfigureAwait(false);
+                await context.Response.WriteAsync(SerializeObject(new Error(exception.Message)));
             }
         }
     }
