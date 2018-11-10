@@ -9,7 +9,7 @@
     {
         internal static IServiceCollection ConfigureIpRateLimiting(
             this IServiceCollection @this,
-            IConfigurationRoot configuration)
+            IConfiguration configuration)
         {
             @this
                 .AddMemoryCache()

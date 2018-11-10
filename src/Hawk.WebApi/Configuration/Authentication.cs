@@ -12,7 +12,7 @@
     {
         internal static IServiceCollection ConfigureIdentityServer(
             this IServiceCollection services,
-            IConfigurationRoot configuration)
+            IConfiguration configuration)
         {
             var authConfig = configuration
                 .GetSection("authentication")

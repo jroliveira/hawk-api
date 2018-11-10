@@ -44,6 +44,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tasks", "tasks", "{88F81594
 		cakebuild\tasks\test.cake = cakebuild\tasks\test.cake
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{5447E1CB-522F-482B-80B8-8694A6DF3B24}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hawk.WebApi.Integration.Tests", "test\integration\Hawk.WebApi.Integration.Tests\Hawk.WebApi.Integration.Tests.csproj", "{B15D9216-A236-42D5-812C-636D051B9672}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,12 +62,17 @@ Global
 		{6CF3AA48-4AF4-4D4B-A470-17CA7D326F0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CF3AA48-4AF4-4D4B-A470-17CA7D326F0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CF3AA48-4AF4-4D4B-A470-17CA7D326F0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B15D9216-A236-42D5-812C-636D051B9672}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B15D9216-A236-42D5-812C-636D051B9672}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B15D9216-A236-42D5-812C-636D051B9672}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B15D9216-A236-42D5-812C-636D051B9672}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{88F81594-D86D-4424-87F1-FA73CEC46051} = {1D15F9CF-6EEA-4EA9-9837-2A2D1355BAF9}
+		{B15D9216-A236-42D5-812C-636D051B9672} = {5447E1CB-522F-482B-80B8-8694A6DF3B24}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7CB3FDF8-0DA7-4D1F-B674-0261172FE8F6}
