@@ -4,10 +4,10 @@
     using System.Diagnostics;
     using System.Threading.Tasks;
 
-    using Hawk.Infrastructure;
-    using Hawk.Infrastructure.Logging;
-
     using Microsoft.AspNetCore.Http;
+
+    using static Hawk.Infrastructure.Guard;
+    using static Hawk.Infrastructure.Logging.Logger;
 
     internal class HttpLogMiddleware
     {
@@ -15,7 +15,7 @@
 
         public HttpLogMiddleware(RequestDelegate next)
         {
-            Guard.NotNull(next, nameof(next), "Http log middleware's next cannot be null.");
+            NotNull(next, nameof(next), "Http log middleware's next cannot be null.");
 
             this.next = next;
         }
@@ -29,7 +29,7 @@
 
             stopwatch.Stop();
 
-            Logger.Info(new LogData("Time spent during request execution.", stopwatch, context));
+            Info(new LogData("Time spent during request execution.", stopwatch, context));
         }
 
         internal sealed class LogData

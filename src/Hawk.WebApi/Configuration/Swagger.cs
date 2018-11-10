@@ -7,9 +7,10 @@
 
     using Microsoft.AspNetCore.Mvc.ApiExplorer;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.PlatformAbstractions;
 
     using Swashbuckle.AspNetCore.Swagger;
+
+    using static Microsoft.Extensions.PlatformAbstractions.PlatformServices;
 
     internal static class Swagger
     {
@@ -17,7 +18,7 @@
         {
             get
             {
-                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+                var basePath = Default.Application.ApplicationBasePath;
                 var fileName = $"{typeof(Startup).GetTypeInfo().Assembly.GetName().Name}.xml";
 
                 return Path.Combine(basePath, fileName);
