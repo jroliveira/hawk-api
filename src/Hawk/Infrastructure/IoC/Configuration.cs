@@ -19,7 +19,7 @@
 
     public static class Configuration
     {
-        public static IServiceCollection ConfigureIoC(this IServiceCollection @this, IConfigurationRoot configuration)
+        public static IServiceCollection ConfigureIoC(this IServiceCollection @this, IConfiguration configuration)
         {
             // Neo4j
             @this.AddScoped<Data.Neo4J.Database>();

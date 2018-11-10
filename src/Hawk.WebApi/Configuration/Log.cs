@@ -12,14 +12,16 @@
 
     using static Hawk.Infrastructure.Logging.Logger;
 
+    using static System.Enum;
+
     internal static class Log
     {
         internal static IApplicationBuilder UseLog(
             this IApplicationBuilder app,
-            IConfigurationRoot configuration,
+            IConfiguration configuration,
             IHttpContextAccessor accessor)
         {
-            if (!Enum.TryParse(configuration["log:level"], out LogLevel level))
+            if (!TryParse(configuration["log:level"], out LogLevel level))
             {
                 throw new InvalidCastException($"LogLevel {configuration["log:level"]} is not valid.");
             }
