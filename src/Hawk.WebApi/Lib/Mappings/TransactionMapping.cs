@@ -4,17 +4,20 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using Hawk.Domain.Entities;
-    using Hawk.Domain.Entities.Payment;
-    using Hawk.Domain.Entities.Transactions;
+    using Hawk.Domain.Account;
+    using Hawk.Domain.Store;
+    using Hawk.Domain.Tag;
+    using Hawk.Domain.Transaction;
     using Hawk.Infrastructure;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
 
+    using static System.Guid;
+
     internal static class TransactionMapping
     {
-        private static readonly IReadOnlyDictionary<string, Func<Option<Guid>, Option<Pay>, Option<Account>, Try<Transaction>>> Types =
-            new Dictionary<string, Func<Option<Guid>, Option<Pay>, Option<Account>, Try<Transaction>>>
+        private static readonly IReadOnlyDictionary<string, Func<Option<Guid>, Option<Payment>, Option<Account>, Try<Transaction>>> Types =
+            new Dictionary<string, Func<Option<Guid>, Option<Payment>, Option<Account>, Try<Transaction>>>
             {
                 { "Debit", Debit.CreateWith },
                 { "Credit", Credit.CreateWith },
@@ -32,7 +35,7 @@
 
         internal static Transaction ToEntity(this Models.Transaction.Post.Transaction @this) => Map(
             @this.Type,
-            Guid.NewGuid(),
+            NewGuid(),
             @this.Store,
             @this.Tags,
             @this.Account,

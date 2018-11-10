@@ -18,6 +18,6 @@
 
         public Account Account { get; set; }
 
-        public static implicit operator Domain.Entities.Transaction(Transaction model) => model.ToEntity();
+        public static implicit operator Domain.Transaction.Transaction(Transaction model) => model.ToEntity();
     }
 }

@@ -30,7 +30,7 @@
             }
             catch (Exception exception)
             {
-                Error("Unexpected error", exception);
+                LogError("Unexpected error", exception);
 
                 context.Response.StatusCode = 500;
                 context.Response.ContentType = "application/json; charset=utf-8";

@@ -9,7 +9,7 @@
 
     internal static class TagMapping
     {
-        internal static Paged<Tag> ToModel(this Paged<Try<(Domain.Entities.Tag Tag, uint Count)>> @this)
+        internal static Paged<Tag> ToModel(this Paged<Try<(Domain.Tag.Tag Tag, uint Count)>> @this)
         {
             var model = @this
                 .Data

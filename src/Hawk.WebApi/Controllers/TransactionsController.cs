@@ -2,8 +2,7 @@
 {
     using System.Threading.Tasks;
 
-    using Hawk.Domain.Commands.Transaction;
-    using Hawk.Domain.Queries.Transaction;
+    using Hawk.Domain.Transaction;
     using Hawk.Infrastructure;
     using Hawk.WebApi.Lib;
     using Hawk.WebApi.Lib.Extensions;
@@ -11,7 +10,6 @@
     using Hawk.WebApi.Lib.Validators;
     using Hawk.WebApi.Models;
     using Hawk.WebApi.Models.Transaction;
-    using Hawk.WebApi.Models.Transaction.Get;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -23,32 +21,32 @@
     [Route("transactions")]
     public class TransactionsController : BaseController
     {
-        private readonly IGetAllQuery getAll;
-        private readonly IGetByIdQuery getById;
-        private readonly ICreateCommand create;
-        private readonly IExcludeCommand exclude;
+        private readonly IGetTransactions getTransactions;
+        private readonly IGetTransactionById getTransactionById;
+        private readonly IUpsertTransaction upsertTransaction;
+        private readonly IDeleteTransaction deleteTransaction;
         private readonly TransactionValidator validator;
 
         public TransactionsController(
-            IGetAllQuery getAll,
-            IGetByIdQuery getById,
-            ICreateCommand create,
-            IExcludeCommand exclude)
-            : this(getAll, getById, create, exclude, new TransactionValidator())
+            IGetTransactions getTransactions,
+            IGetTransactionById getTransactionById,
+            IUpsertTransaction upsertTransaction,
+            IDeleteTransaction deleteTransaction)
+            : this(getTransactions, getTransactionById, upsertTransaction, deleteTransaction, new TransactionValidator())
         {
         }
 
         internal TransactionsController(
-            IGetAllQuery getAll,
-            IGetByIdQuery getById,
-            ICreateCommand create,
-            IExcludeCommand exclude,
+            IGetTransactions getTransactions,
+            IGetTransactionById getTransactionById,
+            IUpsertTransaction upsertTransaction,
+            IDeleteTransaction deleteTransaction,
             TransactionValidator validator)
         {
-            this.getAll = getAll;
-            this.getById = getById;
-            this.create = create;
-            this.exclude = exclude;
+            this.getTransactions = getTransactions;
+            this.getTransactionById = getTransactionById;
+            this.upsertTransaction = upsertTransaction;
+            this.deleteTransaction = deleteTransaction;
             this.validator = validator;
         }
 
@@ -57,10 +55,10 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ProducesResponseType(typeof(Paged<Transaction>), 200)]
+        [ProducesResponseType(typeof(Paged<Models.Transaction.Get.Transaction>), 200)]
         public async Task<IActionResult> Get()
         {
-            var entities = await this.getAll.GetResult(this.GetUser(), this.Request.QueryString.Value);
+            var entities = await this.getTransactions.GetResult(this.GetUser(), this.Request.QueryString.Value);
 
             return entities.Match(
                 failure => this.StatusCode(500, new Error(failure.Message)),
@@ -73,16 +71,16 @@
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(Transaction), 200)]
+        [ProducesResponseType(typeof(Models.Transaction.Get.Transaction), 200)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetById([FromRoute] string id)
         {
-            var entity = await this.getById.GetResult(id, this.GetUser());
+            var entity = await this.getTransactionById.GetResult(id, this.GetUser());
 
             return entity.Match(
                 failure => this.StatusCode(500, new Error(failure.Message)),
                 success => success.Match<IActionResult>(
-                    transaction => this.Ok((Transaction)transaction),
+                    transaction => this.Ok((Models.Transaction.Get.Transaction)transaction),
                     () => this.NotFound($"Resource 'transactions' with id {id} could not be found")));
         }
 
@@ -92,7 +90,7 @@
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost]
-        [ProducesResponseType(typeof(Transaction), 201)]
+        [ProducesResponseType(typeof(Models.Transaction.Get.Transaction), 201)]
         public async Task<IActionResult> Create([FromBody] Models.Transaction.Post.Transaction request)
         {
             var validateResult = await this.validator.ValidateAsync(request);
@@ -102,11 +100,11 @@
             }
 
             request.Account = new Account(this.GetUser());
-            var entity = await this.create.Execute(request);
+            var entity = await this.upsertTransaction.Execute(request);
 
             return entity.Match(
                 failure => this.StatusCode(500, new Error(failure.Message)),
-                transaction => this.Created(transaction.Id, (Transaction)transaction));
+                transaction => this.Created(transaction.Id, (Models.Transaction.Get.Transaction)transaction));
         }
 
         /// <summary>
@@ -121,16 +119,16 @@
             [FromRoute] string id,
             [FromBody] dynamic request)
         {
-            var entity = await this.getById.GetResult(id, this.GetUser());
+            var entity = await this.getTransactionById.GetResult(id, this.GetUser());
 
             return await entity.Match(
                 failure => Task<IActionResult>(this.StatusCode(500, new Error(failure.Message))),
                 success => success.Match<Task<IActionResult>>(
                     async transaction =>
                     {
-                        Transaction model = transaction;
+                        Models.Transaction.Get.Transaction model = transaction;
                         PartialUpdater.Apply(request, model);
-                        await this.create.Execute(model);
+                        await this.upsertTransaction.Execute(model);
 
                         return this.NoContent();
                     },
@@ -146,14 +144,14 @@
         [ProducesResponseType(204)]
         public async Task<IActionResult> Exclude([FromRoute] string id)
         {
-            var entity = await this.getById.GetResult(id, this.GetUser());
+            var entity = await this.getTransactionById.GetResult(id, this.GetUser());
 
             return await entity.Match(
                 failure => Task<IActionResult>(this.StatusCode(500, new Error(failure.Message))),
                 success => success.Match<Task<IActionResult>>(
                     async store =>
                     {
-                        await this.exclude.Execute(store);
+                        await this.deleteTransaction.Execute(store);
                         return this.NoContent();
                     },
                     () => Task<IActionResult>(this.NotFound($"Resource 'transactions' with id {id} could not be found"))));

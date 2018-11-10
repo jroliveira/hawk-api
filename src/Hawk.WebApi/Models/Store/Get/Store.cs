@@ -20,10 +20,10 @@
 
         public uint Total { get; }
 
-        public static implicit operator Store(Domain.Entities.Store entity) => new Store(entity.Name);
+        public static implicit operator Store(Domain.Store.Store entity) => new Store(entity.Name);
 
-        public static implicit operator Option<Domain.Entities.Store>(Store model) => Domain.Entities.Store.CreateWith(model.Name);
+        public static implicit operator Option<Domain.Store.Store>(Store model) => Domain.Store.Store.CreateWith(model.Name);
 
-        public static implicit operator Domain.Entities.Store(Store model) => Domain.Entities.Store.CreateWith(model.Name).GetOrElse(default);
+        public static implicit operator Domain.Store.Store(Store model) => Domain.Store.Store.CreateWith(model.Name).GetOrElse(default);
     }
 }

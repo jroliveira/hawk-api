@@ -9,8 +9,9 @@
 
     using Neo4j.Driver.V1;
 
-    using static System.ComponentModel.TypeDescriptor;
     using static Hawk.Infrastructure.Monad.Utils.Util;
+
+    using static System.ComponentModel.TypeDescriptor;
 
     internal sealed class Record
     {
