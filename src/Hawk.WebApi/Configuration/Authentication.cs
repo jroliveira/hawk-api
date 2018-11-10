@@ -1,19 +1,24 @@
-namespace Hawk.WebApi.Configuration
+﻿namespace Hawk.WebApi.Configuration
 {
     using Hawk.WebApi.Lib.Authentication;
+
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
+    using static Hawk.Infrastructure.Guard;
+
     internal static class Authentication
     {
-        public static IServiceCollection ConfigureIdentityServer(
+        internal static IServiceCollection ConfigureIdentityServer(
             this IServiceCollection services,
             IConfigurationRoot configuration)
         {
             var authConfig = configuration
                 .GetSection("authentication")
                 .Get<Configuration>();
+
+            NotNull(authConfig.Authority, "authConfig.Authority", "AuthConfig's authority cannot be null.");
 
             services
                 .AddAuthentication("Bearer")

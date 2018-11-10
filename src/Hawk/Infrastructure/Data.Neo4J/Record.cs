@@ -1,24 +1,28 @@
-namespace Hawk.Infrastructure.Data.Neo4J
+﻿namespace Hawk.Infrastructure.Data.Neo4J
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
+
     using Neo4j.Driver.V1;
+
     using static Hawk.Infrastructure.Monad.Utils.Util;
+
     using static System.ComponentModel.TypeDescriptor;
 
     internal sealed class Record
     {
         private readonly IDictionary<string, object> data;
 
-        public Record()
+        internal Record()
             : this(null)
         {
         }
 
-        public Record(object record)
+        internal Record(object record)
         {
             if (record == null)
             {
@@ -34,7 +38,7 @@ namespace Hawk.Infrastructure.Data.Neo4J
             this.data = record.As<IDictionary<string, object>>();
         }
 
-        public Option<Record> GetRecord(string key)
+        internal Option<Record> GetRecord(string key)
         {
             if (!this.Has(key))
             {
@@ -44,12 +48,12 @@ namespace Hawk.Infrastructure.Data.Neo4J
             return new Record(this.data[key]);
         }
 
-        public IEnumerable<string> GetList(string key) => this
+        internal IEnumerable<string> GetList(string key) => this
             .Get<IList<object>>(key)
             .GetOrElse(new List<object>())
             ?.Select(item => item.ToString());
 
-        public Option<TValue> Get<TValue>(string key)
+        internal Option<TValue> Get<TValue>(string key)
         {
             if (!this.Has(key))
             {
@@ -65,6 +69,6 @@ namespace Hawk.Infrastructure.Data.Neo4J
             }
         }
 
-        public bool Has(string key) => this.data != null && this.data.ContainsKey(key);
+        internal bool Has(string key) => this.data != null && this.data.ContainsKey(key);
     }
 }

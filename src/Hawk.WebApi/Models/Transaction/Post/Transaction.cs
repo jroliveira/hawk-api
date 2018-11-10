@@ -1,6 +1,7 @@
 ﻿namespace Hawk.WebApi.Models.Transaction.Post
 {
     using System.Collections.Generic;
+
     using Hawk.WebApi.Lib.Mappings;
 
     public class Transaction
@@ -17,6 +18,6 @@
 
         public Account Account { get; set; }
 
-        public static implicit operator Domain.Entities.Transaction(Transaction model) => model.ToEntity();
+        public static implicit operator Domain.Transaction.Transaction(Transaction model) => model.ToEntity();
     }
 }

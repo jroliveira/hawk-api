@@ -3,23 +3,27 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Hawk.Domain.Entities;
-    using Hawk.Domain.Entities.Payment;
-    using Hawk.Domain.Entities.Transactions;
+
+    using Hawk.Domain.Account;
+    using Hawk.Domain.Store;
+    using Hawk.Domain.Tag;
+    using Hawk.Domain.Transaction;
     using Hawk.Infrastructure;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
 
+    using static System.Guid;
+
     internal static class TransactionMapping
     {
-        private static readonly IReadOnlyDictionary<string, Func<Option<Guid>, Option<Pay>, Option<Account>, Try<Transaction>>> Types =
-            new Dictionary<string, Func<Option<Guid>, Option<Pay>, Option<Account>, Try<Transaction>>>
+        private static readonly IReadOnlyDictionary<string, Func<Option<Guid>, Option<Payment>, Option<Account>, Try<Transaction>>> Types =
+            new Dictionary<string, Func<Option<Guid>, Option<Payment>, Option<Account>, Try<Transaction>>>
             {
                 { "Debit", Debit.CreateWith },
                 { "Credit", Credit.CreateWith },
             };
 
-        public static Paged<Models.Transaction.Get.Transaction> ToModel(this Paged<Transaction> @this)
+        internal static Paged<Models.Transaction.Get.Transaction> ToModel(this Paged<Transaction> @this)
         {
             var model = @this
                 .Data
@@ -29,16 +33,16 @@
             return new Paged<Models.Transaction.Get.Transaction>(model, @this.Skip, @this.Limit);
         }
 
-        public static Transaction ToEntity(this Models.Transaction.Post.Transaction @this) => Map(
+        internal static Transaction ToEntity(this Models.Transaction.Post.Transaction @this) => Map(
             @this.Type,
-            Guid.NewGuid(),
+            NewGuid(),
             @this.Store,
             @this.Tags,
             @this.Account,
             @this.Payment,
             @this.Parcel);
 
-        public static Transaction ToEntity(this Models.Transaction.Get.Transaction @this) => Map(
+        internal static Transaction ToEntity(this Models.Transaction.Get.Transaction @this) => Map(
             @this.Type,
             new Guid(@this.Id),
             @this.Store,

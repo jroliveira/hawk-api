@@ -3,21 +3,23 @@
     using System;
     using System.IO;
     using System.Reflection;
-    using Hawk.Infrastructure.Logging;
+
     using Hawk.Infrastructure.Monad;
+
+    using static Hawk.Infrastructure.Logging.Logger;
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal static class CypherScript
     {
         private static readonly Assembly Assembly = typeof(CypherScript).GetTypeInfo().Assembly;
 
-        public static Option<string> ReadAll(string name)
+        internal static Option<string> ReadAll(string name)
         {
-            name = $@"Hawk.Infrastructure.Data.Neo4J.Scripts.{name}";
+            name = $@"Hawk.Infrastructure.Data.Neo4J.Entities.{name}";
 
             if (string.IsNullOrEmpty(name))
             {
-                Logger.Error("File name cannot be null or empty.");
+                LogError("File name cannot be null or empty.");
                 return None;
             }
 
@@ -31,7 +33,7 @@
             }
             catch (Exception exception)
             {
-                Logger.Error($"Cannot load file {name}.", exception);
+                LogError($"Cannot load file {name}.", exception);
                 return None;
             }
         }

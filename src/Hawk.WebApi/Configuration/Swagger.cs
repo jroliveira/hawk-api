@@ -2,11 +2,15 @@
 {
     using System.IO;
     using System.Reflection;
+
     using Hawk.WebApi.Lib.Swagger;
+
     using Microsoft.AspNetCore.Mvc.ApiExplorer;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.PlatformAbstractions;
+
     using Swashbuckle.AspNetCore.Swagger;
+
+    using static Microsoft.Extensions.PlatformAbstractions.PlatformServices;
 
     internal static class Swagger
     {
@@ -14,14 +18,14 @@
         {
             get
             {
-                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+                var basePath = Default.Application.ApplicationBasePath;
                 var fileName = $"{typeof(Startup).GetTypeInfo().Assembly.GetName().Name}.xml";
 
                 return Path.Combine(basePath, fileName);
             }
         }
 
-        public static IServiceCollection ConfigureSwagger(this IServiceCollection @this)
+        internal static IServiceCollection ConfigureSwagger(this IServiceCollection @this)
         {
             @this.AddSwaggerGen(options =>
             {
@@ -43,7 +47,7 @@
             return @this;
         }
 
-        private static Info CreateInfoForApiVersion(ApiVersionDescription description)
+        internal static Info CreateInfoForApiVersion(ApiVersionDescription description)
         {
             var info = new Info
             {

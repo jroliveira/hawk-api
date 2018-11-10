@@ -14,7 +14,7 @@
 
         public uint Total { get; }
 
-        public static implicit operator Parcel(Domain.Entities.Parcel entity)
+        public static implicit operator Parcel(Domain.Transaction.Parcel entity)
         {
             Parcel model = default;
             if (entity != null)
@@ -25,12 +25,12 @@
             return model;
         }
 
-        public static implicit operator Option<Domain.Entities.Parcel>(Parcel model)
+        public static implicit operator Option<Domain.Transaction.Parcel>(Parcel model)
         {
-            Try<Domain.Entities.Parcel> entity = default;
+            Try<Domain.Transaction.Parcel> entity = default;
             if (model != null)
             {
-                entity = Domain.Entities.Parcel.CreateWith(model.Total, model.Number);
+                entity = Domain.Transaction.Parcel.CreateWith(model.Total, model.Number);
             }
 
             return entity;

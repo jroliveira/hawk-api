@@ -23,7 +23,7 @@
 
         public static void Init(LogLevel level, Func<string> tracking, Action<string> logMethod) => logger = new Logger(level, tracking, logMethod);
 
-        public static void Error(string message, Exception exception = null)
+        public static void LogError(string message, Exception exception = null)
         {
             var logMessage = new StringBuilder(message);
 
@@ -39,14 +39,10 @@
                 }
             }
 
-            logger.Error(new DefaultLogData(logger.Level, logger.tracking(), new { message }));
+            logger.Log(LogLevel.Error, new DefaultLogData(logger.Level, logger.tracking(), new { message }));
         }
 
-        public static void Info(object data) => logger.Info(new DefaultLogData(LogLevel.Info, logger.tracking(), data));
-
-        public void Error(ILogData data) => this.Log(LogLevel.Error, data);
-
-        public void Info(ILogData data) => this.Log(LogLevel.Info, data);
+        public static void Info(object data) => logger.Log(LogLevel.Info, new DefaultLogData(LogLevel.Info, logger.tracking(), data));
 
         private void Log(LogLevel level, ILogData data)
         {

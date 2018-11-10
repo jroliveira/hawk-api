@@ -1,13 +1,16 @@
 ﻿namespace Hawk.WebApi.Lib.Conventions
 {
     using System.Linq;
+
     using Microsoft.AspNetCore.Mvc.ApplicationModels;
+
+    using static Microsoft.AspNetCore.Mvc.ApplicationModels.AttributeRouteModel;
 
     internal sealed class ApiVersionRoutePrefixConvention : IApplicationModelConvention
     {
         private readonly AttributeRouteModel versionConstraintTemplate;
 
-        public ApiVersionRoutePrefixConvention() => this.versionConstraintTemplate = new AttributeRouteModel
+        internal ApiVersionRoutePrefixConvention() => this.versionConstraintTemplate = new AttributeRouteModel
         {
             Template = "v{api-version:apiVersion}",
         };
@@ -18,7 +21,7 @@
                 .SelectMany(controller => controller.Selectors)
                 .Where(selector => selector.AttributeRouteModel != null))
             {
-                selector.AttributeRouteModel = AttributeRouteModel.CombineAttributeRouteModel(this.versionConstraintTemplate, selector.AttributeRouteModel);
+                selector.AttributeRouteModel = CombineAttributeRouteModel(this.versionConstraintTemplate, selector.AttributeRouteModel);
             }
         }
     }

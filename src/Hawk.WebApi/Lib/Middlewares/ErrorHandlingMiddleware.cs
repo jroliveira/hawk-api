@@ -1,10 +1,13 @@
-namespace Hawk.WebApi.Lib.Middlewares
+﻿namespace Hawk.WebApi.Lib.Middlewares
 {
     using System;
     using System.Threading.Tasks;
-    using Hawk.Infrastructure;
+
     using Hawk.WebApi.Models;
+
     using Microsoft.AspNetCore.Http;
+
+    using static Hawk.Infrastructure.Guard;
     using static Hawk.Infrastructure.Logging.Logger;
     using static Newtonsoft.Json.JsonConvert;
 
@@ -14,7 +17,7 @@ namespace Hawk.WebApi.Lib.Middlewares
 
         public ErrorHandlingMiddleware(RequestDelegate next)
         {
-            Guard.NotNull(next, nameof(next), "Error handling middleware's next cannot be null.");
+            NotNull(next, nameof(next), "Error handling middleware's next cannot be null.");
 
             this.next = next;
         }
@@ -23,15 +26,15 @@ namespace Hawk.WebApi.Lib.Middlewares
         {
             try
             {
-                await this.next(context).ConfigureAwait(false);
+                await this.next(context);
             }
             catch (Exception exception)
             {
-                Error("Unexpected error", exception);
+                LogError("Unexpected error", exception);
 
                 context.Response.StatusCode = 500;
                 context.Response.ContentType = "application/json; charset=utf-8";
-                await context.Response.WriteAsync(SerializeObject(new Error(exception.Message))).ConfigureAwait(false);
+                await context.Response.WriteAsync(SerializeObject(new Error(exception.Message)));
             }
         }
     }

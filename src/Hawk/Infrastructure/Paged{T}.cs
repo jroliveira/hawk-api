@@ -1,4 +1,4 @@
-namespace Hawk.Infrastructure
+﻿namespace Hawk.Infrastructure
 {
     using System;
     using System.Collections.Generic;

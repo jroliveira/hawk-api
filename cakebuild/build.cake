@@ -8,12 +8,18 @@ var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
 var solutionPath = $"./../Hawk.sln";
-var outputDirectory = Directory($"./../bin");
+var artifactsDirectory = Directory($"./../artifacts");
 
 Task("Default")
+    .IsDependentOn("Restore")
+    .IsDependentOn("Build")
+    .IsDependentOn("Test");
+
+Task("Deploy")
     .IsDependentOn("Clean")
     .IsDependentOn("Restore")
     .IsDependentOn("Build")
-	.IsDependentOn("Publish");
+    .IsDependentOn("Test")
+    .IsDependentOn("Publish");
 
 RunTarget(target);

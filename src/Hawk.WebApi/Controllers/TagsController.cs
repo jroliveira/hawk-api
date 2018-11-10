@@ -1,29 +1,32 @@
-namespace Hawk.WebApi.Controllers
+﻿namespace Hawk.WebApi.Controllers
 {
     using System.Threading.Tasks;
-    using Hawk.Domain.Queries.Tag;
+
+    using Hawk.Domain.Tag;
     using Hawk.Infrastructure;
     using Hawk.WebApi.Lib.Extensions;
     using Hawk.WebApi.Lib.Mappings;
     using Hawk.WebApi.Models;
-    using Hawk.WebApi.Models.Tag.Get;
+
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+
+    using Tag = Hawk.WebApi.Models.Tag.Get.Tag;
 
     [Authorize]
     [ApiVersion("1")]
     [Route("")]
     public class TagsController : BaseController
     {
-        private readonly IGetAllQuery getAll;
-        private readonly IGetAllByStoreQuery getAllByStore;
+        private readonly IGetTags getTags;
+        private readonly IGetTagsByStore getTagsByStore;
 
         public TagsController(
-            IGetAllQuery getAll,
-            IGetAllByStoreQuery getAllByStore)
+            IGetTags getTags,
+            IGetTagsByStore getTagsByStore)
         {
-            this.getAll = getAll;
-            this.getAllByStore = getAllByStore;
+            this.getTags = getTags;
+            this.getTagsByStore = getTagsByStore;
         }
 
         /// <summary>
@@ -34,7 +37,7 @@ namespace Hawk.WebApi.Controllers
         [ProducesResponseType(typeof(Paged<Tag>), 200)]
         public async Task<IActionResult> Get()
         {
-            var entities = await this.getAll.GetResult(this.GetUser(), this.Request.QueryString.Value).ConfigureAwait(false);
+            var entities = await this.getTags.GetResult(this.GetUser(), this.Request.QueryString.Value);
 
             return entities.Match(
                 failure => this.StatusCode(500, new Error(failure.Message)),
@@ -51,7 +54,7 @@ namespace Hawk.WebApi.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetByStore(string store)
         {
-            var entities = await this.getAllByStore.GetResult(this.GetUser(), store, this.Request.QueryString.Value).ConfigureAwait(false);
+            var entities = await this.getTagsByStore.GetResult(this.GetUser(), store, this.Request.QueryString.Value);
 
             return entities.Match(
                 failure => this.StatusCode(500, new Error(failure.Message)),

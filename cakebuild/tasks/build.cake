@@ -4,6 +4,9 @@ Task("Build")
         new DotNetCoreBuildSettings()
         {
             Configuration = configuration,
-            OutputDirectory = outputDirectory,
-            ArgumentCustomization = args => args.Append($"--no-restore"),
+            NoRestore = true,
+            MSBuildSettings = new DotNetCoreMSBuildSettings
+            {
+                NoLogo = true,    
+            },
         }));

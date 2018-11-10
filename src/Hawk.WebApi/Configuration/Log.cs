@@ -1,16 +1,20 @@
 ﻿namespace Hawk.WebApi.Configuration
 {
     using System;
+
     using Hawk.Infrastructure.Logging;
     using Hawk.Infrastructure.Logging.Methods;
     using Hawk.WebApi.Lib;
+
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
 
+    using static Hawk.Infrastructure.Logging.Logger;
+
     internal static class Log
     {
-        public static IApplicationBuilder UseLog(
+        internal static IApplicationBuilder UseLog(
             this IApplicationBuilder app,
             IConfigurationRoot configuration,
             IHttpContextAccessor accessor)
@@ -22,7 +26,7 @@
 
             Action<string> logMethod = new DefaultLogMethod(configuration["log:file"]).Write;
 
-            Logger.Init(level, () => accessor.HttpContext.Request.Headers[Constants.Api.ReqId], logMethod);
+            Init(level, () => accessor.HttpContext.Request.Headers[Constants.Api.ReqId], logMethod);
 
             return app;
         }

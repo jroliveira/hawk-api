@@ -1,11 +1,14 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Filter
 {
     using Hawk.Infrastructure.Filter;
+
     using Http.Query.Filter;
 
-    internal sealed class Skip : ISkip<uint, Filter>
+    using static System.Convert;
+
+    internal sealed class Skip : ISkip<int, Filter>
     {
-        public uint Apply(Filter filter)
+        public int Apply(Filter filter)
         {
             if (filter.Skip.Value == null)
             {
@@ -17,7 +20,7 @@
                 return 0;
             }
 
-            return filter.Skip.Value.Value;
+            return ToInt32(filter.Skip.Value.Value);
         }
     }
 }

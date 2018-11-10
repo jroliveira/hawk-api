@@ -1,6 +1,8 @@
 ﻿namespace Hawk.WebApi.Models.Transaction
 {
     using System;
+
+    using Hawk.Domain.Transaction;
     using Hawk.Infrastructure.Monad;
 
     public sealed class Payment
@@ -21,15 +23,15 @@
 
         public string Currency { get; }
 
-        public static implicit operator Payment(Domain.Entities.Payment.Pay entity) => new Payment(entity.Price.Value, entity.Date, entity.Method, entity.Price.Currency);
+        public static implicit operator Payment(Domain.Transaction.Payment entity) => new Payment(entity.Price.Value, entity.Date, entity.PaymentMethod, entity.Price.Currency);
 
-        public static implicit operator Option<Domain.Entities.Payment.Pay>(Payment model)
+        public static implicit operator Option<Domain.Transaction.Payment>(Payment model)
         {
-            var currency = Domain.Entities.Payment.Currency.CreateWith(model.Currency);
-            var price = Domain.Entities.Payment.Price.CreateWith(model.Value, currency);
-            var method = Domain.Entities.Payment.Method.CreateWith(model.Method);
+            var currency = Domain.Currency.Currency.CreateWith(model.Currency);
+            var price = Price.CreateWith(model.Value, currency);
+            var paymentMethod = Domain.PaymentMethod.PaymentMethod.CreateWith(model.Method);
 
-            return Domain.Entities.Payment.Pay.CreateWith(price, model.Date, method);
+            return Domain.Transaction.Payment.CreateWith(price, model.Date, paymentMethod);
         }
     }
 }

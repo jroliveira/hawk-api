@@ -1,6 +1,7 @@
 ﻿namespace Hawk.WebApi.Lib.Mappings
 {
     using System.Linq;
+
     using Hawk.Infrastructure;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
@@ -8,7 +9,7 @@
 
     internal static class StoreMapping
     {
-        public static Paged<Store> ToModel(this Paged<Try<(Domain.Entities.Store Store, uint Count)>> @this)
+        internal static Paged<Store> ToModel(this Paged<Try<(Domain.Store.Store Store, uint Count)>> @this)
         {
             var model = @this
                 .Data

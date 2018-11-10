@@ -1,6 +1,7 @@
 ﻿namespace Hawk.Infrastructure.Monad.Utils
 {
     using System;
+
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
 
