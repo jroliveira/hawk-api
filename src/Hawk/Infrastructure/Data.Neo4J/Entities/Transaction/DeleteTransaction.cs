@@ -1,14 +1,13 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Entities.Transaction
 {
+    using System;
     using System.Threading.Tasks;
 
+    using Hawk.Domain.Shared;
     using Hawk.Domain.Transaction;
     using Hawk.Infrastructure.Monad;
-    using Hawk.Infrastructure.Monad.Extensions;
 
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
-
-    using static System.String;
 
     internal sealed class DeleteTransaction : IDeleteTransaction
     {
@@ -17,15 +16,15 @@
 
         public DeleteTransaction(Database database) => this.database = database;
 
-        public Task<Try<Unit>> Execute(Transaction entity)
+        public Task<Try<Unit>> Execute(Email email, Guid id)
         {
             var parameters = new
             {
-                email = entity.Account.Email,
-                id = entity.Id.ToString(),
+                email = email.ToString(),
+                id = id.ToString(),
             };
 
-            return this.database.Execute(Statement.GetOrElse(Empty), parameters);
+            return this.database.Execute(Statement, parameters);
         }
     }
 }

@@ -1,11 +1,8 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Entities.PaymentMethod
 {
-    using System;
-
     using Hawk.Domain.PaymentMethod;
-    using Hawk.Infrastructure.Data.Neo4J.Extensions;
+    using Hawk.Domain.Shared.Exceptions;
     using Hawk.Infrastructure.Monad;
-    using Hawk.Infrastructure.Monad.Extensions;
 
     using Neo4j.Driver.V1;
 
@@ -17,12 +14,23 @@
         private const string Total = "total";
         private const string Data = "data";
 
-        internal static Try<(PaymentMethod PaymentMethod, uint Count)> MapFrom(IRecord data) => MapFrom(data.GetRecord(Data));
+        internal static Try<(PaymentMethod PaymentMethod, uint Count)> MapFrom(IRecord data) => data.GetRecord(Data).Match(
+            record =>
+            {
+                var total = record.Get<uint>(Total);
+                if (!total.IsDefined)
+                {
+                    return new InvalidObjectException("Invalid payment method.");
+                }
 
-        internal static Try<(PaymentMethod PaymentMethod, uint Count)> MapFrom(Option<Record> recordOption) => recordOption.Match(
-            record => CreateWith(record.Get<string>(Name)).Match<Try<(PaymentMethod, uint)>>(
-                _ => _,
-                paymentMethod => (paymentMethod, record.Get<uint>(Total).GetOrElse(0u))),
-            () => new NullReferenceException("Payment method cannot be null."));
+                return MapFrom(record).Match<Try<(PaymentMethod, uint)>>(
+                    _ => _,
+                    paymentMethod => (paymentMethod, total.Get()));
+            },
+            () => new NotFoundException("Payment method not found."));
+
+        internal static Try<PaymentMethod> MapFrom(Option<Record> record) => record.Match(
+            some => CreateWith(some.Get<string>(Name)),
+            () => new NotFoundException("Payment method not found."));
     }
 }

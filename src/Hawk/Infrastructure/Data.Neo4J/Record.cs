@@ -9,40 +9,36 @@
 
     using Neo4j.Driver.V1;
 
-    using static Hawk.Infrastructure.Monad.Utils.Util;
-
     using static System.ComponentModel.TypeDescriptor;
+
+    using static Hawk.Infrastructure.Logging.Logger;
+
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal sealed class Record
     {
         private readonly IDictionary<string, object> data;
 
-        internal Record()
-            : this(null)
-        {
-        }
-
         internal Record(object record)
         {
-            if (record == null)
+            switch (record)
             {
-                return;
+                case null:
+                    return;
+                case IEntity node:
+                    this.data = node.Properties.ToDictionary(item => item.Key, item => item.Value);
+                    return;
+                default:
+                    this.data = record.As<IDictionary<string, object>>();
+                    break;
             }
-
-            if (record is IEntity node)
-            {
-                this.data = node.Properties.ToDictionary(item => item.Key, item => item.Value);
-                return;
-            }
-
-            this.data = record.As<IDictionary<string, object>>();
         }
 
         internal Option<Record> GetRecord(string key)
         {
             if (!this.Has(key))
             {
-                return None;
+                return None();
             }
 
             return new Record(this.data[key]);
@@ -57,18 +53,26 @@
         {
             if (!this.Has(key))
             {
-                return None;
+                return None();
             }
 
-            switch (typeof(TValue))
+            try
             {
-                case Type guidType when guidType == typeof(Guid):
-                    return (TValue)GetConverter(typeof(Guid)).ConvertFromInvariantString(this.data[key].As<string>());
-                default:
-                    return this.data[key].As<TValue>();
+                switch (typeof(TValue))
+                {
+                    case Type guidType when guidType == typeof(Guid):
+                        return (TValue)GetConverter(typeof(Guid)).ConvertFromInvariantString(this.data[key].As<string>());
+                    default:
+                        return this.data[key].As<TValue>();
+                }
+            }
+            catch (Exception exception)
+            {
+                LogError($"Get key value {key} threw an exception.", exception);
+                return None();
             }
         }
 
-        internal bool Has(string key) => this.data != null && this.data.ContainsKey(key);
+        private bool Has(string key) => this.data != null && this.data.ContainsKey(key);
     }
 }

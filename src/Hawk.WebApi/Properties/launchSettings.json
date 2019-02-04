@@ -1,13 +1,13 @@
-﻿{
+{
   "profiles": {
     "Hawk.WebApi": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "v1",
+      "applicationUrl": "http://localhost:48285",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:48285"
+      }
     }
   }
 }

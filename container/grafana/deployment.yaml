@@ -1,0 +1,53 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\tools\kompose.exe convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: grafana
+  name: grafana
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: grafana
+    spec:
+      containers:
+      - env:
+        - name: GF_AUTH_ANONYMOUS_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              key: GF_AUTH_ANONYMOUS_ENABLED
+              name: grafana-monitor-grafana-grafana-env
+        - name: GF_INSTALL_PLUGINS
+          valueFrom:
+            configMapKeyRef:
+              key: GF_INSTALL_PLUGINS
+              name: grafana-monitor-grafana-grafana-env
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: GF_SECURITY_ADMIN_PASSWORD
+              name: grafana-monitor-grafana-grafana-env
+        - name: GF_SECURITY_ADMIN_USER
+          valueFrom:
+            configMapKeyRef:
+              key: GF_SECURITY_ADMIN_USER
+              name: grafana-monitor-grafana-grafana-env
+        - name: GF_USERS_ALLOW_SIGN_UP
+          valueFrom:
+            configMapKeyRef:
+              key: GF_USERS_ALLOW_SIGN_UP
+              name: grafana-monitor-grafana-grafana-env
+        image: grafana/grafana:5.4.3
+        name: hawk-grafana
+        ports:
+        - containerPort: 3000
+        resources: {}
+      restartPolicy: Always
+status: {}

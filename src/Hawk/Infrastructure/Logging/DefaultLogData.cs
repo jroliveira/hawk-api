@@ -1,21 +1,27 @@
 ﻿namespace Hawk.Infrastructure.Logging
 {
     using System;
+    using System.Globalization;
     using System.Runtime.Serialization;
 
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
 
+    using static Clock;
+
+    using static Newtonsoft.Json.JsonConvert;
+
     public sealed class DefaultLogData : ILogData
     {
-        private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
+        private static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
-            DateFormatHandling = DateFormatHandling.IsoDateFormat,
-            DateTimeZoneHandling = DateTimeZoneHandling.Utc,
-            Formatting = Formatting.Indented,
+            Formatting = Formatting.None,
+            Culture = CultureInfo.InvariantCulture,
             NullValueHandling = NullValueHandling.Ignore,
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+            DateFormatHandling = DateFormatHandling.IsoDateFormat,
         };
 
         public DefaultLogData(LogLevel level, string tracking, object data)
@@ -25,7 +31,7 @@
             this.Data = data;
         }
 
-        public DateTime DateTime => DateTime.UtcNow;
+        public DateTime DateTime => UtcNow();
 
         public LogLevel Level { get; }
 
@@ -37,7 +43,7 @@
         {
             try
             {
-                return JsonConvert.SerializeObject(this, Formatting.None, SerializerSettings);
+                return SerializeObject(this, JsonSerializerSettings);
             }
             catch (Exception exception)
             {

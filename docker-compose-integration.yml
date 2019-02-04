@@ -1,0 +1,31 @@
+version: '3'
+services:
+  integration:
+    container_name: hawk-integration
+    build: 
+      context: .
+      dockerfile: Dockerfile.integration
+    entrypoint: bash /app/wait_for_it.sh graphdb:7474 -t 0 -- dotnet cake --target=Run-Tests
+    env_file:
+      - api.integration.env
+    depends_on:
+      - graphdb
+
+  graphdb:
+    image: neo4j:3.1.0
+    container_name: hawk-graphdb
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      NEO4J_AUTH: neo4j/123456
+
+  mockserver:
+    image: jamesdbloom/mockserver:mockserver-5.5.1
+    ports:
+      - "1080:1080"
+    environment:
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./test/integration/Hawk.WebApi.IntegrationTest/mockserver/mockserver.properties:/opt/mockserver/mockserver.properties
+      - ./test/integration/Hawk.WebApi.IntegrationTest/mockserver:/opt/mockserver/conf

@@ -3,7 +3,7 @@
     using System;
 
     using Hawk.Domain.Account;
-    using Hawk.Infrastructure.Data.Neo4J.Extensions;
+    using Hawk.Domain.Shared.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     using Neo4j.Driver.V1;
@@ -12,14 +12,14 @@
 
     internal static class AccountMapping
     {
-        private const string Data = "data";
         private const string Id = "id";
         private const string Email = "email";
+        private const string Data = "data";
 
         internal static Try<Account> MapFrom(IRecord data) => MapFrom(data.GetRecord(Data));
 
-        internal static Try<Account> MapFrom(Option<Record> recordOption) => recordOption.Match(
-            record => CreateWith(record.Get<Guid>(Id), record.Get<string>(Email)),
-            () => new NullReferenceException("Account cannot be null."));
+        internal static Try<Account> MapFrom(Option<Record> record) => record.Match(
+            some => CreateWith(some.Get<Guid>(Id), some.Get<string>(Email)),
+            () => new NotFoundException("Account not found."));
     }
 }

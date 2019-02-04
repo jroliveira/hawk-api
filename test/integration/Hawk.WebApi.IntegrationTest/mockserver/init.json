@@ -1,0 +1,18 @@
+[
+  {
+    "httpRequest": {
+      "path": "/connect/token",
+      "method": "POST",
+      "secure": false,
+      "keepAlive": true
+    },
+    "httpResponse": {
+      "body": "some_response_body",
+      "delay": {
+        "timeUnit": "SECONDS",
+        "value": 0
+      },
+      "statusCode": 500
+    }
+  }
+]

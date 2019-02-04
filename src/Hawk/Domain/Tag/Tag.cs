@@ -2,10 +2,10 @@
 {
     using System;
 
+    using Hawk.Domain.Shared.Exceptions;
     using Hawk.Infrastructure.Monad;
-    using Hawk.Infrastructure.Monad.Extensions;
 
-    using static System.String;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     public sealed class Tag : IEquatable<Tag>
     {
@@ -15,16 +15,10 @@
 
         public static implicit operator string(Tag tag) => tag.Name;
 
-        public static Try<Tag> CreateWith(Option<string> nameOption)
-        {
-            var name = nameOption.GetOrElse(Empty);
-            if (IsNullOrEmpty(name))
-            {
-                return new ArgumentNullException(nameof(name), "Tag's name cannot be null or empty.");
-            }
-
-            return new Tag(name);
-        }
+        public static Try<Tag> CreateWith(Option<string> name) =>
+            name
+            ? new Tag(name.Get())
+            : Failure<Tag>(new InvalidObjectException("Invalid tag."));
 
         public override bool Equals(object obj)
         {

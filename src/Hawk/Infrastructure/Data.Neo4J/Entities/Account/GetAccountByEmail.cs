@@ -1,17 +1,13 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Entities.Account
 {
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Hawk.Domain.Account;
+    using Hawk.Domain.Shared;
     using Hawk.Infrastructure.Monad;
-    using Hawk.Infrastructure.Monad.Extensions;
 
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
     using static Hawk.Infrastructure.Data.Neo4J.Entities.Account.AccountMapping;
-    using static Hawk.Infrastructure.Monad.Utils.Util;
-
-    using static System.String;
 
     internal sealed class GetAccountByEmail : IGetAccountByEmail
     {
@@ -20,16 +16,14 @@
 
         public GetAccountByEmail(Database database) => this.database = database;
 
-        public async Task<Try<Option<Account>>> GetResult(string email)
+        public Task<Try<Account>> GetResult(Email email)
         {
             var parameters = new
             {
-                email,
+                email = email.ToString(),
             };
 
-            var data = await this.database.ExecuteScalar(MapFrom, Statement.GetOrElse(Empty), parameters).ConfigureAwait(false);
-
-            return data.SelectMany(Some);
+            return this.database.ExecuteScalar(MapFrom, Statement, parameters);
         }
     }
 }

@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
 
+    using Hawk.Domain.Shared;
     using Hawk.Infrastructure;
     using Hawk.Infrastructure.Monad;
 
@@ -9,6 +10,6 @@
 
     public interface IGetTransactions
     {
-        Task<Try<Paged<Transaction>>> GetResult(string email, Filter filter);
+        Task<Try<Paged<Try<Transaction>>>> GetResult(Email email, Filter filter);
     }
 }

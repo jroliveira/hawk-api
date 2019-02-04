@@ -1,0 +1,62 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: api
+  name: api
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: api
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_URLS
+          valueFrom:
+            configMapKeyRef:
+              key: ASPNETCORE_URLS
+              name: api-api-env
+        - name: AUTHENTICATION
+          valueFrom:
+            configMapKeyRef:
+              key: AUTHENTICATION
+              name: api-api-env
+        - name: AUTHENTICATION:AUTHORITY
+          value: http://localhost:35653
+        - name: IPRATELIMITING
+          valueFrom:
+            configMapKeyRef:
+              key: IPRATELIMITING
+              name: api-api-env
+        - name: IPRATELIMITING:CLIENTIDHEADER
+          value: X-ClientId
+        - name: IPRATELIMITING:ENABLEENDPOINTRATELIMITING
+          value: "false"
+        - name: IPRATELIMITING:HTTPSTATUSCODE
+          value: "429"
+        - name: IPRATELIMITING:REALIPHEADER
+          value: X-Real-IP
+        - name: IPRATELIMITING:STACKBLOCKEDREQUESTS
+          value: "false"
+        - name: NEO4J
+          valueFrom:
+            configMapKeyRef:
+              key: NEO4J
+              name: api-api-env
+        - name: NEO4J:PASSWORD
+          value: "123456"
+        - name: NEO4J:URI
+          value: bolt://graphdb:7687
+        - name: NEO4J:USERNAME
+          value: neo4j
+        image: api
+        name: hawk-api
+        ports:
+        - containerPort: 5000
+        resources: {}
+      restartPolicy: Always
+status: {}

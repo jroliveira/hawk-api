@@ -1,9 +1,12 @@
 ﻿namespace Hawk.WebApi
 {
-    using Hawk.Infrastructure.IoC;
-    using Hawk.WebApi.Configuration;
-    using Hawk.WebApi.Lib;
-    using Hawk.WebApi.Lib.Middlewares;
+    using Hawk.Infrastructure.Data.Neo4J;
+    using Hawk.WebApi.Infrastructure.Api;
+    using Hawk.WebApi.Infrastructure.Authentication;
+    using Hawk.WebApi.Infrastructure.IpRateLimiting;
+    using Hawk.WebApi.Infrastructure.Logging;
+    using Hawk.WebApi.Infrastructure.Metric;
+    using Hawk.WebApi.Infrastructure.Swagger;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
@@ -20,25 +23,21 @@
         {
             services
                 .ConfigureIpRateLimiting(this.Configuration)
-                .ConfigureIoC(this.Configuration)
+                .ConfigureNeo4J(this.Configuration)
                 .ConfigureApi()
-                .ConfigureSwagger();
+                .ConfigureSwagger()
+                .ConfigureMetric();
 
-            this.ConfigureAuth(services);
+            this.ConfigureAuthentication(services);
         }
 
         public void Configure(IApplicationBuilder app, IHttpContextAccessor accessor) => app
-            .UseLog(this.Configuration, accessor)
-            .UseResponseCaching()
-            .UseResponseCompression()
-            .UseMiddleware<ErrorHandlingMiddleware>()
-            .UseMiddleware<SecurityHeadersMiddleware>()
-            .UseMiddleware<HttpLogMiddleware>()
-            .UseCors(Constants.Api.Cors)
+            .UseLogging(this.Configuration, accessor)
             .UseAuthentication()
-            .UseMvc()
-            .UseSwagger();
+            .UseApi()
+            .UseSwagger()
+            .UseMetric();
 
-        protected virtual void ConfigureAuth(IServiceCollection services) => services.ConfigureIdentityServer(this.Configuration);
+        protected virtual void ConfigureAuthentication(IServiceCollection services) => services.ConfigureAuthentication(this.Configuration);
     }
 }

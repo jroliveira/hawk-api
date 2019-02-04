@@ -1,25 +1,19 @@
 ﻿namespace Hawk.WebApi
 {
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Configuration;
+    using Hawk.WebApi.Infrastructure.Api;
+    using Hawk.WebApi.Infrastructure.Logging;
+    using Hawk.WebApi.Infrastructure.Metric;
 
-    using static System.IO.Directory;
+    using Microsoft.AspNetCore.Hosting;
 
     public sealed class Program
     {
-        public static void Main(string[] args) => CreateWebHostBuilder(args)
+        public static void Main(string[] args) => new WebHostBuilder()
+            .ConfigureApi()
+            .ConfigureLogging()
+            .ConfigureMetric()
+            .UseStartup<Startup>()
             .Build()
             .Run();
-
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) => new WebHostBuilder()
-            .UseKestrel(options => options.AddServerHeader = false)
-            .UseContentRoot(GetCurrentDirectory())
-            .ConfigureAppConfiguration((hostingContext, config) => config
-                .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
-                .AddJsonFile("appsettings.json", true, true)
-                .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true)
-                .AddEnvironmentVariables()
-                .Build())
-            .UseStartup<Startup>();
     }
 }

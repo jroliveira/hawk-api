@@ -44,9 +44,7 @@ SET
   transaction.value = {value},
   transaction.year = {year},
   transaction.month = {month},
-  transaction.day = {day},
-  transaction.parcels = {parcels},
-  transaction.parcel = {parcel}
+  transaction.day = {day}
 CREATE UNIQUE
   (transaction)-[:BELONGS]->(account)
 CREATE UNIQUE
@@ -85,10 +83,6 @@ RETURN
     id: account.id,
 	email: account.email
   },
-  parcel: CASE WHEN transaction.parcels IS null THEN NULL ELSE {
-    number: transaction.parcel,
-    total: transaction.parcels
-  } END,
   store: CASE WHEN store IS null THEN NULL ELSE {
     name: store.name
   } END,
@@ -104,5 +98,5 @@ RETURN
 	  name: paymentMethod.name
 	} END
   },
-  tags: collect(tag.name)
+  tags: collect(distinct tag.name)
 } as data;

@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
 
+    using Hawk.Domain.Shared;
     using Hawk.Infrastructure;
     using Hawk.Infrastructure.Monad;
 
@@ -9,6 +10,6 @@
 
     public interface IGetPaymentMethodsByStore
     {
-        Task<Try<Paged<Try<(PaymentMethod PaymentMethod, uint Count)>>>> GetResult(string email, string store, Filter filter);
+        Task<Try<Paged<Try<(PaymentMethod PaymentMethod, uint Count)>>>> GetResult(Email email, string store, Filter filter);
     }
 }

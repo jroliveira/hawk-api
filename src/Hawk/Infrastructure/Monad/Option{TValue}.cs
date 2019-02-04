@@ -8,25 +8,30 @@
 
     public readonly struct Option<TValue>
     {
-        public static readonly Option<TValue> None = default;
+        private static readonly Option<TValue> None = default;
 
-        private readonly bool isDefined;
         private readonly TValue value;
 
         internal Option(TValue value, bool isDefined)
         {
             this.value = value;
-            this.isDefined = isDefined;
+            this.IsDefined = isDefined;
         }
+
+        public bool IsDefined { get; }
 
         public static implicit operator Option<TValue>(TValue value) => Some(value);
 
-        public static implicit operator Option<TValue>(NoneType none) => None;
+        public static implicit operator Option<TValue>(None none) => None;
 
         public static implicit operator Option<TValue>(Try<TValue> @try) => @try.ToOption();
 
-        public TReturn Match<TReturn>(Func<TValue, TReturn> some, Func<TReturn> none) => this.isDefined
+        public static implicit operator bool(Option<TValue> option) => option.IsDefined;
+
+        public TReturn Match<TReturn>(Func<TValue, TReturn> some, Func<TReturn> none) => this.IsDefined
             ? some(this.value)
             : none();
+
+        public TValue Get() => this.value;
     }
 }

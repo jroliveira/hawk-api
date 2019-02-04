@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
 
+    using Hawk.Domain.Shared;
     using Hawk.Infrastructure;
     using Hawk.Infrastructure.Monad;
 
@@ -9,6 +10,6 @@
 
     public interface IGetTags
     {
-        Task<Try<Paged<Try<(Tag Tag, uint Count)>>>> GetResult(string email, Filter filter);
+        Task<Try<Paged<Try<(Tag Tag, uint Count)>>>> GetResult(Email email, Filter filter);
     }
 }

@@ -60,13 +60,9 @@ RETURN
     id: account.id,
 	email: account.email
   },
-  parcel: CASE WHEN transaction.parcels IS null THEN NULL ELSE {
-    number: transaction.parcel,
-    total: transaction.parcels
-  } END,
   store: CASE WHEN store IS null THEN NULL ELSE {
     name: store.name,
-	tags: collect(storeTag.name)
+	tags: collect(distinct storeTag.name)
   } END,
   payment: {
     value: transaction.value,
@@ -80,7 +76,7 @@ RETURN
 	  name: paymentMethod.name
 	} END
   },
-  tags: collect(tag.name)
+  tags: collect(distinct tag.name)
 } as data
 
 SKIP 

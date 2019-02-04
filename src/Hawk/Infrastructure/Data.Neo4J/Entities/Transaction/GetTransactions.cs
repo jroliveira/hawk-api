@@ -3,6 +3,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Hawk.Domain.Shared;
     using Hawk.Domain.Transaction;
     using Hawk.Infrastructure.Filter;
     using Hawk.Infrastructure.Monad;
@@ -10,10 +11,10 @@
 
     using Http.Query.Filter;
 
+    using static System.String;
+
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
     using static Hawk.Infrastructure.Data.Neo4J.Entities.Transaction.TransactionMapping;
-
-    using static System.String;
 
     internal sealed class GetTransactions : IGetTransactions
     {
@@ -35,22 +36,22 @@
             this.where = where;
         }
 
-        public async Task<Try<Paged<Transaction>>> GetResult(string email, Filter filter)
+        public async Task<Try<Paged<Try<Transaction>>>> GetResult(Email email, Filter filter)
         {
             var statement = Statement.GetOrElse(Empty).Replace("#where#", this.where.Apply(filter, "transaction"));
 
             var parameters = new
             {
-                email,
+                email = email.ToString(),
                 skip = this.skip.Apply(filter),
                 limit = this.limit.Apply(filter),
             };
 
             var data = await this.database.Execute(MapFrom, statement, parameters).ConfigureAwait(false);
 
-            return data.Match<Try<Paged<Transaction>>>(
+            return data.Match<Try<Paged<Try<Transaction>>>>(
                 _ => _,
-                items => new Paged<Transaction>(items.Select(item => item.GetOrElse(default)).ToList(), parameters.skip, parameters.limit));
+                items => new Paged<Try<Transaction>>(items.ToList(), parameters.skip, parameters.limit));
         }
     }
 }

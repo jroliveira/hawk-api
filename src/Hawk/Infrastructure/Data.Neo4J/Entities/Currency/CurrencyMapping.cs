@@ -1,8 +1,7 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Entities.Currency
 {
-    using System;
-
     using Hawk.Domain.Currency;
+    using Hawk.Domain.Shared.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     using static Hawk.Domain.Currency.Currency;
@@ -11,8 +10,8 @@
     {
         private const string Name = "name";
 
-        internal static Try<Currency> MapFrom(Option<Record> recordOption) => recordOption.Match(
-            record => CreateWith(record.Get<string>(Name)),
-            () => new NullReferenceException("Currency cannot be null."));
+        internal static Try<Currency> MapFrom(Option<Record> record) => record.Match(
+            some => CreateWith(some.Get<string>(Name)),
+            () => new NotFoundException("Currency not found."));
     }
 }

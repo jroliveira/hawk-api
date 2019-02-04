@@ -2,10 +2,10 @@
 {
     using System;
 
+    using Hawk.Domain.Shared.Exceptions;
     using Hawk.Infrastructure.Monad;
-    using Hawk.Infrastructure.Monad.Extensions;
 
-    using static System.String;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     public sealed class Currency : IEquatable<Currency>
     {
@@ -15,17 +15,10 @@
 
         public static implicit operator string(Currency currency) => currency.Name;
 
-        public static Try<Currency> CreateWith(Option<string> nameOption)
-        {
-            var name = nameOption.GetOrElse(Empty);
-
-            if (IsNullOrEmpty(name))
-            {
-                return new ArgumentNullException(nameof(name), "Currency's name cannot be null or empty.");
-            }
-
-            return new Currency(name);
-        }
+        public static Try<Currency> CreateWith(Option<string> name) =>
+            name
+            ? new Currency(name.Get())
+            : Failure<Currency>(new InvalidObjectException("Invalid currency."));
 
         public override bool Equals(object obj)
         {

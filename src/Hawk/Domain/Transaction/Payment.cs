@@ -3,8 +3,10 @@
     using System;
 
     using Hawk.Domain.PaymentMethod;
+    using Hawk.Domain.Shared.Exceptions;
     using Hawk.Infrastructure.Monad;
-    using Hawk.Infrastructure.Monad.Extensions;
+
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     public sealed class Payment
     {
@@ -21,23 +23,11 @@
 
         public PaymentMethod PaymentMethod { get; }
 
-        public static Try<Payment> CreateWith(Option<Price> priceOption, in Option<DateTime> dateOption, Option<PaymentMethod> paymentMethodOption)
-        {
-            var price = priceOption.GetOrElse(default);
-            if (price == null)
-            {
-                return new ArgumentNullException(nameof(price), "Payment price cannot be null.");
-            }
-
-            var paymentMethod = paymentMethodOption.GetOrElse(default);
-            if (paymentMethod == null)
-            {
-                return new ArgumentNullException(nameof(paymentMethodOption), "Payment method cannot be null.");
-            }
-
-            return dateOption.Match<Try<Payment>>(
-                date => new Payment(price, date, paymentMethod),
-                () => new ArgumentNullException(nameof(dateOption), "Payment date cannot be null."));
-        }
+        public static Try<Payment> CreateWith(Option<Price> price, in Option<DateTime> date, Option<PaymentMethod> paymentMethod) =>
+            price
+            && date
+            && paymentMethod
+            ? new Payment(price.Get(), date.Get(), paymentMethod.Get())
+            : Failure<Payment>(new InvalidObjectException("Invalid payment."));
     }
 }

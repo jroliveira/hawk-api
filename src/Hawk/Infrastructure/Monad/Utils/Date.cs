@@ -2,16 +2,16 @@
 {
     using System;
 
+    using Hawk.Domain.Shared.Exceptions;
     using Hawk.Infrastructure.Monad;
-    using Hawk.Infrastructure.Monad.Extensions;
 
     public static partial class Util
     {
-        private static readonly DateTime DefaultDate = default;
-
-        public static DateTime Date(Option<int> yearOption, Option<int> monthOption, Option<int> dayOption) => new DateTime(
-            yearOption.GetOrElse(DefaultDate.Year),
-            monthOption.GetOrElse(DefaultDate.Month),
-            dayOption.GetOrElse(DefaultDate.Day));
+        public static Try<DateTime> Date(Option<int> year, Option<int> month, Option<int> day) =>
+            year
+            && month
+            && day
+            ? new DateTime(year.Get(), month.Get(), day.Get())
+            : Failure<DateTime>(new InvalidObjectException("Invalid date."));
     }
 }

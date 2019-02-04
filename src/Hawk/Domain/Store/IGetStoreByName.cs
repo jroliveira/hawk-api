@@ -2,10 +2,11 @@
 {
     using System.Threading.Tasks;
 
+    using Hawk.Domain.Shared;
     using Hawk.Infrastructure.Monad;
 
     public interface IGetStoreByName
     {
-        Task<Try<Option<Store>>> GetResult(string name, string email);
+        Task<Try<Store>> GetResult(Email email, string name);
     }
 }

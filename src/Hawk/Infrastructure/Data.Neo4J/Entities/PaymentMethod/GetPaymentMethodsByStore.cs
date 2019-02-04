@@ -4,16 +4,14 @@
     using System.Threading.Tasks;
 
     using Hawk.Domain.PaymentMethod;
+    using Hawk.Domain.Shared;
     using Hawk.Infrastructure.Filter;
     using Hawk.Infrastructure.Monad;
-    using Hawk.Infrastructure.Monad.Extensions;
 
     using Http.Query.Filter;
 
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
     using static Hawk.Infrastructure.Data.Neo4J.Entities.PaymentMethod.PaymentMethodMapping;
-
-    using static System.String;
 
     internal sealed class GetPaymentMethodsByStore : IGetPaymentMethodsByStore
     {
@@ -32,17 +30,17 @@
             this.skip = skip;
         }
 
-        public async Task<Try<Paged<Try<(PaymentMethod PaymentMethod, uint Count)>>>> GetResult(string email, string store, Filter filter)
+        public async Task<Try<Paged<Try<(PaymentMethod PaymentMethod, uint Count)>>>> GetResult(Email email, string store, Filter filter)
         {
             var parameters = new
             {
-                email,
+                email = email.ToString(),
                 store,
                 skip = this.skip.Apply(filter),
                 limit = this.limit.Apply(filter),
             };
 
-            var data = await this.database.Execute(MapFrom, Statement.GetOrElse(Empty), parameters).ConfigureAwait(false);
+            var data = await this.database.Execute(MapFrom, Statement, parameters).ConfigureAwait(false);
 
             return data.Match<Try<Paged<Try<(PaymentMethod, uint)>>>>(
                 _ => _,

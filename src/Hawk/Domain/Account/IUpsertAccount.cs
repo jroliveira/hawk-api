@@ -6,6 +6,6 @@
 
     public interface IUpsertAccount
     {
-        Task<Try<Account>> Execute(Account entity);
+        Task<Try<Account>> Execute(Option<Account> entity);
     }
 }

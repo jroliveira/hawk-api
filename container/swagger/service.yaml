@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: C:\tools\kompose.exe convert
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: swagger
+  name: swagger
+spec:
+  ports:
+  - name: "5001"
+    port: 5001
+    targetPort: 8080
+  selector:
+    io.kompose.service: swagger
+status:
+  loadBalancer: {}

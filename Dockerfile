@@ -1,11 +1,16 @@
-FROM microsoft/dotnet:2.1-sdk AS builder
-WORKDIR /source
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS builder
 
-COPY . .
-RUN dotnet restore
-RUN dotnet publish --output /app/ --configuration Release
+# install cakebuild 0.33.0
+RUN dotnet tool install --global Cake.Tool --version 0.33.0
+ENV PATH="${PATH}:/root/.dotnet/tools"
 
-FROM microsoft/dotnet:2.1-aspnetcore-runtime
+ADD . /src
+
+RUN dotnet-cake /src/build.cake --Target=Deploy
+
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.2
+
 WORKDIR /app
-COPY --from=builder /app .
+
+COPY --from=builder ./src/artifacts .
 ENTRYPOINT ["dotnet", "Hawk.WebApi.dll"]

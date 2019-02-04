@@ -13,6 +13,7 @@
 
     using static Hawk.Infrastructure.Logging.Logger;
     using static Hawk.Infrastructure.Monad.Utils.Util;
+
     using static Neo4j.Driver.V1.AuthTokens;
     using static Neo4j.Driver.V1.GraphDatabase;
 
@@ -20,11 +21,10 @@
     {
         private readonly IDriver driver;
 
-        public Database(IOptions<Configuration> configOptional)
+        public Database(IOptions<Configuration> config)
         {
-            var config = configOptional.Value;
-            var auth = Basic(config.Username, config.Password);
-            var uri = $"{config.Protocol}://{config.Host}:{config.Port}";
+            var auth = Basic(config.Value.Username, config.Value.Password);
+            var uri = $"{config.Value.Protocol}://{config.Value.Host}:{config.Value.Port}";
 
             try
             {
@@ -38,40 +38,52 @@
 
         public void Dispose() => this.driver.Dispose();
 
-        internal Task<Try<IEnumerable<TReturn>>> Execute<TReturn>(Func<IRecord, TReturn> mapping, string statement, object parameters) => this.Execute(async session =>
+        internal Task<Try<TReturn>> ExecuteScalar<TReturn>(Func<IRecord, Try<TReturn>> mapping, Option<string> statement, object parameters) => this.ExecuteAndGetRecords(
+            statement,
+            parameters,
+            records => records.Count > 1
+                ? new Exception($"Query returned {records.Count} results.")
+                : mapping(records.FirstOrDefault()));
+
+        internal Task<Try<IEnumerable<Try<TReturn>>>> Execute<TReturn>(Func<IRecord, Try<TReturn>> mapping, Option<string> statement, object parameters) => this.ExecuteAndGetRecords(
+            statement,
+            parameters,
+            records => Success(records.Select(mapping)));
+
+        internal Task<Try<Unit>> Execute(Option<string> statement, object parameters) => this.ExecuteAndGetRecords(
+            statement,
+            parameters,
+            _ => Success(Unit()));
+
+        private Task<Try<TReturn>> ExecuteAndGetRecords<TReturn>(Option<string> statement, object parameters, Func<IList<IRecord>, Try<TReturn>> command) => this.ExecuteAndGetCursor(
+            statement,
+            parameters,
+            async cursor =>
+            {
+                var records = await cursor.ToListAsync().ConfigureAwait(false);
+
+                return command(records);
+            });
+
+        private async Task<Try<TReturn>> ExecuteAndGetCursor<TReturn>(Option<string> statement, object parameters, Func<IStatementResultCursor, Task<Try<TReturn>>> command)
         {
-            var cursor = await session.RunAsync(statement, parameters).ConfigureAwait(false);
-            var data = await cursor.ToListAsync().ConfigureAwait(false);
+            if (!statement.IsDefined)
+            {
+                return new ArgumentNullException(nameof(statement), "Cypher statement is required.");
+            }
 
-            return data.Select(mapping);
-        });
-
-        internal Task<Try<TReturn>> ExecuteScalar<TReturn>(Func<IRecord, TReturn> mapping, string statement, object parameters) => this.Execute(async session =>
-        {
-            var cursor = await session.RunAsync(statement, parameters).ConfigureAwait(false);
-            var data = await cursor.ToListAsync().ConfigureAwait(false);
-
-            return mapping(data.FirstOrDefault());
-        });
-
-        internal Task<Try<Unit>> Execute(string statement, object parameters) => this.Execute(async session =>
-        {
-            await session.RunAsync(statement, parameters).ConfigureAwait(false);
-            return Unit();
-        });
-
-        private async Task<Try<TReturn>> Execute<TReturn>(Func<ISession, Task<TReturn>> command)
-        {
             try
             {
                 using (var session = this.driver.Session())
                 {
-                    return await command(session).ConfigureAwait(false);
+                    var cursor = await session.RunAsync(statement.Get(), parameters).ConfigureAwait(false);
+
+                    return await command(cursor).ConfigureAwait(false);
                 }
             }
             catch (Exception exception)
             {
-                return new Exception("Could not run command in database", exception);
+                return new Exception($"Could not run command in database {exception.Message}", exception);
             }
         }
     }

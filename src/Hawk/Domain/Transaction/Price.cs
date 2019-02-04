@@ -1,10 +1,10 @@
 ﻿namespace Hawk.Domain.Transaction
 {
-    using System;
-
     using Hawk.Domain.Currency;
+    using Hawk.Domain.Shared.Exceptions;
     using Hawk.Infrastructure.Monad;
-    using Hawk.Infrastructure.Monad.Extensions;
+
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     public sealed class Price
     {
@@ -18,17 +18,10 @@
 
         public Currency Currency { get; }
 
-        public static Try<Price> CreateWith(Option<double> valueOption, Option<Currency> currencyOption)
-        {
-            var currency = currencyOption.GetOrElse(default);
-            if (currency == null)
-            {
-                return new ArgumentNullException(nameof(currency), "Price's currency cannot be null.");
-            }
-
-            return valueOption.Match<Try<Price>>(
-                value => new Price(value, currency),
-                () => new ArgumentNullException(nameof(valueOption), "Price's value cannot be null."));
-        }
+        public static Try<Price> CreateWith(Option<double> value, Option<Currency> currency) =>
+            value
+            && currency
+            ? new Price(value.Get(), currency.Get())
+            : Failure<Price>(new InvalidObjectException("Invalid price."));
     }
 }

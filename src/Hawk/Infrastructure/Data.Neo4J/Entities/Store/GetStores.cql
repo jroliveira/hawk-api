@@ -14,7 +14,7 @@ OPTIONAL MATCH
 RETURN
 { 
   name: store.name,
-  tags: collect(tag.name),
+  tags: collect(distinct tag.name),
   total: count(store.name)
 } as data
 

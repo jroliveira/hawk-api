@@ -7,18 +7,30 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.dockerignore = .dockerignore
 		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		after.Hawk.sln.targets = after.Hawk.sln.targets
 		api.env = api.env
+		api.integration.env = api.integration.env
 		app.json = app.json
+		build.cake = build.cake
+		build.ps1 = build.ps1
+		build.sh = build.sh
+		cake.config = cake.config
+		CHANGELOG.md = CHANGELOG.md
 		circle.yml = circle.yml
 		code-analysis.ruleset = code-analysis.ruleset
+		commitlint.config.js = commitlint.config.js
 		CONTRIBUTING.md = CONTRIBUTING.md
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
+		docker-compose-integration.yml = docker-compose-integration.yml
 		docker-compose.yml = docker-compose.yml
 		Dockerfile = Dockerfile
-		LICENSE = LICENSE
+		Dockerfile.integration = Dockerfile.integration
+		LICENSE.txt = LICENSE.txt
+		NuGet.config = NuGet.config
+		package.json = package.json
 		README.md = README.md
 		run.sh = run.sh
 	EndProjectSection
@@ -27,25 +39,114 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hawk", "src\Hawk\Hawk.cspro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hawk.WebApi", "src\Hawk.WebApi\Hawk.WebApi.csproj", "{6CF3AA48-4AF4-4D4B-A470-17CA7D326F0F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cakebuild", "cakebuild", "{1D15F9CF-6EEA-4EA9-9837-2A2D1355BAF9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{1D15F9CF-6EEA-4EA9-9837-2A2D1355BAF9}"
 	ProjectSection(SolutionItems) = preProject
-		cakebuild\build.cake = cakebuild\build.cake
-		cakebuild\build.ps1 = cakebuild\build.ps1
-		cakebuild\build.sh = cakebuild\build.sh
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tasks", "tasks", "{88F81594-D86D-4424-87F1-FA73CEC46051}"
-	ProjectSection(SolutionItems) = preProject
-		cakebuild\tasks\build.cake = cakebuild\tasks\build.cake
-		cakebuild\tasks\clean.cake = cakebuild\tasks\clean.cake
-		cakebuild\tasks\publish.cake = cakebuild\tasks\publish.cake
-		cakebuild\tasks\restore.cake = cakebuild\tasks\restore.cake
-		cakebuild\tasks\test.cake = cakebuild\tasks\test.cake
+		build\authenticate-dockerhub.cake = build\authenticate-dockerhub.cake
+		build\build-dockerfile.cake = build\build-dockerfile.cake
+		build\build-solution.cake = build\build-solution.cake
+		build\data.cake = build\data.cake
+		build\delete-temp-directories.cake = build\delete-temp-directories.cake
+		build\helpers.cake = build\helpers.cake
+		build\publish-webapi.cake = build\publish-webapi.cake
+		build\push-docker-image.cake = build\push-docker-image.cake
+		build\restore-nuget-packages.cake = build\restore-nuget-packages.cake
+		build\run-docker-tag.cake = build\run-docker-tag.cake
+		build\run-tests.cake = build\run-tests.cake
+		build\setup-tests.cake = build\setup-tests.cake
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{5447E1CB-522F-482B-80B8-8694A6DF3B24}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hawk.WebApi.Integration.Tests", "test\integration\Hawk.WebApi.Integration.Tests\Hawk.WebApi.Integration.Tests.csproj", "{B15D9216-A236-42D5-812C-636D051B9672}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{D4D24371-4A9D-4A8A-96C7-2B2E9F24F3E7}"
+	ProjectSection(SolutionItems) = preProject
+		tools\packages.config = tools\packages.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{48867782-9828-4C00-93D7-9AA2F6908358}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{057A0073-536B-4619-ACA6-76D3D2DFB0B3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{B38F080A-96CF-4995-99CA-A990A74067F5}"
+	ProjectSection(SolutionItems) = preProject
+		docs\images\hawk_anime.png = docs\images\hawk_anime.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "monitor", "monitor", "{9B95FA03-E0A0-4038-9572-538F4F549DF6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prometheus", "prometheus", "{849EFE53-2118-4A9C-8630-FE753636EB14}"
+	ProjectSection(SolutionItems) = preProject
+		monitor\prometheus\prometheus.yml = monitor\prometheus\prometheus.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "grafana", "grafana", "{62659545-9EFB-4671-AB92-A190433FB5AF}"
+	ProjectSection(SolutionItems) = preProject
+		monitor\grafana\config.ini = monitor\grafana\config.ini
+		monitor\grafana\grafana.env = monitor\grafana\grafana.env
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dashboards", "dashboards", "{1645DB45-28BE-4F07-9453-624FB3CE7C48}"
+	ProjectSection(SolutionItems) = preProject
+		monitor\grafana\dashboards\app-metrics-web-monitoring-prometheus_rev3.json = monitor\grafana\dashboards\app-metrics-web-monitoring-prometheus_rev3.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "provisioning", "provisioning", "{03D638FA-FF6D-40A1-9FD4-CF5581AB110A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dashboards", "dashboards", "{B02F0437-10FF-4EC7-AB99-0F1941616D80}"
+	ProjectSection(SolutionItems) = preProject
+		monitor\grafana\provisioning\dashboards\all.yml = monitor\grafana\provisioning\dashboards\all.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "datasources", "datasources", "{D6234D4E-A68B-4D5C-81E5-5C1494A0F3B3}"
+	ProjectSection(SolutionItems) = preProject
+		monitor\grafana\provisioning\datasources\all.yml = monitor\grafana\provisioning\datasources\all.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "integration", "integration", "{948C89B0-82B6-4FD2-A847-62220E38F9A0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hawk.WebApi.IntegrationTest", "test\integration\Hawk.WebApi.IntegrationTest\Hawk.WebApi.IntegrationTest.csproj", "{A33FFD7B-B7F5-4C8B-9D9C-CB28080CCDEA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{158C19BF-F190-4AA5-945D-A1327074C3DA}"
+	ProjectSection(SolutionItems) = preProject
+		.config\dotnet-tools.json = .config\dotnet-tools.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "container", "container", "{3D38D172-2DCE-4A53-A907-B4A5C0D8F5A4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{A8D5A67A-2D90-4B63-A089-311CCAFB1C97}"
+	ProjectSection(SolutionItems) = preProject
+		container\api\configmap.yaml = container\api\configmap.yaml
+		container\api\deployment.yaml = container\api\deployment.yaml
+		container\api\service.yaml = container\api\service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "grafana", "grafana", "{88811F59-6C3C-4CE4-B3FE-83300B36DAC3}"
+	ProjectSection(SolutionItems) = preProject
+		container\grafana\configmap.yaml = container\grafana\configmap.yaml
+		container\grafana\deployment.yaml = container\grafana\deployment.yaml
+		container\grafana\service.yaml = container\grafana\service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "graphdb", "graphdb", "{1C8843AE-6880-4AB2-B057-5F2367253D8A}"
+	ProjectSection(SolutionItems) = preProject
+		container\graphdb\deployment.yaml = container\graphdb\deployment.yaml
+		container\graphdb\service.yaml = container\graphdb\service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prometheus", "prometheus", "{20E158B6-751D-4075-B16D-C2803FA31468}"
+	ProjectSection(SolutionItems) = preProject
+		container\prometheus\deployment.yaml = container\prometheus\deployment.yaml
+		container\prometheus\service.yaml = container\prometheus\service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "swagger", "swagger", "{2D708B88-3CCB-48FC-B007-B877BEC0BA98}"
+	ProjectSection(SolutionItems) = preProject
+		container\swagger\deployment.yaml = container\swagger\deployment.yaml
+		container\swagger\service.yaml = container\swagger\service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unit", "unit", "{3817E1E5-C6E2-4879-AEB9-2A1906B7A02F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hawk.Test", "test\unit\Hawk.Test\Hawk.Test.csproj", "{4D213E49-9D73-4319-B737-B2EEAB432B22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,17 +162,37 @@ Global
 		{6CF3AA48-4AF4-4D4B-A470-17CA7D326F0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CF3AA48-4AF4-4D4B-A470-17CA7D326F0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CF3AA48-4AF4-4D4B-A470-17CA7D326F0F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B15D9216-A236-42D5-812C-636D051B9672}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B15D9216-A236-42D5-812C-636D051B9672}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B15D9216-A236-42D5-812C-636D051B9672}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B15D9216-A236-42D5-812C-636D051B9672}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A33FFD7B-B7F5-4C8B-9D9C-CB28080CCDEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A33FFD7B-B7F5-4C8B-9D9C-CB28080CCDEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A33FFD7B-B7F5-4C8B-9D9C-CB28080CCDEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A33FFD7B-B7F5-4C8B-9D9C-CB28080CCDEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D213E49-9D73-4319-B737-B2EEAB432B22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D213E49-9D73-4319-B737-B2EEAB432B22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D213E49-9D73-4319-B737-B2EEAB432B22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D213E49-9D73-4319-B737-B2EEAB432B22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{88F81594-D86D-4424-87F1-FA73CEC46051} = {1D15F9CF-6EEA-4EA9-9837-2A2D1355BAF9}
-		{B15D9216-A236-42D5-812C-636D051B9672} = {5447E1CB-522F-482B-80B8-8694A6DF3B24}
+		{F8A0EC67-2A97-4760-9FDA-E19ECA565772} = {48867782-9828-4C00-93D7-9AA2F6908358}
+		{6CF3AA48-4AF4-4D4B-A470-17CA7D326F0F} = {48867782-9828-4C00-93D7-9AA2F6908358}
+		{B38F080A-96CF-4995-99CA-A990A74067F5} = {057A0073-536B-4619-ACA6-76D3D2DFB0B3}
+		{849EFE53-2118-4A9C-8630-FE753636EB14} = {9B95FA03-E0A0-4038-9572-538F4F549DF6}
+		{62659545-9EFB-4671-AB92-A190433FB5AF} = {9B95FA03-E0A0-4038-9572-538F4F549DF6}
+		{1645DB45-28BE-4F07-9453-624FB3CE7C48} = {62659545-9EFB-4671-AB92-A190433FB5AF}
+		{03D638FA-FF6D-40A1-9FD4-CF5581AB110A} = {62659545-9EFB-4671-AB92-A190433FB5AF}
+		{B02F0437-10FF-4EC7-AB99-0F1941616D80} = {03D638FA-FF6D-40A1-9FD4-CF5581AB110A}
+		{D6234D4E-A68B-4D5C-81E5-5C1494A0F3B3} = {03D638FA-FF6D-40A1-9FD4-CF5581AB110A}
+		{948C89B0-82B6-4FD2-A847-62220E38F9A0} = {5447E1CB-522F-482B-80B8-8694A6DF3B24}
+		{A33FFD7B-B7F5-4C8B-9D9C-CB28080CCDEA} = {948C89B0-82B6-4FD2-A847-62220E38F9A0}
+		{A8D5A67A-2D90-4B63-A089-311CCAFB1C97} = {3D38D172-2DCE-4A53-A907-B4A5C0D8F5A4}
+		{88811F59-6C3C-4CE4-B3FE-83300B36DAC3} = {3D38D172-2DCE-4A53-A907-B4A5C0D8F5A4}
+		{1C8843AE-6880-4AB2-B057-5F2367253D8A} = {3D38D172-2DCE-4A53-A907-B4A5C0D8F5A4}
+		{20E158B6-751D-4075-B16D-C2803FA31468} = {3D38D172-2DCE-4A53-A907-B4A5C0D8F5A4}
+		{2D708B88-3CCB-48FC-B007-B877BEC0BA98} = {3D38D172-2DCE-4A53-A907-B4A5C0D8F5A4}
+		{3817E1E5-C6E2-4879-AEB9-2A1906B7A02F} = {5447E1CB-522F-482B-80B8-8694A6DF3B24}
+		{4D213E49-9D73-4319-B737-B2EEAB432B22} = {3817E1E5-C6E2-4879-AEB9-2A1906B7A02F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7CB3FDF8-0DA7-4D1F-B674-0261172FE8F6}

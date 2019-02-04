@@ -4,7 +4,7 @@
 
 [![CircleCI](https://circleci.com/gh/jroliveira/hawk-api/tree/master.svg?style=svg&circle-token=d587c191aee3dcb4b2ae7c23132585d36baa9808)](https://circleci.com/gh/jroliveira/hawk-api/tree/master)
 [![CodeFactor](https://www.codefactor.io/repository/github/jroliveira/hawk-api/badge)](https://www.codefactor.io/repository/github/jroliveira/hawk-api)
-[![License: MIT](http://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License: MIT](http://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.txt)
 
 Hawk is a personal finance control. The name Hawk is the name of pig in the anime "The Seven Deadly Sins" (Nanatsu no Taizai).
 
@@ -19,7 +19,7 @@ After you install the Docker Compose, you need to run the commands below.
 
 ### Running application with Docker Compose
 
-```bash
+``` bash
 # Clone this repository
 $ git clone https://github.com/jroliveira/hawk-api.git
 
@@ -29,7 +29,7 @@ $ cd hawk-api
 
 Now you need to configure the [api.env](#configuring-api.env), and run the commands below to run the application.
 
-```bash
+``` bash
 # Run the application
 $ docker-compose up
 ```
@@ -44,6 +44,7 @@ $ docker-compose up
  - [Neo4j](https://neo4j.com/developer/)
  - [Docker Compose](https://docs.docker.com/compose/)
  - [Swagger](https://swagger.io/)
+ - [Node.js](https://nodejs.org/en/)
 
 ### Pre requisites
 
@@ -52,23 +53,19 @@ Download and install:
  - [.NET Core SDK](https://www.microsoft.com/net/download)
  - [Neo4j](https://neo4j.com/download/)
  - [Docker Compose](https://docs.docker.com/compose/install/)
-
-#### Installing the Cake
-
-[Cake](https://github.com/cake-build/cake) (C# Make) is a cross-platform build automation system with a C# DSL for tasks such as compiling code, copying files and folders, running unit tests, compressing files and building NuGet packages.
-
-```bash
-$ dotnet tool install -g Cake.Tool --version 0.30.0
-```
+ - [Node.js](https://nodejs.org/en/download/)
 
 ### Setting up Dev
 
-```bash
+``` bash
 # Clone this repository
 $ git clone https://github.com/jroliveira/hawk-api.git
 
 # Go into the repository
 $ cd hawk-api
+
+# Download node packages and install Cake
+$ npm install
 ```
 
 ## Configuration
@@ -128,7 +125,7 @@ This file is used to set the configuration to run in Visual Studio or `dotnet ru
 You must create a file `api.env` on the path `.` with the context below.  
 This file is used to set the configuration to run in `docker-compose up` command.
 
-```bash
+``` bash
 ASPNETCORE_URLS=http://*:5000
 
 NEO4J:URI=bolt://graphdb:7687
@@ -146,25 +143,21 @@ IPRATELIMITING:HTTPSTATUSCODE=429
 
 ### Building
 
-```bash
-$ dotnet cake ./cakebuild/build.cake
+``` bash
+$ dotnet cake
 ```
 
-or
+### Testing
 
-```bash
-# Restore dependencies
-$ dotnet restore
-
-# Build project
-$ dotnet build
+``` bash
+$ dotnet cake --target=Test
 ```
 
 ### Running
 
 If you want to run with Docker Compose, you need to execute the command below:
 
-```bash
+``` bash
 # Run the application
 $ docker-compose up
 ```
@@ -173,7 +166,7 @@ or
 
 If you want to run with dotnet, you need to run Neo4j and before, the command below:
 
-```bash
+``` bash
 # Run application
 $ dotnet run --project ./src/Hawk.WebApi/
 ```
@@ -194,13 +187,19 @@ Automatic
 
 [![Deploy][heroku_button]][heroku_template]
 
+### Deploying / Publishing
+
+``` bash
+$ dotnet cake --target=Release
+```
+
 ## Api Reference
 
 The documentation was written with [Swagger](https://swagger.io/) and you can see the API documentation on the link [localhost:5001](http://localhost:5001) after performing the previous step [Running](#running) with Docker Compose.
 
 ## Licensing
 
-The code is available under the [MIT license](LICENSE).
+The code is available under the [MIT license](LICENSE.txt).
 
 [hawk_anime]: docs/images/hawk_anime.png "Hawk - logo"
 [vs2017]: https://www.visualstudio.com/vs/whatsnew/

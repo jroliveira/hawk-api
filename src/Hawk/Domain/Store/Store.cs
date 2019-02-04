@@ -1,52 +1,55 @@
 ﻿namespace Hawk.Domain.Store
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
-    using Hawk.Domain.Tag;
+    using Hawk.Domain.Shared.Exceptions;
     using Hawk.Infrastructure.Monad;
-    using Hawk.Infrastructure.Monad.Extensions;
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
-    using static System.String;
-
-    public sealed class Store
+    public sealed class Store : IEquatable<Store>
     {
-        private readonly ICollection<Tag> tags = new List<Tag>();
-
         private Store(string name) => this.Name = name;
 
         public string Name { get; }
 
-        public IReadOnlyCollection<Tag> Tags => this.tags.ToList();
-
         public static implicit operator string(Store store) => store.Name;
 
-        public static Try<Store> CreateWith(Option<string> nameOption)
+        public static Try<Store> CreateWith(Option<string> name) =>
+            name
+            ? new Store(name.Get())
+            : Failure<Store>(new InvalidObjectException("Invalid store."));
+
+        public override bool Equals(object obj)
         {
-            var name = nameOption.GetOrElse(Empty);
-            if (IsNullOrEmpty(name))
+            if (ReferenceEquals(null, obj))
             {
-                return new ArgumentNullException(nameof(name), "Store's name cannot be null or empty.");
+                return false;
             }
 
-            return new Store(name);
-        }
-
-        public Try<Unit> AddTag(Option<Tag> tagOption) => this.AddTag(tagOption.GetOrElse(default));
-
-        public Try<Unit> AddTag(Tag tag)
-        {
-            if (tag == null)
+            if (ReferenceEquals(this, obj))
             {
-                return new ArgumentNullException(nameof(tag), "Store's tag cannot be null.");
+                return true;
             }
 
-            this.tags.Add(tag);
-
-            return Unit();
+            return obj is Store store && this.Equals(store);
         }
+
+        public bool Equals(Store other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return Equals(this.Name, other.Name);
+        }
+
+        public override int GetHashCode() => this.Name != null ? this.Name.GetHashCode() : 0;
     }
 }

@@ -2,38 +2,30 @@
 {
     using System;
 
+    using Hawk.Domain.Shared;
+    using Hawk.Domain.Shared.Exceptions;
     using Hawk.Infrastructure.Monad;
-    using Hawk.Infrastructure.Monad.Extensions;
 
-    using static System.String;
+    using static System.Guid;
+
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     public sealed class Account : Entity<Guid>
     {
-        private Account(Guid id, string email)
+        private Account(Guid id, Email email)
         {
             this.Id = id;
             this.Email = email;
         }
 
-        public string Email { get; }
+        public Email Email { get; }
 
-        public static Try<Account> CreateWith(Option<string> nameOption) => CreateWith(Guid.NewGuid(), nameOption);
+        public static Try<Account> CreateWith(Option<string> name) => CreateWith(NewGuid(), name);
 
-        public static Try<Account> CreateWith(Option<Guid> accountIdOption, Option<string> nameOption)
-        {
-            var id = accountIdOption.GetOrElse(Guid.Empty);
-            if (id == Guid.Empty)
-            {
-                return new ArgumentNullException(nameof(id), "Account's id cannot be null.");
-            }
-
-            var name = nameOption.GetOrElse(Empty);
-            if (IsNullOrEmpty(name))
-            {
-                return new ArgumentNullException(nameof(name), "Account's e-mail cannot be null or empty.");
-            }
-
-            return new Account(id, name);
-        }
+        public static Try<Account> CreateWith(Option<Guid> id, Option<string> name) =>
+            id
+            && name
+            ? new Account(id.Get(), name.Get())
+            : Failure<Account>(new InvalidObjectException("Invalid account."));
     }
 }
