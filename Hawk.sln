@@ -21,7 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE = LICENSE
 		README.md = README.md
 		run.sh = run.sh
-		Settings.StyleCop = Settings.StyleCop
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hawk", "src\Hawk\Hawk.csproj", "{F8A0EC67-2A97-4760-9FDA-E19ECA565772}"
@@ -46,7 +45,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tasks", "tasks", "{88F81594
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{5447E1CB-522F-482B-80B8-8694A6DF3B24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hawk.WebApi.Integration.Tests", "test\integration\Hawk.WebApi.Integration.Tests\Hawk.WebApi.Integration.Tests.csproj", "{B15D9216-A236-42D5-812C-636D051B9672}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hawk.WebApi.Integration.Tests", "test\integration\Hawk.WebApi.Integration.Tests\Hawk.WebApi.Integration.Tests.csproj", "{B15D9216-A236-42D5-812C-636D051B9672}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
