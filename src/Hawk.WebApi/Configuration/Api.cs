@@ -20,6 +20,7 @@
             @this
                 .AddResponseCompression()
                 .AddResponseCaching()
+                .AddVersionedApiExplorer(o => o.GroupNameFormat = "'v'V")
                 .AddCors(options => options.AddPolicy(
                     Constants.Api.Cors,
                     builder => builder
@@ -28,7 +29,6 @@
                         .AllowAnyHeader()
                         .AllowCredentials()))
                 .AddMvcCore(options => options.Conventions.Add(new ApiVersionRoutePrefixConvention()))
-                .AddVersionedApiExplorer(o => o.GroupNameFormat = "'v'V")
                 .AddApiExplorer()
                 .AddAuthorization()
                 .AddJsonFormatters(serializerSettings =>
