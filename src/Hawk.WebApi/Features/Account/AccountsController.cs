@@ -6,6 +6,9 @@
     using Hawk.Domain.Shared.Exceptions;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure;
+    using Hawk.WebApi.Infrastructure.Authentication;
+    using Hawk.WebApi.Infrastructure.ErrorHandling;
+    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
@@ -15,7 +18,7 @@
 
     [Authorize]
     [ApiVersion("1")]
-    [Route("accounts")]
+    [Route("")]
     public class AccountsController : BaseController
     {
         private readonly IGetAccountByEmail getAccountByEmail;
@@ -45,18 +48,17 @@
         /// <summary>
         /// Get by email.
         /// </summary>
-        /// <param name="email"></param>
         /// <returns></returns>
-        [HttpGet("{email}")]
-        [ProducesResponseType(typeof(AccountModel), 200)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> GetByEmail([FromRoute] string email)
+        [HttpGet("account")]
+        [ProducesResponseType(typeof(TryModel<AccountModel>), 200)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetAccountByEmail()
         {
-            var entity = await this.getAccountByEmail.GetResult(email);
+            var entity = await this.getAccountByEmail.GetResult(this.GetUser());
 
             return entity.Match(
-                this.HandleError,
-                account => this.Ok(new AccountModel(account)));
+                this.HandleError<AccountModel>,
+                account => this.Ok(new TryModel<AccountModel>(new AccountModel(account))));
         }
 
         /// <summary>
@@ -64,16 +66,18 @@
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost("accounts")]
         [AllowAnonymous]
         [ValidateSchema(typeof(NewAccountModel))]
-        [ProducesResponseType(typeof(AccountModel), 201)]
-        public async Task<IActionResult> Create([FromBody] NewAccountModel request)
+        [ProducesResponseType(typeof(TryModel<AccountModel>), 201)]
+        [ProducesResponseType(409)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> CreateAccount([FromBody] NewAccountModel request)
         {
             var validated = await this.validator.ValidateAsync(request);
             if (!validated.IsValid)
             {
-                return this.HandleError(new InvalidObjectException("Invalid account.", validated));
+                return this.HandleError<AccountModel>(new InvalidObjectException("Invalid account.", validated));
             }
 
             var entity = await this.getAccountByEmail.GetResult(request.Email);
@@ -84,10 +88,10 @@
                     var inserted = await this.upsertAccount.Execute(request);
 
                     return inserted.Match(
-                        this.HandleError,
-                        account => this.Created(account.Email, new AccountModel(account)));
+                        this.HandleError<AccountModel>,
+                        account => this.Created(account.Email, new TryModel<AccountModel>(new AccountModel(account))));
                 },
-                success => Task(this.HandleError(new AlreadyExistsException("Account already exists."))));
+                _ => Task(this.HandleError<AccountModel>(new AlreadyExistsException("Account already exists."))));
         }
     }
 }

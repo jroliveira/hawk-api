@@ -1,27 +1,23 @@
-﻿namespace Hawk.WebApi.Features.Shared.ErrorModels
+﻿namespace Hawk.WebApi.Infrastructure.ErrorHandling.ErrorModels
 {
     using System;
 
-    public sealed class DeveloperErrorModel
+    public sealed class DeveloperErrorModel : ErrorModel
     {
         public DeveloperErrorModel(Exception exception)
+            : base(exception)
         {
             if (exception == null)
             {
                 return;
             }
 
-            this.Message = exception.Message;
             this.StackTrace = exception.StackTrace;
             this.InnerDeveloperError = new DeveloperErrorModel(exception.InnerException);
         }
 
-        public string Message { get; }
-
         public string StackTrace { get; }
 
         public DeveloperErrorModel InnerDeveloperError { get; }
-
-        public static implicit operator DeveloperErrorModel(Exception exception) => new DeveloperErrorModel(exception);
     }
 }

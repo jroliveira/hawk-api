@@ -3,9 +3,11 @@
     using System.Threading.Tasks;
 
     using Hawk.Domain.Store;
-    using Hawk.Infrastructure;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure.Authentication;
+    using Hawk.WebApi.Infrastructure.ErrorHandling;
+    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.WebApi.Infrastructure.Pagination;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
@@ -36,14 +38,15 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ProducesResponseType(typeof(Paged<StoreModel>), 200)]
-        public async Task<IActionResult> Get()
+        [ProducesResponseType(typeof(TryModel<PageModel<TryModel<StoreModel>>>), 200)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetStores()
         {
             var entities = await this.getStores.GetResult(this.GetUser(), this.Request.QueryString.Value);
 
             return entities.Match(
-                this.HandleError,
-                paged => this.Ok(MapFrom(paged)));
+                this.HandleError<PageModel<TryModel<StoreModel>>>,
+                page => this.Ok(MapFrom(page)));
         }
 
         /// <summary>
@@ -52,15 +55,16 @@
         /// <param name="name"></param>
         /// <returns></returns>
         [HttpGet("{name}")]
-        [ProducesResponseType(typeof(StoreModel), 200)]
+        [ProducesResponseType(typeof(TryModel<StoreModel>), 200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetByName([FromRoute] string name)
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetStoreByName([FromRoute] string name)
         {
             var entity = await this.getStoreByName.GetResult(this.GetUser(), name);
 
             return entity.Match(
-                this.HandleError,
-                store => this.Ok(new StoreModel(store)));
+                this.HandleError<StoreModel>,
+                store => this.Ok(new TryModel<StoreModel>(new StoreModel(store))));
         }
     }
 }

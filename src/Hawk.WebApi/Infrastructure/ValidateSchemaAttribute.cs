@@ -1,40 +1,27 @@
 ﻿namespace Hawk.WebApi.Infrastructure
 {
     using System;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
 
     using Hawk.Domain.Shared.Exceptions;
-    using Hawk.WebApi.Features.Shared.ErrorModels;
+    using Hawk.WebApi.Infrastructure.ErrorHandling.ErrorModels;
 
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
-
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Serialization;
 
     using NJsonSchema.Generation;
 
     using static System.IO.SeekOrigin;
     using static System.String;
 
+    using static Hawk.Infrastructure.JsonSettings;
+
     using static Newtonsoft.Json.Linq.JObject;
     using static NJsonSchema.JsonSchema;
 
     public class ValidateSchemaAttribute : ActionFilterAttribute
     {
-        private static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings
-        {
-            ContractResolver = new CamelCasePropertyNamesContractResolver(),
-            Formatting = Formatting.Indented,
-            Culture = CultureInfo.InvariantCulture,
-            NullValueHandling = NullValueHandling.Ignore,
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            DateTimeZoneHandling = DateTimeZoneHandling.Utc,
-            DateFormatHandling = DateFormatHandling.IsoDateFormat,
-        };
-
         private readonly Type schemaType;
 
         public ValidateSchemaAttribute(Type schema) => this.schemaType = schema;
@@ -52,10 +39,7 @@
                     return;
                 }
 
-                var schema = FromType(this.schemaType, new JsonSchemaGeneratorSettings
-                {
-                    SerializerSettings = JsonSerializerSettings,
-                });
+                var schema = FromType(this.schemaType, new JsonSchemaGeneratorSettings { SerializerSettings = JsonSerializerSettings });
 
                 schema.AllowAdditionalProperties = false;
 

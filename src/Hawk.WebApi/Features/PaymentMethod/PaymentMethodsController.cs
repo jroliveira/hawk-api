@@ -3,9 +3,11 @@
     using System.Threading.Tasks;
 
     using Hawk.Domain.PaymentMethod;
-    using Hawk.Infrastructure;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure.Authentication;
+    using Hawk.WebApi.Infrastructure.ErrorHandling;
+    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.WebApi.Infrastructure.Pagination;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
@@ -36,14 +38,15 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet("payment-methods")]
-        [ProducesResponseType(typeof(Paged<PaymentMethodModel>), 200)]
-        public async Task<IActionResult> Get()
+        [ProducesResponseType(typeof(TryModel<PageModel<TryModel<PaymentMethodModel>>>), 200)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetPaymentMethods()
         {
             var entities = await this.getPaymentMethods.GetResult(this.GetUser(), this.Request.QueryString.Value);
 
             return entities.Match(
-                this.HandleError,
-                paged => this.Ok(MapFrom(paged)));
+                this.HandleError<PageModel<TryModel<PaymentMethodModel>>>,
+                page => this.Ok(MapFrom(page)));
         }
 
         /// <summary>
@@ -52,15 +55,16 @@
         /// <param name="store"></param>
         /// <returns></returns>
         [HttpGet("stores/{store}/payment-methods")]
-        [ProducesResponseType(typeof(PaymentMethodModel), 200)]
+        [ProducesResponseType(typeof(TryModel<PageModel<TryModel<PaymentMethodModel>>>), 200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetByStore(string store)
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetPaymentMethodsByStore(string store)
         {
             var entities = await this.getPaymentMethodsByStore.GetResult(this.GetUser(), store, this.Request.QueryString.Value);
 
             return entities.Match(
-                this.HandleError,
-                paged => this.Ok(MapFrom(paged)));
+                this.HandleError<PageModel<TryModel<PaymentMethodModel>>>,
+                page => this.Ok(MapFrom(page)));
         }
     }
 }

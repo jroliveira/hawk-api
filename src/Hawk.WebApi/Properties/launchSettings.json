@@ -8,6 +8,15 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
+    },
+    "Hawk.WebApi (Production)": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "v1",
+      "applicationUrl": "http://localhost:48285",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      }
     }
   }
 }

@@ -26,12 +26,14 @@
 
         public static implicit operator Option<TValue>(Try<TValue> @try) => @try.ToOption();
 
-        public static implicit operator bool(Option<TValue> option) => option.IsDefined;
+        public static implicit operator bool(Option<TValue> option) => option.ToBoolean();
 
         public TReturn Match<TReturn>(Func<TValue, TReturn> some, Func<TReturn> none) => this.IsDefined
             ? some(this.value)
             : none();
 
         public TValue Get() => this.value;
+
+        public bool ToBoolean() => this.IsDefined;
     }
 }

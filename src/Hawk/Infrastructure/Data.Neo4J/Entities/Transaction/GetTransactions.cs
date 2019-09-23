@@ -36,7 +36,7 @@
             this.where = where;
         }
 
-        public async Task<Try<Paged<Try<Transaction>>>> GetResult(Email email, Filter filter)
+        public async Task<Try<Page<Try<Transaction>>>> GetResult(Email email, Filter filter)
         {
             var statement = Statement.GetOrElse(Empty).Replace("#where#", this.where.Apply(filter, "transaction"));
 
@@ -49,9 +49,9 @@
 
             var data = await this.database.Execute(MapFrom, statement, parameters).ConfigureAwait(false);
 
-            return data.Match<Try<Paged<Try<Transaction>>>>(
+            return data.Match<Try<Page<Try<Transaction>>>>(
                 _ => _,
-                items => new Paged<Try<Transaction>>(items.ToList(), parameters.skip, parameters.limit));
+                items => new Page<Try<Transaction>>(items, parameters.skip, parameters.limit));
         }
     }
 }

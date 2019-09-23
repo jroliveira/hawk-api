@@ -16,8 +16,6 @@
 
         public string Email { get; }
 
-        public static implicit operator AccountModel(Account entity) => new AccountModel(entity.Email);
-
         public static implicit operator Option<Account>(AccountModel model) => CreateWith(model.Email);
     }
 }

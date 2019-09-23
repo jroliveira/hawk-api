@@ -10,6 +10,6 @@
 
     public interface IGetTransactions
     {
-        Task<Try<Paged<Try<Transaction>>>> GetResult(Email email, Filter filter);
+        Task<Try<Page<Try<Transaction>>>> GetResult(Email email, Filter filter);
     }
 }

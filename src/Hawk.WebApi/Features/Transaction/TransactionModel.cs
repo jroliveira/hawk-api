@@ -6,8 +6,10 @@
     using Hawk.Domain.Transaction;
     using Hawk.Infrastructure;
     using Hawk.Infrastructure.Monad;
+    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.WebApi.Infrastructure.Pagination;
 
-    using static Hawk.WebApi.Features.Shared.ErrorModels.GenericErrorModel;
+    using static Infrastructure.ErrorHandling.ErrorHandler;
 
     public sealed class TransactionModel
     {
@@ -45,16 +47,13 @@
 
         public IEnumerable<string> Tags { get; }
 
-        internal static Paged<object> MapFrom(Paged<Try<Transaction>> @this)
-        {
-            var model = @this
+        internal static TryModel<PageModel<TryModel<TransactionModel>>> MapFrom(Page<Try<Transaction>> @this) => new PageModel<TryModel<TransactionModel>>(
+            @this
                 .Data
                 .Select(item => item.Match(
-                    HandleError,
-                    transaction => new TransactionModel(transaction)))
-                .ToList();
-
-            return new Paged<object>(model, @this.Skip, @this.Limit);
-        }
+                    HandleError<TransactionModel>,
+                    transaction => new TransactionModel(transaction))),
+            @this.Skip,
+            @this.Limit);
     }
 }

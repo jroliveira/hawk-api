@@ -1,12 +1,14 @@
 ﻿namespace Hawk.WebApi.Infrastructure.Api
 {
+    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.WebApi.Infrastructure.Hal;
+
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
 
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Serialization;
+    using static Hawk.Infrastructure.JsonSettings;
 
     internal static class ServiceCollectionExtension
     {
@@ -30,13 +32,22 @@
                 .AddAuthorization()
                 .AddJsonFormatters(serializerSettings =>
                 {
-                    serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                    serializerSettings.Formatting = Formatting.Indented;
-                    serializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                    serializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-                    serializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-                    serializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                });
+                    serializerSettings.ContractResolver = JsonSerializerSettings.ContractResolver;
+                    serializerSettings.Formatting = JsonSerializerSettings.Formatting;
+                    serializerSettings.Culture = JsonSerializerSettings.Culture;
+                    serializerSettings.NullValueHandling = JsonSerializerSettings.NullValueHandling;
+                    serializerSettings.ReferenceLoopHandling = JsonSerializerSettings.ReferenceLoopHandling;
+                    serializerSettings.DateTimeZoneHandling = JsonSerializerSettings.DateTimeZoneHandling;
+                    serializerSettings.DateFormatHandling = JsonSerializerSettings.DateFormatHandling;
+
+                    foreach (var converter in JsonSerializerSettings.Converters)
+                    {
+                        serializerSettings.Converters.Add(converter);
+                    }
+
+                    serializerSettings.Converters.Add(new TryModelJsonConverter());
+                })
+                .AddHal(serializerSettings => serializerSettings.Converters.Add(new TryModelJsonConverter()));
 
             @this
                 .AddApiVersioning(opt => opt.ReportApiVersions = true);

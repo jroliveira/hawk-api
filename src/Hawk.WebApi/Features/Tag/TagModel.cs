@@ -5,8 +5,10 @@
     using Hawk.Domain.Tag;
     using Hawk.Infrastructure;
     using Hawk.Infrastructure.Monad;
+    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.WebApi.Infrastructure.Pagination;
 
-    using static Hawk.WebApi.Features.Shared.ErrorModels.GenericErrorModel;
+    using static Infrastructure.ErrorHandling.ErrorHandler;
 
     public sealed class TagModel
     {
@@ -20,16 +22,13 @@
 
         public uint Total { get; }
 
-        internal static Paged<object> MapFrom(Paged<Try<(Tag Tag, uint Count)>> @this)
-        {
-            var model = @this
+        internal static TryModel<PageModel<TryModel<TagModel>>> MapFrom(Page<Try<(Tag Tag, uint Count)>> @this) => new PageModel<TryModel<TagModel>>(
+            @this
                 .Data
                 .Select(item => item.Match(
-                    HandleError,
-                    tag => new TagModel(tag.Tag, tag.Count)))
-                .ToList();
-
-            return new Paged<object>(model, @this.Skip, @this.Limit);
-        }
+                    HandleError<TagModel>,
+                    tag => new TagModel(tag.Tag, tag.Count))),
+            @this.Skip,
+            @this.Limit);
     }
 }
