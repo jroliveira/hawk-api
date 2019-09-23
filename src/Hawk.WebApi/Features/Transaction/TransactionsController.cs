@@ -5,14 +5,18 @@
 
     using Hawk.Domain.Shared.Exceptions;
     using Hawk.Domain.Transaction;
-    using Hawk.Infrastructure;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure;
     using Hawk.WebApi.Infrastructure.Authentication;
+    using Hawk.WebApi.Infrastructure.ErrorHandling;
+    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.WebApi.Infrastructure.Pagination;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
+
+    using static TransactionModel;
 
     [Authorize]
     [ApiVersion("1")]
@@ -56,14 +60,15 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ProducesResponseType(typeof(Paged<TransactionModel>), 200)]
-        public async Task<IActionResult> Get()
+        [ProducesResponseType(typeof(TryModel<PageModel<TryModel<TransactionModel>>>), 200)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetTransactions()
         {
             var entities = await this.getTransactions.GetResult(this.GetUser(), this.Request.QueryString.Value);
 
             return entities.Match(
-                this.HandleError,
-                paged => this.Ok(TransactionModel.MapFrom(paged)));
+                this.HandleError<PageModel<TryModel<TransactionModel>>>,
+                page => this.Ok(MapFrom(page)));
         }
 
         /// <summary>
@@ -72,15 +77,16 @@
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(TransactionModel), 200)]
+        [ProducesResponseType(typeof(TryModel<TransactionModel>), 200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetById([FromRoute] string id)
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetTransactionById([FromRoute] string id)
         {
             var entity = await this.getTransactionById.GetResult(this.GetUser(), new Guid(id));
 
             return entity.Match(
-                this.HandleError,
-                transaction => this.Ok(new TransactionModel(transaction)));
+                this.HandleError<TransactionModel>,
+                transaction => this.Ok(new TryModel<TransactionModel>(new TransactionModel(transaction))));
         }
 
         /// <summary>
@@ -90,20 +96,22 @@
         /// <returns></returns>
         [HttpPost]
         [ValidateSchema(typeof(NewTransactionModel))]
-        [ProducesResponseType(typeof(TransactionModel), 201)]
-        public async Task<IActionResult> Create([FromBody] NewTransactionModel request)
+        [ProducesResponseType(typeof(TryModel<TransactionModel>), 201)]
+        [ProducesResponseType(409)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> CreateTransaction([FromBody] NewTransactionModel request)
         {
             var validated = await this.validator.ValidateAsync(request);
             if (!validated.IsValid)
             {
-                return this.HandleError(new InvalidObjectException("Invalid transaction.", validated));
+                return this.HandleError<TransactionModel>(new InvalidObjectException("Invalid transaction.", validated));
             }
 
             var entity = await this.upsertTransaction.Execute(this.GetUser(), request);
 
             return entity.Match(
-                this.HandleError,
-                transaction => this.Created(transaction.Id, new TransactionModel(transaction)));
+                this.HandleError<TransactionModel>,
+                transaction => this.Created(transaction.Id, new TryModel<TransactionModel>(new TransactionModel(transaction))));
         }
 
         /// <summary>
@@ -114,15 +122,19 @@
         /// <returns></returns>
         [HttpPut("{id}")]
         [ValidateSchema(typeof(NewTransactionModel))]
+        [ProducesResponseType(typeof(TryModel<TransactionModel>), 201)]
         [ProducesResponseType(204)]
-        public async Task<IActionResult> Update(
+        [ProducesResponseType(404)]
+        [ProducesResponseType(409)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> UpdateTransaction(
             [FromRoute] string id,
             [FromBody] NewTransactionModel request)
         {
             var validated = await this.validator.ValidateAsync(request);
             if (!validated.IsValid)
             {
-                return this.HandleError(new InvalidObjectException("Invalid transaction.", validated));
+                return this.HandleError<TransactionModel>(new InvalidObjectException("Invalid transaction.", validated));
             }
 
             var entity = await this.getTransactionById.GetResult(this.GetUser(), new Guid(id));
@@ -133,16 +145,16 @@
                     var inserted = await this.upsertTransaction.Execute(this.GetUser(), NewTransactionModel.MapFrom(new Guid(id), request));
 
                     return inserted.Match(
-                        this.HandleError,
-                        transaction => this.Created(default, new TransactionModel(transaction)));
+                        this.HandleError<TransactionModel>,
+                        transaction => this.Created(default, new TryModel<TransactionModel>(new TransactionModel(transaction))));
                 },
                 async _ =>
                 {
                     var updated = await this.upsertTransaction.Execute(this.GetUser(), request);
 
                     return updated.Match(
-                        this.HandleError,
-                        configuration => this.NoContent());
+                        this.HandleError<TransactionModel>,
+                        transaction => this.NoContent());
                 });
         }
 
@@ -153,13 +165,14 @@
         /// <returns></returns>
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
-        public async Task<IActionResult> Exclude([FromRoute] string id)
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteTransaction([FromRoute] string id)
         {
             var deleted = await this.deleteTransaction.Execute(this.GetUser(), new Guid(id));
 
             return deleted.Match(
-                this.HandleError,
-                configuration => this.NoContent());
+                this.HandleError<TransactionModel>,
+                _ => this.NoContent());
         }
     }
 }

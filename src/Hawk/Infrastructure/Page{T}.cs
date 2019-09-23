@@ -2,12 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
-    public sealed class Paged<T>
+    public sealed class Page<T>
     {
-        public Paged(IReadOnlyCollection<T> data, int skip, int limit)
+        public Page(IEnumerable<T> data, int skip, int limit)
         {
-            this.Data = data;
+            this.Data = data.ToList();
             this.Skip = skip;
             this.Limit = limit;
         }

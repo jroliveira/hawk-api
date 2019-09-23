@@ -1,5 +1,7 @@
 ﻿namespace Hawk.WebApi.Features.Home
 {
+    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
+
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
 
@@ -17,18 +19,11 @@
         /// <returns></returns>
         [HttpGet]
         [ResponseCache(Duration = 60)]
-        [ProducesResponseType(typeof(object), 200)]
+        [ProducesResponseType(typeof(TryModel<HomeModel>), 200)]
         [ProducesResponseType(404)]
-        public IActionResult Get()
-        {
-            var response = new
-            {
-                name = this.environment.ApplicationName,
-                env = this.environment.EnvironmentName,
-                version = "1.0.0",
-            };
-
-            return this.Ok(response);
-        }
+        public IActionResult Get() => this.Ok(new TryModel<HomeModel>(new HomeModel(
+            this.environment.ApplicationName,
+            this.environment.EnvironmentName,
+            "1.0.0")));
     }
 }

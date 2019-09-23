@@ -5,8 +5,10 @@
     using Hawk.Domain.PaymentMethod;
     using Hawk.Infrastructure;
     using Hawk.Infrastructure.Monad;
+    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.WebApi.Infrastructure.Pagination;
 
-    using static Hawk.WebApi.Features.Shared.ErrorModels.GenericErrorModel;
+    using static Infrastructure.ErrorHandling.ErrorHandler;
 
     public sealed class PaymentMethodModel
     {
@@ -20,16 +22,13 @@
 
         public uint Total { get; }
 
-        internal static Paged<object> MapFrom(Paged<Try<(PaymentMethod Method, uint Count)>> @this)
-        {
-            var model = @this
+        internal static TryModel<PageModel<TryModel<PaymentMethodModel>>> MapFrom(Page<Try<(PaymentMethod Method, uint Count)>> @this) => new PageModel<TryModel<PaymentMethodModel>>(
+            @this
                 .Data
                 .Select(item => item.Match(
-                    HandleError,
-                    paymentMethod => new PaymentMethodModel(paymentMethod.Method, paymentMethod.Count)))
-                .ToList();
-
-            return new Paged<object>(model, @this.Skip, @this.Limit);
-        }
+                    HandleError<PaymentMethodModel>,
+                    paymentMethod => new PaymentMethodModel(paymentMethod.Method, paymentMethod.Count))),
+            @this.Skip,
+            @this.Limit);
     }
 }

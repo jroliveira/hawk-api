@@ -1,6 +1,5 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Entities.Tag
 {
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Hawk.Domain.Shared;
@@ -30,7 +29,7 @@
             this.skip = skip;
         }
 
-        public async Task<Try<Paged<Try<(Tag Tag, uint Count)>>>> GetResult(Email email, Filter filter)
+        public async Task<Try<Page<Try<(Tag Tag, uint Count)>>>> GetResult(Email email, Filter filter)
         {
             var parameters = new
             {
@@ -41,9 +40,9 @@
 
             var data = await this.database.Execute(MapFrom, Statement, parameters).ConfigureAwait(false);
 
-            return data.Match<Try<Paged<Try<(Tag, uint)>>>>(
+            return data.Match<Try<Page<Try<(Tag, uint)>>>>(
                 _ => _,
-                items => new Paged<Try<(Tag, uint)>>(items.ToList(), parameters.skip, parameters.limit));
+                items => new Page<Try<(Tag, uint)>>(items, parameters.skip, parameters.limit));
         }
     }
 }

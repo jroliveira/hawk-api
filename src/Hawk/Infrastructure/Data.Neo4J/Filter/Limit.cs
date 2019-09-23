@@ -12,12 +12,12 @@
         {
             if (filter.Limit.Value == null)
             {
-                return 10000;
+                return 100;
             }
 
             if (filter.Limit < 1)
             {
-                return 10000;
+                return 100;
             }
 
             return ToInt32(filter.Limit.Value.Value);

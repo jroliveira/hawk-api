@@ -5,10 +5,12 @@
     using Hawk.Domain.Store;
     using Hawk.Infrastructure;
     using Hawk.Infrastructure.Monad;
+    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.WebApi.Infrastructure.Pagination;
 
     using static Hawk.Domain.Store.Store;
 
-    using static Hawk.WebApi.Features.Shared.ErrorModels.GenericErrorModel;
+    using static Infrastructure.ErrorHandling.ErrorHandler;
 
     public sealed class StoreModel
     {
@@ -29,16 +31,13 @@
 
         public static implicit operator Option<Store>(StoreModel model) => CreateWith(model.Name);
 
-        internal static Paged<object> MapFrom(Paged<Try<(Store Store, uint Count)>> @this)
-        {
-            var model = @this
+        internal static TryModel<PageModel<TryModel<StoreModel>>> MapFrom(Page<Try<(Store Store, uint Count)>> @this) => new PageModel<TryModel<StoreModel>>(
+            @this
                 .Data
                 .Select(item => item.Match(
-                    HandleError,
-                    store => new StoreModel(store.Store, store.Count)))
-                .ToList();
-
-            return new Paged<object>(model, @this.Skip, @this.Limit);
-        }
+                    HandleError<StoreModel>,
+                    store => new StoreModel(store.Store, store.Count))),
+            @this.Skip,
+            @this.Limit);
     }
 }

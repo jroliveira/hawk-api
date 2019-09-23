@@ -3,6 +3,7 @@
     using Hawk.Infrastructure.Data.Neo4J;
     using Hawk.WebApi.Infrastructure.Api;
     using Hawk.WebApi.Infrastructure.Authentication;
+    using Hawk.WebApi.Infrastructure.ErrorHandling;
     using Hawk.WebApi.Infrastructure.IpRateLimiting;
     using Hawk.WebApi.Infrastructure.Logging;
     using Hawk.WebApi.Infrastructure.Metric;
@@ -34,6 +35,7 @@
         public void Configure(IApplicationBuilder app, IHttpContextAccessor accessor) => app
             .UseLogging(this.Configuration, accessor)
             .UseAuthentication()
+            .UseErrorHandling()
             .UseApi()
             .UseSwagger()
             .UseMetric();

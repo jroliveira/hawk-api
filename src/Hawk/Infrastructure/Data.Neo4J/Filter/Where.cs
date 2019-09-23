@@ -28,8 +28,7 @@
 
             result.AddRange(filter
                 .Where
-                .Select(condition => $"{node}.{condition.Field} {GetOperator(condition.Comparison)} {GetValue(condition.Value)}")
-                .ToList());
+                .Select(condition => $"{node}.{condition.Field} {GetOperator(condition.Comparison)} {GetValue(condition.Value)}"));
 
             return string.Join(" AND ", result);
         }

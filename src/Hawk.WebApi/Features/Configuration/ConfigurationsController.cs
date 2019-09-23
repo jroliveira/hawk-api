@@ -7,6 +7,8 @@
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure;
     using Hawk.WebApi.Infrastructure.Authentication;
+    using Hawk.WebApi.Infrastructure.ErrorHandling;
+    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
@@ -50,16 +52,16 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet("{description}")]
-        [ProducesResponseType(typeof(ConfigurationModel), 200)]
+        [ProducesResponseType(typeof(TryModel<ConfigurationModel>), 200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetByDescription(
-            [FromRoute] string description)
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetConfigurationByDescription([FromRoute] string description)
         {
             var entity = await this.getConfigurationByDescription.GetResult(this.GetUser(), description);
 
             return entity.Match(
-                this.HandleError,
-                configuration => this.Ok(new ConfigurationModel(configuration)));
+                this.HandleError<ConfigurationModel>,
+                configuration => this.Ok(new TryModel<ConfigurationModel>(new ConfigurationModel(configuration))));
         }
 
         /// <summary>
@@ -70,15 +72,19 @@
         /// <returns></returns>
         [HttpPut("{description}")]
         [ValidateSchema(typeof(NewConfigurationModel))]
+        [ProducesResponseType(typeof(TryModel<ConfigurationModel>), 201)]
         [ProducesResponseType(204)]
-        public async Task<IActionResult> Update(
+        [ProducesResponseType(404)]
+        [ProducesResponseType(409)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> UpdateConfiguration(
             [FromRoute] string description,
             [FromBody] NewConfigurationModel request)
         {
             var validated = await this.validator.ValidateAsync(request);
             if (!validated.IsValid)
             {
-                return this.HandleError(new InvalidObjectException("Invalid configuration.", validated));
+                return this.HandleError<ConfigurationModel>(new InvalidObjectException("Invalid configuration.", validated));
             }
 
             var entity = await this.getConfigurationByDescription.GetResult(this.GetUser(), description);
@@ -89,15 +95,15 @@
                     var inserted = await this.upsertConfiguration.Execute(this.GetUser(), MapFrom(description, request));
 
                     return inserted.Match(
-                        this.HandleError,
-                        configuration => this.Created(default, new ConfigurationModel(configuration)));
+                        this.HandleError<ConfigurationModel>,
+                        configuration => this.Created(default, new TryModel<ConfigurationModel>(new ConfigurationModel(configuration))));
                 },
                 async _ =>
                 {
                     var updated = await this.upsertConfiguration.Execute(this.GetUser(), MapFrom(description, request));
 
                     return updated.Match(
-                        this.HandleError,
+                        this.HandleError<ConfigurationModel>,
                         configuration => this.NoContent());
                 });
         }

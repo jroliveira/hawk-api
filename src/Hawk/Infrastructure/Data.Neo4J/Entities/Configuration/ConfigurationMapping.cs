@@ -1,6 +1,5 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Entities.Configuration
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -11,7 +10,6 @@
     using Hawk.Infrastructure.Data.Neo4J.Entities.PaymentMethod;
     using Hawk.Infrastructure.Data.Neo4J.Entities.Store;
     using Hawk.Infrastructure.Monad;
-    using Hawk.Infrastructure.Monad.Extensions;
 
     using Neo4j.Driver.V1;
 

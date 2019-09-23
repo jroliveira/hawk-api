@@ -93,7 +93,7 @@ RETURN
   },
   store: CASE WHEN store IS null THEN NULL ELSE {
     name: store.name,
-	tags: collect(storeTag.name)
+	tags: collect(distinct storeTag.name)
   } END,
   currency: {
     name: currency.name
@@ -101,5 +101,5 @@ RETURN
   paymentMethod: CASE WHEN paymentMethod IS null THEN NULL ELSE {
 	name: paymentMethod.name
   } END,
-  tags: collect(tag.name)
+  tags: collect(distinct tag.name)
 } as data;

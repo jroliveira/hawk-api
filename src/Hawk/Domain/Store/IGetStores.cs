@@ -10,6 +10,6 @@
 
     public interface IGetStores
     {
-        Task<Try<Paged<Try<(Store Store, uint Count)>>>> GetResult(Email email, Filter filter);
+        Task<Try<Page<Try<(Store Store, uint Count)>>>> GetResult(Email email, Filter filter);
     }
 }
