@@ -2,8 +2,6 @@
 
 # Hawk (api)
 
-[![CircleCI](https://circleci.com/gh/jroliveira/hawk-api/tree/master.svg?style=svg&circle-token=d587c191aee3dcb4b2ae7c23132585d36baa9808)](https://circleci.com/gh/jroliveira/hawk-api/tree/master)
-[![CodeFactor](https://www.codefactor.io/repository/github/jroliveira/hawk-api/badge)](https://www.codefactor.io/repository/github/jroliveira/hawk-api)
 [![License: MIT](http://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.txt)
 
 Hawk is a personal finance control. The name Hawk is the name of pig in the anime "The Seven Deadly Sins" (Nanatsu no Taizai).
@@ -77,13 +75,19 @@ This file is used to set the configuration to run in Visual Studio or `dotnet ru
 
 ``` json
 {
+  "log": {
+    "level": "Info",
+    "file": "logs/.log"
+  },
   "authentication": {
-    "authority": "http://localhost"
+    "authority": "http://localhost:35653"
   },
   "neo4j": {
-    "uri": "bolt://localhost:7687",
+    "protocol": "bolt",
+    "host": "localhost",
+    "port": 7687,
     "username": "neo4j",
-    "password": "neo4j"
+    "password": "123456"
   },
   "ipRateLimiting": {
     "enableEndpointRateLimiting": false,
@@ -118,6 +122,7 @@ This file is used to set the configuration to run in Visual Studio or `dotnet ru
     ]
   }
 }
+
 ```
 
 ### Configuring api.env
@@ -128,6 +133,12 @@ This file is used to set the configuration to run in `docker-compose up` command
 ``` bash
 ASPNETCORE_URLS=http://*:5000
 
+LOG:LEVEL=Info
+LOG:FILE=logs/.log
+
+NEO4J:PROTOCOL=bolt
+NEO4J:HOST=localhost
+NEO4J:PORT=7687
 NEO4J:URI=bolt://graphdb:7687
 NEO4J:USERNAME=neo4j
 NEO4J:PASSWORD=123456

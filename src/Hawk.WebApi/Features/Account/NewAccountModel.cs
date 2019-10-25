@@ -9,21 +9,10 @@
 
     public sealed class NewAccountModel
     {
-        public NewAccountModel(string email, string password, string confirmPassword)
-        {
-            this.Email = email;
-            this.Password = password;
-            this.ConfirmPassword = confirmPassword;
-        }
+        public NewAccountModel(string email) => this.Email = email;
 
         [Required]
         public string Email { get; }
-
-        [Required]
-        public string Password { get; }
-
-        [Required]
-        public string ConfirmPassword { get; }
 
         public static implicit operator Option<Account>(NewAccountModel model) => CreateWith(model.Email);
     }

@@ -36,7 +36,7 @@
             }
         }
 
-        public void Dispose() => this.driver.Dispose();
+        public void Dispose() => this.driver?.Dispose();
 
         internal Task<Try<TReturn>> ExecuteScalar<TReturn>(Func<IRecord, Try<TReturn>> mapping, Option<string> statement, object parameters) => this.ExecuteAndGetRecords(
             statement,
@@ -70,6 +70,11 @@
             if (!statement.IsDefined)
             {
                 return new ArgumentNullException(nameof(statement), "Cypher statement is required.");
+            }
+
+            if (this.driver == null)
+            {
+                return new NullReferenceException("Neo4j driver is null.");
             }
 
             try
