@@ -25,7 +25,7 @@
             services
                 .ConfigureIpRateLimiting(this.Configuration)
                 .ConfigureNeo4J(this.Configuration)
-                .ConfigureApi()
+                .ConfigureApi(this.Configuration)
                 .ConfigureSwagger()
                 .ConfigureMetric();
 

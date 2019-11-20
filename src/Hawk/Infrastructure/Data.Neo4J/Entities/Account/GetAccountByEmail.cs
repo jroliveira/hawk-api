@@ -16,14 +16,12 @@
 
         public GetAccountByEmail(Database database) => this.database = database;
 
-        public Task<Try<Account>> GetResult(Email email)
-        {
-            var parameters = new
+        public Task<Try<Account>> GetResult(Email email) => this.database.ExecuteScalar(
+            MapFrom,
+            Statement,
+            new
             {
                 email = email.ToString(),
-            };
-
-            return this.database.ExecuteScalar(MapFrom, Statement, parameters);
-        }
+            });
     }
 }

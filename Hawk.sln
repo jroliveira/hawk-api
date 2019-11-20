@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29509.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D4ECEBF3-43F6-4894-AC40-0C48627054B5}"
 	ProjectSection(SolutionItems) = preProject
@@ -146,7 +146,37 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "swagger", "swagger", "{2D70
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unit", "unit", "{3817E1E5-C6E2-4879-AEB9-2A1906B7A02F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hawk.Test", "test\unit\Hawk.Test\Hawk.Test.csproj", "{4D213E49-9D73-4319-B737-B2EEAB432B22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hawk.Test", "test\unit\Hawk.Test\Hawk.Test.csproj", "{4D213E49-9D73-4319-B737-B2EEAB432B22}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "elasticsearch", "elasticsearch", "{480FA96C-1C96-44A1-9E40-7E070AF163AB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{3668A27B-F444-4DCD-8577-4B318D19A414}"
+	ProjectSection(SolutionItems) = preProject
+		monitor\elasticsearch\config\elasticsearch.yml = monitor\elasticsearch\config\elasticsearch.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "filebeat", "filebeat", "{9A9B9046-4AB9-42BA-8EB8-58EE79A4205E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "conf.d", "conf.d", "{B7D8BE87-398C-425D-97A8-E3A06C5C8D8A}"
+	ProjectSection(SolutionItems) = preProject
+		monitor\filebeat\conf.d\filebeat.yml = monitor\filebeat\conf.d\filebeat.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "kibana", "kibana", "{3C8AEBB2-86BD-42B0-B140-207608BCF75F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{93E1EAA1-B9A3-41D0-B17F-D6FE32D1175D}"
+	ProjectSection(SolutionItems) = preProject
+		monitor\kibana\config\kibana.yml = monitor\kibana\config\kibana.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "database", "database", "{F009802B-85E1-4565-98D1-3A3F7E76B400}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "neo4j", "neo4j", "{763D9EE8-C20D-4563-9E21-801BA38F8173}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "conf", "conf", "{7F9F9325-E951-4B3C-9E9E-88FBCEA79AE3}"
+	ProjectSection(SolutionItems) = preProject
+		database\neo4j\conf\neo4j.conf = database\neo4j\conf\neo4j.conf
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -193,6 +223,14 @@ Global
 		{2D708B88-3CCB-48FC-B007-B877BEC0BA98} = {3D38D172-2DCE-4A53-A907-B4A5C0D8F5A4}
 		{3817E1E5-C6E2-4879-AEB9-2A1906B7A02F} = {5447E1CB-522F-482B-80B8-8694A6DF3B24}
 		{4D213E49-9D73-4319-B737-B2EEAB432B22} = {3817E1E5-C6E2-4879-AEB9-2A1906B7A02F}
+		{480FA96C-1C96-44A1-9E40-7E070AF163AB} = {9B95FA03-E0A0-4038-9572-538F4F549DF6}
+		{3668A27B-F444-4DCD-8577-4B318D19A414} = {480FA96C-1C96-44A1-9E40-7E070AF163AB}
+		{9A9B9046-4AB9-42BA-8EB8-58EE79A4205E} = {9B95FA03-E0A0-4038-9572-538F4F549DF6}
+		{B7D8BE87-398C-425D-97A8-E3A06C5C8D8A} = {9A9B9046-4AB9-42BA-8EB8-58EE79A4205E}
+		{3C8AEBB2-86BD-42B0-B140-207608BCF75F} = {9B95FA03-E0A0-4038-9572-538F4F549DF6}
+		{93E1EAA1-B9A3-41D0-B17F-D6FE32D1175D} = {3C8AEBB2-86BD-42B0-B140-207608BCF75F}
+		{763D9EE8-C20D-4563-9E21-801BA38F8173} = {F009802B-85E1-4565-98D1-3A3F7E76B400}
+		{7F9F9325-E951-4B3C-9E9E-88FBCEA79AE3} = {763D9EE8-C20D-4563-9E21-801BA38F8173}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7CB3FDF8-0DA7-4D1F-B674-0261172FE8F6}

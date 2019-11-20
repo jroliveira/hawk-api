@@ -10,13 +10,11 @@
     using Hawk.WebApi.Infrastructure.ErrorHandling;
     using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
 
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
 
     using static NewConfigurationModel;
 
-    [Authorize]
     [ApiVersion("1")]
     [Route("configurations")]
     public class ConfigurationsController : BaseController

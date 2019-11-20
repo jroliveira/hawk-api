@@ -2,21 +2,29 @@
 {
     using Microsoft.AspNetCore.Mvc;
 
+    using static System.String;
+
     internal static class ControllerBaseExtension
     {
         private const string Claim = "email";
+        private const string Header = "X-Email";
 
         internal static string GetUser(this ControllerBase @this)
         {
-            if (!@this.User.HasClaim(match => match.Type == Claim))
+            if (@this.User.HasClaim(match => match.Type == Claim))
             {
-                return string.Empty;
+                return @this
+                    .User
+                    .FindFirst(match => match.Type == Claim)
+                    .Value;
             }
 
-            return @this
-                .User
-                .FindFirst(match => match.Type == Claim)
-                .Value;
+            if (@this.Request.Headers.TryGetValue(Header, out var email))
+            {
+                return email;
+            }
+
+            return Empty;
         }
     }
 }

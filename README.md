@@ -77,10 +77,24 @@ This file is used to set the configuration to run in Visual Studio or `dotnet ru
 {
   "log": {
     "level": "Info",
-    "file": "logs/.log"
+    "sinks": {
+      "file": {
+        "path": "logs/.log"
+      },
+      "elasticSearch": {
+        "protocol": "http",
+        "host": "elasticsearch",
+        "port": 9200
+      }
+    }
   },
   "authentication": {
-    "authority": "http://localhost:35653"
+    "enabled": false,
+    "authority": {
+      "protocol": "http",
+      "host": "localhost",
+      "port": 35653
+    }
   },
   "neo4j": {
     "protocol": "bolt",
@@ -122,7 +136,6 @@ This file is used to set the configuration to run in Visual Studio or `dotnet ru
     ]
   }
 }
-
 ```
 
 ### Configuring api.env
@@ -134,16 +147,21 @@ This file is used to set the configuration to run in `docker-compose up` command
 ASPNETCORE_URLS=http://*:5000
 
 LOG:LEVEL=Info
-LOG:FILE=logs/.log
+LOG:SINKS:FILE:PATH=/logs/.log
+LOG:SINKS:ELASTICSEARCH:PROTOCOL=http
+LOG:SINKS:ELASTICSEARCH:HOST=elasticsearch
+LOG:SINKS:ELASTICSEARCH:PORT=9200
+
+AUTHENTICATION:ENABLED=false
+AUTHENTICATION:AUTHORITY:PROTOCOL=http
+AUTHENTICATION:AUTHORITY:HOST=localhost
+AUTHENTICATION:AUTHORITY:PORT=35653
 
 NEO4J:PROTOCOL=bolt
-NEO4J:HOST=localhost
+NEO4J:HOST=graphdb
 NEO4J:PORT=7687
-NEO4J:URI=bolt://graphdb:7687
 NEO4J:USERNAME=neo4j
 NEO4J:PASSWORD=123456
-
-AUTHENTICATION:AUTHORITY=http://localhost:35653
 
 IPRATELIMITING:ENABLEENDPOINTRATELIMITING=false
 IPRATELIMITING:STACKBLOCKEDREQUESTS=false

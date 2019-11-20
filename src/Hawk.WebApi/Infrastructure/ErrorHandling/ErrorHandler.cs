@@ -3,12 +3,13 @@
     using System;
 
     using Hawk.Domain.Shared.Exceptions;
-
     using Hawk.WebApi.Infrastructure.ErrorHandling.ErrorModels;
     using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
 
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
+
+    using static Hawk.Infrastructure.Logging.Logger;
 
     internal static class ErrorHandler
     {
@@ -27,6 +28,8 @@
 
         internal static TryModel<TModel> HandleError<TModel>(Exception exception, IHostingEnvironment environment)
         {
+            LogError(exception.Message, exception);
+
             switch (exception)
             {
                 case NotFoundException _: return new GenericErrorModel(exception);

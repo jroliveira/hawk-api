@@ -21,7 +21,10 @@
 
         public LogLevel Level { get; }
 
-        public static void Init(LogLevel level, Func<string> tracking, Action<string> logMethod) => logger = new Logger(level, tracking, logMethod);
+        public static void NewLogger(
+            LogLevel level,
+            Func<string> tracking,
+            Action<string> logMethod) => logger = new Logger(level, tracking, logMethod);
 
         public static void LogError(string message, Exception exception = null)
         {
@@ -39,10 +42,10 @@
                 }
             }
 
-            logger.Log(LogLevel.Error, new DefaultLogData(logger.Level, logger.tracking(), new { message }));
+            logger.Log(LogLevel.Error, new DefaultLogData(logger.Level, logger.tracking(), logMessage.ToString()));
         }
 
-        public static void Info(object data) => logger.Log(LogLevel.Info, new DefaultLogData(LogLevel.Info, logger.tracking(), data));
+        public static void LogInfo(object data) => logger.Log(LogLevel.Info, new DefaultLogData(LogLevel.Info, logger.tracking(), data));
 
         private void Log(LogLevel level, ILogData data)
         {

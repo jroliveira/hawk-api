@@ -15,7 +15,7 @@
     {
         public static IServiceCollection ConfigureNeo4J(this IServiceCollection @this, IConfiguration configuration) => @this
             .AddScoped<Database>()
-            .Configure<Configuration>(configuration.GetSection("neo4j"))
+            .Configure<Neo4JConfiguration>(configuration.GetSection("neo4j"))
             .ConfigureFilterWithNeo4J()
             .ConfigureAccountWithNeo4J()
             .ConfigureConfigurationWithNeo4J()

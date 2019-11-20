@@ -123,3 +123,17 @@ api.env
 # Build related
 tools/**
 !tools/packages.config
+
+# Neo4j database
+database/neo4j/data
+database/neo4j/logs
+
+# Neo4j database
+database/neo4j/data
+database/neo4j/logs
+
+# Elastic Search monitoring
+monitor/elasticsearch/data
+
+# Logs
+logs/

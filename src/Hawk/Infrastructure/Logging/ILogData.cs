@@ -2,6 +2,5 @@
 {
     public interface ILogData
     {
-        string ToString();
     }
 }
