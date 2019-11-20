@@ -2,9 +2,11 @@
 {
     using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
 
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
 
+    [AllowAnonymous]
     [ApiVersion("1")]
     [Route("")]
     public class HomeController : ControllerBase

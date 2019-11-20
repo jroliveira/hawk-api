@@ -16,7 +16,6 @@
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
-    [Authorize]
     [ApiVersion("1")]
     [Route("")]
     public class AccountsController : BaseController

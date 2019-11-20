@@ -9,13 +9,11 @@
     using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Infrastructure.Pagination;
 
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
 
     using static TagModel;
 
-    [Authorize]
     [ApiVersion("1")]
     [Route("")]
     public class TagsController : BaseController

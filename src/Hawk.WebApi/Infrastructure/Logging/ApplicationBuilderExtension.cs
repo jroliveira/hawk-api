@@ -3,7 +3,9 @@
     using System;
 
     using Hawk.Infrastructure.Logging;
+    using Hawk.Infrastructure.Logging.Configurations;
     using Hawk.Infrastructure.Logging.Methods;
+    using Hawk.WebApi.Infrastructure.Logging.Http;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
@@ -22,14 +24,19 @@
         {
             @this.UseMiddleware<LoggingHttpMiddleware>();
 
-            if (!TryParse(configuration["log:level"], out LogLevel level))
+            var logConfig = configuration
+                .GetSection("log")
+                .Get<LogConfiguration>();
+
+            if (!TryParse(logConfig.Level, out LogLevel level))
             {
-                throw new InvalidCastException($"LogLevel {configuration["log:level"]} is not valid.");
+                throw new InvalidCastException($"LogLevel {logConfig.Level} is not valid.");
             }
 
-            Action<string> logMethod = new DefaultLogMethod(configuration["log:file"]).Write;
-
-            Init(level, () => accessor.HttpContext.Request.Headers["reqId"], logMethod);
+            NewLogger(
+                level,
+                () => accessor.HttpContext.Request.Headers["reqId"],
+                new SerilogLogMethod(logConfig).Write);
 
             return @this;
         }

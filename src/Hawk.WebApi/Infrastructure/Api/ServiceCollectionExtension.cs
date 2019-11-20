@@ -1,18 +1,24 @@
 ﻿namespace Hawk.WebApi.Infrastructure.Api
 {
+    using Hawk.WebApi.Infrastructure.Authentication;
+    using Hawk.WebApi.Infrastructure.Authentication.Configurations;
     using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Infrastructure.Hal;
 
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
+
+    using static System.Boolean;
 
     using static Hawk.Infrastructure.JsonSettings;
 
     internal static class ServiceCollectionExtension
     {
-        internal static IServiceCollection ConfigureApi(this IServiceCollection @this)
+        internal static IServiceCollection ConfigureApi(this IServiceCollection @this, IConfiguration configuration)
         {
             @this.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -27,7 +33,19 @@
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials()))
-                .AddMvcCore(options => options.Conventions.Add(new ApiVersionRoutePrefixConvention()))
+                .AddMvcCore(options =>
+                {
+                    options.Conventions.Add(new ApiVersionRoutePrefixConvention());
+
+                    var authConfig = configuration
+                        .GetSection("authentication")
+                        .Get<AuthConfiguration>();
+
+                    if (authConfig.Enabled)
+                    {
+                        options.Filters.Add(typeof(AuthorizeAttribute));
+                    }
+                })
                 .AddApiExplorer()
                 .AddAuthorization()
                 .AddJsonFormatters(serializerSettings =>

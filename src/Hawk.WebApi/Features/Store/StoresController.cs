@@ -9,13 +9,11 @@
     using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Infrastructure.Pagination;
 
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
 
     using static StoreModel;
 
-    [Authorize]
     [ApiVersion("1")]
     [Route("stores")]
     public class StoresController : BaseController

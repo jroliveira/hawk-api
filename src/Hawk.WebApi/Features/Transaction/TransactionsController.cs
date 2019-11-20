@@ -12,13 +12,11 @@
     using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Infrastructure.Pagination;
 
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
 
     using static TransactionModel;
 
-    [Authorize]
     [ApiVersion("1")]
     [Route("transactions")]
     public class TransactionsController : BaseController

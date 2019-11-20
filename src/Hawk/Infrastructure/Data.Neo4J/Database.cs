@@ -21,18 +21,17 @@
     {
         private readonly IDriver driver;
 
-        public Database(IOptions<Configuration> config)
+        public Database(IOptions<Neo4JConfiguration> config)
         {
             var auth = Basic(config.Value.Username, config.Value.Password);
-            var uri = $"{config.Value.Protocol}://{config.Value.Host}:{config.Value.Port}";
 
             try
             {
-                this.driver = Driver(uri, auth);
+                this.driver = Driver(config.Value.Uri, auth);
             }
             catch (Exception exception)
             {
-                LogError($"Unable to connect to database {uri}", exception);
+                LogError($"Unable to connect to database {config.Value.Uri}", exception);
             }
         }
 
