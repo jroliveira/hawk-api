@@ -79,7 +79,7 @@ This file is used to set the configuration to run in Visual Studio or `dotnet ru
     "level": "Info",
     "sinks": {
       "file": {
-        "path": "logs/.log"
+        "path": "../../logs/.log"
       },
       "elasticSearch": {
         "protocol": "http",
@@ -89,7 +89,7 @@ This file is used to set the configuration to run in Visual Studio or `dotnet ru
     }
   },
   "authentication": {
-    "enabled": false,
+    "enabled": true,
     "authority": {
       "protocol": "http",
       "host": "localhost",
