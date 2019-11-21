@@ -4,9 +4,9 @@
     using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Infrastructure.Hal;
 
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc.Authorization;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -40,7 +40,7 @@
 
                     if (authConfig.Enabled)
                     {
-                        options.Filters.Add(typeof(AuthorizeAttribute));
+                        options.Filters.Add(new AuthorizeFilter());
                     }
                 })
                 .AddApiExplorer()
