@@ -15,7 +15,7 @@
 
         public static implicit operator string(Tag tag) => tag.Name;
 
-        public static Try<Tag> CreateWith(Option<string> name) =>
+        public static Try<Tag> NewTag(Option<string> name) =>
             name
             ? new Tag(name.Get())
             : Failure<Tag>(new InvalidObjectException("Invalid tag."));

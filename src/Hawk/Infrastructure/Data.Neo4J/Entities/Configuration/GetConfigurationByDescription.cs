@@ -11,20 +11,18 @@
 
     internal sealed class GetConfigurationByDescription : IGetConfigurationByDescription
     {
-        private static readonly Option<string> Statement = ReadAll("Configuration.GetConfigurationByDescription.cql");
-        private readonly Database database;
+        private static readonly Option<string> Statement = ReadCypherScript("Configuration.GetConfigurationByDescription.cql");
+        private readonly Neo4JConnection connection;
 
-        public GetConfigurationByDescription(Database database) => this.database = database;
+        public GetConfigurationByDescription(Neo4JConnection connection) => this.connection = connection;
 
-        public Task<Try<Configuration>> GetResult(Email email, string description)
-        {
-            var parameters = new
+        public Task<Try<Configuration>> GetResult(Email email, string description) => this.connection.ExecuteCypherScalar(
+            MapConfiguration,
+            Statement,
+            new
             {
                 email = email.ToString(),
                 description,
-            };
-
-            return this.database.ExecuteScalar(MapFrom, Statement, parameters);
-        }
+            });
     }
 }

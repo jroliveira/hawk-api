@@ -8,13 +8,14 @@
 
     using static Hawk.Domain.Store.Store;
 
+    using static Neo4JRecord;
+
     internal static class StoreMapping
     {
         private const string Name = "name";
         private const string Total = "total";
-        private const string Data = "data";
 
-        internal static Try<(Store Store, uint Count)> MapFrom(IRecord data) => data.GetRecord(Data).Match(
+        internal static Try<(Store Store, uint Count)> MapStore(IRecord data) => MapRecord(data, "data").Match(
             record =>
             {
                 var total = record.Get<uint>(Total);
@@ -23,14 +24,14 @@
                     return new InvalidObjectException("Invalid store.");
                 }
 
-                return MapFrom(record).Match<Try<(Store, uint)>>(
+                return MapStore(record).Match<Try<(Store, uint)>>(
                     _ => _,
                     store => (store, total.Get()));
             },
             () => new NotFoundException("Store not found."));
 
-        internal static Try<Store> MapFrom(Option<Record> record) => record.Match(
-            some => CreateWith(some.Get<string>(Name)),
+        internal static Try<Store> MapStore(Option<Neo4JRecord> record) => record.Match(
+            some => NewStore(some.Get<string>(Name)),
             () => new NotFoundException("Store not found."));
     }
 }

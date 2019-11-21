@@ -20,9 +20,9 @@
 
         public Email Email { get; }
 
-        public static Try<Account> CreateWith(Option<string> name) => CreateWith(NewGuid(), name);
+        public static Try<Account> NewAccount(Option<string> name) => NewAccount(NewGuid(), name);
 
-        public static Try<Account> CreateWith(Option<Guid> id, Option<string> name) =>
+        public static Try<Account> NewAccount(Option<Guid> id, Option<string> name) =>
             id
             && name
             ? new Account(id.Get(), name.Get())

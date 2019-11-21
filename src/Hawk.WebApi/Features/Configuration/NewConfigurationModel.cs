@@ -9,7 +9,10 @@
     using Hawk.Infrastructure.Monad;
 
     using static Hawk.Domain.Configuration.Configuration;
-
+    using static Hawk.Domain.Currency.Currency;
+    using static Hawk.Domain.PaymentMethod.PaymentMethod;
+    using static Hawk.Domain.Store.Store;
+    using static Hawk.Domain.Tag.Tag;
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
     public sealed class NewConfigurationModel
@@ -50,11 +53,11 @@
             entity.Store,
             entity.Tags.Select(tag => tag.Name));
 
-        public static Option<Configuration> MapFrom(string description, NewConfigurationModel model)
+        public static Option<Configuration> MapNewConfiguration(string description, NewConfigurationModel model)
         {
             var tags = model
                 .Tags
-                .Select(tag => Tag.CreateWith(tag))
+                .Select(tag => NewTag(tag))
                 .ToList();
 
             if (tags.Any(tag => tag.IsFailure))
@@ -62,12 +65,12 @@
                 return None();
             }
 
-            return CreateWith(
+            return NewConfiguration(
                 model.Type,
                 description,
-                Domain.PaymentMethod.PaymentMethod.CreateWith(model.PaymentMethod),
-                Domain.Currency.Currency.CreateWith(model.Currency),
-                Domain.Store.Store.CreateWith(model.Store),
+                NewPaymentMethod(model.PaymentMethod),
+                NewCurrency(model.Currency),
+                NewStore(model.Store),
                 new List<Tag>(tags.Select(tag => tag.Get())));
         }
     }

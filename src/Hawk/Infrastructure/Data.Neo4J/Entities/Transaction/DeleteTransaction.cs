@@ -11,20 +11,17 @@
 
     internal sealed class DeleteTransaction : IDeleteTransaction
     {
-        private static readonly Option<string> Statement = ReadAll("Transaction.DeleteTransaction.cql");
-        private readonly Database database;
+        private static readonly Option<string> Statement = ReadCypherScript("Transaction.DeleteTransaction.cql");
+        private readonly Neo4JConnection connection;
 
-        public DeleteTransaction(Database database) => this.database = database;
+        public DeleteTransaction(Neo4JConnection connection) => this.connection = connection;
 
-        public Task<Try<Unit>> Execute(Email email, Guid id)
-        {
-            var parameters = new
+        public Task<Try<Unit>> Execute(Email email, Guid id) => this.connection.ExecuteCypher(
+            Statement,
+            new
             {
                 email = email.ToString(),
                 id = id.ToString(),
-            };
-
-            return this.database.Execute(Statement, parameters);
-        }
+            });
     }
 }

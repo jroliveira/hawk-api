@@ -29,9 +29,9 @@
 
         public uint Total { get; }
 
-        public static implicit operator Option<Store>(StoreModel model) => CreateWith(model.Name);
+        public static implicit operator Option<Store>(StoreModel model) => NewStore(model.Name);
 
-        internal static TryModel<PageModel<TryModel<StoreModel>>> MapFrom(Page<Try<(Store Store, uint Count)>> @this) => new PageModel<TryModel<StoreModel>>(
+        internal static TryModel<PageModel<TryModel<StoreModel>>> MapStore(Page<Try<(Store Store, uint Count)>> @this) => new PageModel<TryModel<StoreModel>>(
             @this
                 .Data
                 .Select(item => item.Match(

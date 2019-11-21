@@ -14,17 +14,17 @@
 
     internal sealed class GetTagsByStore : IGetTagsByStore
     {
-        private static readonly Option<string> Statement = ReadAll("Tag.GetTagsByStore.cql");
-        private readonly Database database;
+        private static readonly Option<string> Statement = ReadCypherScript("Tag.GetTagsByStore.cql");
+        private readonly Neo4JConnection connection;
         private readonly ILimit<int, Filter> limit;
         private readonly ISkip<int, Filter> skip;
 
         public GetTagsByStore(
-            Database database,
+            Neo4JConnection connection,
             ILimit<int, Filter> limit,
             ISkip<int, Filter> skip)
         {
-            this.database = database;
+            this.connection = connection;
             this.limit = limit;
             this.skip = skip;
         }
@@ -39,7 +39,7 @@
                 limit = this.limit.Apply(filter),
             };
 
-            var data = await this.database.Execute(MapFrom, Statement, parameters).ConfigureAwait(false);
+            var data = await this.connection.ExecuteCypher(MapTag, Statement, parameters);
 
             return data.Match<Try<Page<Try<(Tag, uint)>>>>(
                 _ => _,

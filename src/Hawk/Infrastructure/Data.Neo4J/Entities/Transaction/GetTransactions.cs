@@ -1,6 +1,5 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Entities.Transaction
 {
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Hawk.Domain.Shared;
@@ -18,19 +17,19 @@
 
     internal sealed class GetTransactions : IGetTransactions
     {
-        private static readonly Option<string> Statement = ReadAll("Transaction.GetTransactions.cql");
-        private readonly Database database;
+        private static readonly Option<string> Statement = ReadCypherScript("Transaction.GetTransactions.cql");
+        private readonly Neo4JConnection connection;
         private readonly ILimit<int, Filter> limit;
         private readonly ISkip<int, Filter> skip;
         private readonly IWhere<string, Filter> where;
 
         public GetTransactions(
-            Database database,
+            Neo4JConnection connection,
             ILimit<int, Filter> limit,
             ISkip<int, Filter> skip,
             IWhere<string, Filter> where)
         {
-            this.database = database;
+            this.connection = connection;
             this.limit = limit;
             this.skip = skip;
             this.where = where;
@@ -47,7 +46,7 @@
                 limit = this.limit.Apply(filter),
             };
 
-            var data = await this.database.Execute(MapFrom, statement, parameters).ConfigureAwait(false);
+            var data = await this.connection.ExecuteCypher(MapTransaction, statement, parameters);
 
             return data.Match<Try<Page<Try<Transaction>>>>(
                 _ => _,

@@ -14,7 +14,7 @@
         {
         }
 
-        public static Try<Transaction> CreateWith(Option<Guid> id, Option<Payment> payment, Option<Store> store, Option<IReadOnlyCollection<Tag>> tags) => CreateWith(
+        public static Try<Transaction> NewCredit(Option<Guid> id, Option<Payment> payment, Option<Store> store, Option<IReadOnlyCollection<Tag>> tags) => NewTransaction(
             id,
             payment,
             store,

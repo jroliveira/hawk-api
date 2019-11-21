@@ -14,6 +14,6 @@
         [Required]
         public string Email { get; }
 
-        public static implicit operator Option<Account>(NewAccountModel model) => CreateWith(model.Email);
+        public static implicit operator Option<Account>(NewAccountModel model) => NewAccount(model.Email);
     }
 }

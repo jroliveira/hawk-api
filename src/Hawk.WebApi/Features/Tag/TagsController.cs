@@ -44,7 +44,7 @@
 
             return entities.Match(
                 this.HandleError<PageModel<TryModel<TagModel>>>,
-                page => this.Ok(MapFrom(page)));
+                page => this.Ok(MapTag(page)));
         }
 
         /// <summary>
@@ -62,7 +62,7 @@
 
             return entities.Match(
                 this.HandleError<PageModel<TryModel<TagModel>>>,
-                page => this.Ok(MapFrom(page)));
+                page => this.Ok(MapTag(page)));
         }
     }
 }

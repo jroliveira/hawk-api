@@ -15,7 +15,7 @@
 
         public static implicit operator string(Store store) => store.Name;
 
-        public static Try<Store> CreateWith(Option<string> name) =>
+        public static Try<Store> NewStore(Option<string> name) =>
             name
             ? new Store(name.Get())
             : Failure<Store>(new InvalidObjectException("Invalid store."));

@@ -22,7 +22,7 @@
 
         public uint Total { get; }
 
-        internal static TryModel<PageModel<TryModel<TagModel>>> MapFrom(Page<Try<(Tag Tag, uint Count)>> @this) => new PageModel<TryModel<TagModel>>(
+        internal static TryModel<PageModel<TryModel<TagModel>>> MapTag(Page<Try<(Tag Tag, uint Count)>> @this) => new PageModel<TryModel<TagModel>>(
             @this
                 .Data
                 .Select(item => item.Match(

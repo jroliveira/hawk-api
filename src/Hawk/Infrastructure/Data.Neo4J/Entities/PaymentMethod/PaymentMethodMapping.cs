@@ -8,13 +8,14 @@
 
     using static Hawk.Domain.PaymentMethod.PaymentMethod;
 
+    using static Neo4JRecord;
+
     internal static class PaymentMethodMapping
     {
         private const string Name = "name";
         private const string Total = "total";
-        private const string Data = "data";
 
-        internal static Try<(PaymentMethod PaymentMethod, uint Count)> MapFrom(IRecord data) => data.GetRecord(Data).Match(
+        internal static Try<(PaymentMethod PaymentMethod, uint Count)> MapPaymentMethod(IRecord data) => MapRecord(data, "data").Match(
             record =>
             {
                 var total = record.Get<uint>(Total);
@@ -23,14 +24,14 @@
                     return new InvalidObjectException("Invalid payment method.");
                 }
 
-                return MapFrom(record).Match<Try<(PaymentMethod, uint)>>(
+                return MapPaymentMethod(record).Match<Try<(PaymentMethod, uint)>>(
                     _ => _,
                     paymentMethod => (paymentMethod, total.Get()));
             },
             () => new NotFoundException("Payment method not found."));
 
-        internal static Try<PaymentMethod> MapFrom(Option<Record> record) => record.Match(
-            some => CreateWith(some.Get<string>(Name)),
+        internal static Try<PaymentMethod> MapPaymentMethod(Option<Neo4JRecord> record) => record.Match(
+            some => NewPaymentMethod(some.Get<string>(Name)),
             () => new NotFoundException("Payment method not found."));
     }
 }

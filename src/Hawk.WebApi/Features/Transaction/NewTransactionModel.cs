@@ -12,6 +12,10 @@
 
     using static System.Guid;
 
+    using static Hawk.Domain.Store.Store;
+    using static Hawk.Domain.Tag.Tag;
+    using static Hawk.Domain.Transaction.Credit;
+    using static Hawk.Domain.Transaction.Debit;
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
     public class NewTransactionModel
@@ -19,11 +23,15 @@
         private static readonly IReadOnlyDictionary<string, Func<Option<Guid>, Option<Payment>, Option<Store>, Option<IReadOnlyCollection<Tag>>, Try<Transaction>>> Types =
             new Dictionary<string, Func<Option<Guid>, Option<Payment>, Option<Store>, Option<IReadOnlyCollection<Tag>>, Try<Transaction>>>
             {
-                { "Debit", Debit.CreateWith },
-                { "Credit", Credit.CreateWith },
+                { "Debit", NewDebit },
+                { "Credit", NewCredit },
             };
 
-        public NewTransactionModel(string type, PaymentModel payment, string store, IEnumerable<string> tags)
+        public NewTransactionModel(
+            string type,
+            PaymentModel payment,
+            string store,
+            IEnumerable<string> tags)
         {
             this.Type = type;
             this.Payment = payment;
@@ -43,7 +51,7 @@
         [Required]
         public IEnumerable<string> Tags { get; }
 
-        public static implicit operator Option<Transaction>(NewTransactionModel model) => MapFrom(NewGuid(), model);
+        public static implicit operator Option<Transaction>(NewTransactionModel model) => MapNewTransaction(NewGuid(), model);
 
         public static implicit operator NewTransactionModel(Transaction entity) => new NewTransactionModel(
             entity.GetType().Name,
@@ -51,16 +59,16 @@
             entity.Store,
             entity.Tags.Select(tag => tag.Name));
 
-        public static Option<Transaction> MapFrom(Guid id, NewTransactionModel model)
+        public static Option<Transaction> MapNewTransaction(Guid id, NewTransactionModel model)
         {
-            if (!Types.TryGetValue(model.Type, out var createWith))
+            if (!Types.TryGetValue(model.Type, out var newTransaction))
             {
                 return None();
             }
 
             var tags = model
                 .Tags
-                .Select(tag => Tag.CreateWith(tag))
+                .Select(tag => NewTag(tag))
                 .ToList();
 
             if (tags.Any(tag => tag.IsFailure))
@@ -68,10 +76,10 @@
                 return None();
             }
 
-            return createWith(
+            return newTransaction(
                 id,
                 model.Payment,
-                Domain.Store.Store.CreateWith(model.Store),
+                NewStore(model.Store),
                 new List<Tag>(tags.Select(tag => tag.Get())));
         }
     }

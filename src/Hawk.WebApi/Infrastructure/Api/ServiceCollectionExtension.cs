@@ -1,6 +1,5 @@
 ﻿namespace Hawk.WebApi.Infrastructure.Api
 {
-    using Hawk.WebApi.Infrastructure.Authentication;
     using Hawk.WebApi.Infrastructure.Authentication.Configurations;
     using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Infrastructure.Hal;
@@ -11,8 +10,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
-
-    using static System.Boolean;
 
     using static Hawk.Infrastructure.JsonSettings;
 

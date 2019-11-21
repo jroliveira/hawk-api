@@ -15,7 +15,7 @@
 
         public static implicit operator string(PaymentMethod paymentMethod) => paymentMethod.Name;
 
-        public static Try<PaymentMethod> CreateWith(Option<string> name) =>
+        public static Try<PaymentMethod> NewPaymentMethod(Option<string> name) =>
             name
             ? new PaymentMethod(name.Get())
             : Failure<PaymentMethod>(new InvalidObjectException("Invalid payment method."));

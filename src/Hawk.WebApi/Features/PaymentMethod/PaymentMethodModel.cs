@@ -22,7 +22,7 @@
 
         public uint Total { get; }
 
-        internal static TryModel<PageModel<TryModel<PaymentMethodModel>>> MapFrom(Page<Try<(PaymentMethod Method, uint Count)>> @this) => new PageModel<TryModel<PaymentMethodModel>>(
+        internal static TryModel<PageModel<TryModel<PaymentMethodModel>>> MapPaymentMethod(Page<Try<(PaymentMethod Method, uint Count)>> @this) => new PageModel<TryModel<PaymentMethodModel>>(
             @this
                 .Data
                 .Select(item => item.Match(

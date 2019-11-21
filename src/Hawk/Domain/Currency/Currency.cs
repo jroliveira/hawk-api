@@ -15,7 +15,7 @@
 
         public static implicit operator string(Currency currency) => currency.Name;
 
-        public static Try<Currency> CreateWith(Option<string> name) =>
+        public static Try<Currency> NewCurrency(Option<string> name) =>
             name
             ? new Currency(name.Get())
             : Failure<Currency>(new InvalidObjectException("Invalid currency."));

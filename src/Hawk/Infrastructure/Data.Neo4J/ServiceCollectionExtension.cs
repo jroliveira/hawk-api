@@ -14,7 +14,7 @@
     public static class ServiceCollectionExtension
     {
         public static IServiceCollection ConfigureNeo4J(this IServiceCollection @this, IConfiguration configuration) => @this
-            .AddScoped<Database>()
+            .AddScoped<Neo4JConnection>()
             .Configure<Neo4JConfiguration>(configuration.GetSection("neo4j"))
             .ConfigureFilterWithNeo4J()
             .ConfigureAccountWithNeo4J()
