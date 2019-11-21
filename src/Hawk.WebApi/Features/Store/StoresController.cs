@@ -44,7 +44,7 @@
 
             return entities.Match(
                 this.HandleError<PageModel<TryModel<StoreModel>>>,
-                page => this.Ok(MapFrom(page)));
+                page => this.Ok(MapStore(page)));
         }
 
         /// <summary>

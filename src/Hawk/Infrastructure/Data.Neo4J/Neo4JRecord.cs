@@ -15,11 +15,11 @@
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
-    internal sealed class Record
+    internal sealed class Neo4JRecord
     {
         private readonly IDictionary<string, object> data;
 
-        internal Record(object record)
+        internal Neo4JRecord(object record)
         {
             switch (record)
             {
@@ -34,14 +34,24 @@
             }
         }
 
-        internal Option<Record> GetRecord(string key)
+        internal static Option<Neo4JRecord> MapRecord(IRecord record, string key)
+        {
+            if (record == null || !record.Keys.Contains(key))
+            {
+                return None();
+            }
+
+            return new Neo4JRecord(record[key]);
+        }
+
+        internal Option<Neo4JRecord> GetRecord(string key)
         {
             if (!this.Has(key))
             {
                 return None();
             }
 
-            return new Record(this.data[key]);
+            return new Neo4JRecord(this.data[key]);
         }
 
         internal IEnumerable<string> GetList(string key) => this

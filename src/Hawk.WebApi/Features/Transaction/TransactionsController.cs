@@ -66,7 +66,7 @@
 
             return entities.Match(
                 this.HandleError<PageModel<TryModel<TransactionModel>>>,
-                page => this.Ok(MapFrom(page)));
+                page => this.Ok(MapTransaction(page)));
         }
 
         /// <summary>
@@ -140,7 +140,7 @@
             return await entity.Match(
                 async _ =>
                 {
-                    var inserted = await this.upsertTransaction.Execute(this.GetUser(), NewTransactionModel.MapFrom(new Guid(id), request));
+                    var inserted = await this.upsertTransaction.Execute(this.GetUser(), NewTransactionModel.MapNewTransaction(new Guid(id), request));
 
                     return inserted.Match(
                         this.HandleError<TransactionModel>,

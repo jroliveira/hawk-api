@@ -11,13 +11,13 @@
 
     internal sealed class GetAccountByEmail : IGetAccountByEmail
     {
-        private static readonly Option<string> Statement = ReadAll("Account.GetAccountByEmail.cql");
-        private readonly Database database;
+        private static readonly Option<string> Statement = ReadCypherScript("Account.GetAccountByEmail.cql");
+        private readonly Neo4JConnection connection;
 
-        public GetAccountByEmail(Database database) => this.database = database;
+        public GetAccountByEmail(Neo4JConnection connection) => this.connection = connection;
 
-        public Task<Try<Account>> GetResult(Email email) => this.database.ExecuteScalar(
-            MapFrom,
+        public Task<Try<Account>> GetResult(Email email) => this.connection.ExecuteCypherScalar(
+            MapAccount,
             Statement,
             new
             {

@@ -47,7 +47,7 @@
 
         public IEnumerable<string> Tags { get; }
 
-        internal static TryModel<PageModel<TryModel<TransactionModel>>> MapFrom(Page<Try<Transaction>> @this) => new PageModel<TryModel<TransactionModel>>(
+        internal static TryModel<PageModel<TryModel<TransactionModel>>> MapTransaction(Page<Try<Transaction>> @this) => new PageModel<TryModel<TransactionModel>>(
             @this
                 .Data
                 .Select(item => item.Match(

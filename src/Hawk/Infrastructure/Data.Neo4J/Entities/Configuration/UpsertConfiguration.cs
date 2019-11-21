@@ -15,10 +15,10 @@
 
     internal sealed class UpsertConfiguration : IUpsertConfiguration
     {
-        private static readonly Option<string> Statement = ReadAll("Configuration.UpsertConfiguration.cql");
-        private readonly Database database;
+        private static readonly Option<string> Statement = ReadCypherScript("Configuration.UpsertConfiguration.cql");
+        private readonly Neo4JConnection connection;
 
-        public UpsertConfiguration(Database database) => this.database = database;
+        public UpsertConfiguration(Neo4JConnection connection) => this.connection = connection;
 
         public Task<Try<Configuration>> Execute(Email email, Option<Configuration> entity)
         {
@@ -27,18 +27,19 @@
                 return Task(Failure<Configuration>(new NullReferenceException("Configuration is required.")));
             }
 
-            var parameters = new
-            {
-                email = email.ToString(),
-                description = entity.Get().Description,
-                type = entity.Get().Type,
-                paymentMethod = entity.Get().PaymentMethod.Name,
-                currency = entity.Get().Currency.Name,
-                store = entity.Get().Store.Name,
-                tags = entity.Get().Tags.Select(tag => tag.Name).ToArray(),
-            };
-
-            return this.database.ExecuteScalar(MapFrom, Statement, parameters);
+            return this.connection.ExecuteCypherScalar(
+                MapConfiguration,
+                Statement,
+                new
+                {
+                    email = email.ToString(),
+                    description = entity.Get().Description,
+                    type = entity.Get().Type,
+                    paymentMethod = entity.Get().PaymentMethod.Name,
+                    currency = entity.Get().Currency.Name,
+                    store = entity.Get().Store.Name,
+                    tags = entity.Get().Tags.Select(tag => tag.Name).ToArray(),
+                });
         }
     }
 }

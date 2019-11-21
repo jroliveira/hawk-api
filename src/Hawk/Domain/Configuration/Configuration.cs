@@ -41,20 +41,20 @@
 
         public IReadOnlyCollection<Tag> Tags { get; }
 
-        public static Try<Configuration> CreateWith(
+        public static Try<Configuration> NewConfiguration(
             Option<string> type,
             Option<string> description,
             Option<PaymentMethod> paymentMethod,
             Option<Currency> currency,
             Option<Store> store,
             Option<IReadOnlyCollection<Tag>> tags) =>
-            type
-            && description
-            && paymentMethod
-            && currency
-            && store
-            && tags
-            ? new Configuration(type.Get(), description.Get(), paymentMethod.Get(), currency.Get(), store.Get(), tags.Get())
-            : Failure<Configuration>(new InvalidObjectException("Invalid configuration."));
+                type
+                && description
+                && paymentMethod
+                && currency
+                && store
+                && tags
+                ? new Configuration(type.Get(), description.Get(), paymentMethod.Get(), currency.Get(), store.Get(), tags.Get())
+                : Failure<Configuration>(new InvalidObjectException("Invalid configuration."));
     }
 }

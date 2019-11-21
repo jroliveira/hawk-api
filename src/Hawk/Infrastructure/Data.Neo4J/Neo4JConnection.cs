@@ -17,11 +17,11 @@
     using static Neo4j.Driver.V1.AuthTokens;
     using static Neo4j.Driver.V1.GraphDatabase;
 
-    internal sealed class Database : IDisposable
+    internal sealed class Neo4JConnection : IDisposable
     {
         private readonly IDriver driver;
 
-        public Database(IOptions<Neo4JConfiguration> config)
+        public Neo4JConnection(IOptions<Neo4JConfiguration> config)
         {
             var auth = Basic(config.Value.Username, config.Value.Password);
 
@@ -37,34 +37,34 @@
 
         public void Dispose() => this.driver?.Dispose();
 
-        internal Task<Try<TReturn>> ExecuteScalar<TReturn>(Func<IRecord, Try<TReturn>> mapping, Option<string> statement, object parameters) => this.ExecuteAndGetRecords(
+        internal Task<Try<TReturn>> ExecuteCypherScalar<TReturn>(Func<IRecord, Try<TReturn>> mapping, Option<string> statement, object parameters) => this.ExecuteCypherAndGetRecords(
             statement,
             parameters,
             records => records.Count > 1
                 ? new Exception($"Query returned {records.Count} results.")
                 : mapping(records.FirstOrDefault()));
 
-        internal Task<Try<IEnumerable<Try<TReturn>>>> Execute<TReturn>(Func<IRecord, Try<TReturn>> mapping, Option<string> statement, object parameters) => this.ExecuteAndGetRecords(
+        internal Task<Try<IEnumerable<Try<TReturn>>>> ExecuteCypher<TReturn>(Func<IRecord, Try<TReturn>> mapping, Option<string> statement, object parameters) => this.ExecuteCypherAndGetRecords(
             statement,
             parameters,
             records => Success(records.Select(mapping)));
 
-        internal Task<Try<Unit>> Execute(Option<string> statement, object parameters) => this.ExecuteAndGetRecords(
+        internal Task<Try<Unit>> ExecuteCypher(Option<string> statement, object parameters) => this.ExecuteCypherAndGetRecords(
             statement,
             parameters,
             _ => Success(Unit()));
 
-        private Task<Try<TReturn>> ExecuteAndGetRecords<TReturn>(Option<string> statement, object parameters, Func<IList<IRecord>, Try<TReturn>> command) => this.ExecuteAndGetCursor(
+        private Task<Try<TReturn>> ExecuteCypherAndGetRecords<TReturn>(Option<string> statement, object parameters, Func<IList<IRecord>, Try<TReturn>> command) => this.ExecuteCypherAndGetCursor(
             statement,
             parameters,
             async cursor =>
             {
-                var records = await cursor.ToListAsync().ConfigureAwait(false);
+                var records = await cursor.ToListAsync();
 
                 return command(records);
             });
 
-        private async Task<Try<TReturn>> ExecuteAndGetCursor<TReturn>(Option<string> statement, object parameters, Func<IStatementResultCursor, Task<Try<TReturn>>> command)
+        private async Task<Try<TReturn>> ExecuteCypherAndGetCursor<TReturn>(Option<string> statement, object parameters, Func<IStatementResultCursor, Task<Try<TReturn>>> command)
         {
             if (!statement.IsDefined)
             {
@@ -80,9 +80,9 @@
             {
                 using (var session = this.driver.Session())
                 {
-                    var cursor = await session.RunAsync(statement.Get(), parameters).ConfigureAwait(false);
+                    var cursor = await session.RunAsync(statement.Get(), parameters);
 
-                    return await command(cursor).ConfigureAwait(false);
+                    return await command(cursor);
                 }
             }
             catch (Exception exception)

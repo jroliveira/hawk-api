@@ -10,16 +10,17 @@
 
     using static Hawk.Domain.Account.Account;
 
+    using static Neo4JRecord;
+
     internal static class AccountMapping
     {
         private const string Id = "id";
         private const string Email = "email";
-        private const string Data = "data";
 
-        internal static Try<Account> MapFrom(IRecord data) => MapFrom(data.GetRecord(Data));
+        internal static Try<Account> MapAccount(IRecord data) => MapAccount(MapRecord(data, "data"));
 
-        internal static Try<Account> MapFrom(Option<Record> record) => record.Match(
-            some => CreateWith(some.Get<Guid>(Id), some.Get<string>(Email)),
+        internal static Try<Account> MapAccount(Option<Neo4JRecord> record) => record.Match(
+            some => NewAccount(some.Get<Guid>(Id), some.Get<string>(Email)),
             () => new NotFoundException("Account not found."));
     }
 }

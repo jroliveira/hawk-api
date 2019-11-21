@@ -1,12 +1,13 @@
 ﻿namespace Hawk.WebApi.Infrastructure.Swagger
 {
-    using System.IO;
     using System.Reflection;
 
     using Microsoft.AspNetCore.Mvc.ApiExplorer;
     using Microsoft.Extensions.DependencyInjection;
 
     using Swashbuckle.AspNetCore.Swagger;
+
+    using static System.IO.Path;
 
     using static Microsoft.Extensions.PlatformAbstractions.PlatformServices;
 
@@ -19,7 +20,7 @@
                 var basePath = Default.Application.ApplicationBasePath;
                 var fileName = $"{typeof(Startup).GetTypeInfo().Assembly.GetName().Name}.xml";
 
-                return Path.Combine(basePath, fileName);
+                return Combine(basePath, fileName);
             }
         }
 

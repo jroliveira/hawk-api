@@ -90,7 +90,7 @@
             return await entity.Match(
                 async _ =>
                 {
-                    var inserted = await this.upsertConfiguration.Execute(this.GetUser(), MapFrom(description, request));
+                    var inserted = await this.upsertConfiguration.Execute(this.GetUser(), MapNewConfiguration(description, request));
 
                     return inserted.Match(
                         this.HandleError<ConfigurationModel>,
@@ -98,7 +98,7 @@
                 },
                 async _ =>
                 {
-                    var updated = await this.upsertConfiguration.Execute(this.GetUser(), MapFrom(description, request));
+                    var updated = await this.upsertConfiguration.Execute(this.GetUser(), MapNewConfiguration(description, request));
 
                     return updated.Match(
                         this.HandleError<ConfigurationModel>,

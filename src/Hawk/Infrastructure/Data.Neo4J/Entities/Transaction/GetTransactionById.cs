@@ -12,20 +12,18 @@
 
     internal sealed class GetTransactionById : IGetTransactionById
     {
-        private static readonly Option<string> Statement = ReadAll("Transaction.GetTransactionById.cql");
-        private readonly Database database;
+        private static readonly Option<string> Statement = ReadCypherScript("Transaction.GetTransactionById.cql");
+        private readonly Neo4JConnection connection;
 
-        public GetTransactionById(Database database) => this.database = database;
+        public GetTransactionById(Neo4JConnection connection) => this.connection = connection;
 
-        public Task<Try<Transaction>> GetResult(Email email, Guid id)
-        {
-            var parameters = new
+        public Task<Try<Transaction>> GetResult(Email email, Guid id) => this.connection.ExecuteCypherScalar(
+            MapTransaction,
+            Statement,
+            new
             {
                 email = email.ToString(),
                 id = id.ToString(),
-            };
-
-            return this.database.ExecuteScalar(MapFrom, Statement, parameters);
-        }
+            });
     }
 }

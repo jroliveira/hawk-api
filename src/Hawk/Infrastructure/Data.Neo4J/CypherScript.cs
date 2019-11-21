@@ -14,7 +14,7 @@
     {
         private static readonly Func<string, Stream> ReadFile = typeof(CypherScript).GetTypeInfo().Assembly.GetManifestResourceStream;
 
-        internal static Option<string> ReadAll(string name)
+        internal static Option<string> ReadCypherScript(string name)
         {
             name = $@"Hawk.Infrastructure.Data.Neo4J.Entities.{name}";
 
@@ -30,7 +30,7 @@
                 {
                     if (stream == null)
                     {
-                        LogError($"Variable {nameof(stream)} of the class {nameof(CypherScript)} in the method {nameof(ReadAll)} is null.");
+                        LogError($"Variable {nameof(stream)} of the class {nameof(CypherScript)} in the method {nameof(ReadCypherScript)} is null.");
                         return None();
                     }
 

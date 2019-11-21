@@ -18,7 +18,7 @@
 
         public Currency Currency { get; }
 
-        public static Try<Price> CreateWith(Option<double> value, Option<Currency> currency) =>
+        public static Try<Price> NewPrice(Option<double> value, Option<Currency> currency) =>
             value
             && currency
             ? new Price(value.Get(), currency.Get())

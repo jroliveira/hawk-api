@@ -31,17 +31,17 @@
 
         public IReadOnlyCollection<Tag> Tags { get; }
 
-        protected static Try<Transaction> CreateWith(
+        protected static Try<Transaction> NewTransaction(
             Option<Guid> id,
             Option<Payment> payment,
             Option<Store> store,
             Option<IReadOnlyCollection<Tag>> tags,
             Func<(Guid Id, Payment Payment, Store Store, IReadOnlyCollection<Tag> Tags), Try<Transaction>> createTransaction) =>
-            id
-            && payment
-            && store
-            && tags
-            ? createTransaction((id.Get(), payment.Get(), store.Get(), tags.Get()))
-            : Failure<Transaction>(new InvalidObjectException("Invalid transaction."));
+                id
+                && payment
+                && store
+                && tags
+                ? createTransaction((id.Get(), payment.Get(), store.Get(), tags.Get()))
+                : Failure<Transaction>(new InvalidObjectException("Invalid transaction."));
     }
 }

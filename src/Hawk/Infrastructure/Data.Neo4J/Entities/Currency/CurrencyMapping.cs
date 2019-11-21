@@ -10,8 +10,8 @@
     {
         private const string Name = "name";
 
-        internal static Try<Currency> MapFrom(Option<Record> record) => record.Match(
-            some => CreateWith(some.Get<string>(Name)),
+        internal static Try<Currency> MapCurrency(Option<Neo4JRecord> record) => record.Match(
+            some => NewCurrency(some.Get<string>(Name)),
             () => new NotFoundException("Currency not found."));
     }
 }

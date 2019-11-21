@@ -23,7 +23,7 @@
 
         public PaymentMethod PaymentMethod { get; }
 
-        public static Try<Payment> CreateWith(Option<Price> price, in Option<DateTime> date, Option<PaymentMethod> paymentMethod) =>
+        public static Try<Payment> NewPayment(Option<Price> price, in Option<DateTime> date, Option<PaymentMethod> paymentMethod) =>
             price
             && date
             && paymentMethod

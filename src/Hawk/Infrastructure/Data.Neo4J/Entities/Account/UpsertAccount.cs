@@ -15,10 +15,10 @@
 
     internal sealed class UpsertAccount : IUpsertAccount
     {
-        private static readonly Option<string> Statement = ReadAll("Account.UpsertAccount.cql");
-        private readonly Database database;
+        private static readonly Option<string> Statement = ReadCypherScript("Account.UpsertAccount.cql");
+        private readonly Neo4JConnection connection;
 
-        public UpsertAccount(Database database) => this.database = database;
+        public UpsertAccount(Neo4JConnection connection) => this.connection = connection;
 
         public Task<Try<Account>> Execute(Option<Account> entity)
         {
@@ -27,14 +27,15 @@
                 return Task(Failure<Account>(new NullReferenceException("Account is required.")));
             }
 
-            var parameters = new
-            {
-                id = entity.Get().Id.ToString(),
-                email = entity.Get().Email.ToString(),
-                creationDate = entity.Get().CreationAt.ToString(InvariantCulture),
-            };
-
-            return this.database.ExecuteScalar(MapFrom, Statement, parameters);
+            return this.connection.ExecuteCypherScalar(
+                MapAccount,
+                Statement,
+                new
+                {
+                    id = entity.Get().Id.ToString(),
+                    email = entity.Get().Email.ToString(),
+                    creationDate = entity.Get().CreationAt.ToString(InvariantCulture),
+                });
         }
     }
 }

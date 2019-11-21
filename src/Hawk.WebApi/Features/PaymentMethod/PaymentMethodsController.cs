@@ -44,7 +44,7 @@
 
             return entities.Match(
                 this.HandleError<PageModel<TryModel<PaymentMethodModel>>>,
-                page => this.Ok(MapFrom(page)));
+                page => this.Ok(MapPaymentMethod(page)));
         }
 
         /// <summary>
@@ -62,7 +62,7 @@
 
             return entities.Match(
                 this.HandleError<PageModel<TryModel<PaymentMethodModel>>>,
-                page => this.Ok(MapFrom(page)));
+                page => this.Ok(MapPaymentMethod(page)));
         }
     }
 }
