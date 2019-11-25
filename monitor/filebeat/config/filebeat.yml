@@ -1,0 +1,7 @@
+filebeat.inputs:
+- type: log
+  paths:
+    - /var/log/hawk/*.log
+
+output.logstash:
+  hosts: ["logstash:5044"]

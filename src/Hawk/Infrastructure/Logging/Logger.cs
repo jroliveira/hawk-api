@@ -1,7 +1,6 @@
 ﻿namespace Hawk.Infrastructure.Logging
 {
     using System;
-    using System.Text;
 
     public sealed class Logger
     {
@@ -26,26 +25,21 @@
             Func<string> tracking,
             Action<string> logMethod) => logger = new Logger(level, tracking, logMethod);
 
-        public static void LogError(string message, Exception exception = null)
-        {
-            var logMessage = new StringBuilder(message);
+        public static void LogError(string message, object data) => logger.Log(
+            LogLevel.Error,
+            new DefaultLogData(
+                LogLevel.Error,
+                message,
+                logger.tracking(),
+                data));
 
-            if (exception != null)
-            {
-                logMessage.Append($"Exception: {exception.Message}.");
-
-                var innerException = exception.InnerException;
-                while (innerException != null)
-                {
-                    logMessage.Append($" Inner exception: {innerException.Message}");
-                    innerException = innerException.InnerException;
-                }
-            }
-
-            logger.Log(LogLevel.Error, new DefaultLogData(logger.Level, logger.tracking(), logMessage.ToString()));
-        }
-
-        public static void LogInfo(object data) => logger.Log(LogLevel.Info, new DefaultLogData(LogLevel.Info, logger.tracking(), data));
+        public static void LogInfo(string message, object data) => logger.Log(
+            LogLevel.Info,
+            new DefaultLogData(
+                LogLevel.Info,
+                message,
+                logger.tracking(),
+                data));
 
         private void Log(LogLevel level, ILogData data)
         {

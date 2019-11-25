@@ -2,6 +2,8 @@
 {
     public sealed class ElasticSearchConfiguration
     {
+        public bool Enabled { get; set; }
+
         public string Protocol { get; set; }
 
         public string Host { get; set; }

@@ -20,7 +20,7 @@
 
             if (string.IsNullOrEmpty(name))
             {
-                LogError($"File {name} is null or empty.");
+                LogError("Cypher script is null or empty.", new { File = name });
                 return None();
             }
 
@@ -30,7 +30,7 @@
                 {
                     if (stream == null)
                     {
-                        LogError($"Variable {nameof(stream)} of the class {nameof(CypherScript)} in the method {nameof(ReadCypherScript)} is null.");
+                        LogError("Variable is null.", new { Var = nameof(stream), Method = nameof(ReadCypherScript), Class = nameof(CypherScript) });
                         return None();
                     }
 
@@ -42,7 +42,7 @@
             }
             catch (Exception exception)
             {
-                LogError($"Cannot load file {name}.", exception);
+                LogError("Cannot load cypher script.", new { File = name, Exception = exception });
                 return None();
             }
         }
