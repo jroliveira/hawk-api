@@ -28,7 +28,7 @@
 
             stopwatch.Stop();
 
-            LogInfo(new LogData("Time spent during request execution.", stopwatch, context));
+            LogInfo("Time spent during request execution.", new LogData(stopwatch, context));
         }
     }
 }

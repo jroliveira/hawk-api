@@ -79,11 +79,13 @@ This file is used to set the configuration to run in Visual Studio or `dotnet ru
     "level": "Info",
     "sinks": {
       "file": {
+        "enabled": true,
         "path": "../../logs/.log"
       },
       "elasticSearch": {
+        "enabled": false,
         "protocol": "http",
-        "host": "elasticsearch",
+        "host": "localhost",
         "port": 9200
       }
     }
@@ -147,7 +149,9 @@ This file is used to set the configuration to run in `docker-compose up` command
 ASPNETCORE_URLS=http://*:5000
 
 LOG:LEVEL=Info
+LOG:SINKS:FILE:ENABLED=true
 LOG:SINKS:FILE:PATH=/logs/.log
+LOG:SINKS:ELASTICSEARCH:ENABLED=false
 LOG:SINKS:ELASTICSEARCH:PROTOCOL=http
 LOG:SINKS:ELASTICSEARCH:HOST=elasticsearch
 LOG:SINKS:ELASTICSEARCH:PORT=9200

@@ -34,9 +34,10 @@
             },
         };
 
-        public DefaultLogData(LogLevel level, string tracking, object data)
+        public DefaultLogData(LogLevel level, string message, string tracking, object data)
         {
             this.Level = level;
+            this.Message = message;
             this.Tracking = tracking;
             this.Data = data;
         }
@@ -44,6 +45,8 @@
         public DateTime DateTime => UtcNow();
 
         public LogLevel Level { get; }
+
+        public string Message { get; }
 
         public string Tracking { get; }
 

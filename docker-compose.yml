@@ -1,61 +1,12 @@
 version: '3'
 services:
-  graphdb:
-    image: neo4j:3.4-enterprise
-    container_name: hawk-graphdb
-    ports:
-      - "7474:7474"
-      - "7687:7687"
-      - "2004:2004"
-    volumes:
-      - ./database/neo4j/plugins:/plugins
-      - ./database/neo4j/data:/data
-      - ./database/neo4j/logs:/logs
-      - ./database/neo4j/conf:/conf
-    environment:
-      NEO4J_AUTH: neo4j/123456
-      NEO4J_ACCEPT_LICENSE_AGREEMENT: "yes"
-    networks:
-      - hawk-network
-
-  api:
-    container_name: hawk-api
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - .:/src
-      - ./logs:/logs
-    ports:
-      - "5000:5000"
-    env_file:
-      - api.env
-    depends_on:
-      - graphdb
-    networks:
-      - hawk-network
-
   swagger:
     image: swaggerapi/swagger-ui
     container_name: hawk-swagger
     ports:
-      - "5001:8080"
+      - "8080:8080"
     environment:
       API_URL: http://localhost:5000/swagger/v1/swagger.json
-    networks:
-      - hawk-network
-
-  prometheus:
-    image: prom/prometheus:v2.7.2
-    container_name: hawk-prometheus
-    ports:
-      - "5002:9090"
-    volumes:
-      - ./monitor/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-    depends_on:
-      - api
     networks:
       - hawk-network
 
@@ -75,15 +26,51 @@ services:
     networks:
       - hawk-network
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.4.0
-    container_name: hawk-elasticsearch
+  prometheus:
+    image: prom/prometheus:v2.7.2
+    container_name: hawk-prometheus
     ports:
-      - "9200:9200"
-      - "9300:9300"
+      - "5002:9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
     volumes:
-      - ./monitor/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-      - ./monitor/elasticsearch/data:/usr/share/elasticsearch/data
+      - ./monitor/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - api
+    networks:
+      - hawk-network
+
+  api:
+    container_name: hawk-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    env_file:
+      - api.env
+    volumes:
+      - .:/src
+      - ./logs:/logs
+    depends_on:
+      - graphdb
+    networks:
+      - hawk-network
+
+  graphdb:
+    image: neo4j:3.4-enterprise
+    container_name: hawk-graphdb
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+      - "2004:2004"
+    env_file:
+      - ./database/neo4j/neo4j.env
+    volumes:
+      - ./database/neo4j/plugins:/plugins
+      - ./database/neo4j/data:/data
+      - ./database/neo4j/logs:/logs
+      - ./database/neo4j/conf:/conf
     networks:
       - hawk-network
 
@@ -103,10 +90,35 @@ services:
     image: docker.elastic.co/beats/filebeat:7.4.0
     container_name: hawk-filebeat
     volumes:
-      - ./monitor/filebeat/conf.d/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-      - ./logs:/var/log/filebeat-source
+      - ./monitor/filebeat/config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ./logs:/var/log/hawk
+    depends_on:
+      - logstash
+    networks:
+      - hawk-network
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.4.0
+    container_name: hawk-logstash
+    ports:
+      - "5044:5044"
+    volumes:
+      - ./monitor/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./monitor/logstash/pipeline:/usr/share/logstash/pipeline
     depends_on:
       - elasticsearch
+    networks:
+      - hawk-network
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.4.0
+    container_name: hawk-elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - ./monitor/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./monitor/elasticsearch/data:/usr/share/elasticsearch/data
     networks:
       - hawk-network
 

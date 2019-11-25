@@ -157,9 +157,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{3668A2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "filebeat", "filebeat", "{9A9B9046-4AB9-42BA-8EB8-58EE79A4205E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "conf.d", "conf.d", "{B7D8BE87-398C-425D-97A8-E3A06C5C8D8A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{B7D8BE87-398C-425D-97A8-E3A06C5C8D8A}"
 	ProjectSection(SolutionItems) = preProject
-		monitor\filebeat\conf.d\filebeat.yml = monitor\filebeat\conf.d\filebeat.yml
+		monitor\filebeat\config\filebeat.yml = monitor\filebeat\config\filebeat.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "kibana", "kibana", "{3C8AEBB2-86BD-42B0-B140-207608BCF75F}"
@@ -172,10 +172,25 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "database", "database", "{F009802B-85E1-4565-98D1-3A3F7E76B400}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "neo4j", "neo4j", "{763D9EE8-C20D-4563-9E21-801BA38F8173}"
+	ProjectSection(SolutionItems) = preProject
+		database\neo4j\neo4j.env = database\neo4j\neo4j.env
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "conf", "conf", "{7F9F9325-E951-4B3C-9E9E-88FBCEA79AE3}"
 	ProjectSection(SolutionItems) = preProject
 		database\neo4j\conf\neo4j.conf = database\neo4j\conf\neo4j.conf
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "logstash", "logstash", "{316572DD-34C2-4998-BEF9-C0C59C76EABE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{404BE1C9-B5B2-4CF5-98E3-372340E20EB6}"
+	ProjectSection(SolutionItems) = preProject
+		monitor\logstash\config\logstash.yml = monitor\logstash\config\logstash.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipeline", "pipeline", "{E5C0A1CB-6F46-4881-BEA6-6C8FE2599B97}"
+	ProjectSection(SolutionItems) = preProject
+		monitor\logstash\pipeline\logstash.conf = monitor\logstash\pipeline\logstash.conf
 	EndProjectSection
 EndProject
 Global
@@ -231,6 +246,9 @@ Global
 		{93E1EAA1-B9A3-41D0-B17F-D6FE32D1175D} = {3C8AEBB2-86BD-42B0-B140-207608BCF75F}
 		{763D9EE8-C20D-4563-9E21-801BA38F8173} = {F009802B-85E1-4565-98D1-3A3F7E76B400}
 		{7F9F9325-E951-4B3C-9E9E-88FBCEA79AE3} = {763D9EE8-C20D-4563-9E21-801BA38F8173}
+		{316572DD-34C2-4998-BEF9-C0C59C76EABE} = {9B95FA03-E0A0-4038-9572-538F4F549DF6}
+		{404BE1C9-B5B2-4CF5-98E3-372340E20EB6} = {316572DD-34C2-4998-BEF9-C0C59C76EABE}
+		{E5C0A1CB-6F46-4881-BEA6-6C8FE2599B97} = {316572DD-34C2-4998-BEF9-C0C59C76EABE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7CB3FDF8-0DA7-4D1F-B674-0261172FE8F6}

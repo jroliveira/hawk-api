@@ -1,18 +1,15 @@
 version: '3'
 services:
-  graphdb:
-    image: neo4j:3.4-enterprise
-    container_name: hawk-graphdb-integration-test
+  mockserver:
+    image: jamesdbloom/mockserver:mockserver-5.5.1
+    container_name: hawk-mockserver
     ports:
-      - "7474:7474"
-      - "7687:7687"
-      - "2004:2004"
-    volumes:
-      - ./database/neo4j/plugins:/plugins
-      - ./database/neo4j/conf:/conf
+      - "1080:1080"
     environment:
-      NEO4J_AUTH: neo4j/123456
-      NEO4J_ACCEPT_LICENSE_AGREEMENT: "yes"
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./test/integration/Hawk.WebApi.IntegrationTest/mockserver/mockserver.properties:/opt/mockserver/mockserver.properties
+      - ./test/integration/Hawk.WebApi.IntegrationTest/mockserver:/opt/mockserver/conf
     networks:
       - hawk-network
 
@@ -29,16 +26,18 @@ services:
     networks:
       - hawk-network
 
-  mockserver:
-    image: jamesdbloom/mockserver:mockserver-5.5.1
-    container_name: hawk-mockserver
+  graphdb:
+    image: neo4j:3.4-enterprise
+    container_name: hawk-graphdb-integration-test
     ports:
-      - "1080:1080"
+      - "7474:7474"
+      - "7687:7687"
+      - "2004:2004"
+    env_file:
+      - ./database/neo4j/neo4j.env
     environment:
-      - LOG_LEVEL=INFO
-    volumes:
-      - ./test/integration/Hawk.WebApi.IntegrationTest/mockserver/mockserver.properties:/opt/mockserver/mockserver.properties
-      - ./test/integration/Hawk.WebApi.IntegrationTest/mockserver:/opt/mockserver/conf
+      NEO4J_AUTH: neo4j/123456
+      NEO4J_ACCEPT_LICENSE_AGREEMENT: "yes"
     networks:
       - hawk-network
 

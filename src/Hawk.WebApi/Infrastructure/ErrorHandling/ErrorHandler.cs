@@ -28,15 +28,19 @@
 
         internal static TryModel<TModel> HandleError<TModel>(Exception exception, IHostingEnvironment environment)
         {
-            LogError(exception.Message, exception);
+            ErrorModel error;
 
             switch (exception)
             {
-                case NotFoundException _: return new GenericErrorModel(exception);
-                case InvalidObjectException invalidObject: return new ConflictErrorModel(invalidObject);
-                case AlreadyExistsException _: return new GenericErrorModel(exception);
-                default: return new GenericErrorModel(exception, environment);
+                case NotFoundException _: error = new GenericErrorModel(exception); break;
+                case InvalidObjectException invalidObject: error = new ConflictErrorModel(invalidObject); break;
+                case AlreadyExistsException _: error = new GenericErrorModel(exception); break;
+                default: error = new GenericErrorModel(exception, environment); break;
             }
+
+            LogError(error.Message, error);
+
+            return error;
         }
     }
 }

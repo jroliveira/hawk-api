@@ -6,15 +6,12 @@
 
     public sealed class LogData
     {
-        internal LogData(string message, Stopwatch stopwatch, HttpContext context)
+        internal LogData(Stopwatch stopwatch, HttpContext context)
         {
-            this.Message = message;
             this.Elapse = new Elapse(stopwatch);
             this.Request = new Request(context);
             this.Response = new Response(context);
         }
-
-        public string Message { get; }
 
         public Elapse Elapse { get; }
 
