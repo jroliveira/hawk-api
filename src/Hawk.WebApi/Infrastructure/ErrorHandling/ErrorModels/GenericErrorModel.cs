@@ -2,23 +2,16 @@
 {
     using System;
 
-    using Hawk.Domain.Shared.Exceptions;
-
-    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Hosting;
 
     public sealed class GenericErrorModel : ErrorModel
     {
-        public GenericErrorModel(HawkException exception)
-            : base(exception)
-        {
-        }
-
         public GenericErrorModel(Exception exception)
             : this(exception, default)
         {
         }
 
-        public GenericErrorModel(Exception exception, IHostingEnvironment environment)
+        public GenericErrorModel(Exception exception, IHostEnvironment? environment)
             : base("An error has occurred.")
         {
             if (environment != null && environment.IsDevelopment())
@@ -27,6 +20,6 @@
             }
         }
 
-        public DeveloperErrorModel DeveloperError { get; }
+        public DeveloperErrorModel? DeveloperError { get; }
     }
 }

@@ -11,7 +11,7 @@
 
     internal sealed class GetStoreByName : IGetStoreByName
     {
-        private static readonly Option<string> Statement = ReadCypherScript("Store.GetStoreByName.cql");
+        private static readonly Option<string> Statement = ReadCypherScript("Store\\GetStoreByName.cql");
         private readonly Neo4JConnection connection;
 
         public GetStoreByName(Neo4JConnection connection) => this.connection = connection;

@@ -13,10 +13,7 @@
     public sealed class Account : Entity<Guid>
     {
         private Account(Guid id, Email email)
-        {
-            this.Id = id;
-            this.Email = email;
-        }
+            : base(id) => this.Email = email;
 
         public Email Email { get; }
 

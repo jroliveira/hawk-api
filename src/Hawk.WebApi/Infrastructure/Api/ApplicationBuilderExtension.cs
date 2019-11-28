@@ -9,6 +9,8 @@
             .UseResponseCaching()
             .UseResponseCompression()
             .UseCors("CorsPolicy")
+            .UseRouting()
+            .UseHttpsRedirection()
             .UseMvc();
     }
 }

@@ -2,8 +2,10 @@
 {
     public sealed class SinksConfiguration
     {
-        public FileConfiguration File { get; set; }
+        public ConsoleConfiguration? Console { get; set; }
 
-        public ElasticSearchConfiguration ElasticSearch { get; set; }
+        public FileConfiguration? File { get; set; }
+
+        public ElasticSearchConfiguration? ElasticSearch { get; set; }
     }
 }

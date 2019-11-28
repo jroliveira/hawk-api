@@ -14,6 +14,7 @@
 
     using static StoreModel;
 
+    [ApiController]
     [ApiVersion("1")]
     [Route("stores")]
     public class StoresController : BaseController
@@ -24,7 +25,7 @@
         public StoresController(
             IGetStores getStores,
             IGetStoreByName getStoreByName,
-            IHostingEnvironment environment)
+            IWebHostEnvironment environment)
             : base(environment)
         {
             this.getStores = getStores;

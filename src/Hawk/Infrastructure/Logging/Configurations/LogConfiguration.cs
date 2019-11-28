@@ -2,8 +2,8 @@
 {
     public sealed class LogConfiguration
     {
-        public string Level { get; set; }
+        public string? Level { get; set; }
 
-        public SinksConfiguration Sinks { get; set; }
+        public SinksConfiguration? Sinks { get; set; }
     }
 }

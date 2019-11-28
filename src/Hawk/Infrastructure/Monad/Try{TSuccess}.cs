@@ -27,9 +27,9 @@
 
         public static implicit operator Try<TSuccess>(TSuccess success) => new Try<TSuccess>(success);
 
-        public TReturn Match<TReturn>(Func<Exception, TReturn> failure, Func<TSuccess, TReturn> success) => this.IsFailure
-            ? failure(this.failure)
-            : success(this.success);
+        public TReturn Match<TReturn>(Func<Exception, TReturn> failureFunc, Func<TSuccess, TReturn> successFunc) => this.IsFailure
+            ? failureFunc(this.failure)
+            : successFunc(this.success);
 
         public TSuccess Get() => this.success;
     }

@@ -17,7 +17,7 @@
 
     internal sealed class GetTransactions : IGetTransactions
     {
-        private static readonly Option<string> Statement = ReadCypherScript("Transaction.GetTransactions.cql");
+        private static readonly Option<string> Statement = ReadCypherScript("Transaction\\GetTransactions.cql");
         private readonly Neo4JConnection connection;
         private readonly ILimit<int, Filter> limit;
         private readonly ISkip<int, Filter> skip;

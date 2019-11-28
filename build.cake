@@ -32,6 +32,9 @@ Task("Default")
 Task("Test")
     .IsDependentOn("Setup-Tests");
 
+Task("Dependencies")
+    .IsDependentOn("Up-Dependencies");
+
 Task("Deploy")
     .IsDependentOn("Delete-Temp-Directories")
     .IsDependentOn("Restore-NuGet-Packages")

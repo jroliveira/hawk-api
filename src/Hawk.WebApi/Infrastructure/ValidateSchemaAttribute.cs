@@ -30,33 +30,31 @@
         {
             actionExecutingContext.HttpContext.Request.Body.Seek(0, Begin);
 
-            using (var reader = new StreamReader(actionExecutingContext.HttpContext.Request.Body))
+            using var reader = new StreamReader(actionExecutingContext.HttpContext.Request.Body);
+            var json = reader.ReadToEnd();
+            if (IsNullOrWhiteSpace(json))
             {
-                var json = reader.ReadToEnd();
-                if (IsNullOrWhiteSpace(json))
+                actionExecutingContext.Result = new StatusCodeResult(422);
+                return;
+            }
+
+            var schema = FromType(this.schemaType, new JsonSchemaGeneratorSettings { SerializerSettings = JsonSerializerSettings });
+
+            schema.AllowAdditionalProperties = false;
+
+            var body = Parse(json);
+            var errors = schema.Validate(body);
+
+            if (errors.Any())
+            {
+                actionExecutingContext.Result = new ObjectResult(new ConflictErrorModel(new InvalidObjectException(
+                    "Unprocessable entity.",
+                    errors
+                        .Select(error => (error.Property, error.Kind.ToString()))
+                        .ToList())))
                 {
-                    actionExecutingContext.Result = new StatusCodeResult(422);
-                    return;
-                }
-
-                var schema = FromType(this.schemaType, new JsonSchemaGeneratorSettings { SerializerSettings = JsonSerializerSettings });
-
-                schema.AllowAdditionalProperties = false;
-
-                var body = Parse(json);
-                var errors = schema.Validate(body);
-
-                if (errors.Any())
-                {
-                    actionExecutingContext.Result = new ObjectResult(new ConflictErrorModel(new InvalidObjectException(
-                        "Unprocessable entity",
-                        errors
-                            .Select(error => (error.Property, error.Kind.ToString()))
-                            .ToList())))
-                    {
-                        StatusCode = 422,
-                    };
-                }
+                    StatusCode = 422,
+                };
             }
         }
     }

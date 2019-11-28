@@ -15,28 +15,28 @@
 
     using Newtonsoft.Json;
 
-    using static System.Buffers.ArrayPool<char>;
     using static System.Text.Encoding;
 
     using static Microsoft.Net.Http.Headers.MediaTypeHeaderValue;
 
     using static Newtonsoft.Json.JsonConvert;
 
-    internal sealed class HalJsonOutputFormatter : JsonOutputFormatter
+    internal sealed class HalJsonOutputFormatter : TextOutputFormatter
     {
         private const string ContentType = "application/hal+json";
 
         private readonly IReadOnlyDictionary<Type, Func<HttpContext, object, IResource>> builders;
+        private readonly JsonSerializerSettings serializerSettings;
 
         internal HalJsonOutputFormatter(IReadOnlyDictionary<Type, Func<HttpContext, object, IResource>> builders, Action<JsonSerializerSettings> setupAction)
-            : base(JsonSettings.JsonSerializerSettings, Shared)
         {
             this.builders = builders;
-            this.SerializerSettings.Converters.Add(new ResourceJsonConverter());
-            this.SerializerSettings.Converters.Add(new LinksJsonConverter());
-            this.SerializerSettings.Converters.Add(new PageJsonConverter());
+            this.serializerSettings = JsonSettings.JsonSerializerSettings;
+            this.serializerSettings.Converters.Add(new ResourceJsonConverter());
+            this.serializerSettings.Converters.Add(new LinksJsonConverter());
+            this.serializerSettings.Converters.Add(new PageJsonConverter());
 
-            setupAction?.Invoke(this.SerializerSettings);
+            setupAction?.Invoke(this.serializerSettings);
 
             this.SupportedEncodings.Add(UTF8);
             this.SupportedMediaTypes.Clear();
@@ -46,7 +46,7 @@
         public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding selectedEncoding)
         {
             var resource = this.builders[context.ObjectType](context.HttpContext, context.Object);
-            var json = SerializeObject(resource, this.SerializerSettings);
+            var json = SerializeObject(resource, this.serializerSettings);
 
             var response = context.HttpContext.Response;
             response.ContentType = ContentType;

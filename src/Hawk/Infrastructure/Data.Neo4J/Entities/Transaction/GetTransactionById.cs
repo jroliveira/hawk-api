@@ -12,7 +12,7 @@
 
     internal sealed class GetTransactionById : IGetTransactionById
     {
-        private static readonly Option<string> Statement = ReadCypherScript("Transaction.GetTransactionById.cql");
+        private static readonly Option<string> Statement = ReadCypherScript("Transaction\\GetTransactionById.cql");
         private readonly Neo4JConnection connection;
 
         public GetTransactionById(Neo4JConnection connection) => this.connection = connection;

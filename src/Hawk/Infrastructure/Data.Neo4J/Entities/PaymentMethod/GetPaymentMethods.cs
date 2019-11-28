@@ -14,7 +14,7 @@
 
     internal sealed class GetPaymentMethods : IGetPaymentMethods
     {
-        private static readonly Option<string> Statement = ReadCypherScript("PaymentMethod.GetPaymentMethods.cql");
+        private static readonly Option<string> Statement = ReadCypherScript("PaymentMethod\\GetPaymentMethods.cql");
         private readonly Neo4JConnection connection;
         private readonly ILimit<int, Filter> limit;
         private readonly ISkip<int, Filter> skip;

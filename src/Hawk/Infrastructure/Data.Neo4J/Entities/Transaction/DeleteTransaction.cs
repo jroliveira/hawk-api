@@ -11,7 +11,7 @@
 
     internal sealed class DeleteTransaction : IDeleteTransaction
     {
-        private static readonly Option<string> Statement = ReadCypherScript("Transaction.DeleteTransaction.cql");
+        private static readonly Option<string> Statement = ReadCypherScript("Transaction\\DeleteTransaction.cql");
         private readonly Neo4JConnection connection;
 
         public DeleteTransaction(Neo4JConnection connection) => this.connection = connection;

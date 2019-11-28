@@ -1,7 +1,7 @@
 version: '3'
 services:
   swagger:
-    image: swaggerapi/swagger-ui
+    image: swaggerapi/swagger-ui:v3.24.3
     container_name: hawk-swagger
     ports:
       - "8080:8080"
@@ -14,11 +14,11 @@ services:
     image: grafana/grafana:5.4.3
     container_name: hawk-grafana
     ports:
-      - "5003:3000"
+      - "3000:3000"
     env_file:
       - ./monitor/grafana/grafana.env
     volumes:
-      - ./monitor/grafana/config.ini:/etc/grafana/config.ini
+      - ./monitor/grafana/grafana.ini:/etc/grafana/grafana.ini
       - ./monitor/grafana/dashboards:/var/lib/grafana/dashboards
       - ./monitor/grafana/provisioning:/etc/grafana/provisioning
     depends_on:
@@ -30,13 +30,12 @@ services:
     image: prom/prometheus:v2.7.2
     container_name: hawk-prometheus
     ports:
-      - "5002:9090"
+      - "9090:9090"
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--log.level=warn"
     volumes:
       - ./monitor/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-    depends_on:
-      - api
     networks:
       - hawk-network
 
@@ -118,6 +117,7 @@ services:
       - "9300:9300"
     volumes:
       - ./monitor/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./monitor/elasticsearch/config/log4j2.properties:/usr/share/elasticsearch/config/log4j2.properties
       - ./monitor/elasticsearch/data:/usr/share/elasticsearch/data
     networks:
       - hawk-network

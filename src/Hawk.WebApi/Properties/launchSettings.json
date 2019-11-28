@@ -4,7 +4,7 @@
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "v1",
-      "applicationUrl": "http://localhost:48285",
+      "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -13,7 +13,7 @@
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "v1",
-      "applicationUrl": "http://localhost:48285",
+      "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       }

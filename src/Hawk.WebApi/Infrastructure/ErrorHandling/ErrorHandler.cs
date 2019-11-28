@@ -13,32 +13,27 @@
 
     internal static class ErrorHandler
     {
-        internal static IActionResult HandleError<TModel>(this ErrorController @this, Exception exception)
+        internal static IActionResult HandleError<TModel>(this ErrorController @this, Exception exception) => exception switch
         {
-            switch (exception)
-            {
-                case NotFoundException _: return @this.NotFound(HandleError<TModel>(exception, @this.Environment));
-                case InvalidObjectException _: return @this.StatusCode(409, HandleError<TModel>(exception, @this.Environment));
-                case AlreadyExistsException _: return @this.StatusCode(409, HandleError<TModel>(exception, @this.Environment));
-                default: return @this.StatusCode(500, HandleError<TModel>(exception, @this.Environment));
-            }
-        }
+            NotFoundException _ => @this.NotFound(HandleError<TModel>(exception, @this.Environment)),
+            InvalidObjectException _ => @this.StatusCode(409, HandleError<TModel>(exception, @this.Environment)),
+            AlreadyExistsException _ => @this.StatusCode(409, HandleError<TModel>(exception, @this.Environment)),
+            _ => @this.StatusCode(500, HandleError<TModel>(exception, @this.Environment))
+        };
 
         internal static TryModel<TModel> HandleError<TModel>(Exception exception) => HandleError<TModel>(exception, default);
 
-        internal static TryModel<TModel> HandleError<TModel>(Exception exception, IHostingEnvironment environment)
+        internal static TryModel<TModel> HandleError<TModel>(Exception exception, IWebHostEnvironment? environment)
         {
-            ErrorModel error;
-
-            switch (exception)
+            var error = exception switch
             {
-                case NotFoundException _: error = new GenericErrorModel(exception); break;
-                case InvalidObjectException invalidObject: error = new ConflictErrorModel(invalidObject); break;
-                case AlreadyExistsException _: error = new GenericErrorModel(exception); break;
-                default: error = new GenericErrorModel(exception, environment); break;
-            }
+                NotFoundException _ => (ErrorModel)new GenericErrorModel(exception),
+                InvalidObjectException invalidObject => new ConflictErrorModel(invalidObject),
+                AlreadyExistsException _ => new GenericErrorModel(exception),
+                _ => new GenericErrorModel(exception, environment)
+            };
 
-            LogError(error.Message, error);
+            LogError(error.Message ?? "An error has occurred.", error);
 
             return error;
         }

@@ -18,9 +18,9 @@
     internal sealed class ErrorHandlingMiddleware
     {
         private readonly RequestDelegate next;
-        private readonly IHostingEnvironment environment;
+        private readonly IWebHostEnvironment environment;
 
-        public ErrorHandlingMiddleware(RequestDelegate next, IHostingEnvironment environment)
+        public ErrorHandlingMiddleware(RequestDelegate next, IWebHostEnvironment environment)
         {
             this.next = next;
             this.environment = environment;

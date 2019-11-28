@@ -12,7 +12,7 @@
 
         internal ApiVersionRoutePrefixConvention() => this.versionConstraintTemplate = new AttributeRouteModel
         {
-            Template = "v{api-version:apiVersion}",
+            Template = "v{version:apiVersion}",
         };
 
         public void Apply(ApplicationModel application)

@@ -4,7 +4,7 @@
 
     public sealed class Logger
     {
-        private static Logger logger;
+        private static Logger? logger;
 
         private readonly Func<string> tracking;
         private readonly Action<string> logMethod;
@@ -25,7 +25,7 @@
             Func<string> tracking,
             Action<string> logMethod) => logger = new Logger(level, tracking, logMethod);
 
-        public static void LogError(string message, object data) => logger.Log(
+        public static void LogError(string message, object data) => logger?.Log(
             LogLevel.Error,
             new DefaultLogData(
                 LogLevel.Error,
@@ -33,10 +33,18 @@
                 logger.tracking(),
                 data));
 
-        public static void LogInfo(string message, object data) => logger.Log(
+        public static void LogInfo(string message, object data) => logger?.Log(
             LogLevel.Info,
             new DefaultLogData(
                 LogLevel.Info,
+                message,
+                logger.tracking(),
+                data));
+
+        public static void LogWarning(string message, object data) => logger?.Log(
+            LogLevel.Warn,
+            new DefaultLogData(
+                LogLevel.Warn,
                 message,
                 logger.tracking(),
                 data));

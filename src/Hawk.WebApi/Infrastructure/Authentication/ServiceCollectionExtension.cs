@@ -19,12 +19,12 @@
                 .GetSection("authentication")
                 .Get<AuthConfiguration>();
 
-            if (!authConfig.Enabled)
+            if (!authConfig.Enabled.GetValueOrDefault(false))
             {
                 return @this;
             }
 
-            NotNull(authConfig.Authority, "authConfig.Authority", "AuthConfig authority cannot be null.");
+            NotNull(authConfig.Authority?.Uri, "authConfig.Authority.Uri", "AuthConfig authority cannot be null.");
 
             ShowPII = true;
 
@@ -33,7 +33,7 @@
                 .AddIdentityServerAuthentication(opt =>
                 {
                     opt.ApiName = "hawk";
-                    opt.Authority = authConfig.Authority.Uri;
+                    opt.Authority = authConfig.Authority?.Uri;
                     opt.RequireHttpsMetadata = false;
                 });
 

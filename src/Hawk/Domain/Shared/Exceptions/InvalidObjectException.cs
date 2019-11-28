@@ -9,7 +9,7 @@
     public sealed class InvalidObjectException : HawkException
     {
         public InvalidObjectException(string message)
-            : this(message, default)
+            : this(message, new InvalidProperties())
         {
         }
 
@@ -24,6 +24,11 @@
 
         public class InvalidProperties : ReadOnlyCollection<InvalidProperty>
         {
+            public InvalidProperties()
+                : this(new List<InvalidProperty>())
+            {
+            }
+
             public InvalidProperties(IList<InvalidProperty> invalidProperties)
                 : base(invalidProperties)
             {

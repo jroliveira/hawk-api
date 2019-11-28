@@ -4,7 +4,7 @@
 
     public sealed class DeveloperErrorModel : ErrorModel
     {
-        public DeveloperErrorModel(Exception exception)
+        public DeveloperErrorModel(Exception? exception)
             : base(exception)
         {
             if (exception == null)
@@ -16,8 +16,8 @@
             this.InnerDeveloperError = new DeveloperErrorModel(exception.InnerException);
         }
 
-        public string StackTrace { get; }
+        public string? StackTrace { get; }
 
-        public DeveloperErrorModel InnerDeveloperError { get; }
+        public DeveloperErrorModel? InnerDeveloperError { get; }
     }
 }

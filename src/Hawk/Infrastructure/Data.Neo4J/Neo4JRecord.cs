@@ -24,6 +24,7 @@
             switch (record)
             {
                 case null:
+                    this.data = new Dictionary<string, object>();
                     return;
                 case IEntity node:
                     this.data = node.Properties.ToDictionary(item => item.Key, item => item.Value);
@@ -57,7 +58,7 @@
         internal IEnumerable<string> GetList(string key) => this
             .Get<IList<object>>(key)
             .GetOrElse(new List<object>())
-            ?.Select(item => item.ToString());
+            .Select(item => item.ToString());
 
         internal Option<TValue> Get<TValue>(string key)
         {
@@ -68,13 +69,11 @@
 
             try
             {
-                switch (typeof(TValue))
+                return typeof(TValue) switch
                 {
-                    case Type guidType when guidType == typeof(Guid):
-                        return (TValue)GetConverter(typeof(Guid)).ConvertFromInvariantString(this.data[key].As<string>());
-                    default:
-                        return this.data[key].As<TValue>();
-                }
+                    { } guidType when guidType == typeof(Guid) => (TValue)GetConverter(typeof(Guid)).ConvertFromInvariantString(this.data[key].As<string>()),
+                    _ => this.data[key].As<TValue>()
+                };
             }
             catch (Exception exception)
             {

@@ -66,114 +66,6 @@ $ cd hawk-api
 $ npm install
 ```
 
-## Configuration
-
-### Configuring appsettings.json
-
-You must create a file `appsettings.json` on the path `./src/Hawk.WebApi/` with the context below.  
-This file is used to set the configuration to run in Visual Studio or `dotnet run` command.
-
-``` json
-{
-  "log": {
-    "level": "Info",
-    "sinks": {
-      "file": {
-        "enabled": true,
-        "path": "../../logs/.log"
-      },
-      "elasticSearch": {
-        "enabled": false,
-        "protocol": "http",
-        "host": "localhost",
-        "port": 9200
-      }
-    }
-  },
-  "authentication": {
-    "enabled": true,
-    "authority": {
-      "protocol": "http",
-      "host": "localhost",
-      "port": 35653
-    }
-  },
-  "neo4j": {
-    "protocol": "bolt",
-    "host": "localhost",
-    "port": 7687,
-    "username": "neo4j",
-    "password": "123456"
-  },
-  "ipRateLimiting": {
-    "enableEndpointRateLimiting": false,
-    "stackBlockedRequests": false,
-    "realIpHeader": "X-Real-IP",
-    "clientIdHeader": "X-ClientId",
-    "httpStatusCode": 429,
-    "ipWhitelist": [],
-    "endpointWhitelist": [],
-    "clientWhitelist": [],
-    "generalRules": [
-      {
-        "endpoint": "*",
-        "period": "1s",
-        "limit": 2
-      },
-      {
-        "endpoint": "*",
-        "period": "15m",
-        "limit": 100
-      },
-      {
-        "endpoint": "*",
-        "period": "12h",
-        "limit": 1000
-      },
-      {
-        "endpoint": "*",
-        "period": "7d",
-        "limit": 10000
-      }
-    ]
-  }
-}
-```
-
-### Configuring api.env
-
-You must create a file `api.env` on the path `.` with the context below.  
-This file is used to set the configuration to run in `docker-compose up` command.
-
-``` bash
-ASPNETCORE_URLS=http://*:5000
-
-LOG:LEVEL=Info
-LOG:SINKS:FILE:ENABLED=true
-LOG:SINKS:FILE:PATH=/logs/.log
-LOG:SINKS:ELASTICSEARCH:ENABLED=false
-LOG:SINKS:ELASTICSEARCH:PROTOCOL=http
-LOG:SINKS:ELASTICSEARCH:HOST=elasticsearch
-LOG:SINKS:ELASTICSEARCH:PORT=9200
-
-AUTHENTICATION:ENABLED=false
-AUTHENTICATION:AUTHORITY:PROTOCOL=http
-AUTHENTICATION:AUTHORITY:HOST=localhost
-AUTHENTICATION:AUTHORITY:PORT=35653
-
-NEO4J:PROTOCOL=bolt
-NEO4J:HOST=graphdb
-NEO4J:PORT=7687
-NEO4J:USERNAME=neo4j
-NEO4J:PASSWORD=123456
-
-IPRATELIMITING:ENABLEENDPOINTRATELIMITING=false
-IPRATELIMITING:STACKBLOCKEDREQUESTS=false
-IPRATELIMITING:REALIPHEADER=X-Real-IP
-IPRATELIMITING:CLIENTIDHEADER=X-ClientId
-IPRATELIMITING:HTTPSTATUSCODE=429
-```
-
 ### Building
 
 ``` bash
@@ -197,9 +89,12 @@ $ docker-compose up
 
 or
 
-If you want to run with dotnet, you need to run Neo4j and before, the command below:
+If you want to run with dotnet, you need to run the command below:
 
 ``` bash
+# Run dependencies
+$ dotnet cake --target=Dependencies
+
 # Run application
 $ dotnet run --project ./src/Hawk.WebApi/
 ```

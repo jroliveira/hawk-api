@@ -14,6 +14,7 @@
 
     using static TagModel;
 
+    [ApiController]
     [ApiVersion("1")]
     [Route("")]
     public class TagsController : BaseController
@@ -24,7 +25,7 @@
         public TagsController(
             IGetTags getTags,
             IGetTagsByStore getTagsByStore,
-            IHostingEnvironment environment)
+            IWebHostEnvironment environment)
             : base(environment)
         {
             this.getTags = getTags;

@@ -13,13 +13,13 @@
 
         public override void WriteJson(
             JsonWriter writer,
-            object value,
-            JsonSerializer serializer) => writer.WriteValue(value.ToString());
+            object? value,
+            JsonSerializer serializer) => writer.WriteValue(value?.ToString());
 
         public override object ReadJson(
             JsonReader reader,
             Type objectType,
-            object existingValue,
+            object? existingValue,
             JsonSerializer serializer) => Parse((string)reader.Value);
     }
 }

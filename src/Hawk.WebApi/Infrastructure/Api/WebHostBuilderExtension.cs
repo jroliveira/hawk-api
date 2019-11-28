@@ -15,6 +15,7 @@
                 .AddJsonFile("appsettings.json", true, true)
                 .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true)
                 .AddEnvironmentVariables()
-                .Build());
+                .Build())
+            .UseUrls("http://*:5000");
     }
 }
