@@ -19,7 +19,7 @@
 
     internal sealed class Neo4JConnection : IDisposable
     {
-        private readonly IDriver driver;
+        private readonly IDriver? driver;
 
         public Neo4JConnection(IOptions<Neo4JConfiguration> config)
         {
@@ -78,12 +78,10 @@
 
             try
             {
-                using (var session = this.driver.Session())
-                {
-                    var cursor = await session.RunAsync(statement.Get(), parameters);
+                using var session = this.driver.Session();
+                var cursor = await session.RunAsync(statement.Get(), parameters);
 
-                    return await command(cursor);
-                }
+                return await command(cursor);
             }
             catch (Exception exception)
             {

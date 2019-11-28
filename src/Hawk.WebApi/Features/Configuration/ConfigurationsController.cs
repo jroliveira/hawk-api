@@ -15,6 +15,7 @@
 
     using static NewConfigurationModel;
 
+    [ApiController]
     [ApiVersion("1")]
     [Route("configurations")]
     public class ConfigurationsController : BaseController
@@ -26,7 +27,7 @@
         public ConfigurationsController(
             IGetConfigurationByDescription getConfigurationByDescription,
             IUpsertConfiguration upsertConfiguration,
-            IHostingEnvironment environment)
+            IWebHostEnvironment environment)
             : this(getConfigurationByDescription, upsertConfiguration, new NewConfigurationModelValidator(), environment)
         {
             this.getConfigurationByDescription = getConfigurationByDescription;
@@ -37,7 +38,7 @@
             IGetConfigurationByDescription getConfigurationByDescription,
             IUpsertConfiguration upsertConfiguration,
             NewConfigurationModelValidator validator,
-            IHostingEnvironment environment)
+            IWebHostEnvironment environment)
             : base(environment)
         {
             this.getConfigurationByDescription = getConfigurationByDescription;
@@ -94,7 +95,7 @@
 
                     return inserted.Match(
                         this.HandleError<ConfigurationModel>,
-                        configuration => this.Created(default, new TryModel<ConfigurationModel>(new ConfigurationModel(configuration))));
+                        configuration => this.Created(new TryModel<ConfigurationModel>(new ConfigurationModel(configuration))));
                 },
                 async _ =>
                 {

@@ -11,7 +11,7 @@
 
     internal sealed class GetConfigurationByDescription : IGetConfigurationByDescription
     {
-        private static readonly Option<string> Statement = ReadCypherScript("Configuration.GetConfigurationByDescription.cql");
+        private static readonly Option<string> Statement = ReadCypherScript("Configuration\\GetConfigurationByDescription.cql");
         private readonly Neo4JConnection connection;
 
         public GetConfigurationByDescription(Neo4JConnection connection) => this.connection = connection;

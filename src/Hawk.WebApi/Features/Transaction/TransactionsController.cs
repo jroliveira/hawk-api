@@ -17,6 +17,7 @@
 
     using static TransactionModel;
 
+    [ApiController]
     [ApiVersion("1")]
     [Route("transactions")]
     public class TransactionsController : BaseController
@@ -32,7 +33,7 @@
             IGetTransactionById getTransactionById,
             IUpsertTransaction upsertTransaction,
             IDeleteTransaction deleteTransaction,
-            IHostingEnvironment environment)
+            IWebHostEnvironment environment)
             : this(getTransactions, getTransactionById, upsertTransaction, deleteTransaction, new NewTransactionModelValidator(), environment)
         {
         }
@@ -43,7 +44,7 @@
             IUpsertTransaction upsertTransaction,
             IDeleteTransaction deleteTransaction,
             NewTransactionModelValidator validator,
-            IHostingEnvironment environment)
+            IWebHostEnvironment environment)
             : base(environment)
         {
             this.getTransactions = getTransactions;
@@ -144,7 +145,7 @@
 
                     return inserted.Match(
                         this.HandleError<TransactionModel>,
-                        transaction => this.Created(default, new TryModel<TransactionModel>(new TransactionModel(transaction))));
+                        transaction => this.Created(new TryModel<TransactionModel>(new TransactionModel(transaction))));
                 },
                 async _ =>
                 {

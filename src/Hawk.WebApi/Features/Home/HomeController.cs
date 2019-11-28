@@ -6,14 +6,16 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
 
+    [ApiController]
     [AllowAnonymous]
     [ApiVersion("1")]
+    [ApiVersion("2")]
     [Route("")]
     public class HomeController : ControllerBase
     {
-        private readonly IHostingEnvironment environment;
+        private readonly IWebHostEnvironment environment;
 
-        public HomeController(IHostingEnvironment environment) => this.environment = environment;
+        public HomeController(IWebHostEnvironment environment) => this.environment = environment;
 
         /// <summary>
         /// Get.

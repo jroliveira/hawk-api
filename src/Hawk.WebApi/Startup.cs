@@ -26,19 +26,19 @@
                 .ConfigureIpRateLimiting(this.Configuration)
                 .ConfigureNeo4J(this.Configuration)
                 .ConfigureApi(this.Configuration)
-                .ConfigureSwagger()
-                .ConfigureMetric();
+                .ConfigureMetric()
+                .ConfigureSwagger(this.Configuration);
 
             this.ConfigureAuthentication(services);
         }
 
         public void Configure(IApplicationBuilder app, IHttpContextAccessor accessor) => app
-            .UseLogging(this.Configuration, accessor)
+            .UseLogging()
             .UseAuthentication()
             .UseErrorHandling()
             .UseApi()
-            .UseSwagger()
-            .UseMetric();
+            .UseMetric()
+            .UseSwagger(this.Configuration);
 
         protected virtual void ConfigureAuthentication(IServiceCollection services) => services.ConfigureAuthentication(this.Configuration);
     }

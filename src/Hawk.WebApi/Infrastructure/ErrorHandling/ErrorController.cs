@@ -5,8 +5,8 @@
 
     public abstract class ErrorController : ControllerBase
     {
-        protected ErrorController(IHostingEnvironment environment) => this.Environment = environment;
+        protected ErrorController(IWebHostEnvironment environment) => this.Environment = environment;
 
-        internal IHostingEnvironment Environment { get; }
+        internal IWebHostEnvironment Environment { get; }
     }
 }

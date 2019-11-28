@@ -14,7 +14,7 @@
 
     internal sealed class GetTagsByStore : IGetTagsByStore
     {
-        private static readonly Option<string> Statement = ReadCypherScript("Tag.GetTagsByStore.cql");
+        private static readonly Option<string> Statement = ReadCypherScript("Tag\\GetTagsByStore.cql");
         private readonly Neo4JConnection connection;
         private readonly ILimit<int, Filter> limit;
         private readonly ISkip<int, Filter> skip;

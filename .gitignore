@@ -116,10 +116,6 @@ Backup*/
 UpgradeLog*.XML
 .vs
 
-# App config related
-appsettings.json
-api.env
-
 # Build related
 tools/**
 !tools/packages.config

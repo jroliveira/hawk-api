@@ -2,21 +2,23 @@
 {
     using System;
     using System.IO;
-    using System.Reflection;
 
     using Hawk.Infrastructure.Monad;
 
-    using static Hawk.Infrastructure.Logging.Logger;
+    using static System.IO.File;
+    using static System.IO.Path;
+    using static System.Reflection.Assembly;
 
+    using static Hawk.Infrastructure.Logging.Logger;
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal static class CypherScript
     {
-        private static readonly Func<string, Stream> ReadFile = typeof(CypherScript).GetTypeInfo().Assembly.GetManifestResourceStream;
+        private static readonly Func<string, Stream> ReadFile = file => OpenRead(Combine(GetDirectoryName(GetExecutingAssembly().Location), file));
 
         internal static Option<string> ReadCypherScript(string name)
         {
-            name = $@"Hawk.Infrastructure.Data.Neo4J.Entities.{name}";
+            name = $@"Infrastructure\Data.Neo4J\Entities\{name}";
 
             if (string.IsNullOrEmpty(name))
             {
@@ -26,19 +28,15 @@
 
             try
             {
-                using (var stream = ReadFile(name))
+                using var stream = ReadFile(name);
+                if (stream == null)
                 {
-                    if (stream == null)
-                    {
-                        LogError("Variable is null.", new { Var = nameof(stream), Method = nameof(ReadCypherScript), Class = nameof(CypherScript) });
-                        return None();
-                    }
-
-                    using (var reader = new StreamReader(stream))
-                    {
-                        return reader.ReadToEnd();
-                    }
+                    LogError("Variable is null.", new { Var = nameof(stream), Method = nameof(ReadCypherScript), Class = nameof(CypherScript) });
+                    return None();
                 }
+
+                using var reader = new StreamReader(stream);
+                return reader.ReadToEnd();
             }
             catch (Exception exception)
             {

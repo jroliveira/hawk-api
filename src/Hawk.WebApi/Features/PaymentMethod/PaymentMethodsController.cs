@@ -14,6 +14,7 @@
 
     using static PaymentMethodModel;
 
+    [ApiController]
     [ApiVersion("1")]
     [Route("")]
     public class PaymentMethodsController : BaseController
@@ -24,7 +25,7 @@
         public PaymentMethodsController(
             IGetPaymentMethods getPaymentMethods,
             IGetPaymentMethodsByStore getPaymentMethodsByStore,
-            IHostingEnvironment environment)
+            IWebHostEnvironment environment)
             : base(environment)
         {
             this.getPaymentMethods = getPaymentMethods;

@@ -16,3 +16,7 @@ discovery.type: single-node
 xpack.license.self_generated.type: trial
 xpack.security.enabled: false
 xpack.monitoring.collection.enabled: true
+
+## Logging
+#
+logger.org.elasticsearch.transport: warn

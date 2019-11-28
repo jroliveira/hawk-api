@@ -5,7 +5,7 @@
     public sealed class ConflictErrorModel : ErrorModel
     {
         public ConflictErrorModel(InvalidObjectException exception)
-            : base(exception) => this.Properties = exception?.Properties;
+            : base(exception) => this.Properties = exception.Properties;
 
         public object Properties { get; }
     }

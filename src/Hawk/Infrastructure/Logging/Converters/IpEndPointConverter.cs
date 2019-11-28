@@ -12,7 +12,7 @@
 
         public override void WriteJson(
             JsonWriter writer,
-            object value,
+            object? value,
             JsonSerializer serializer)
         {
             var ep = (IPEndPoint)value;
@@ -28,7 +28,7 @@
         public override object ReadJson(
             JsonReader reader,
             Type objectType,
-            object existingValue,
+            object? existingValue,
             JsonSerializer serializer)
         {
             var jo = JObject.Load(reader);

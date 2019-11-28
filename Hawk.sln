@@ -53,6 +53,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{1D15F9CF
 		build\run-docker-tag.cake = build\run-docker-tag.cake
 		build\run-tests.cake = build\run-tests.cake
 		build\setup-tests.cake = build\setup-tests.cake
+		build\up-dependencies.cake = build\up-dependencies.cake
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{5447E1CB-522F-482B-80B8-8694A6DF3B24}"
@@ -80,8 +81,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prometheus", "prometheus", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "grafana", "grafana", "{62659545-9EFB-4671-AB92-A190433FB5AF}"
 	ProjectSection(SolutionItems) = preProject
-		monitor\grafana\config.ini = monitor\grafana\config.ini
 		monitor\grafana\grafana.env = monitor\grafana\grafana.env
+		monitor\grafana\grafana.ini = monitor\grafana\grafana.ini
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dashboards", "dashboards", "{1645DB45-28BE-4F07-9453-624FB3CE7C48}"
@@ -153,6 +154,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{3668A27B-F444-4DCD-8577-4B318D19A414}"
 	ProjectSection(SolutionItems) = preProject
 		monitor\elasticsearch\config\elasticsearch.yml = monitor\elasticsearch\config\elasticsearch.yml
+		monitor\elasticsearch\config\log4j2.properties = monitor\elasticsearch\config\log4j2.properties
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "filebeat", "filebeat", "{9A9B9046-4AB9-42BA-8EB8-58EE79A4205E}"

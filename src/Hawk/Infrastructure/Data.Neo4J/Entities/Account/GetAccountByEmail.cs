@@ -11,7 +11,7 @@
 
     internal sealed class GetAccountByEmail : IGetAccountByEmail
     {
-        private static readonly Option<string> Statement = ReadCypherScript("Account.GetAccountByEmail.cql");
+        private static readonly Option<string> Statement = ReadCypherScript("Account\\GetAccountByEmail.cql");
         private readonly Neo4JConnection connection;
 
         public GetAccountByEmail(Neo4JConnection connection) => this.connection = connection;

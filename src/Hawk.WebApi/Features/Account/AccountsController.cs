@@ -16,6 +16,7 @@
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
+    [ApiController]
     [ApiVersion("1")]
     [Route("")]
     public class AccountsController : BaseController
@@ -27,7 +28,7 @@
         public AccountsController(
             IGetAccountByEmail getAccountByEmail,
             IUpsertAccount upsertAccount,
-            IHostingEnvironment environment)
+            IWebHostEnvironment environment)
             : this(getAccountByEmail, upsertAccount, new NewAccountModelValidator(), environment)
         {
         }
@@ -36,7 +37,7 @@
             IGetAccountByEmail getAccountByEmail,
             IUpsertAccount upsertAccount,
             NewAccountModelValidator validator,
-            IHostingEnvironment environment)
+            IWebHostEnvironment environment)
             : base(environment)
         {
             this.getAccountByEmail = getAccountByEmail;

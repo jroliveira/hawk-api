@@ -9,9 +9,17 @@
         private readonly ErrorModel errorModel;
         private readonly TModel model;
 
-        public TryModel(TModel model) => this.model = model;
+        public TryModel(TModel model)
+        {
+            this.errorModel = default;
+            this.model = model;
+        }
 
-        public TryModel(ErrorModel errorModel) => this.errorModel = errorModel;
+        public TryModel(ErrorModel errorModel)
+        {
+            this.errorModel = errorModel;
+            this.model = default;
+        }
 
         public static implicit operator TryModel<TModel>(ErrorModel errorModel) => new TryModel<TModel>(errorModel);
 

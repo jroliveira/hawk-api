@@ -10,8 +10,8 @@ metadata:
   name: grafana
 spec:
   ports:
-  - name: "5003"
-    port: 5003
+  - name: "3000"
+    port: 3000
     targetPort: 3000
   selector:
     io.kompose.service: grafana

@@ -14,7 +14,7 @@
 
     internal sealed class GetStores : IGetStores
     {
-        private static readonly Option<string> Statement = ReadCypherScript("Store.GetStores.cql");
+        private static readonly Option<string> Statement = ReadCypherScript("Store\\GetStores.cql");
         private readonly Neo4JConnection connection;
         private readonly ILimit<int, Filter> limit;
         private readonly ISkip<int, Filter> skip;

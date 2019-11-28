@@ -15,7 +15,7 @@
 
     internal sealed class UpsertConfiguration : IUpsertConfiguration
     {
-        private static readonly Option<string> Statement = ReadCypherScript("Configuration.UpsertConfiguration.cql");
+        private static readonly Option<string> Statement = ReadCypherScript("Configuration\\UpsertConfiguration.cql");
         private readonly Neo4JConnection connection;
 
         public UpsertConfiguration(Neo4JConnection connection) => this.connection = connection;

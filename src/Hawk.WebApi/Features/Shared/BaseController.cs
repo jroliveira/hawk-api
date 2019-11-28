@@ -6,16 +6,20 @@
     using Microsoft.AspNetCore.Http.Extensions;
     using Microsoft.AspNetCore.Mvc;
 
+    using static System.String;
+
     public abstract class BaseController : ErrorController
     {
-        protected BaseController(IHostingEnvironment environment)
+        protected BaseController(IWebHostEnvironment environment)
             : base(environment)
         {
         }
 
+        internal IActionResult Created(object value) => this.Created(Empty, value);
+
         internal IActionResult Created(object id, object value)
         {
-            var uri = $"{this.Request.GetDisplayUrl()}{(id == null ? string.Empty : $"/{id}")}";
+            var uri = $"{this.Request.GetDisplayUrl()}{(id == null ? Empty : $"/{id}")}";
 
             return base.Created(uri, value);
         }

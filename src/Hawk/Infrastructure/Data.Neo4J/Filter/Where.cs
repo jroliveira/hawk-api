@@ -33,15 +33,12 @@
             return string.Join(" AND ", result);
         }
 
-        private static object GetValue(object value)
+        private static object GetValue(object value) => value switch
         {
-            switch (value)
-            {
-                case string s when int.TryParse(s, out var i): return i;
-                case string s: return $"\"{s}\"";
-                default: return value;
-            }
-        }
+            string s when int.TryParse(s, out var i) => i,
+            string s => $"\"{s}\"",
+            _ => value
+        };
 
         private static string GetOperator(Comparison comparison) => Operations[comparison];
     }

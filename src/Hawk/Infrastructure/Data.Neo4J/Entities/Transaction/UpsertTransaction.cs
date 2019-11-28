@@ -17,7 +17,7 @@
 
     internal sealed class UpsertTransaction : IUpsertTransaction
     {
-        private static readonly Option<string> Statement = ReadCypherScript("Transaction.UpsertTransaction.cql");
+        private static readonly Option<string> Statement = ReadCypherScript("Transaction\\UpsertTransaction.cql");
         private readonly Neo4JConnection connection;
 
         public UpsertTransaction(Neo4JConnection connection) => this.connection = connection;

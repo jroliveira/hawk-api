@@ -18,8 +18,8 @@
             Payment payment,
             Store store,
             IReadOnlyCollection<Tag> tags)
+            : base(id)
         {
-            this.Id = id;
             this.Payment = payment;
             this.Store = store;
             this.Tags = tags;
