@@ -10,6 +10,7 @@
 
     using Http.Query.Filter;
 
+    using static System.IO.Path;
     using static System.String;
 
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
@@ -17,7 +18,7 @@
 
     internal sealed class GetTransactions : IGetTransactions
     {
-        private static readonly Option<string> Statement = ReadCypherScript("Transaction\\GetTransactions.cql");
+        private static readonly Option<string> Statement = ReadCypherScript(Combine("Transaction", "GetTransactions.cql"));
         private readonly Neo4JConnection connection;
         private readonly ILimit<int, Filter> limit;
         private readonly ISkip<int, Filter> skip;

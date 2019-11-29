@@ -11,8 +11,8 @@
 
     using static System.ComponentModel.TypeDescriptor;
 
+    using static Hawk.Infrastructure.ErrorHandling.ExceptionHandler;
     using static Hawk.Infrastructure.Logging.Logger;
-
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal sealed class Neo4JRecord
@@ -77,7 +77,7 @@
             }
             catch (Exception exception)
             {
-                LogError($"Get key value {key} threw an exception.", exception);
+                LogError("Get key value threw an exception.", new { Key = key }, HandleException(exception));
                 return None();
             }
         }

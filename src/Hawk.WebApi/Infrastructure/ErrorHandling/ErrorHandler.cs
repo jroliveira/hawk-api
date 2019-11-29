@@ -2,40 +2,37 @@
 {
     using System;
 
-    using Hawk.Domain.Shared.Exceptions;
-    using Hawk.WebApi.Infrastructure.ErrorHandling.ErrorModels;
-    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.Infrastructure.ErrorHandling.ErrorModels;
 
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Hosting;
 
+    using static Hawk.Infrastructure.ErrorHandling.ExceptionHandler;
     using static Hawk.Infrastructure.Logging.Logger;
 
     internal static class ErrorHandler
     {
-        internal static IActionResult HandleError<TModel>(this ErrorController @this, Exception exception) => exception switch
+        internal static void NewErrorHandler(IWebHostEnvironment environment) => NewExceptionHandler(environment.IsDevelopment());
+
+        internal static IActionResult ErrorResult(Exception exception) => ErrorResult<Unit>(exception);
+
+        internal static IActionResult ErrorResult<TModel>(Exception exception)
         {
-            NotFoundException _ => @this.NotFound(HandleError<TModel>(exception, @this.Environment)),
-            InvalidObjectException _ => @this.StatusCode(409, HandleError<TModel>(exception, @this.Environment)),
-            AlreadyExistsException _ => @this.StatusCode(409, HandleError<TModel>(exception, @this.Environment)),
-            _ => @this.StatusCode(500, HandleError<TModel>(exception, @this.Environment))
-        };
+            var tryModel = HandleException<TModel>(exception);
 
-        internal static TryModel<TModel> HandleError<TModel>(Exception exception) => HandleError<TModel>(exception, default);
+            LogError("An error has occurred.", tryModel);
 
-        internal static TryModel<TModel> HandleError<TModel>(Exception exception, IWebHostEnvironment? environment)
-        {
-            var error = exception switch
-            {
-                NotFoundException _ => (ErrorModel)new GenericErrorModel(exception),
-                InvalidObjectException invalidObject => new ConflictErrorModel(invalidObject),
-                AlreadyExistsException _ => new GenericErrorModel(exception),
-                _ => new GenericErrorModel(exception, environment)
-            };
-
-            LogError(error.Message ?? "An error has occurred.", error);
-
-            return error;
+            return tryModel.Match(
+                errorModel => errorModel switch
+                {
+                    BadRequestErrorModel _ => new BadRequestObjectResult(tryModel),
+                    NotFoundErrorModel _ => new NotFoundObjectResult(tryModel),
+                    ConflictErrorModel _ => new ConflictObjectResult(tryModel),
+                    UnprocessableEntityErrorModel _ => new UnprocessableEntityObjectResult(tryModel),
+                    _ => new ObjectResult(tryModel) { StatusCode = 500 },
+                },
+                model => new OkObjectResult(model));
         }
     }
 }

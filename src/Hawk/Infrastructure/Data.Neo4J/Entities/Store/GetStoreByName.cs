@@ -6,12 +6,14 @@
     using Hawk.Domain.Store;
     using Hawk.Infrastructure.Monad;
 
+    using static System.IO.Path;
+
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
     using static Hawk.Infrastructure.Data.Neo4J.Entities.Store.StoreMapping;
 
     internal sealed class GetStoreByName : IGetStoreByName
     {
-        private static readonly Option<string> Statement = ReadCypherScript("Store\\GetStoreByName.cql");
+        private static readonly Option<string> Statement = ReadCypherScript(Combine("Store", "GetStoreByName.cql"));
         private readonly Neo4JConnection connection;
 
         public GetStoreByName(Neo4JConnection connection) => this.connection = connection;

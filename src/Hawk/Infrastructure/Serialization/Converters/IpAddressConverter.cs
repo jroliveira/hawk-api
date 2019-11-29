@@ -1,4 +1,4 @@
-﻿namespace Hawk.Infrastructure.Logging.Converters
+﻿namespace Hawk.Infrastructure.Serialization.Converters
 {
     using System;
     using System.Net;

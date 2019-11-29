@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Infrastructure.Hal.Link;
     using Hawk.WebApi.Infrastructure.Hal.Page;
     using Hawk.WebApi.Infrastructure.Hal.Resource;

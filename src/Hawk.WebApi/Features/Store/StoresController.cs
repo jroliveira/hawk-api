@@ -3,13 +3,11 @@
     using System.Threading.Tasks;
 
     using Hawk.Domain.Store;
+    using Hawk.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure.Authentication;
-    using Hawk.WebApi.Infrastructure.ErrorHandling;
-    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Infrastructure.Pagination;
 
-    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
 
     using static StoreModel;
@@ -24,9 +22,7 @@
 
         public StoresController(
             IGetStores getStores,
-            IGetStoreByName getStoreByName,
-            IWebHostEnvironment environment)
-            : base(environment)
+            IGetStoreByName getStoreByName)
         {
             this.getStores = getStores;
             this.getStoreByName = getStoreByName;
@@ -44,7 +40,7 @@
             var entities = await this.getStores.GetResult(this.GetUser(), this.Request.QueryString.Value);
 
             return entities.Match(
-                this.HandleError<PageModel<TryModel<StoreModel>>>,
+                this.Error<PageModel<TryModel<StoreModel>>>,
                 page => this.Ok(MapStore(page)));
         }
 
@@ -62,7 +58,7 @@
             var entity = await this.getStoreByName.GetResult(this.GetUser(), name);
 
             return entity.Match(
-                this.HandleError<StoreModel>,
+                this.Error<StoreModel>,
                 store => this.Ok(new TryModel<StoreModel>(new StoreModel(store))));
         }
     }

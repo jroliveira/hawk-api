@@ -3,51 +3,60 @@
     using System;
     using System.Threading.Tasks;
 
-    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.Domain.Shared.Exceptions;
+    using Hawk.WebApi.Infrastructure.Hal;
 
-    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
 
-    using static ErrorHandler;
-
-    using static Hawk.Infrastructure.JsonSettings;
+    using static Hawk.Infrastructure.ErrorHandling.ExceptionHandler;
     using static Hawk.Infrastructure.Logging.Logger;
+    using static Hawk.Infrastructure.Serialization.JsonSettings;
+    using static Hawk.WebApi.Infrastructure.Hal.ResourceBuilders;
 
     using static Newtonsoft.Json.JsonConvert;
 
     internal sealed class ErrorHandlingMiddleware
     {
         private readonly RequestDelegate next;
-        private readonly IWebHostEnvironment environment;
 
-        public ErrorHandlingMiddleware(RequestDelegate next, IWebHostEnvironment environment)
-        {
-            this.next = next;
-            this.environment = environment;
-        }
+        public ErrorHandlingMiddleware(RequestDelegate next) => this.next = next;
 
         public async Task Invoke(HttpContext context)
         {
             try
             {
                 await this.next(context);
+
+                switch (context.Response.StatusCode)
+                {
+                    case 404:
+                        await WriteResponse(context, new NotFoundException($"The HTTP resource that matches the request URI '{context.Request.Scheme}:/{context.Request.Path.Value}' not found."), 404);
+                        break;
+                }
             }
             catch (Exception exception)
             {
-                LogError("Unexpected error", exception);
-
-                context.Response.StatusCode = 500;
-                context.Response.ContentType = "application/json; charset=utf-8";
-
-                var serializerSettings = JsonSerializerSettings;
-                serializerSettings.Converters.Add(new TryModelJsonConverter());
-
-                await context.Response.WriteAsync(SerializeObject(HandleError<Unit>(exception, this.environment), serializerSettings));
+                await WriteResponse(context, exception, 500);
             }
         }
 
-        public sealed class Unit
+        private static async Task WriteResponse(HttpContext context, Exception exception, int statusCode)
         {
+            context.Response.StatusCode = statusCode;
+            context.Response.ContentType = context.Request.Headers.TryGetValue("Accept", out var accept)
+                ? accept.ToString()
+                : "application/json";
+
+            var serializerSettings = JsonSerializerSettings;
+            serializerSettings.AddHal();
+
+            var errorModel = HandleException(exception);
+
+            LogError("An unhandled error has occurred.", errorModel);
+
+            await context.Response.WriteAsync(SerializeObject(
+                GetResource(context, errorModel, errorModel.GetType()),
+                serializerSettings));
         }
     }
 }

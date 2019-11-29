@@ -5,14 +5,11 @@
 
     using Hawk.Domain.Shared.Exceptions;
     using Hawk.Domain.Transaction;
+    using Hawk.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Features.Shared;
-    using Hawk.WebApi.Infrastructure;
     using Hawk.WebApi.Infrastructure.Authentication;
-    using Hawk.WebApi.Infrastructure.ErrorHandling;
-    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Infrastructure.Pagination;
 
-    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
 
     using static TransactionModel;
@@ -32,26 +29,13 @@
             IGetTransactions getTransactions,
             IGetTransactionById getTransactionById,
             IUpsertTransaction upsertTransaction,
-            IDeleteTransaction deleteTransaction,
-            IWebHostEnvironment environment)
-            : this(getTransactions, getTransactionById, upsertTransaction, deleteTransaction, new NewTransactionModelValidator(), environment)
-        {
-        }
-
-        internal TransactionsController(
-            IGetTransactions getTransactions,
-            IGetTransactionById getTransactionById,
-            IUpsertTransaction upsertTransaction,
-            IDeleteTransaction deleteTransaction,
-            NewTransactionModelValidator validator,
-            IWebHostEnvironment environment)
-            : base(environment)
+            IDeleteTransaction deleteTransaction)
         {
             this.getTransactions = getTransactions;
             this.getTransactionById = getTransactionById;
             this.upsertTransaction = upsertTransaction;
             this.deleteTransaction = deleteTransaction;
-            this.validator = validator;
+            this.validator = new NewTransactionModelValidator();
         }
 
         /// <summary>
@@ -66,7 +50,7 @@
             var entities = await this.getTransactions.GetResult(this.GetUser(), this.Request.QueryString.Value);
 
             return entities.Match(
-                this.HandleError<PageModel<TryModel<TransactionModel>>>,
+                this.Error<PageModel<TryModel<TransactionModel>>>,
                 page => this.Ok(MapTransaction(page)));
         }
 
@@ -84,7 +68,7 @@
             var entity = await this.getTransactionById.GetResult(this.GetUser(), new Guid(id));
 
             return entity.Match(
-                this.HandleError<TransactionModel>,
+                this.Error<TransactionModel>,
                 transaction => this.Ok(new TryModel<TransactionModel>(new TransactionModel(transaction))));
         }
 
@@ -94,7 +78,6 @@
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost]
-        [ValidateSchema(typeof(NewTransactionModel))]
         [ProducesResponseType(typeof(TryModel<TransactionModel>), 201)]
         [ProducesResponseType(409)]
         [ProducesResponseType(500)]
@@ -103,13 +86,13 @@
             var validated = await this.validator.ValidateAsync(request);
             if (!validated.IsValid)
             {
-                return this.HandleError<TransactionModel>(new InvalidObjectException("Invalid transaction.", validated));
+                return this.Error<TransactionModel>(new InvalidObjectException("Invalid transaction.", validated));
             }
 
             var entity = await this.upsertTransaction.Execute(this.GetUser(), request);
 
             return entity.Match(
-                this.HandleError<TransactionModel>,
+                this.Error<TransactionModel>,
                 transaction => this.Created(transaction.Id, new TryModel<TransactionModel>(new TransactionModel(transaction))));
         }
 
@@ -120,7 +103,6 @@
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        [ValidateSchema(typeof(NewTransactionModel))]
         [ProducesResponseType(typeof(TryModel<TransactionModel>), 201)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
@@ -133,7 +115,7 @@
             var validated = await this.validator.ValidateAsync(request);
             if (!validated.IsValid)
             {
-                return this.HandleError<TransactionModel>(new InvalidObjectException("Invalid transaction.", validated));
+                return this.Error<TransactionModel>(new InvalidObjectException("Invalid transaction.", validated));
             }
 
             var entity = await this.getTransactionById.GetResult(this.GetUser(), new Guid(id));
@@ -144,7 +126,7 @@
                     var inserted = await this.upsertTransaction.Execute(this.GetUser(), NewTransactionModel.MapNewTransaction(new Guid(id), request));
 
                     return inserted.Match(
-                        this.HandleError<TransactionModel>,
+                        this.Error<TransactionModel>,
                         transaction => this.Created(new TryModel<TransactionModel>(new TransactionModel(transaction))));
                 },
                 async _ =>
@@ -152,7 +134,7 @@
                     var updated = await this.upsertTransaction.Execute(this.GetUser(), request);
 
                     return updated.Match(
-                        this.HandleError<TransactionModel>,
+                        this.Error<TransactionModel>,
                         transaction => this.NoContent());
                 });
         }
@@ -170,7 +152,7 @@
             var deleted = await this.deleteTransaction.Execute(this.GetUser(), new Guid(id));
 
             return deleted.Match(
-                this.HandleError<TransactionModel>,
+                this.Error<TransactionModel>,
                 _ => this.NoContent());
         }
     }

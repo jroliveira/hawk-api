@@ -6,23 +6,29 @@
     using System.Threading.Tasks;
 
     using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Resilience;
 
     using Microsoft.Extensions.Options;
 
     using Neo4j.Driver.V1;
 
+    using static Hawk.Infrastructure.ErrorHandling.ExceptionHandler;
     using static Hawk.Infrastructure.Logging.Logger;
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
     using static Neo4j.Driver.V1.AuthTokens;
     using static Neo4j.Driver.V1.GraphDatabase;
 
+    using Unit = Hawk.Infrastructure.Monad.Unit;
+
     internal sealed class Neo4JConnection : IDisposable
     {
+        private readonly ResiliencePolicy resiliencePolicy;
         private readonly IDriver? driver;
 
-        public Neo4JConnection(IOptions<Neo4JConfiguration> config)
+        public Neo4JConnection(IOptions<Neo4JConfiguration> config, ResiliencePolicy resiliencePolicy)
         {
+            this.resiliencePolicy = resiliencePolicy;
             var auth = Basic(config.Value.Username, config.Value.Password);
 
             try
@@ -31,7 +37,7 @@
             }
             catch (Exception exception)
             {
-                LogError($"Unable to connect to database {config.Value.Uri}", exception);
+                LogError("Unable to connect to Neo4j.", new { config.Value.Uri }, HandleException(exception));
             }
         }
 
@@ -78,14 +84,17 @@
 
             try
             {
-                using var session = this.driver.Session();
-                var cursor = await session.RunAsync(statement.Get(), parameters);
+                return await this.resiliencePolicy.Execute(async _ =>
+                {
+                    using var session = this.driver.Session();
+                    var cursor = await session.RunAsync(statement.Get(), parameters);
 
-                return await command(cursor);
+                    return await command(cursor);
+                });
             }
             catch (Exception exception)
             {
-                return new Exception($"Could not run command in database {exception.Message}", exception);
+                return new Exception("Could not run command in Neo4j.", exception);
             }
         }
     }

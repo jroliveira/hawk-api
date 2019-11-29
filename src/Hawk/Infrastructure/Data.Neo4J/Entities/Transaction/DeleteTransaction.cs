@@ -7,11 +7,13 @@
     using Hawk.Domain.Transaction;
     using Hawk.Infrastructure.Monad;
 
+    using static System.IO.Path;
+
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
 
     internal sealed class DeleteTransaction : IDeleteTransaction
     {
-        private static readonly Option<string> Statement = ReadCypherScript("Transaction\\DeleteTransaction.cql");
+        private static readonly Option<string> Statement = ReadCypherScript(Combine("Transaction", "DeleteTransaction.cql"));
         private readonly Neo4JConnection connection;
 
         public DeleteTransaction(Neo4JConnection connection) => this.connection = connection;

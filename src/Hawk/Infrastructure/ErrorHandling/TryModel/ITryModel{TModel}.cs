@@ -1,8 +1,8 @@
-﻿namespace Hawk.WebApi.Infrastructure.ErrorHandling.TryModel
+﻿namespace Hawk.Infrastructure.ErrorHandling.TryModel
 {
     using System;
 
-    using Hawk.WebApi.Infrastructure.ErrorHandling.ErrorModels;
+    using Hawk.Infrastructure.ErrorHandling.ErrorModels;
 
     public interface ITryModel<out TModel>
     {

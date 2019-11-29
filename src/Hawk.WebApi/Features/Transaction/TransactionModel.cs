@@ -5,11 +5,11 @@
 
     using Hawk.Domain.Transaction;
     using Hawk.Infrastructure;
+    using Hawk.Infrastructure.ErrorHandling.TryModel;
     using Hawk.Infrastructure.Monad;
-    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Infrastructure.Pagination;
 
-    using static Infrastructure.ErrorHandling.ErrorHandler;
+    using static Hawk.Infrastructure.ErrorHandling.ExceptionHandler;
 
     public sealed class TransactionModel
     {
@@ -51,7 +51,7 @@
             @this
                 .Data
                 .Select(item => item.Match(
-                    HandleError<TransactionModel>,
+                    HandleException<TransactionModel>,
                     transaction => new TransactionModel(transaction))),
             @this.Skip,
             @this.Limit);

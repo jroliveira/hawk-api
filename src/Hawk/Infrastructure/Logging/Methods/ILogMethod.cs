@@ -2,6 +2,6 @@
 {
     public interface ILogMethod
     {
-        void Write(string data);
+        void Write(LogLevel logLevel, string data);
     }
 }

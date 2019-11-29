@@ -3,13 +3,11 @@
     using System.Threading.Tasks;
 
     using Hawk.Domain.Tag;
+    using Hawk.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure.Authentication;
-    using Hawk.WebApi.Infrastructure.ErrorHandling;
-    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Infrastructure.Pagination;
 
-    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
 
     using static TagModel;
@@ -24,9 +22,7 @@
 
         public TagsController(
             IGetTags getTags,
-            IGetTagsByStore getTagsByStore,
-            IWebHostEnvironment environment)
-            : base(environment)
+            IGetTagsByStore getTagsByStore)
         {
             this.getTags = getTags;
             this.getTagsByStore = getTagsByStore;
@@ -44,7 +40,7 @@
             var entities = await this.getTags.GetResult(this.GetUser(), this.Request.QueryString.Value);
 
             return entities.Match(
-                this.HandleError<PageModel<TryModel<TagModel>>>,
+                this.Error<PageModel<TryModel<TagModel>>>,
                 page => this.Ok(MapTag(page)));
         }
 
@@ -62,7 +58,7 @@
             var entities = await this.getTagsByStore.GetResult(this.GetUser(), store, this.Request.QueryString.Value);
 
             return entities.Match(
-                this.HandleError<PageModel<TryModel<TagModel>>>,
+                this.Error<PageModel<TryModel<TagModel>>>,
                 page => this.Ok(MapTag(page)));
         }
     }

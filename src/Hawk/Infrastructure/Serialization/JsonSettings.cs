@@ -1,7 +1,10 @@
-﻿namespace Hawk.Infrastructure
+﻿namespace Hawk.Infrastructure.Serialization
 {
     using System.Collections.Generic;
     using System.Globalization;
+
+    using Hawk.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.Infrastructure.Serialization.Converters;
 
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
@@ -21,6 +24,9 @@
             Converters = new List<JsonConverter>
             {
                 new StringEnumConverter(),
+                new IpAddressConverter(),
+                new IpEndPointConverter(),
+                new TryModelJsonConverter(),
             },
         };
     }

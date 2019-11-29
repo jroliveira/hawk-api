@@ -9,12 +9,14 @@
 
     using Http.Query.Filter;
 
+    using static System.IO.Path;
+
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
     using static Hawk.Infrastructure.Data.Neo4J.Entities.PaymentMethod.PaymentMethodMapping;
 
     internal sealed class GetPaymentMethods : IGetPaymentMethods
     {
-        private static readonly Option<string> Statement = ReadCypherScript("PaymentMethod\\GetPaymentMethods.cql");
+        private static readonly Option<string> Statement = ReadCypherScript(Combine("PaymentMethod", "GetPaymentMethods.cql"));
         private readonly Neo4JConnection connection;
         private readonly ILimit<int, Filter> limit;
         private readonly ISkip<int, Filter> skip;

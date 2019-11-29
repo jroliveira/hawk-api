@@ -1,6 +1,6 @@
 ﻿namespace Hawk.WebApi.Features.Home
 {
-    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.Infrastructure.ErrorHandling.TryModel;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
@@ -9,7 +9,6 @@
     [ApiController]
     [AllowAnonymous]
     [ApiVersion("1")]
-    [ApiVersion("2")]
     [Route("")]
     public class HomeController : ControllerBase
     {
