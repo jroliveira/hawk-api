@@ -3,13 +3,11 @@
     using System.Threading.Tasks;
 
     using Hawk.Domain.PaymentMethod;
+    using Hawk.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure.Authentication;
-    using Hawk.WebApi.Infrastructure.ErrorHandling;
-    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Infrastructure.Pagination;
 
-    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
 
     using static PaymentMethodModel;
@@ -24,9 +22,7 @@
 
         public PaymentMethodsController(
             IGetPaymentMethods getPaymentMethods,
-            IGetPaymentMethodsByStore getPaymentMethodsByStore,
-            IWebHostEnvironment environment)
-            : base(environment)
+            IGetPaymentMethodsByStore getPaymentMethodsByStore)
         {
             this.getPaymentMethods = getPaymentMethods;
             this.getPaymentMethodsByStore = getPaymentMethodsByStore;
@@ -44,7 +40,7 @@
             var entities = await this.getPaymentMethods.GetResult(this.GetUser(), this.Request.QueryString.Value);
 
             return entities.Match(
-                this.HandleError<PageModel<TryModel<PaymentMethodModel>>>,
+                this.Error<PageModel<TryModel<PaymentMethodModel>>>,
                 page => this.Ok(MapPaymentMethod(page)));
         }
 
@@ -62,7 +58,7 @@
             var entities = await this.getPaymentMethodsByStore.GetResult(this.GetUser(), store, this.Request.QueryString.Value);
 
             return entities.Match(
-                this.HandleError<PageModel<TryModel<PaymentMethodModel>>>,
+                this.Error<PageModel<TryModel<PaymentMethodModel>>>,
                 page => this.Ok(MapPaymentMethod(page)));
         }
     }

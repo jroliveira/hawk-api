@@ -1,16 +1,16 @@
 ﻿namespace Hawk.WebApi
 {
     using Hawk.Infrastructure.Data.Neo4J;
+    using Hawk.Infrastructure.Resilience;
     using Hawk.WebApi.Infrastructure.Api;
     using Hawk.WebApi.Infrastructure.Authentication;
     using Hawk.WebApi.Infrastructure.ErrorHandling;
     using Hawk.WebApi.Infrastructure.IpRateLimiting;
-    using Hawk.WebApi.Infrastructure.Logging;
     using Hawk.WebApi.Infrastructure.Metric;
     using Hawk.WebApi.Infrastructure.Swagger;
 
     using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -24,6 +24,7 @@
         {
             services
                 .ConfigureIpRateLimiting(this.Configuration)
+                .ConfigureResilience(this.Configuration)
                 .ConfigureNeo4J(this.Configuration)
                 .ConfigureApi(this.Configuration)
                 .ConfigureMetric()
@@ -32,10 +33,9 @@
             this.ConfigureAuthentication(services);
         }
 
-        public void Configure(IApplicationBuilder app, IHttpContextAccessor accessor) => app
-            .UseLogging()
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment environment) => app
             .UseAuthentication()
-            .UseErrorHandling()
+            .UseErrorHandling(environment)
             .UseApi()
             .UseMetric()
             .UseSwagger(this.Configuration);

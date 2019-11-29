@@ -9,14 +9,14 @@
     public sealed class InvalidObjectException : HawkException
     {
         public InvalidObjectException(string message)
-            : this(message, new InvalidProperties())
+            : this(message, default)
         {
         }
 
-        public InvalidObjectException(string message, InvalidProperties invalidProperties)
+        public InvalidObjectException(string message, InvalidProperties? invalidProperties)
             : base(message) => this.Properties = invalidProperties;
 
-        public InvalidProperties Properties { get; }
+        public InvalidProperties? Properties { get; }
 
         public static implicit operator InvalidObjectException(ValidationResult validated) => new InvalidObjectException(
             "Invalid object.",
@@ -24,11 +24,6 @@
 
         public class InvalidProperties : ReadOnlyCollection<InvalidProperty>
         {
-            public InvalidProperties()
-                : this(new List<InvalidProperty>())
-            {
-            }
-
             public InvalidProperties(IList<InvalidProperty> invalidProperties)
                 : base(invalidProperties)
             {

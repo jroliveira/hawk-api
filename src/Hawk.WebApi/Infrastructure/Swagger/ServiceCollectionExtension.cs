@@ -8,7 +8,7 @@
 
     using NSwag;
 
-    using static Hawk.Infrastructure.JsonSettings;
+    using static Hawk.Infrastructure.Serialization.JsonSettings;
 
     internal static class ServiceCollectionExtension
     {

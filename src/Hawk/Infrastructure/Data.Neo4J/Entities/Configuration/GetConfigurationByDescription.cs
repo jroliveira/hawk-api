@@ -6,12 +6,14 @@
     using Hawk.Domain.Shared;
     using Hawk.Infrastructure.Monad;
 
+    using static System.IO.Path;
+
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
     using static Hawk.Infrastructure.Data.Neo4J.Entities.Configuration.ConfigurationMapping;
 
     internal sealed class GetConfigurationByDescription : IGetConfigurationByDescription
     {
-        private static readonly Option<string> Statement = ReadCypherScript("Configuration\\GetConfigurationByDescription.cql");
+        private static readonly Option<string> Statement = ReadCypherScript(Combine("Configuration", "GetConfigurationByDescription.cql"));
         private readonly Neo4JConnection connection;
 
         public GetConfigurationByDescription(Neo4JConnection connection) => this.connection = connection;

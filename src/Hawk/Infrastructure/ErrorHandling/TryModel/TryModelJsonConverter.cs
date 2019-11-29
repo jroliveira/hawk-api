@@ -1,4 +1,4 @@
-﻿namespace Hawk.WebApi.Infrastructure.ErrorHandling.TryModel
+﻿namespace Hawk.Infrastructure.ErrorHandling.TryModel
 {
     using System;
 

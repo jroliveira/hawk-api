@@ -9,6 +9,7 @@
     using static System.IO.Path;
     using static System.Reflection.Assembly;
 
+    using static Hawk.Infrastructure.ErrorHandling.ExceptionHandler;
     using static Hawk.Infrastructure.Logging.Logger;
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
@@ -31,7 +32,7 @@
                 using var stream = ReadFile(name);
                 if (stream == null)
                 {
-                    LogError("Variable is null.", new { Var = nameof(stream), Method = nameof(ReadCypherScript), Class = nameof(CypherScript) });
+                    LogError("Cypher stream is null.", new { File = name });
                     return None();
                 }
 
@@ -40,7 +41,7 @@
             }
             catch (Exception exception)
             {
-                LogError("Cannot load cypher script.", new { File = name, Exception = exception });
+                LogError("Cannot load cypher script.", new { File = name }, HandleException(exception));
                 return None();
             }
         }

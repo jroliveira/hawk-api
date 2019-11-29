@@ -4,11 +4,11 @@
 
     using Hawk.Domain.Tag;
     using Hawk.Infrastructure;
+    using Hawk.Infrastructure.ErrorHandling.TryModel;
     using Hawk.Infrastructure.Monad;
-    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Infrastructure.Pagination;
 
-    using static Infrastructure.ErrorHandling.ErrorHandler;
+    using static Hawk.Infrastructure.ErrorHandling.ExceptionHandler;
 
     public sealed class TagModel
     {
@@ -26,7 +26,7 @@
             @this
                 .Data
                 .Select(item => item.Match(
-                    HandleError<TagModel>,
+                    HandleException<TagModel>,
                     tag => new TagModel(tag.Tag, tag.Count))),
             @this.Skip,
             @this.Limit);

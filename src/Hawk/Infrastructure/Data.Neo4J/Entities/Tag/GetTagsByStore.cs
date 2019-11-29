@@ -9,12 +9,14 @@
 
     using Http.Query.Filter;
 
+    using static System.IO.Path;
+
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
     using static Hawk.Infrastructure.Data.Neo4J.Entities.Tag.TagMapping;
 
     internal sealed class GetTagsByStore : IGetTagsByStore
     {
-        private static readonly Option<string> Statement = ReadCypherScript("Tag\\GetTagsByStore.cql");
+        private static readonly Option<string> Statement = ReadCypherScript(Combine("Tag", "GetTagsByStore.cql"));
         private readonly Neo4JConnection connection;
         private readonly ILimit<int, Filter> limit;
         private readonly ISkip<int, Filter> skip;

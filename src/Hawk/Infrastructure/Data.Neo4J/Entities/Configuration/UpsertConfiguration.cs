@@ -8,14 +8,15 @@
     using Hawk.Domain.Shared;
     using Hawk.Infrastructure.Monad;
 
+    using static System.IO.Path;
+
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
     using static Hawk.Infrastructure.Data.Neo4J.Entities.Configuration.ConfigurationMapping;
-
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal sealed class UpsertConfiguration : IUpsertConfiguration
     {
-        private static readonly Option<string> Statement = ReadCypherScript("Configuration\\UpsertConfiguration.cql");
+        private static readonly Option<string> Statement = ReadCypherScript(Combine("Configuration", "UpsertConfiguration.cql"));
         private readonly Neo4JConnection connection;
 
         public UpsertConfiguration(Neo4JConnection connection) => this.connection = connection;

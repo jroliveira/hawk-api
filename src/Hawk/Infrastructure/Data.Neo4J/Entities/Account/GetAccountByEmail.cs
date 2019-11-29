@@ -6,12 +6,14 @@
     using Hawk.Domain.Shared;
     using Hawk.Infrastructure.Monad;
 
+    using static System.IO.Path;
+
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
     using static Hawk.Infrastructure.Data.Neo4J.Entities.Account.AccountMapping;
 
     internal sealed class GetAccountByEmail : IGetAccountByEmail
     {
-        private static readonly Option<string> Statement = ReadCypherScript("Account\\GetAccountByEmail.cql");
+        private static readonly Option<string> Statement = ReadCypherScript(Combine("Account", "GetAccountByEmail.cql"));
         private readonly Neo4JConnection connection;
 
         public GetAccountByEmail(Neo4JConnection connection) => this.connection = connection;

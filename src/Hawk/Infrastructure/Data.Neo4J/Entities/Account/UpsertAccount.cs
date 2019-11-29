@@ -7,15 +7,15 @@
     using Hawk.Infrastructure.Monad;
 
     using static System.Globalization.CultureInfo;
+    using static System.IO.Path;
 
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
     using static Hawk.Infrastructure.Data.Neo4J.Entities.Account.AccountMapping;
-
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal sealed class UpsertAccount : IUpsertAccount
     {
-        private static readonly Option<string> Statement = ReadCypherScript("Account\\UpsertAccount.cql");
+        private static readonly Option<string> Statement = ReadCypherScript(Combine("Account", "UpsertAccount.cql"));
         private readonly Neo4JConnection connection;
 
         public UpsertAccount(Neo4JConnection connection) => this.connection = connection;

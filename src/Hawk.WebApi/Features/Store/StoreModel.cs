@@ -4,13 +4,13 @@
 
     using Hawk.Domain.Store;
     using Hawk.Infrastructure;
+    using Hawk.Infrastructure.ErrorHandling.TryModel;
     using Hawk.Infrastructure.Monad;
-    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Infrastructure.Pagination;
 
     using static Hawk.Domain.Store.Store;
 
-    using static Infrastructure.ErrorHandling.ErrorHandler;
+    using static Hawk.Infrastructure.ErrorHandling.ExceptionHandler;
 
     public sealed class StoreModel
     {
@@ -35,7 +35,7 @@
             @this
                 .Data
                 .Select(item => item.Match(
-                    HandleError<StoreModel>,
+                    HandleException<StoreModel>,
                     store => new StoreModel(store.Store, store.Count))),
             @this.Skip,
             @this.Limit);

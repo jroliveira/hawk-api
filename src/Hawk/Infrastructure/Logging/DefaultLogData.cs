@@ -5,7 +5,8 @@
     using System.Globalization;
     using System.Runtime.Serialization;
 
-    using Hawk.Infrastructure.Logging.Converters;
+    using Hawk.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.Infrastructure.Serialization.Converters;
 
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
@@ -17,7 +18,7 @@
 
     public sealed class DefaultLogData : ILogData
     {
-        private static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings
+        private readonly JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
             Formatting = Formatting.None,
@@ -31,14 +32,14 @@
                 new StringEnumConverter(),
                 new IpAddressConverter(),
                 new IpEndPointConverter(),
+                new TryModelJsonConverter(),
             },
         };
 
-        public DefaultLogData(LogLevel level, string message, string tracking, object data)
+        public DefaultLogData(LogLevel level, string message, object data)
         {
             this.Level = level;
             this.Message = message;
-            this.Tracking = tracking;
             this.Data = data;
         }
 
@@ -48,19 +49,17 @@
 
         public string Message { get; }
 
-        public string Tracking { get; }
-
         public object Data { get; }
 
         public override string ToString()
         {
             try
             {
-                return SerializeObject(this, JsonSerializerSettings);
+                return SerializeObject(this, this.jsonSerializerSettings);
             }
             catch (Exception exception)
             {
-                throw new SerializationException("Cannot serialize object defaultLogData.", exception);
+                throw new SerializationException("Cannot serialize object default log data.", exception);
             }
         }
     }

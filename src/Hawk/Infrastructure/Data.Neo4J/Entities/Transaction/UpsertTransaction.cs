@@ -9,6 +9,7 @@
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
 
+    using static System.IO.Path;
     using static System.String;
 
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
@@ -17,7 +18,7 @@
 
     internal sealed class UpsertTransaction : IUpsertTransaction
     {
-        private static readonly Option<string> Statement = ReadCypherScript("Transaction\\UpsertTransaction.cql");
+        private static readonly Option<string> Statement = ReadCypherScript(Combine("Transaction", "UpsertTransaction.cql"));
         private readonly Neo4JConnection connection;
 
         public UpsertTransaction(Neo4JConnection connection) => this.connection = connection;

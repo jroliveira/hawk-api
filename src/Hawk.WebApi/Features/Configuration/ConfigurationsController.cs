@@ -4,13 +4,10 @@
 
     using Hawk.Domain.Configuration;
     using Hawk.Domain.Shared.Exceptions;
+    using Hawk.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Features.Shared;
-    using Hawk.WebApi.Infrastructure;
     using Hawk.WebApi.Infrastructure.Authentication;
-    using Hawk.WebApi.Infrastructure.ErrorHandling;
-    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
 
-    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
 
     using static NewConfigurationModel;
@@ -26,24 +23,11 @@
 
         public ConfigurationsController(
             IGetConfigurationByDescription getConfigurationByDescription,
-            IUpsertConfiguration upsertConfiguration,
-            IWebHostEnvironment environment)
-            : this(getConfigurationByDescription, upsertConfiguration, new NewConfigurationModelValidator(), environment)
+            IUpsertConfiguration upsertConfiguration)
         {
             this.getConfigurationByDescription = getConfigurationByDescription;
             this.upsertConfiguration = upsertConfiguration;
-        }
-
-        internal ConfigurationsController(
-            IGetConfigurationByDescription getConfigurationByDescription,
-            IUpsertConfiguration upsertConfiguration,
-            NewConfigurationModelValidator validator,
-            IWebHostEnvironment environment)
-            : base(environment)
-        {
-            this.getConfigurationByDescription = getConfigurationByDescription;
-            this.upsertConfiguration = upsertConfiguration;
-            this.validator = validator;
+            this.validator = new NewConfigurationModelValidator();
         }
 
         /// <summary>
@@ -59,7 +43,7 @@
             var entity = await this.getConfigurationByDescription.GetResult(this.GetUser(), description);
 
             return entity.Match(
-                this.HandleError<ConfigurationModel>,
+                this.Error<ConfigurationModel>,
                 configuration => this.Ok(new TryModel<ConfigurationModel>(new ConfigurationModel(configuration))));
         }
 
@@ -70,7 +54,6 @@
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{description}")]
-        [ValidateSchema(typeof(NewConfigurationModel))]
         [ProducesResponseType(typeof(TryModel<ConfigurationModel>), 201)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
@@ -83,7 +66,7 @@
             var validated = await this.validator.ValidateAsync(request);
             if (!validated.IsValid)
             {
-                return this.HandleError<ConfigurationModel>(new InvalidObjectException("Invalid configuration.", validated));
+                return this.Error<ConfigurationModel>(new InvalidObjectException("Invalid configuration.", validated));
             }
 
             var entity = await this.getConfigurationByDescription.GetResult(this.GetUser(), description);
@@ -94,7 +77,7 @@
                     var inserted = await this.upsertConfiguration.Execute(this.GetUser(), MapNewConfiguration(description, request));
 
                     return inserted.Match(
-                        this.HandleError<ConfigurationModel>,
+                        this.Error<ConfigurationModel>,
                         configuration => this.Created(new TryModel<ConfigurationModel>(new ConfigurationModel(configuration))));
                 },
                 async _ =>
@@ -102,7 +85,7 @@
                     var updated = await this.upsertConfiguration.Execute(this.GetUser(), MapNewConfiguration(description, request));
 
                     return updated.Match(
-                        this.HandleError<ConfigurationModel>,
+                        this.Error<ConfigurationModel>,
                         configuration => this.NoContent());
                 });
         }

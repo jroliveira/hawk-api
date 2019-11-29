@@ -2,16 +2,16 @@
 {
     using System;
 
+    using Hawk.Infrastructure.ErrorHandling.TryModel;
+
     public sealed class Logger
     {
         private static Logger? logger;
 
-        private readonly Func<string> tracking;
-        private readonly Action<string> logMethod;
+        private readonly Action<LogLevel, string> logMethod;
 
-        private Logger(LogLevel level, Func<string> tracking, Action<string> logMethod)
+        private Logger(LogLevel level, Action<LogLevel, string> logMethod)
         {
-            this.tracking = tracking;
             this.logMethod = logMethod;
             this.Level = level;
 
@@ -22,41 +22,52 @@
 
         public static void NewLogger(
             LogLevel level,
-            Func<string> tracking,
-            Action<string> logMethod) => logger = new Logger(level, tracking, logMethod);
+            Action<LogLevel, string> logMethod) => logger = new Logger(level, logMethod);
+
+        public static void LogError<TModel>(string message, object data, TryModel<TModel> tryModel) => logger?.Log(
+            LogLevel.Error,
+            message,
+            new { Info = data, Error = tryModel });
+
+        public static void LogError<TModel>(string message, TryModel<TModel> tryModel) => logger?.Log(
+            LogLevel.Error,
+            message,
+            new { Error = tryModel });
 
         public static void LogError(string message, object data) => logger?.Log(
             LogLevel.Error,
-            new DefaultLogData(
-                LogLevel.Error,
-                message,
-                logger.tracking(),
-                data));
+            message,
+            new { Info = data });
 
         public static void LogInfo(string message, object data) => logger?.Log(
             LogLevel.Info,
             new DefaultLogData(
                 LogLevel.Info,
                 message,
-                logger.tracking(),
-                data));
+                new { Info = data }));
 
         public static void LogWarning(string message, object data) => logger?.Log(
             LogLevel.Warn,
             new DefaultLogData(
                 LogLevel.Warn,
                 message,
-                logger.tracking(),
+                new { Info = data }));
+
+        private void Log(LogLevel level, string message, object data) => this.Log(
+            level,
+            new DefaultLogData(
+                level,
+                message,
                 data));
 
         private void Log(LogLevel level, ILogData data)
         {
-            if (this.Level < level || level == LogLevel.None)
+            if (this.Level < level || level == LogLevel.Verb)
             {
                 return;
             }
 
-            this.logMethod(data.ToString());
+            this.logMethod(level, data.ToString());
         }
     }
 }

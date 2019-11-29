@@ -1,14 +1,7 @@
 ﻿namespace Hawk.WebApi.Infrastructure.Hal
 {
-    using System;
-    using System.Collections.Generic;
     using System.Text;
     using System.Threading.Tasks;
-
-    using Hawk.Infrastructure;
-    using Hawk.WebApi.Infrastructure.Hal.Link;
-    using Hawk.WebApi.Infrastructure.Hal.Page;
-    using Hawk.WebApi.Infrastructure.Hal.Resource;
 
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.Formatters;
@@ -21,22 +14,22 @@
 
     using static Newtonsoft.Json.JsonConvert;
 
+    using static ResourceBuilders;
+
     internal sealed class HalJsonOutputFormatter : TextOutputFormatter
     {
         private const string ContentType = "application/hal+json";
 
-        private readonly IReadOnlyDictionary<Type, Func<HttpContext, object, IResource>> builders;
+        private readonly ResourceBuilders builders;
         private readonly JsonSerializerSettings serializerSettings;
 
-        internal HalJsonOutputFormatter(IReadOnlyDictionary<Type, Func<HttpContext, object, IResource>> builders, Action<JsonSerializerSettings> setupAction)
+        internal HalJsonOutputFormatter(
+            ResourceBuilders builders,
+            JsonSerializerSettings serializerSettings)
         {
             this.builders = builders;
-            this.serializerSettings = JsonSettings.JsonSerializerSettings;
-            this.serializerSettings.Converters.Add(new ResourceJsonConverter());
-            this.serializerSettings.Converters.Add(new LinksJsonConverter());
-            this.serializerSettings.Converters.Add(new PageJsonConverter());
-
-            setupAction?.Invoke(this.serializerSettings);
+            this.serializerSettings = serializerSettings;
+            this.serializerSettings.AddHal();
 
             this.SupportedEncodings.Add(UTF8);
             this.SupportedMediaTypes.Clear();
@@ -45,13 +38,11 @@
 
         public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding selectedEncoding)
         {
-            var resource = this.builders[context.ObjectType](context.HttpContext, context.Object);
-            var json = SerializeObject(resource, this.serializerSettings);
+            context.HttpContext.Response.ContentType = ContentType;
 
-            var response = context.HttpContext.Response;
-            response.ContentType = ContentType;
-
-            return response.WriteAsync(json);
+            return context.HttpContext.Response.WriteAsync(SerializeObject(
+                GetResource(context.HttpContext, context.Object, context.ObjectType),
+                this.serializerSettings));
         }
     }
 }

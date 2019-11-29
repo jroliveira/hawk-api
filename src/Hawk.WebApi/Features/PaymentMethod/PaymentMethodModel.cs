@@ -4,11 +4,11 @@
 
     using Hawk.Domain.PaymentMethod;
     using Hawk.Infrastructure;
+    using Hawk.Infrastructure.ErrorHandling.TryModel;
     using Hawk.Infrastructure.Monad;
-    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Infrastructure.Pagination;
 
-    using static Infrastructure.ErrorHandling.ErrorHandler;
+    using static Hawk.Infrastructure.ErrorHandling.ExceptionHandler;
 
     public sealed class PaymentMethodModel
     {
@@ -26,7 +26,7 @@
             @this
                 .Data
                 .Select(item => item.Match(
-                    HandleError<PaymentMethodModel>,
+                    HandleException<PaymentMethodModel>,
                     paymentMethod => new PaymentMethodModel(paymentMethod.Method, paymentMethod.Count))),
             @this.Skip,
             @this.Limit);

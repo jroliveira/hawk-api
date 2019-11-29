@@ -1,7 +1,7 @@
 ﻿namespace Hawk.WebApi.Infrastructure.Api
 {
+    using Hawk.Infrastructure.ErrorHandling;
     using Hawk.WebApi.Infrastructure.Authentication;
-    using Hawk.WebApi.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Infrastructure.Hal;
 
     using Microsoft.AspNetCore.Builder;
@@ -12,7 +12,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
 
-    using static Hawk.Infrastructure.JsonSettings;
+    using static Hawk.Infrastructure.Serialization.JsonSettings;
 
     internal static class ServiceCollectionExtension
     {
@@ -27,6 +27,7 @@
                 {
                     options.AssumeDefaultVersionWhenUnspecified = true;
                     options.ApiVersionReader = new UrlSegmentApiVersionReader();
+                    options.ErrorResponses = new VersioningErrorResponseProvider();
                 })
                 .AddVersionedApiExplorer(options =>
                 {
@@ -63,10 +64,8 @@
                     {
                         options.SerializerSettings.Converters.Add(converter);
                     }
-
-                    options.SerializerSettings.Converters.Add(new TryModelJsonConverter());
                 })
-                .AddHal(serializerSettings => serializerSettings.Converters.Add(new TryModelJsonConverter()));
+                .AddHal(JsonSerializerSettings);
 
             return @this;
         }

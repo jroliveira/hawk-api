@@ -1,6 +1,5 @@
 ﻿namespace Hawk.WebApi.Infrastructure.Hal
 {
-    using System;
     using System.Linq;
 
     using Hawk.WebApi.Infrastructure.Hal.Resource;
@@ -14,9 +13,7 @@
 
     internal static class MvcCoreBuilderExtension
     {
-        private static readonly Type Type = typeof(IResourceBuilder);
-
-        internal static IMvcCoreBuilder AddHal(this IMvcCoreBuilder @this, Action<JsonSerializerSettings> setupAction) =>
+        internal static IMvcCoreBuilder AddHal(this IMvcCoreBuilder @this, JsonSerializerSettings serializerSettings) =>
             @this
                 .AddMvcOptions(options => options
                     .OutputFormatters
@@ -24,10 +21,10 @@
                         CurrentDomain
                             .GetAssemblies()
                             .SelectMany(assembly => assembly.GetTypes())
-                            .Where(type => Type.IsAssignableFrom(type) && type.IsClass && !type.IsAbstract)
+                            .Where(type => typeof(IResourceBuilder).IsAssignableFrom(type) && type.IsClass && !type.IsAbstract)
                             .Select(type => (IResourceBuilder)CreateInstance(type))
                             .SelectMany(item => item.Builders)
                             .ToDictionary(item => item.Key, item => item.Value),
-                        setupAction)));
+                        serializerSettings)));
     }
 }
