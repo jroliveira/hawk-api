@@ -23,14 +23,19 @@ $ git clone https://github.com/jroliveira/hawk-api.git
 
 # Go into the repository
 $ cd hawk-api
-```
 
-Now you need to configure the [api.env](#configuring-api.env), and run the commands below to run the application.
-
-``` bash
 # Run the application
 $ docker-compose up
 ```
+
+### Api Reference / Monitoring
+
+ - [Swagger UI](http://localhost:8080/)
+ - [Graphana](http://localhost:3000/)
+ - [Prometheus](http://localhost:9090/)
+ - [Kibana](http://localhost:5601/)
+ - [Elasticsearch](http://localhost:9200/)
+ - [Jaeger UI](http://localhost:16686/)
 
 ## Developing
 
@@ -120,10 +125,6 @@ Automatic
 ``` bash
 $ dotnet cake --target=Release
 ```
-
-## Api Reference
-
-The documentation was written with [Swagger](https://swagger.io/) and you can see the API documentation on the link [localhost:5001](http://localhost:5001) after performing the previous step [Running](#running) with Docker Compose.
 
 ## Licensing
 

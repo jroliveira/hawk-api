@@ -15,8 +15,6 @@
 
     using static Flurl.Url;
 
-    using static Hawk.Infrastructure.Guard;
-
     using static NSwag.OpenApiOAuth2Flow;
     using static NSwag.OpenApiSecuritySchemeType;
 
@@ -28,12 +26,10 @@
                 .GetSection("authentication")
                 .Get<AuthConfiguration>();
 
-            if (!authConfig.Enabled.GetValueOrDefault(false))
+            if (!authConfig.IsEnabled())
             {
                 return;
             }
-
-            NotNull(authConfig.Authority?.Uri, "authConfig.Authority.Uri", "AuthConfig authority cannot be null.");
 
             @this.AddSecurity("bearer", Empty<string>(), new OpenApiSecurityScheme
             {

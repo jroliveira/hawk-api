@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.5.1" />
     <PackageReference Include="Http.Query.Filter" Version="3.0.28" />
+    <PackageReference Include="Jaeger" Version="0.3.6" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.0.1" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="3.0.1" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.0.1" />

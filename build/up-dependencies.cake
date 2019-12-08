@@ -12,4 +12,5 @@ Task("Up-Dependencies")
         "kibana",
         "filebeat",
         "logstash",
-        "elasticsearch"));
+        "elasticsearch",
+        "jaegertracing"));
