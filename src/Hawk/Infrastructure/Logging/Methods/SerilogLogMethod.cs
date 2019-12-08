@@ -4,6 +4,7 @@
     using System.Collections.Generic;
 
     using Hawk.Infrastructure.Logging.Configurations;
+    using Hawk.Infrastructure.Tracing.SerilogSink;
 
     using Serilog;
     using Serilog.Events;
@@ -48,6 +49,11 @@
                 {
                     AutoRegisterTemplate = true,
                 });
+            }
+
+            if (config?.Sinks?.Tracing?.Enabled != null && config.Sinks.Tracing.Enabled.Value)
+            {
+                loggerConfig.WriteTo.OpenTracing();
             }
 
             this.logger = loggerConfig.CreateLogger();

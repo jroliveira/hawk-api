@@ -11,7 +11,7 @@
                 .GetSection("swagger")
                 .Get<SwaggerConfiguration>();
 
-            if (!swaggerConfig.Enabled.GetValueOrDefault(false))
+            if (!swaggerConfig.IsEnabled())
             {
                 return @this;
             }

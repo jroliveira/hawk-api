@@ -14,9 +14,9 @@
 
         internal bool IsEnabled()
         {
-            if (this.Enabled.GetValueOrDefault(false))
+            if (!this.Enabled.GetValueOrDefault(false))
             {
-                return true;
+                return false;
             }
 
             if (this.Retry != null && this.Retry.IsEnabled())
@@ -24,7 +24,7 @@
                 return true;
             }
 
-            LogError("Resilience configuration is not valid", this);
+            LogError("Resilience configuration is not valid.", this);
 
             return false;
         }

@@ -8,6 +8,7 @@
     using Hawk.WebApi.Infrastructure.IpRateLimiting;
     using Hawk.WebApi.Infrastructure.Metric;
     using Hawk.WebApi.Infrastructure.Swagger;
+    using Hawk.WebApi.Infrastructure.Tracing;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -28,7 +29,8 @@
                 .ConfigureNeo4J(this.Configuration)
                 .ConfigureApi(this.Configuration)
                 .ConfigureMetric()
-                .ConfigureSwagger(this.Configuration);
+                .ConfigureSwagger(this.Configuration)
+                .ConfigureTracing(this.Configuration);
 
             this.ConfigureAuthentication(services);
         }
@@ -38,7 +40,8 @@
             .UseErrorHandling(environment)
             .UseApi()
             .UseMetric()
-            .UseSwagger(this.Configuration);
+            .UseSwagger(this.Configuration)
+            .UseTracing(this.Configuration);
 
         protected virtual void ConfigureAuthentication(IServiceCollection services) => services.ConfigureAuthentication(this.Configuration);
     }

@@ -67,11 +67,11 @@
 
             if (exception == null)
             {
-                LogError("A non success operation was received on retry count for policy key", logInfo);
+                LogError("A non success operation was received on retry count for policy key.", logInfo);
             }
             else
             {
-                LogError("An exception occurred on retry count for policy key", logInfo, HandleException(exception));
+                LogError("An exception occurred on retry count for policy key.", logInfo, HandleException(exception));
             }
 
             return CompletedTask;

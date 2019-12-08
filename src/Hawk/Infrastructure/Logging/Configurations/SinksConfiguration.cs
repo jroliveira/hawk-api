@@ -7,5 +7,7 @@
         public FileConfiguration? File { get; set; }
 
         public ElasticSearchConfiguration? ElasticSearch { get; set; }
+
+        public TracingConfiguration? Tracing { get; set; }
     }
 }

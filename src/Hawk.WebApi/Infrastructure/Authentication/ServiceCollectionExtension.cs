@@ -6,7 +6,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
-    using static Hawk.Infrastructure.Guard;
     using static Microsoft.IdentityModel.Logging.IdentityModelEventSource;
 
     internal static class ServiceCollectionExtension
@@ -19,12 +18,10 @@
                 .GetSection("authentication")
                 .Get<AuthConfiguration>();
 
-            if (!authConfig.Enabled.GetValueOrDefault(false))
+            if (!authConfig.IsEnabled())
             {
                 return @this;
             }
-
-            NotNull(authConfig.Authority?.Uri, "authConfig.Authority.Uri", "AuthConfig authority cannot be null.");
 
             ShowPII = true;
 
