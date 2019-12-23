@@ -15,7 +15,7 @@
 
         internal IActionResult Created(object id, object value)
         {
-            var uri = $"{this.Request.GetDisplayUrl()}{(id == null ? Empty : $"/{id}")}";
+            var uri = $"{this.Request.GetDisplayUrl()}{(id == default ? Empty : $"/{id}")}";
 
             return base.Created(uri, value);
         }

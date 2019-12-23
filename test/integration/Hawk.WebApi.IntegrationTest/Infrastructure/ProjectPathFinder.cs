@@ -4,6 +4,8 @@
     using System.IO;
     using System.Reflection;
 
+    using Xunit.Sdk;
+
     using static System.IO.Path;
     using static System.Uri;
 
@@ -12,7 +14,7 @@
         public static string GetPath(string projectRelativePath, Type startupType)
         {
             var assembly = GetAssembly(startupType);
-            var projectName = assembly.GetName().Name;
+            var projectName = assembly.GetName().Name ?? throw new NullException("Project name is default.");
             var applicationBasePath = GetAssemblyDirectory(assembly);
             var directoryInfo = new DirectoryInfo(applicationBasePath);
 
@@ -20,7 +22,7 @@
             {
                 directoryInfo = directoryInfo.Parent;
 
-                if (directoryInfo == null)
+                if (directoryInfo == default)
                 {
                     break;
                 }
@@ -37,7 +39,7 @@
                     return Combine(projectDirectoryInfo.FullName, projectName);
                 }
             }
-            while (directoryInfo.Parent != null);
+            while (directoryInfo.Parent != default);
 
             throw new Exception($"Project root could not be located using the application root {applicationBasePath}.");
         }
@@ -45,6 +47,11 @@
         private static string? GetAssemblyDirectory(Assembly assembly)
         {
             var codeBase = assembly.CodeBase;
+            if (string.IsNullOrEmpty(codeBase))
+            {
+                throw new NullException("Code base is default.");
+            }
+
             var uri = new UriBuilder(codeBase);
             var path = UnescapeDataString(uri.Path);
             return GetDirectoryName(path);

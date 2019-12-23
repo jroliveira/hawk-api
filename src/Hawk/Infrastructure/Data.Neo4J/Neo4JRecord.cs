@@ -7,7 +7,7 @@
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
 
-    using Neo4j.Driver.V1;
+    using Neo4j.Driver;
 
     using static System.ComponentModel.TypeDescriptor;
 
@@ -37,7 +37,7 @@
 
         internal static Option<Neo4JRecord> MapRecord(IRecord record, string key)
         {
-            if (record == null || !record.Keys.Contains(key))
+            if (record == default || !record.Keys.Contains(key))
             {
                 return None();
             }
@@ -82,6 +82,6 @@
             }
         }
 
-        private bool Has(string key) => this.data != null && this.data.ContainsKey(key);
+        private bool Has(string key) => this.data != default && this.data.ContainsKey(key);
     }
 }

@@ -3,7 +3,8 @@
     using System;
     using System.Threading.Tasks;
 
-    using Hawk.Domain.Shared.Exceptions;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
+    using Hawk.Infrastructure.Monad;
     using Hawk.WebApi.Infrastructure.Hal;
 
     using Microsoft.AspNetCore.Http;
@@ -50,9 +51,9 @@
             var serializerSettings = JsonSerializerSettings;
             serializerSettings.AddHal();
 
-            var errorModel = HandleException(exception);
+            LogError("An unhandled error has occurred.", exception);
 
-            LogError("An unhandled error has occurred.", errorModel);
+            var errorModel = HandleException(exception);
 
             await context.Response.WriteAsync(SerializeObject(
                 GetResource(context, errorModel, errorModel.GetType()),

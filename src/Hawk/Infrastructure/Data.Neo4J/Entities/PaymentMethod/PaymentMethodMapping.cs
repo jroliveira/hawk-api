@@ -1,10 +1,10 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Entities.PaymentMethod
 {
     using Hawk.Domain.PaymentMethod;
-    using Hawk.Domain.Shared.Exceptions;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
-    using Neo4j.Driver.V1;
+    using Neo4j.Driver;
 
     using static Hawk.Domain.PaymentMethod.PaymentMethod;
 

@@ -24,7 +24,7 @@
         public void Emit(LogEvent logEvent)
         {
             var span = this.tracer.ActiveSpan;
-            if (span == null)
+            if (span == default)
             {
                 return;
             }
@@ -41,13 +41,13 @@
                 fields[Message] = logEvent.RenderMessage(this.formatProvider);
                 fields["message.template"] = logEvent.MessageTemplate.Text;
 
-                if (logEvent.Exception != null)
+                if (logEvent.Exception != default)
                 {
                     fields[ErrorKind] = logEvent.Exception.GetType().FullName;
                     fields[ErrorObject] = logEvent.Exception;
                 }
 
-                if (logEvent.Properties != null)
+                if (logEvent.Properties != default)
                 {
                     foreach (var (key, value) in logEvent.Properties)
                     {

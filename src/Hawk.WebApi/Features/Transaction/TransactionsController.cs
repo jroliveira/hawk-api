@@ -3,8 +3,8 @@
     using System;
     using System.Threading.Tasks;
 
-    using Hawk.Domain.Shared.Exceptions;
     using Hawk.Domain.Transaction;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure.Authentication;
@@ -44,6 +44,8 @@
         /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(typeof(TryModel<PageModel<TryModel<TransactionModel>>>), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetTransactions()
         {
@@ -61,6 +63,8 @@
         /// <returns></returns>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(TryModel<TransactionModel>), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetTransactionById([FromRoute] string id)
@@ -79,6 +83,8 @@
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(TryModel<TransactionModel>), 201)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(409)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> CreateTransaction([FromBody] NewTransactionModel request)
@@ -105,6 +111,8 @@
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(TryModel<TransactionModel>), 201)]
         [ProducesResponseType(204)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [ProducesResponseType(409)]
         [ProducesResponseType(500)]
@@ -146,6 +154,8 @@
         /// <returns></returns>
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> DeleteTransaction([FromRoute] string id)
         {

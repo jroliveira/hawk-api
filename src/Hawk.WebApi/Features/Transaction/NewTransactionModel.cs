@@ -71,7 +71,7 @@
                 .Select(tag => NewTag(tag))
                 .ToList();
 
-            if (tags.Any(tag => tag.IsFailure))
+            if (tags.Any(tag => !tag))
             {
                 return None();
             }

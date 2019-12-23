@@ -3,13 +3,15 @@
     using System.Threading.Tasks;
 
     using Hawk.Domain.Account;
-    using Hawk.Domain.Shared.Exceptions;
+    using Hawk.Infrastructure.Caching;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure.Authentication;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Caching.Memory;
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
@@ -20,14 +22,17 @@
     {
         private readonly IGetAccountByEmail getAccountByEmail;
         private readonly IUpsertAccount upsertAccount;
+        private readonly IMemoryCache memoryCache;
         private readonly NewAccountModelValidator validator;
 
         public AccountsController(
             IGetAccountByEmail getAccountByEmail,
-            IUpsertAccount upsertAccount)
+            IUpsertAccount upsertAccount,
+            IMemoryCache memoryCache)
         {
             this.getAccountByEmail = getAccountByEmail;
             this.upsertAccount = upsertAccount;
+            this.memoryCache = memoryCache;
             this.validator = new NewAccountModelValidator();
         }
 
@@ -37,10 +42,14 @@
         /// <returns></returns>
         [HttpGet("account")]
         [ProducesResponseType(typeof(TryModel<AccountModel>), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetAccountByEmail()
         {
-            var entity = await this.getAccountByEmail.GetResult(this.GetUser());
+            var entity = await this.memoryCache.GetOrCreateCache(
+                this.GetUser(),
+                () => this.getAccountByEmail.GetResult(this.GetUser()));
 
             return entity.Match(
                 this.Error<AccountModel>,
@@ -52,8 +61,8 @@
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("accounts")]
         [AllowAnonymous]
+        [HttpPost("accounts")]
         [ProducesResponseType(typeof(TryModel<AccountModel>), 201)]
         [ProducesResponseType(409)]
         [ProducesResponseType(500)]

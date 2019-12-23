@@ -4,9 +4,9 @@
 
     using Hawk.Domain.Currency;
     using Hawk.Domain.PaymentMethod;
-    using Hawk.Domain.Shared.Exceptions;
     using Hawk.Domain.Store;
     using Hawk.Domain.Tag;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     using static Hawk.Infrastructure.Monad.Utils.Util;

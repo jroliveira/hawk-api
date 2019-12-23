@@ -9,7 +9,7 @@
         {
             this.StackTrace = exception.StackTrace;
 
-            if (exception.InnerException != null)
+            if (exception.InnerException != default)
             {
                 this.InnerDeveloperError = new DeveloperErrorModel(exception.InnerException);
             }

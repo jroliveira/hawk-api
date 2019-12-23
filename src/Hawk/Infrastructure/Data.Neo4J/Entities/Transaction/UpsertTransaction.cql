@@ -2,56 +2,56 @@
 MATCH 
   (account:Account)
 WHERE
-  account.email = {email}
+  account.email = $email
 
 // (:Store)
 
 MERGE 
   (store:Store { 
-    name: {store}
+    name: $store
   })
-CREATE UNIQUE
+MERGE
   (store)-[:BELONGS]->(account)
 
 // (:Currency)
 
 MERGE 
   (currency:Currency { 
-    name: {currency}
+    name: $currency
   })
-CREATE UNIQUE
+MERGE
   (currency)-[:BELONGS]->(account)
 
 // (:PaymentMethod)
 
 MERGE 
   (paymentMethod:PaymentMethod { 
-    name: {method}
+    name: $method
   })
-CREATE UNIQUE
+MERGE
   (paymentMethod)-[:BELONGS]->(account)
 
 // (:Transaction)
 
 MERGE
   (transaction:Transaction { 
-    id: {id}
+    id: $id
   })
 REMOVE 
   transaction:Credit:Debit
 SET
   transaction:#type#,
-  transaction.value = {value},
-  transaction.year = {year},
-  transaction.month = {month},
-  transaction.day = {day}
-CREATE UNIQUE
+  transaction.value = $value,
+  transaction.year = $year,
+  transaction.month = $month,
+  transaction.day = $day
+MERGE
   (transaction)-[:BELONGS]->(account)
-CREATE UNIQUE
+MERGE
   (transaction)-[:IN]->(store)
-CREATE UNIQUE
+MERGE
   (transaction)-[:PAID_IN]->(currency)
-CREATE UNIQUE
+MERGE
   (transaction)-[:PAID_WITH]->(paymentMethod)
 WITH
   account,
@@ -63,16 +63,16 @@ WITH
 // (:Tag)
 
 UNWIND
-  {tags} AS tagName
+  $tags AS tagName
 MERGE
   (tag:Tag { 
     name: tagName
   })
-CREATE UNIQUE
+MERGE
   (tag)-[:BELONGS]->(account)
-CREATE UNIQUE
+MERGE
   (store)-[:HAS]->(tag)
-CREATE UNIQUE
+MERGE
   (transaction)-[:HAS]->(tag)
 
 RETURN 

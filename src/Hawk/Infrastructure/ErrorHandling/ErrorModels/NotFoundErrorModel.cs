@@ -1,6 +1,6 @@
 ﻿namespace Hawk.Infrastructure.ErrorHandling.ErrorModels
 {
-    using Hawk.Domain.Shared.Exceptions;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
 
     public sealed class NotFoundErrorModel : ErrorModel
     {

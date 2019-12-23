@@ -2,7 +2,7 @@
   (account:Account)
 
 WHERE
-  account.email = {email}
+  account.email = $email
 
 RETURN 
 { 

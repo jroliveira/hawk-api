@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
 
 # install cakebuild 0.35.0
 RUN dotnet tool install --global Cake.Tool --version 0.35.0
@@ -8,7 +8,7 @@ ADD . /src
 
 RUN dotnet-cake /src/build.cake --target=Deploy
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.0 AS runtime
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS runtime
 
 WORKDIR /app
 

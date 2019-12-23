@@ -1,10 +1,10 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Entities.Store
 {
-    using Hawk.Domain.Shared.Exceptions;
     using Hawk.Domain.Store;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
-    using Neo4j.Driver.V1;
+    using Neo4j.Driver;
 
     using static Hawk.Domain.Store.Store;
 

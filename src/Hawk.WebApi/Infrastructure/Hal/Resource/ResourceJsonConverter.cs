@@ -14,7 +14,7 @@
             var jsonObject = FromObject(resource.Get(), serializer);
 
             var links = resource.GetLinks();
-            if (links != null && links.Any())
+            if (links != default && links.Any())
             {
                 jsonObject.Add("_links", FromObject(links, serializer));
             }

@@ -3,6 +3,9 @@
     using System;
 
     using Hawk.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.Infrastructure.Monad;
+
+    using static Hawk.Infrastructure.ErrorHandling.ExceptionHandler;
 
     public sealed class Logger
     {
@@ -14,8 +17,6 @@
         {
             this.logMethod = logMethod;
             this.Level = level;
-
-            logger = this;
         }
 
         public LogLevel Level { get; }
@@ -29,10 +30,12 @@
             message,
             new { Info = data, Error = tryModel });
 
-        public static void LogError<TModel>(string message, TryModel<TModel> tryModel) => logger?.Log(
+        public static void LogError(string message, Exception exception) => LogError<Unit>(message, exception);
+
+        public static void LogError<TModel>(string message, Exception exception) => logger?.Log(
             LogLevel.Error,
             message,
-            new { Error = tryModel });
+            new { Error = HandleException<TModel>(exception, true) });
 
         public static void LogError(string message, object data) => logger?.Log(
             LogLevel.Error,

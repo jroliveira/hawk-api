@@ -19,7 +19,7 @@
                 return false;
             }
 
-            if (this.Retry != null && this.Retry.IsEnabled())
+            if (this.Retry != default && this.Retry.IsEnabled())
             {
                 return true;
             }

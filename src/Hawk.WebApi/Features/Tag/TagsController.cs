@@ -34,6 +34,8 @@
         /// <returns></returns>
         [HttpGet("tags")]
         [ProducesResponseType(typeof(TryModel<PageModel<TryModel<TagModel>>>), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetTags()
         {
@@ -51,6 +53,8 @@
         /// <returns></returns>
         [HttpGet("stores/{store}/tags")]
         [ProducesResponseType(typeof(TryModel<PageModel<TryModel<TagModel>>>), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetTagsByStore(string store)

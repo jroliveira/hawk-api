@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Resilience.Configurations;
 
     using Microsoft.Extensions.Options;
@@ -18,6 +19,8 @@
     using static Hawk.Infrastructure.ErrorHandling.ExceptionHandler;
 
     using static Hawk.Infrastructure.Logging.Logger;
+
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     using static Polly.Policy;
 
@@ -47,15 +50,17 @@
 
         internal Task Execute(
             IDictionary<string, object> contextData,
-            Func<Context?, Task> func) => this.policy == null
-                ? func(default)
-                : this.policy.ExecuteAsync(func, contextData);
+            Func<Context?, Task> func) => this.Execute(contextData, _ =>
+            {
+                func(_);
+                return FromResult(Unit());
+            });
 
         internal Task<TResult> Execute<TResult>(Func<Context?, Task<TResult>> func) => this.Execute(new Dictionary<string, object>(), func);
 
         internal Task<TResult> Execute<TResult>(
             IDictionary<string, object> contextData,
-            Func<Context?, Task<TResult>> func) => this.policy == null
+            Func<Context?, Task<TResult>> func) => this.policy == default
                 ? func(default)
                 : this.policy.ExecuteAsync(func, contextData);
 
@@ -65,7 +70,7 @@
         {
             var logInfo = new { RetryCount = retryCount, context.PolicyKey };
 
-            if (exception == null)
+            if (exception == default)
             {
                 LogError("A non success operation was received on retry count for policy key.", logInfo);
             }

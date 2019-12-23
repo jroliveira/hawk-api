@@ -43,8 +43,8 @@
                         TokenUrl = Combine(authConfig.Authority?.Uri, "connect/token"),
                         Scopes = new Dictionary<string, string>
                         {
-                            { "hawk.read", "Read access to protected resources" },
-                            { "hawk.write", "Write access to protected resources" },
+                            { "hawk", "Admin" },
+                            { "hawk.readonly", "Read-only" },
                         },
                     },
                 },

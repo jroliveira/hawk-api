@@ -6,7 +6,7 @@
 
     public sealed class TryModel<TModel> : ITryModel<TModel>
     {
-        private readonly ErrorModel errorModel;
+        private readonly ErrorModel? errorModel;
         private readonly TModel model;
 
         public TryModel(TModel model)
@@ -27,7 +27,7 @@
 
         public TModel Get() => this.model;
 
-        public TReturn Match<TReturn>(Func<ErrorModel, TReturn> failure, Func<TModel, TReturn> success) => this.errorModel != null
+        public TReturn Match<TReturn>(Func<ErrorModel, TReturn> failure, Func<TModel, TReturn> success) => this.errorModel != default
             ? failure(this.errorModel)
             : success(this.model);
     }

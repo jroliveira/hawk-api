@@ -2,10 +2,9 @@
 {
     using System.Collections.Generic;
 
+    using Hawk.Infrastructure.Monad;
     using Hawk.WebApi.Features.Shared.Hal;
     using Hawk.WebApi.Infrastructure.Hal.Link;
-
-    using static Hawk.Infrastructure.ErrorHandling.ExceptionHandler;
 
     internal sealed class ErrorResourceBuilder : ResourceBuilder
     {

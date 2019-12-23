@@ -1,6 +1,6 @@
-﻿namespace Hawk.WebApi.Infrastructure.Api
+﻿namespace Hawk.WebApi.Infrastructure.Versioning
 {
-    using Hawk.Domain.Shared.Exceptions;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
 
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Versioning;

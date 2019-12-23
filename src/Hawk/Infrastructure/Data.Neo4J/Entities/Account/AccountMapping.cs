@@ -3,10 +3,10 @@
     using System;
 
     using Hawk.Domain.Account;
-    using Hawk.Domain.Shared.Exceptions;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
-    using Neo4j.Driver.V1;
+    using Neo4j.Driver;
 
     using static Hawk.Domain.Account.Account;
 

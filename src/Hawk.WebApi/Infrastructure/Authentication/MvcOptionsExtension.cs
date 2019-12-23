@@ -2,13 +2,19 @@
 {
     using Hawk.WebApi.Infrastructure.Authentication.Configurations;
 
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Authorization;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+
+    using static Policies;
 
     internal static class MvcOptionsExtension
     {
-        internal static void AddAuthorizeFilter(this MvcOptions @this, IConfiguration configuration)
+        internal static void AddAuthorizeFilter(
+            this MvcOptions @this,
+            IServiceCollection serviceCollection,
+            IConfiguration configuration)
         {
             var authConfig = configuration
                 .GetSection("authentication")
@@ -19,7 +25,10 @@
                 return;
             }
 
-            @this.Filters.Add(new AuthorizeFilter());
+            using var provider = serviceCollection.BuildServiceProvider();
+            var authorizationService = provider.GetRequiredService<IAuthorizationService>();
+
+            @this.Filters.Add(new CustomAuthorizeFilter(authorizationService, AdminPolicy));
         }
     }
 }

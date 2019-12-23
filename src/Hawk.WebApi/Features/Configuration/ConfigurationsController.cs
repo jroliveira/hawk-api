@@ -3,7 +3,7 @@
     using System.Threading.Tasks;
 
     using Hawk.Domain.Configuration;
-    using Hawk.Domain.Shared.Exceptions;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.ErrorHandling.TryModel;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure.Authentication;
@@ -36,6 +36,8 @@
         /// <returns></returns>
         [HttpGet("{description}")]
         [ProducesResponseType(typeof(TryModel<ConfigurationModel>), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetConfigurationByDescription([FromRoute] string description)
@@ -56,6 +58,8 @@
         [HttpPut("{description}")]
         [ProducesResponseType(typeof(TryModel<ConfigurationModel>), 201)]
         [ProducesResponseType(204)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [ProducesResponseType(409)]
         [ProducesResponseType(500)]

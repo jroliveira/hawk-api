@@ -28,30 +28,31 @@
         public SerilogLogMethod(LogConfiguration config)
         {
             var loggerConfig = new LoggerConfiguration();
+            var (_, (console, file, elasticSearch, tracing)) = config;
 
-            if (config?.Sinks?.Console?.Enabled != null && config.Sinks.Console.Enabled.Value)
+            if (console.Enabled != null && console.Enabled.Value)
             {
                 loggerConfig.WriteTo.Console(
                     outputTemplate: "{NewLine}{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] ---{NewLine}{Message:lj}{NewLine}");
             }
 
-            if (config?.Sinks?.File?.Enabled != null && config.Sinks.File.Enabled.Value)
+            if (file.Enabled != null && file.Enabled.Value)
             {
                 loggerConfig.WriteTo.File(
-                    config.Sinks.File.Path,
+                    file.Path,
                     rollingInterval: Day,
                     outputTemplate: "{Message}{NewLine}");
             }
 
-            if (config?.Sinks?.ElasticSearch?.Enabled != null && config.Sinks.ElasticSearch.Enabled.Value)
+            if (elasticSearch.Enabled != null && elasticSearch.Enabled.Value)
             {
-                loggerConfig.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(config.Sinks.ElasticSearch.Uri))
+                loggerConfig.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticSearch.Uri))
                 {
                     AutoRegisterTemplate = true,
                 });
             }
 
-            if (config?.Sinks?.Tracing?.Enabled != null && config.Sinks.Tracing.Enabled.Value)
+            if (tracing.Enabled != null && tracing.Enabled.Value)
             {
                 loggerConfig.WriteTo.OpenTracing();
             }
@@ -59,6 +60,6 @@
             this.logger = loggerConfig.CreateLogger();
         }
 
-        public void Write(LogLevel logLevel, string data) => this.logger.Write(Levels[logLevel], data);
+        public void Write(LogLevel logLevel, string data) => this.logger.Write(Levels[logLevel], "{Json:l}", data);
     }
 }

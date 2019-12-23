@@ -1,8 +1,8 @@
 ﻿MATCH 
   (transaction:Transaction)-[:BELONGS]->(account:Account)
 WHERE
-  account.email = {email}
-  AND transaction.id = {id}
+  account.email = $email
+  AND transaction.id = $id
 WITH
   account,
   transaction

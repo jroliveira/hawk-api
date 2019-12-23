@@ -29,7 +29,7 @@
                 .AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(opt =>
                 {
-                    opt.ApiName = "hawk";
+                    opt.ApiName = "hawk-api";
                     opt.Authority = authConfig.Authority?.Uri;
                     opt.RequireHttpsMetadata = false;
                 });

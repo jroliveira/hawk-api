@@ -15,24 +15,34 @@
 
     internal static class CypherScript
     {
-        private static readonly Func<string, Stream> ReadFile = file => OpenRead(Combine(GetDirectoryName(GetExecutingAssembly().Location), file));
+        private static readonly Func<string, Stream?> ReadFile = file =>
+        {
+            var directoryName = GetDirectoryName(GetExecutingAssembly().Location);
+            if (directoryName != null)
+            {
+                return OpenRead(Combine(directoryName, file));
+            }
+
+            LogError("Directory name is null.", new { Path = GetExecutingAssembly().Location });
+            return default;
+        };
 
         internal static Option<string> ReadCypherScript(string name)
         {
-            name = $@"Infrastructure\Data.Neo4J\Entities\{name}";
+            name = Combine("Infrastructure", "Data.Neo4J", "Entities", name);
 
             if (string.IsNullOrEmpty(name))
             {
-                LogError("Cypher script is null or empty.", new { File = name });
+                LogError("Cypher script is default or empty.", new { File = name });
                 return None();
             }
 
             try
             {
                 using var stream = ReadFile(name);
-                if (stream == null)
+                if (stream == default)
                 {
-                    LogError("Cypher stream is null.", new { File = name });
+                    LogError("Cypher stream is default.", new { File = name });
                     return None();
                 }
 

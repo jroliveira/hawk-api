@@ -3,7 +3,7 @@
 MATCH 
   (account:Account)
 WHERE
-  account.email = {email}
+  account.email = $email
 WITH
   account
 
@@ -12,7 +12,7 @@ WITH
 MATCH
   (store:Store)-[:BELONGS]->(account)
 WHERE
-  store.name = {store}
+  store.name = $store
 WITH
   account,
   store
@@ -22,7 +22,7 @@ WITH
 MATCH 
   (paymentMethod:PaymentMethod)-[:BELONGS]->(account)
 WHERE
-  paymentMethod.name = {paymentMethod}
+  paymentMethod.name = $paymentMethod
 WITH
   account,
   store,
@@ -33,7 +33,7 @@ WITH
 MATCH 
   (currency:Currency)-[:BELONGS]->(account)
 WHERE
-  currency.name = {currency}
+  currency.name = $currency
 WITH
   account,
   store,
@@ -45,7 +45,7 @@ WITH
 MATCH
   (tag:Tag)-[:BELONGS]->(account)
 WHERE
-  tag.name in {tags}
+  tag.name in $tags
 WITH
   account,
   store,
@@ -67,19 +67,19 @@ WITH
   
 MERGE 
   (configuration:Configuration { 
-    description: {description}
+    description: $description
   })
 SET
-  configuration.type = {type}
-CREATE UNIQUE
+  configuration.type = $type
+MERGE
   (configuration)-[:BELONGS]->(account)
-CREATE UNIQUE
+MERGE
   (configuration)-[:CONFIGURED_WITH]->(store)
-CREATE UNIQUE
+MERGE
   (configuration)-[:CONFIGURED_WITH]->(paymentMethod)
-CREATE UNIQUE
+MERGE
   (configuration)-[:CONFIGURED_WITH]->(currency)
-CREATE UNIQUE
+MERGE
   (configuration)-[:CONFIGURED_WITH]->(tag)
   
 

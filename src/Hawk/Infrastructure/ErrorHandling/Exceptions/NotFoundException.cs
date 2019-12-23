@@ -1,4 +1,4 @@
-﻿namespace Hawk.Domain.Shared.Exceptions
+﻿namespace Hawk.Infrastructure.ErrorHandling.Exceptions
 {
     public sealed class NotFoundException : HawkException
     {

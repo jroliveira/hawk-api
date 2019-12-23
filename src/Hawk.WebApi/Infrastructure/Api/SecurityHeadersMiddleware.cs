@@ -13,15 +13,15 @@
 
         public SecurityHeadersMiddleware(RequestDelegate next)
         {
-            NotNull(next, nameof(next), "Security headers middleware's next cannot be null.");
+            NotNull(next, nameof(next), "Security headers middleware's next cannot be default.");
 
             this.next = next;
         }
 
         public async Task Invoke(HttpContext context)
         {
-            NotNull(context, nameof(context), "SecurityHeadersMiddleware context cannot be null.");
-            NotNull(context.Response, nameof(context.Response), "SecurityHeadersMiddleware response cannot be null.");
+            NotNull(context, nameof(context), "SecurityHeadersMiddleware context cannot be default.");
+            NotNull(context.Response, nameof(context.Response), "SecurityHeadersMiddleware response cannot be default.");
 
             context.Response.Headers["X-Frame-Options"] = "deny";
             context.Response.Headers["X-XSS-Protection"] = "1; mode=block";

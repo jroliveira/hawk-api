@@ -1,6 +1,6 @@
 ﻿namespace Hawk.Infrastructure.Monad
 {
-    public readonly struct Unit
+    public sealed class Unit
     {
     }
 }

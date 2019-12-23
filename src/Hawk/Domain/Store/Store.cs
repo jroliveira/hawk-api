@@ -2,7 +2,7 @@
 {
     using System;
 
-    using Hawk.Domain.Shared.Exceptions;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
@@ -22,7 +22,7 @@
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
+            if (ReferenceEquals(default, obj))
             {
                 return false;
             }
@@ -50,6 +50,6 @@
             return Equals(this.Name, other.Name);
         }
 
-        public override int GetHashCode() => this.Name != null ? this.Name.GetHashCode() : 0;
+        public override int GetHashCode() => this.Name != default ? this.Name.GetHashCode() : 0;
     }
 }

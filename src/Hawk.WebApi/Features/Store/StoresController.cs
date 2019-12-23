@@ -34,6 +34,8 @@
         /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(typeof(TryModel<PageModel<TryModel<StoreModel>>>), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetStores()
         {
@@ -51,6 +53,8 @@
         /// <returns></returns>
         [HttpGet("{name}")]
         [ProducesResponseType(typeof(TryModel<StoreModel>), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetStoreByName([FromRoute] string name)
