@@ -3,7 +3,7 @@
     using System;
 
     using Hawk.Domain.Shared;
-    using Hawk.Domain.Shared.Exceptions;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     using static System.Guid;

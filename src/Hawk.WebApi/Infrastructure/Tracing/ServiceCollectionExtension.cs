@@ -39,7 +39,7 @@
                         .Build();
                 }
 
-                var jaeger = tracingConfig.Jaeger;
+                var (_, (agentHost, agentPort)) = tracingConfig;
                 var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
 
                 var tracer = new Tracer
@@ -47,7 +47,7 @@
                     .WithSampler(new ConstSampler(true))
                     .WithReporter(new RemoteReporter
                         .Builder()
-                        .WithSender(new UdpSender(jaeger.AgentHost, jaeger.AgentPort.Value, 0))
+                        .WithSender(new UdpSender(agentHost, agentPort, 0))
                         .WithLoggerFactory(loggerFactory)
                         .Build())
                     .Build();

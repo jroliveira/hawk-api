@@ -2,7 +2,7 @@
 {
     using System;
 
-    using Hawk.Domain.Shared.Exceptions;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     public static partial class Util

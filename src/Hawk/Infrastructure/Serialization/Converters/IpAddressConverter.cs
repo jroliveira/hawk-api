@@ -16,10 +16,18 @@
             object? value,
             JsonSerializer serializer) => writer.WriteValue(value?.ToString());
 
-        public override object ReadJson(
+        public override object? ReadJson(
             JsonReader reader,
             Type objectType,
             object? existingValue,
-            JsonSerializer serializer) => Parse((string)reader.Value);
+            JsonSerializer serializer)
+        {
+            if (reader.Value is string value)
+            {
+                return Parse(value);
+            }
+
+            return default;
+        }
     }
 }

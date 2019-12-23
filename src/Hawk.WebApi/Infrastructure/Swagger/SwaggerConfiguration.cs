@@ -4,14 +4,6 @@
     {
         public bool? Enabled { get; set; }
 
-        internal bool IsEnabled()
-        {
-            if (!this.Enabled.GetValueOrDefault(false))
-            {
-                return false;
-            }
-
-            return false;
-        }
+        internal bool IsEnabled() => this.Enabled.GetValueOrDefault(false);
     }
 }

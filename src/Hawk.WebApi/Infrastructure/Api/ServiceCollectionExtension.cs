@@ -1,13 +1,11 @@
 ﻿namespace Hawk.WebApi.Infrastructure.Api
 {
-    using Hawk.Infrastructure.ErrorHandling;
     using Hawk.WebApi.Infrastructure.Authentication;
     using Hawk.WebApi.Infrastructure.Hal;
+    using Hawk.WebApi.Infrastructure.Versioning;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Versioning;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -23,33 +21,18 @@
             @this
                 .AddResponseCompression()
                 .AddResponseCaching()
-                .AddApiVersioning(options =>
-                {
-                    options.AssumeDefaultVersionWhenUnspecified = true;
-                    options.ApiVersionReader = new UrlSegmentApiVersionReader();
-                    options.ErrorResponses = new VersioningErrorResponseProvider();
-                })
-                .AddVersionedApiExplorer(options =>
-                {
-                    options.GroupNameFormat = "VVV";
-                    options.SubstituteApiVersionInUrl = true;
-                    options.AssumeDefaultVersionWhenUnspecified = true;
-                    options.DefaultApiVersion = new ApiVersion(1, 0);
-                })
-                .AddCors(options => options.AddPolicy(
-                    "CorsPolicy",
-                    builder => builder
-                        .AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()))
+                .AddCors(options => options.AddPolicy("CorsPolicy", builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()))
                 .AddMvcCore(options =>
                 {
                     options.EnableEndpointRouting = false;
-                    options.Conventions.Add(new ApiVersionRoutePrefixConvention());
-                    options.AddAuthorizeFilter(configuration);
+                    options.AddApiVersionRoutePrefixConvention();
+                    options.AddAuthorizeFilter(@this, configuration);
                 })
                 .AddApiExplorer()
-                .AddAuthorization()
+                .AddAuthorization(configuration)
                 .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.ContractResolver = JsonSerializerSettings.ContractResolver;

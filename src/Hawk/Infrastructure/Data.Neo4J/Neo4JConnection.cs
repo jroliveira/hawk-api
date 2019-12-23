@@ -10,14 +10,14 @@
 
     using Microsoft.Extensions.Options;
 
-    using Neo4j.Driver.V1;
+    using Neo4j.Driver;
 
     using static Hawk.Infrastructure.ErrorHandling.ExceptionHandler;
     using static Hawk.Infrastructure.Logging.Logger;
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
-    using static Neo4j.Driver.V1.AuthTokens;
-    using static Neo4j.Driver.V1.GraphDatabase;
+    using static Neo4j.Driver.AuthTokens;
+    using static Neo4j.Driver.GraphDatabase;
 
     using Unit = Hawk.Infrastructure.Monad.Unit;
 
@@ -63,30 +63,25 @@
         private Task<Try<TReturn>> ExecuteCypherAndGetRecords<TReturn>(Option<string> statement, object parameters, Func<IList<IRecord>, Try<TReturn>> command) => this.ExecuteCypherAndGetCursor(
             statement,
             parameters,
-            async cursor =>
-            {
-                var records = await cursor.ToListAsync();
+            async cursor => command(await cursor.ToListAsync()));
 
-                return command(records);
-            });
-
-        private async Task<Try<TReturn>> ExecuteCypherAndGetCursor<TReturn>(Option<string> statement, object parameters, Func<IStatementResultCursor, Task<Try<TReturn>>> command)
+        private async Task<Try<TReturn>> ExecuteCypherAndGetCursor<TReturn>(Option<string> statement, object parameters, Func<IResultCursor, Task<Try<TReturn>>> command)
         {
             if (!statement.IsDefined)
             {
                 return new ArgumentNullException(nameof(statement), "Cypher statement is required.");
             }
 
-            if (this.driver == null)
+            if (this.driver == default)
             {
-                return new NullReferenceException("Neo4j driver is null.");
+                return new NullReferenceException("Neo4j driver is default.");
             }
 
             try
             {
                 return await this.resiliencePolicy.Execute(async _ =>
                 {
-                    using var session = this.driver.Session();
+                    var session = this.driver.AsyncSession(o => o.WithDatabase("neo4j"));
                     var cursor = await session.RunAsync(statement.Get(), parameters);
 
                     return await command(cursor);

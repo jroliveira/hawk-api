@@ -1,8 +1,12 @@
 ﻿namespace Hawk.Domain.Shared
 {
     using System;
+    using System.Runtime.Serialization;
 
-    public sealed class Email : IEquatable<Email>
+    using static Hawk.Infrastructure.Security.Md5HashAlgorithm;
+
+    [Serializable]
+    public sealed class Email : IEquatable<Email>, ISerializable
     {
         private readonly string value;
 
@@ -14,7 +18,7 @@
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
+            if (ReferenceEquals(default, obj))
             {
                 return false;
             }
@@ -42,8 +46,10 @@
             return Equals(this.value, other.value);
         }
 
-        public override int GetHashCode() => this.value != null ? this.value.GetHashCode() : 0;
+        public override int GetHashCode() => this.value != default ? this.value.GetHashCode() : 0;
 
         public override string ToString() => this.value;
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context) => info.AddValue(nameof(Email).ToLower(), ComputeHash(this.value));
     }
 }

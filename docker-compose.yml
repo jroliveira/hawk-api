@@ -57,7 +57,7 @@ services:
       - hawk-network
 
   graphdb:
-    image: neo4j:3.4-enterprise
+    image: neo4j:4.0.0-enterprise
     container_name: hawk-graphdb
     ports:
       - "7474:7474"

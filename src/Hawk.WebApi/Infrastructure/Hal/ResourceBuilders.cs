@@ -15,11 +15,11 @@
         private ResourceBuilders(IDictionary<Type, Func<HttpContext, object, IResource>> dictionary)
             : base(dictionary) => resourceBuilders = this;
 
-        public static implicit operator ResourceBuilders(Dictionary<Type, Func<HttpContext, object, IResource>> dictionary) => new ResourceBuilders(dictionary);
+        public static void NewResourceBuilders(IDictionary<Type, Func<HttpContext, object, IResource>> dictionary) => resourceBuilders = new ResourceBuilders(dictionary);
 
         internal static object GetResource(HttpContext httpContext, object @object, Type objectType)
         {
-            if (resourceBuilders == null)
+            if (resourceBuilders == default)
             {
                 return @object;
             }

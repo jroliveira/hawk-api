@@ -4,14 +4,14 @@
     using System.Linq;
 
     using Hawk.Domain.Configuration;
-    using Hawk.Domain.Shared.Exceptions;
     using Hawk.Domain.Tag;
     using Hawk.Infrastructure.Data.Neo4J.Entities.Currency;
     using Hawk.Infrastructure.Data.Neo4J.Entities.PaymentMethod;
     using Hawk.Infrastructure.Data.Neo4J.Entities.Store;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
-    using Neo4j.Driver.V1;
+    using Neo4j.Driver;
 
     using static Hawk.Domain.Configuration.Configuration;
 
@@ -34,7 +34,7 @@
                     .Select(tag => Tag.NewTag(tag))
                     .ToList();
 
-                if (tags.Any(tag => tag.IsFailure))
+                if (tags.Any(tag => !tag))
                 {
                     return new InvalidObjectException("Invalid configuration.");
                 }

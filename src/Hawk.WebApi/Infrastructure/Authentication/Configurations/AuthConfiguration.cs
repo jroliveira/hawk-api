@@ -15,7 +15,7 @@
                 return false;
             }
 
-            if (this.Authority != null && this.Authority.IsEnabled())
+            if (this.Authority != default && this.Authority.IsEnabled())
             {
                 return true;
             }

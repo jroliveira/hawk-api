@@ -4,13 +4,13 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using Hawk.Domain.Shared.Exceptions;
     using Hawk.Domain.Store;
     using Hawk.Domain.Tag;
     using Hawk.Domain.Transaction;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
-    using Neo4j.Driver.V1;
+    using Neo4j.Driver;
 
     using static Hawk.Domain.Tag.Tag;
     using static Hawk.Domain.Transaction.Credit;
@@ -52,7 +52,7 @@
                     .Select(tag => NewTag(tag))
                     .ToList();
 
-                if (tags.Any(tag => tag.IsFailure))
+                if (tags.Any(tag => !tag))
                 {
                     return new InvalidObjectException("Invalid transaction.");
                 }

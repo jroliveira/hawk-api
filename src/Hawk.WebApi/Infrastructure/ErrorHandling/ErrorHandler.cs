@@ -3,6 +3,7 @@
     using System;
 
     using Hawk.Infrastructure.ErrorHandling.ErrorModels;
+    using Hawk.Infrastructure.Monad;
 
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
@@ -19,16 +20,18 @@
 
         internal static IActionResult ErrorResult<TModel>(Exception exception)
         {
-            var tryModel = HandleException<TModel>(exception);
+            LogError<TModel>("An error has occurred.", exception);
 
-            LogError("An error has occurred.", tryModel);
+            var tryModel = HandleException<TModel>(exception);
 
             return tryModel.Match(
                 errorModel => errorModel switch
                 {
                     BadRequestErrorModel _ => new BadRequestObjectResult(tryModel),
+                    ForbiddenErrorModel _ => new ObjectResult(tryModel) { StatusCode = 403 },
                     NotFoundErrorModel _ => new NotFoundObjectResult(tryModel),
                     ConflictErrorModel _ => new ConflictObjectResult(tryModel),
+                    UnauthorizedErrorModel _ => new UnauthorizedObjectResult(tryModel),
                     UnprocessableEntityErrorModel _ => new UnprocessableEntityObjectResult(tryModel),
                     _ => new ObjectResult(tryModel) { StatusCode = 500 },
                 },

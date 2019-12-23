@@ -1,7 +1,7 @@
 ﻿MATCH 
   (transaction:Transaction)-[:BELONGS]->(account:Account)
 WHERE
-  account.email = {email}
+  account.email = $email
   AND #where#
 WITH
   account,
@@ -80,7 +80,7 @@ RETURN
 } as data
 
 SKIP 
-  {skip} 
+  $skip 
 
 LIMIT 
-  {limit};
+  $limit;

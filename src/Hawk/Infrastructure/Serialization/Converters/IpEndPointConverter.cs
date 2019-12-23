@@ -3,6 +3,8 @@
     using System;
     using System.Net;
 
+    using Neo4j.Driver;
+
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
@@ -15,6 +17,11 @@
             object? value,
             JsonSerializer serializer)
         {
+            if (value == default)
+            {
+                return;
+            }
+
             var ep = (IPEndPoint)value;
             var jo = new JObject
             {
@@ -25,15 +32,21 @@
             jo.WriteTo(writer);
         }
 
-        public override object ReadJson(
+        public override object? ReadJson(
             JsonReader reader,
             Type objectType,
             object? existingValue,
             JsonSerializer serializer)
         {
             var jo = JObject.Load(reader);
-            var address = jo["Address"].ToObject<IPAddress>(serializer);
-            var port = (int)jo["Port"];
+
+            var address = jo.GetValue("Address")?.ToObject<IPAddress>(serializer);
+            if (address == null)
+            {
+                return default;
+            }
+
+            var port = jo.GetValue("Port").As<int>();
 
             return new IPEndPoint(address, port);
         }

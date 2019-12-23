@@ -1,10 +1,10 @@
 ﻿MERGE 
   (account:Account { 
-    email: {email}
+    email: $email
   })
 SET 
-  account.id = {id},
-  account.creationDate = {creationDate}
+  account.id = $id,
+  account.creationDate = $creationDate
 
 RETURN 
 { 

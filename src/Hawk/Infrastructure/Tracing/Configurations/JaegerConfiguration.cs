@@ -10,6 +10,10 @@
 
         public int? AgentPort { get; set; }
 
+        public void Deconstruct(out string agentHost, out int agentPort) => (agentHost, agentPort) = (
+            this.AgentHost ?? "localhost",
+            this.AgentPort.GetValueOrDefault(6831));
+
         public bool IsEnabled()
         {
             if (!IsNullOrEmpty(this.AgentHost)

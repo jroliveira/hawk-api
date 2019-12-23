@@ -5,8 +5,8 @@ MATCH
 MATCH
   (transaction)-[:PAID_WITH]->(paymentMethod:PaymentMethod)-[:BELONGS]->(account)
 WHERE
-  account.email = {email}
-  AND store.name = {store}
+  account.email = $email
+  AND store.name = $store
 
 RETURN
 { 
@@ -15,7 +15,7 @@ RETURN
 } as data
 
 SKIP 
-  {skip} 
+  $skip 
 
 LIMIT 
-  {limit};
+  $limit;

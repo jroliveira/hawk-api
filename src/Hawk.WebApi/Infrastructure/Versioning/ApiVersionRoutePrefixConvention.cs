@@ -1,4 +1,4 @@
-﻿namespace Hawk.WebApi.Infrastructure.Api
+﻿namespace Hawk.WebApi.Infrastructure.Versioning
 {
     using System.Linq;
 
@@ -19,7 +19,7 @@
         {
             foreach (var selector in application.Controllers
                 .SelectMany(controller => controller.Selectors)
-                .Where(selector => selector.AttributeRouteModel != null))
+                .Where(selector => selector.AttributeRouteModel != default))
             {
                 selector.AttributeRouteModel = CombineAttributeRouteModel(this.versionConstraintTemplate, selector.AttributeRouteModel);
             }

@@ -3,7 +3,7 @@
 MATCH
   (transaction)-[:PAID_WITH]->(paymentMethod:PaymentMethod)-[:BELONGS]->(account)
 WHERE
-  account.email = {email}
+  account.email = $email
 
 RETURN
 { 
@@ -12,7 +12,7 @@ RETURN
 } as data
 
 SKIP 
-  {skip} 
+  $skip 
 
 LIMIT 
-  {limit};
+  $limit;

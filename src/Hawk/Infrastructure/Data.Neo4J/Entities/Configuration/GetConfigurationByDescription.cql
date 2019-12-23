@@ -1,8 +1,8 @@
 ﻿MATCH 
   (configuration:Configuration)-[:BELONGS]->(account:Account)
 WHERE
-  account.email = {email}
-  AND configuration.description = {description}
+  account.email = $email
+  AND configuration.description = $description
 WITH
   account,
   configuration

@@ -1,7 +1,7 @@
 ﻿namespace Hawk.Domain.Transaction
 {
     using Hawk.Domain.Currency;
-    using Hawk.Domain.Shared.Exceptions;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     using static Hawk.Infrastructure.Monad.Utils.Util;

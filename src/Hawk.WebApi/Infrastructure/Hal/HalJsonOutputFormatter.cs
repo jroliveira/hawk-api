@@ -20,14 +20,10 @@
     {
         private const string ContentType = "application/hal+json";
 
-        private readonly ResourceBuilders builders;
         private readonly JsonSerializerSettings serializerSettings;
 
-        internal HalJsonOutputFormatter(
-            ResourceBuilders builders,
-            JsonSerializerSettings serializerSettings)
+        internal HalJsonOutputFormatter(JsonSerializerSettings serializerSettings)
         {
-            this.builders = builders;
             this.serializerSettings = serializerSettings;
             this.serializerSettings.AddHal();
 

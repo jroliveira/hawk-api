@@ -3,8 +3,8 @@
 MATCH 
   (transaction)-[:IN]->(store:Store)-[:BELONGS]->(account)
 WHERE
-  account.email = {email}
-  AND store.name = {name}
+  account.email = $email
+  AND store.name = $name
 WITH
   account,
   store

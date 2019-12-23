@@ -34,6 +34,8 @@
         /// <returns></returns>
         [HttpGet("payment-methods")]
         [ProducesResponseType(typeof(TryModel<PageModel<TryModel<PaymentMethodModel>>>), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetPaymentMethods()
         {
@@ -51,6 +53,8 @@
         /// <returns></returns>
         [HttpGet("stores/{store}/payment-methods")]
         [ProducesResponseType(typeof(TryModel<PageModel<TryModel<PaymentMethodModel>>>), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetPaymentMethodsByStore(string store)

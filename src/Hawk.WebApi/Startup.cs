@@ -4,11 +4,13 @@
     using Hawk.Infrastructure.Resilience;
     using Hawk.WebApi.Infrastructure.Api;
     using Hawk.WebApi.Infrastructure.Authentication;
+    using Hawk.WebApi.Infrastructure.Caching;
     using Hawk.WebApi.Infrastructure.ErrorHandling;
     using Hawk.WebApi.Infrastructure.IpRateLimiting;
     using Hawk.WebApi.Infrastructure.Metric;
     using Hawk.WebApi.Infrastructure.Swagger;
     using Hawk.WebApi.Infrastructure.Tracing;
+    using Hawk.WebApi.Infrastructure.Versioning;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -24,10 +26,12 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services
+                .ConfigureCache()
                 .ConfigureIpRateLimiting(this.Configuration)
                 .ConfigureResilience(this.Configuration)
                 .ConfigureNeo4J(this.Configuration)
                 .ConfigureApi(this.Configuration)
+                .ConfigureVersioning()
                 .ConfigureMetric()
                 .ConfigureSwagger(this.Configuration)
                 .ConfigureTracing(this.Configuration);
@@ -43,6 +47,7 @@
             .UseSwagger(this.Configuration)
             .UseTracing(this.Configuration);
 
-        protected virtual void ConfigureAuthentication(IServiceCollection services) => services.ConfigureAuthentication(this.Configuration);
+        protected virtual void ConfigureAuthentication(IServiceCollection services) => services
+            .ConfigureAuthentication(this.Configuration);
     }
 }

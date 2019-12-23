@@ -1,7 +1,7 @@
 ﻿namespace Hawk.Infrastructure.Data.Neo4J.Entities.Transaction
 {
-    using Hawk.Domain.Shared.Exceptions;
     using Hawk.Domain.Transaction;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     using static Hawk.Domain.Transaction.Payment;
