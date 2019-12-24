@@ -11,14 +11,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		after.Hawk.sln.targets = after.Hawk.sln.targets
 		api.env = api.env
-		api.integration.env = api.integration.env
 		app.json = app.json
 		build.cake = build.cake
 		build.ps1 = build.ps1
 		build.sh = build.sh
 		cake.config = cake.config
 		CHANGELOG.md = CHANGELOG.md
-		circle.yml = circle.yml
 		code-analysis.ruleset = code-analysis.ruleset
 		commitlint.config.js = commitlint.config.js
 		CONTRIBUTING.md = CONTRIBUTING.md
@@ -76,30 +74,32 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "monitor", "monitor", "{9B95
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prometheus", "prometheus", "{849EFE53-2118-4A9C-8630-FE753636EB14}"
 	ProjectSection(SolutionItems) = preProject
-		monitor\prometheus\prometheus.yml = monitor\prometheus\prometheus.yml
+		compose\monitor\prometheus\prometheus.yml = compose\monitor\prometheus\prometheus.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "grafana", "grafana", "{62659545-9EFB-4671-AB92-A190433FB5AF}"
 	ProjectSection(SolutionItems) = preProject
-		monitor\grafana\grafana.env = monitor\grafana\grafana.env
-		monitor\grafana\grafana.ini = monitor\grafana\grafana.ini
+		compose\monitor\grafana\grafana.env = compose\monitor\grafana\grafana.env
+		compose\monitor\grafana\grafana.ini = compose\monitor\grafana\grafana.ini
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dashboards", "dashboards", "{1645DB45-28BE-4F07-9453-624FB3CE7C48}"
 	ProjectSection(SolutionItems) = preProject
-		monitor\grafana\dashboards\app-metrics-web-monitoring-prometheus_rev3.json = monitor\grafana\dashboards\app-metrics-web-monitoring-prometheus_rev3.json
+		compose\monitor\grafana\dashboards\app-metrics-web-monitoring-prometheus_rev3.json = compose\monitor\grafana\dashboards\app-metrics-web-monitoring-prometheus_rev3.json
+		compose\monitor\grafana\dashboards\kong-official_rev5.json = compose\monitor\grafana\dashboards\kong-official_rev5.json
+		compose\monitor\grafana\dashboards\kong-official_rev6.json = compose\monitor\grafana\dashboards\kong-official_rev6.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "provisioning", "provisioning", "{03D638FA-FF6D-40A1-9FD4-CF5581AB110A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dashboards", "dashboards", "{B02F0437-10FF-4EC7-AB99-0F1941616D80}"
 	ProjectSection(SolutionItems) = preProject
-		monitor\grafana\provisioning\dashboards\all.yml = monitor\grafana\provisioning\dashboards\all.yml
+		compose\monitor\grafana\provisioning\dashboards\all.yml = compose\monitor\grafana\provisioning\dashboards\all.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "datasources", "datasources", "{D6234D4E-A68B-4D5C-81E5-5C1494A0F3B3}"
 	ProjectSection(SolutionItems) = preProject
-		monitor\grafana\provisioning\datasources\all.yml = monitor\grafana\provisioning\datasources\all.yml
+		compose\monitor\grafana\provisioning\datasources\all.yml = compose\monitor\grafana\provisioning\datasources\all.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "integration", "integration", "{948C89B0-82B6-4FD2-A847-62220E38F9A0}"
@@ -111,40 +111,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{158C
 		.config\dotnet-tools.json = .config\dotnet-tools.json
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "container", "container", "{3D38D172-2DCE-4A53-A907-B4A5C0D8F5A4}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{A8D5A67A-2D90-4B63-A089-311CCAFB1C97}"
-	ProjectSection(SolutionItems) = preProject
-		container\api\configmap.yaml = container\api\configmap.yaml
-		container\api\deployment.yaml = container\api\deployment.yaml
-		container\api\service.yaml = container\api\service.yaml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "grafana", "grafana", "{88811F59-6C3C-4CE4-B3FE-83300B36DAC3}"
-	ProjectSection(SolutionItems) = preProject
-		container\grafana\configmap.yaml = container\grafana\configmap.yaml
-		container\grafana\deployment.yaml = container\grafana\deployment.yaml
-		container\grafana\service.yaml = container\grafana\service.yaml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "graphdb", "graphdb", "{1C8843AE-6880-4AB2-B057-5F2367253D8A}"
-	ProjectSection(SolutionItems) = preProject
-		container\graphdb\deployment.yaml = container\graphdb\deployment.yaml
-		container\graphdb\service.yaml = container\graphdb\service.yaml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prometheus", "prometheus", "{20E158B6-751D-4075-B16D-C2803FA31468}"
-	ProjectSection(SolutionItems) = preProject
-		container\prometheus\deployment.yaml = container\prometheus\deployment.yaml
-		container\prometheus\service.yaml = container\prometheus\service.yaml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "swagger", "swagger", "{2D708B88-3CCB-48FC-B007-B877BEC0BA98}"
-	ProjectSection(SolutionItems) = preProject
-		container\swagger\deployment.yaml = container\swagger\deployment.yaml
-		container\swagger\service.yaml = container\swagger\service.yaml
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unit", "unit", "{3817E1E5-C6E2-4879-AEB9-2A1906B7A02F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hawk.Test", "test\unit\Hawk.Test\Hawk.Test.csproj", "{4D213E49-9D73-4319-B737-B2EEAB432B22}"
@@ -153,46 +119,64 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "elasticsearch", "elasticsea
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{3668A27B-F444-4DCD-8577-4B318D19A414}"
 	ProjectSection(SolutionItems) = preProject
-		monitor\elasticsearch\config\elasticsearch.yml = monitor\elasticsearch\config\elasticsearch.yml
-		monitor\elasticsearch\config\log4j2.properties = monitor\elasticsearch\config\log4j2.properties
+		compose\monitor\elasticsearch\config\elasticsearch.yml = compose\monitor\elasticsearch\config\elasticsearch.yml
+		compose\monitor\elasticsearch\config\log4j2.properties = compose\monitor\elasticsearch\config\log4j2.properties
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "filebeat", "filebeat", "{9A9B9046-4AB9-42BA-8EB8-58EE79A4205E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{B7D8BE87-398C-425D-97A8-E3A06C5C8D8A}"
 	ProjectSection(SolutionItems) = preProject
-		monitor\filebeat\config\filebeat.yml = monitor\filebeat\config\filebeat.yml
+		compose\monitor\filebeat\config\filebeat.yml = compose\monitor\filebeat\config\filebeat.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "kibana", "kibana", "{3C8AEBB2-86BD-42B0-B140-207608BCF75F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{93E1EAA1-B9A3-41D0-B17F-D6FE32D1175D}"
 	ProjectSection(SolutionItems) = preProject
-		monitor\kibana\config\kibana.yml = monitor\kibana\config\kibana.yml
+		compose\monitor\kibana\config\kibana.yml = compose\monitor\kibana\config\kibana.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "database", "database", "{F009802B-85E1-4565-98D1-3A3F7E76B400}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "neo4j", "neo4j", "{763D9EE8-C20D-4563-9E21-801BA38F8173}"
 	ProjectSection(SolutionItems) = preProject
-		database\neo4j\neo4j.env = database\neo4j\neo4j.env
+		compose\database\neo4j\neo4j.env = compose\database\neo4j\neo4j.env
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "conf", "conf", "{7F9F9325-E951-4B3C-9E9E-88FBCEA79AE3}"
 	ProjectSection(SolutionItems) = preProject
-		database\neo4j\conf\neo4j.conf = database\neo4j\conf\neo4j.conf
+		compose\database\neo4j\conf\neo4j.conf = compose\database\neo4j\conf\neo4j.conf
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "logstash", "logstash", "{316572DD-34C2-4998-BEF9-C0C59C76EABE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{404BE1C9-B5B2-4CF5-98E3-372340E20EB6}"
 	ProjectSection(SolutionItems) = preProject
-		monitor\logstash\config\logstash.yml = monitor\logstash\config\logstash.yml
+		compose\monitor\logstash\config\logstash.yml = compose\monitor\logstash\config\logstash.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipeline", "pipeline", "{E5C0A1CB-6F46-4881-BEA6-6C8FE2599B97}"
 	ProjectSection(SolutionItems) = preProject
-		monitor\logstash\pipeline\logstash.conf = monitor\logstash\pipeline\logstash.conf
+		compose\monitor\logstash\pipeline\logstash.conf = compose\monitor\logstash\pipeline\logstash.conf
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api-gateway", "api-gateway", "{A05A64E8-3FA1-427F-B2EF-34A4A2A623AA}"
+	ProjectSection(SolutionItems) = preProject
+		compose\api-gateway\kong.env = compose\api-gateway\kong.env
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "declarative", "declarative", "{5BF1B5B7-04B1-4F6D-A8A0-84653E8FAE93}"
+	ProjectSection(SolutionItems) = preProject
+		compose\api-gateway\declarative\kong.yml = compose\api-gateway\declarative\kong.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "compose", "compose", "{FFA95A70-A9F5-47FB-8E6E-BF407D23D63E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "process", "process", "{B5598B4F-CD3C-4A63-B213-4AFA581CC9FA}"
+	ProjectSection(SolutionItems) = preProject
+		docs\process\create configuration by transaction id.cypher = docs\process\create configuration by transaction id.cypher
+		docs\process\get transaction id by tag.cypher = docs\process\get transaction id by tag.cypher
 	EndProjectSection
 EndProject
 Global
@@ -225,6 +209,7 @@ Global
 		{F8A0EC67-2A97-4760-9FDA-E19ECA565772} = {48867782-9828-4C00-93D7-9AA2F6908358}
 		{6CF3AA48-4AF4-4D4B-A470-17CA7D326F0F} = {48867782-9828-4C00-93D7-9AA2F6908358}
 		{B38F080A-96CF-4995-99CA-A990A74067F5} = {057A0073-536B-4619-ACA6-76D3D2DFB0B3}
+		{9B95FA03-E0A0-4038-9572-538F4F549DF6} = {FFA95A70-A9F5-47FB-8E6E-BF407D23D63E}
 		{849EFE53-2118-4A9C-8630-FE753636EB14} = {9B95FA03-E0A0-4038-9572-538F4F549DF6}
 		{62659545-9EFB-4671-AB92-A190433FB5AF} = {9B95FA03-E0A0-4038-9572-538F4F549DF6}
 		{1645DB45-28BE-4F07-9453-624FB3CE7C48} = {62659545-9EFB-4671-AB92-A190433FB5AF}
@@ -233,11 +218,6 @@ Global
 		{D6234D4E-A68B-4D5C-81E5-5C1494A0F3B3} = {03D638FA-FF6D-40A1-9FD4-CF5581AB110A}
 		{948C89B0-82B6-4FD2-A847-62220E38F9A0} = {5447E1CB-522F-482B-80B8-8694A6DF3B24}
 		{A33FFD7B-B7F5-4C8B-9D9C-CB28080CCDEA} = {948C89B0-82B6-4FD2-A847-62220E38F9A0}
-		{A8D5A67A-2D90-4B63-A089-311CCAFB1C97} = {3D38D172-2DCE-4A53-A907-B4A5C0D8F5A4}
-		{88811F59-6C3C-4CE4-B3FE-83300B36DAC3} = {3D38D172-2DCE-4A53-A907-B4A5C0D8F5A4}
-		{1C8843AE-6880-4AB2-B057-5F2367253D8A} = {3D38D172-2DCE-4A53-A907-B4A5C0D8F5A4}
-		{20E158B6-751D-4075-B16D-C2803FA31468} = {3D38D172-2DCE-4A53-A907-B4A5C0D8F5A4}
-		{2D708B88-3CCB-48FC-B007-B877BEC0BA98} = {3D38D172-2DCE-4A53-A907-B4A5C0D8F5A4}
 		{3817E1E5-C6E2-4879-AEB9-2A1906B7A02F} = {5447E1CB-522F-482B-80B8-8694A6DF3B24}
 		{4D213E49-9D73-4319-B737-B2EEAB432B22} = {3817E1E5-C6E2-4879-AEB9-2A1906B7A02F}
 		{480FA96C-1C96-44A1-9E40-7E070AF163AB} = {9B95FA03-E0A0-4038-9572-538F4F549DF6}
@@ -246,11 +226,15 @@ Global
 		{B7D8BE87-398C-425D-97A8-E3A06C5C8D8A} = {9A9B9046-4AB9-42BA-8EB8-58EE79A4205E}
 		{3C8AEBB2-86BD-42B0-B140-207608BCF75F} = {9B95FA03-E0A0-4038-9572-538F4F549DF6}
 		{93E1EAA1-B9A3-41D0-B17F-D6FE32D1175D} = {3C8AEBB2-86BD-42B0-B140-207608BCF75F}
+		{F009802B-85E1-4565-98D1-3A3F7E76B400} = {FFA95A70-A9F5-47FB-8E6E-BF407D23D63E}
 		{763D9EE8-C20D-4563-9E21-801BA38F8173} = {F009802B-85E1-4565-98D1-3A3F7E76B400}
 		{7F9F9325-E951-4B3C-9E9E-88FBCEA79AE3} = {763D9EE8-C20D-4563-9E21-801BA38F8173}
 		{316572DD-34C2-4998-BEF9-C0C59C76EABE} = {9B95FA03-E0A0-4038-9572-538F4F549DF6}
 		{404BE1C9-B5B2-4CF5-98E3-372340E20EB6} = {316572DD-34C2-4998-BEF9-C0C59C76EABE}
 		{E5C0A1CB-6F46-4881-BEA6-6C8FE2599B97} = {316572DD-34C2-4998-BEF9-C0C59C76EABE}
+		{A05A64E8-3FA1-427F-B2EF-34A4A2A623AA} = {FFA95A70-A9F5-47FB-8E6E-BF407D23D63E}
+		{5BF1B5B7-04B1-4F6D-A8A0-84653E8FAE93} = {A05A64E8-3FA1-427F-B2EF-34A4A2A623AA}
+		{B5598B4F-CD3C-4A63-B213-4AFA581CC9FA} = {057A0073-536B-4619-ACA6-76D3D2DFB0B3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7CB3FDF8-0DA7-4D1F-B674-0261172FE8F6}

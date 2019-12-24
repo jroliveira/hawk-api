@@ -1,0 +1,78 @@
+_format_version: "1.1"
+
+plugins:
+- name: cors
+  enabled: true
+  service: hawk-api
+  config: 
+    origins: "*"
+    methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - OPTIONS
+    headers:
+    - Accept
+    - Accept-Encoding
+    - Accept-Language
+    - Access-Control-Allow-Origin
+    - Access-Control-Request-Headers
+    - Access-Control-Request-Method
+    - Connection
+    - Host
+    - Origin
+    - Referer
+    - Sec-Fetch-Mode
+    - Sec-Fetch-Site
+    - User-Agent
+
+- name: file-log
+  enabled: true
+  service: hawk-api
+  config: 
+    path: /usr/local/kong/logs/log.txt
+
+- name: header-echo
+  enabled: false
+    
+- name: ip-restriction
+  enabled: false
+  service: hawk-api
+  config:
+    whitelist:
+    - 192.168.80.1
+
+- name: jwt-auth-token-validate
+  enabled: true
+  config:
+    issuer: http://localhost:35653
+    audience: hawk-api
+
+- name: prometheus
+  enabled: true
+  protocols:
+  - grpc
+  - grpcs
+  - http
+  - https
+  run_on: first
+
+services:
+- name: hawk-api
+  protocol: http
+  host: api
+  port: 5000
+  path: "/"
+  retries: 5
+  read_timeout: 60000
+  write_timeout: 60000
+  connect_timeout: 60000
+  routes:
+  - name: default-route
+    methods: 
+    - GET
+    paths:
+    - /
+    protocols:
+    - http

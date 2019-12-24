@@ -6,11 +6,13 @@ Task("Up-Dependencies")
             AbortOnContainerExit = true,
         },
         "swagger",
-        "graphdb",
         "grafana",
         "prometheus",
+        "graphdb",
         "kibana",
         "filebeat",
         "logstash",
         "elasticsearch",
-        "jaegertracing"));
+        "jaegertracing",
+        "kong-gui",
+        "kong"));
