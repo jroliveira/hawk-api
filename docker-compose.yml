@@ -1,4 +1,9 @@
 version: '3'
+
+networks:
+  hawk-net:
+    driver: bridge
+
 services:
   swagger:
     image: swaggerapi/swagger-ui:v3.24.3
@@ -8,36 +13,41 @@ services:
     environment:
       API_URL: http://localhost:5000/swagger/v1/swagger.json
     networks:
-      - hawk-network
+      - hawk-net
 
   grafana:
     image: grafana/grafana:5.4.3
     container_name: hawk-grafana
+    restart: always
     ports:
       - "3000:3000"
     env_file:
-      - ./monitor/grafana/grafana.env
+      - ./compose/monitor/grafana/grafana.env
     volumes:
-      - ./monitor/grafana/grafana.ini:/etc/grafana/grafana.ini
-      - ./monitor/grafana/dashboards:/var/lib/grafana/dashboards
-      - ./monitor/grafana/provisioning:/etc/grafana/provisioning
+      - ./compose/monitor/grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./compose/monitor/grafana/dashboards:/var/lib/grafana/dashboards
+      - ./compose/monitor/grafana/provisioning:/etc/grafana/provisioning
     depends_on:
       - prometheus
     networks:
-      - hawk-network
+      - hawk-net
 
   prometheus:
     image: prom/prometheus:v2.7.2
     container_name: hawk-prometheus
+    restart: always
     ports:
       - "9090:9090"
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--log.level=warn"
     volumes:
-      - ./monitor/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./compose/monitor/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - api
+      - kong
     networks:
-      - hawk-network
+      - hawk-net
 
   api:
     container_name: hawk-api
@@ -49,12 +59,12 @@ services:
     env_file:
       - api.env
     volumes:
-      - .:/src
       - ./logs:/logs
+      - .:/src
     depends_on:
       - graphdb
     networks:
-      - hawk-network
+      - hawk-net
 
   graphdb:
     image: neo4j:4.0.0-enterprise
@@ -64,14 +74,14 @@ services:
       - "7687:7687"
       - "2004:2004"
     env_file:
-      - ./database/neo4j/neo4j.env
+      - ./compose/database/neo4j/neo4j.env
     volumes:
-      - ./database/neo4j/plugins:/plugins
-      - ./database/neo4j/data:/data
-      - ./database/neo4j/logs:/logs
-      - ./database/neo4j/conf:/conf
+      - ./compose/database/neo4j/conf:/conf
+      - ./compose/database/neo4j/data:/data
+      - ./compose/database/neo4j/logs:/logs
+      - ./compose/database/neo4j/plugins:/plugins
     networks:
-      - hawk-network
+      - hawk-net
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.4.0
@@ -79,22 +89,22 @@ services:
     ports:
       - "5601:5601"
     volumes:
-      - ./monitor/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+      - ./compose/monitor/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
     depends_on:
       - elasticsearch
     networks:
-      - hawk-network
+      - hawk-net
 
   filebeat:
     image: docker.elastic.co/beats/filebeat:7.4.0
     container_name: hawk-filebeat
     volumes:
-      - ./monitor/filebeat/config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ./compose/monitor/filebeat/config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
       - ./logs:/var/log/hawk
     depends_on:
       - logstash
     networks:
-      - hawk-network
+      - hawk-net
 
   logstash:
     image: docker.elastic.co/logstash/logstash:7.4.0
@@ -102,12 +112,12 @@ services:
     ports:
       - "5044:5044"
     volumes:
-      - ./monitor/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
-      - ./monitor/logstash/pipeline:/usr/share/logstash/pipeline
+      - ./compose/monitor/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./compose/monitor/logstash/pipeline:/usr/share/logstash/pipeline
     depends_on:
       - elasticsearch
     networks:
-      - hawk-network
+      - hawk-net
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.4.0
@@ -116,11 +126,11 @@ services:
       - "9200:9200"
       - "9300:9300"
     volumes:
-      - ./monitor/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-      - ./monitor/elasticsearch/config/log4j2.properties:/usr/share/elasticsearch/config/log4j2.properties
-      - ./monitor/elasticsearch/data:/usr/share/elasticsearch/data
+      - ./compose/monitor/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./compose/monitor/elasticsearch/config/log4j2.properties:/usr/share/elasticsearch/config/log4j2.properties
+      - ./compose/monitor/elasticsearch/data:/usr/share/elasticsearch/data
     networks:
-      - hawk-network
+      - hawk-net
 
   jaegertracing:
     image: jaegertracing/all-in-one:1.15.1
@@ -134,8 +144,44 @@ services:
       - "14268:14268"
       - "9411:9411"
     networks:
-      - hawk-network
+      - hawk-net
 
-networks:
-  hawk-network:
-    driver: bridge
+  kong-gui:
+    image: pgbi/kong-dashboard:v3
+    container_name: hawk-kong-gui
+    ports:
+      - "8090:8080"
+    command: 
+      - start
+      - --kong-url
+      - http://kong:8001
+    depends_on:
+      - kong
+    networks:
+      - hawk-net
+
+  kong:
+    image: kong:1.4.2
+    container_name: hawk-kong
+    restart: always
+    ports:
+      - "8001:8001"
+      - "8444:8444"
+      - "8000:8000"
+      - "8443:8443"
+      - "9080:9080"
+      - "9081:9081"
+    env_file:
+      - ./compose/api-gateway/kong.env
+    volumes:
+      - ./compose/api-gateway/declarative:/usr/local/kong/declarative
+      - ./compose/api-gateway/logs:/usr/local/kong/logs
+      - ./compose/api-gateway/logs/log.txt:/usr/local/kong/logs/log.txt
+      - ./compose/api-gateway/plugins:/kong/plugins
+    healthcheck:
+      test: ["CMD", "kong", "health"]
+      interval: 120s
+      timeout: 10s
+      retries: 3
+    networks:
+      - hawk-net
