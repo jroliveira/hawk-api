@@ -1,7 +1,19 @@
-﻿MATCH 
-  (store:Store)-[:BELONGS]->(account:Account)
+﻿// (:Account)
+MATCH 
+  (account:Account)
 WHERE
   account.email = $email
+
+// (:Store)
+
+MERGE 
+  (store:Store { 
+    name: $name
+  })
+SET
+  store.name = $newName
+MERGE
+  (store)-[:BELONGS]->(account)
 WITH
   account,
   store
@@ -14,10 +26,5 @@ RETURN
   name: store.name,
   tags: collect(distinct tag.name),
   total: count(store.name)
-} as data
+} as data;
 
-SKIP 
-  $skip 
-
-LIMIT 
-  $limit;
