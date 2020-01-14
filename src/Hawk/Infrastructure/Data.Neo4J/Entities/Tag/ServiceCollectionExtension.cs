@@ -7,7 +7,10 @@
     public static class ServiceCollectionExtension
     {
         public static IServiceCollection ConfigureTagWithNeo4J(this IServiceCollection @this) => @this
+            .AddScoped<IUpsertTag, UpsertTag>()
+            .AddScoped<IDeleteTag, DeleteTag>()
             .AddScoped<IGetTags, GetTags>()
-            .AddScoped<IGetTagsByStore, GetTagsByStore>();
+            .AddScoped<IGetTagsByStore, GetTagsByStore>()
+            .AddScoped<IGetTagByName, GetTagByName>();
     }
 }
