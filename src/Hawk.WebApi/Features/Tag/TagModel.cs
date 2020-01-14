@@ -12,6 +12,11 @@
 
     public sealed class TagModel
     {
+        public TagModel(Tag entity)
+            : this(entity.Name, default)
+        {
+        }
+
         public TagModel(string name, uint total)
         {
             this.Name = name;

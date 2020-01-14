@@ -53,10 +53,19 @@
     <None Update="Infrastructure\Data.Neo4J\Entities\Store\UpsertStore.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Infrastructure\Data.Neo4J\Entities\Tag\DeleteTag.cql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Infrastructure\Data.Neo4J\Entities\Tag\GetTagByName.cql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Infrastructure\Data.Neo4J\Entities\Tag\GetTags.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Infrastructure\Data.Neo4J\Entities\Tag\GetTagsByStore.cql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Infrastructure\Data.Neo4J\Entities\Tag\UpsertTag.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Infrastructure\Data.Neo4J\Entities\Transaction\DeleteTransaction.cql">
