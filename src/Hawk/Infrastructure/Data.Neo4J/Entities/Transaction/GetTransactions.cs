@@ -38,7 +38,9 @@
 
         public async Task<Try<Page<Try<Transaction>>>> GetResult(Email email, Filter filter)
         {
-            var statement = Statement.GetOrElse(Empty).Replace("#where#", this.where.Apply(filter, "transaction"));
+            var statement = Statement
+                .GetOrElse(Empty)
+                .Replace("#where#", this.where.Apply(filter, "transaction"));
 
             var parameters = new
             {

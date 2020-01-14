@@ -30,9 +30,13 @@
                 return Task(Failure<Transaction>(new NullReferenceException("Transaction is required.")));
             }
 
+            var statement = Statement
+                .GetOrElse(Empty)
+                .Replace("#type#", entity.Get().GetType().Name);
+
             return this.connection.ExecuteCypherScalar(
                 MapTransaction,
-                Statement.GetOrElse(Empty).Replace("#type#", entity.Get().GetType().Name),
+                statement,
                 new
                 {
                     email = email.ToString(),

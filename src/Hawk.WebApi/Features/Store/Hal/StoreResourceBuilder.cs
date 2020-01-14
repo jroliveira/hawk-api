@@ -15,6 +15,9 @@
             {
                 new Link($"/v1/stores/{model.Name}", "self", Get),
                 new Link("/v1/stores", "all", Get),
+                new Link("/v1/stores", "create-store", Post),
+                new Link($"/v1/stores/{model.Name}", "update-store", Put),
+                new Link($"/v1/stores/{model.Name}", "delete-store", Delete),
             }),
 
             new PageResourceConfiguration<StoreModel>(
@@ -22,6 +25,9 @@
                 {
                     new Link($"/v1/stores/{model.Name}", "self", Get),
                     new Link("/v1/stores", "all", Get),
+                    new Link("/v1/stores", "create-store", Post),
+                    new Link($"/v1/stores/{model.Name}", "update-store", Put),
+                    new Link($"/v1/stores/{model.Name}", "delete-store", Delete),
                 },
                 getLinks: (_, model) => new List<Link>
                 {
