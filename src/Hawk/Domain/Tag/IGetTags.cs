@@ -3,8 +3,8 @@
     using System.Threading.Tasks;
 
     using Hawk.Domain.Shared;
-    using Hawk.Infrastructure;
     using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Pagination;
 
     using Http.Query.Filter;
 

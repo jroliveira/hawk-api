@@ -14,7 +14,7 @@
                 entity.PaymentMethod,
                 entity.Currency,
                 entity.Store,
-                entity.Tags.Select(tag => tag.Name))
+                entity.Tags.Select(tag => tag.Value))
         {
         }
 

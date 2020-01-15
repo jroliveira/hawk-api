@@ -6,9 +6,9 @@
     using Hawk.Domain.Transaction;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.Infrastructure.Pagination;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure.Authentication;
-    using Hawk.WebApi.Infrastructure.Pagination;
 
     using Microsoft.AspNetCore.Mvc;
 
@@ -43,7 +43,7 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ProducesResponseType(typeof(TryModel<PageModel<TryModel<TransactionModel>>>), 200)]
+        [ProducesResponseType(typeof(TryModel<Page<TryModel<TransactionModel>>>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(500)]
@@ -52,7 +52,7 @@
             var entities = await this.getTransactions.GetResult(this.GetUser(), this.Request.QueryString.Value);
 
             return entities.Match(
-                this.Error<PageModel<TryModel<TransactionModel>>>,
+                this.Error<Page<TryModel<TransactionModel>>>,
                 page => this.Ok(MapTransaction(page)));
         }
 

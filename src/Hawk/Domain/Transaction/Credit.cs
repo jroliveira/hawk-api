@@ -9,12 +9,14 @@
 
     public sealed class Credit : Transaction
     {
-        private Credit(Guid id, Payment payment, Store store, IReadOnlyCollection<Tag> tags)
+        private Credit(Guid id, Payment payment, Store store, IEnumerable<Tag> tags)
             : base(id, payment, store, tags)
         {
         }
 
-        public static Try<Transaction> NewCredit(Option<Guid> id, Option<Payment> payment, Option<Store> store, Option<IReadOnlyCollection<Tag>> tags) => NewTransaction(
+        public override string Type => "Credit";
+
+        public static Try<Transaction> NewCredit(Option<Guid> id, Option<Payment> payment, Option<Store> store, Option<IEnumerable<Tag>> tags) => NewTransaction(
             id,
             payment,
             store,

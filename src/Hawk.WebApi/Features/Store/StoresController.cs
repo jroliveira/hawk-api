@@ -5,9 +5,9 @@
     using Hawk.Domain.Store;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.Infrastructure.Pagination;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure.Authentication;
-    using Hawk.WebApi.Infrastructure.Pagination;
 
     using Microsoft.AspNetCore.Mvc;
 
@@ -44,7 +44,7 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ProducesResponseType(typeof(TryModel<PageModel<TryModel<StoreModel>>>), 200)]
+        [ProducesResponseType(typeof(TryModel<Page<TryModel<StoreModel>>>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(500)]
@@ -53,7 +53,7 @@
             var entities = await this.getStores.GetResult(this.GetUser(), this.Request.QueryString.Value);
 
             return entities.Match(
-                this.Error<PageModel<TryModel<StoreModel>>>,
+                this.Error<Page<TryModel<StoreModel>>>,
                 page => this.Ok(MapStore(page)));
         }
 
@@ -105,7 +105,7 @@
 
                     return inserted.Match(
                         this.Error<StoreModel>,
-                        store => this.Created(store.Name, new TryModel<StoreModel>(new StoreModel(store))));
+                        store => this.Created(store.Value, new TryModel<StoreModel>(new StoreModel(store))));
                 },
                 _ => Task(this.Error<StoreModel>(new AlreadyExistsException("Store already exists."))));
         }

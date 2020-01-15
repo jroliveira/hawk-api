@@ -3,9 +3,9 @@
     using System;
     using System.Collections.Generic;
 
+    using Hawk.Infrastructure.Pagination;
     using Hawk.WebApi.Infrastructure.Hal;
     using Hawk.WebApi.Infrastructure.Hal.Link;
-    using Hawk.WebApi.Infrastructure.Pagination;
 
     using Microsoft.AspNetCore.Http;
 
@@ -15,7 +15,7 @@
     {
         internal static Links DocumentationLinks => new List<Link> { new Link("/docs", "self", Get) };
 
-        internal static Func<HttpContext, IPageModel, Links, Links> PaginationLinks => (context, page, links) =>
+        internal static Func<HttpContext, IPage, Links, Links> PaginationLinks => (context, page, links) =>
         {
             var next = page.Skip + page.Limit;
             var prev = page.Skip - page.Limit < 0 ? 0 : page.Skip - page.Limit;

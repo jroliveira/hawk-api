@@ -16,7 +16,7 @@
 
         public static implicit operator Option<Tag>(NewTagModel model) => MapNewTag(model);
 
-        public static implicit operator NewTagModel(Tag entity) => new NewTagModel(entity.Name);
+        public static implicit operator NewTagModel(Tag entity) => new NewTagModel(entity);
 
         public static Option<Tag> MapNewTag(NewTagModel model) => NewTag(model.Name);
     }

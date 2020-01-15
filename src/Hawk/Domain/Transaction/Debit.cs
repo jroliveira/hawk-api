@@ -9,12 +9,14 @@
 
     public sealed class Debit : Transaction
     {
-        private Debit(Guid id, Payment payment, Store store, IReadOnlyCollection<Tag> tags)
+        private Debit(Guid id, Payment payment, Store store, IEnumerable<Tag> tags)
             : base(id, payment, store, tags)
         {
         }
 
-        public static Try<Transaction> NewDebit(Option<Guid> id, Option<Payment> payment, Option<Store> store, Option<IReadOnlyCollection<Tag>> tags) => NewTransaction(
+        public override string Type => "Debit";
+
+        public static Try<Transaction> NewDebit(Option<Guid> id, Option<Payment> payment, Option<Store> store, Option<IEnumerable<Tag>> tags) => NewTransaction(
             id,
             payment,
             store,

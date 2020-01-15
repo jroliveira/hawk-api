@@ -5,7 +5,6 @@
     using System.Linq;
 
     using Hawk.Domain.Configuration;
-    using Hawk.Domain.Tag;
     using Hawk.Infrastructure.Monad;
 
     using static Hawk.Domain.Configuration.Configuration;
@@ -51,7 +50,7 @@
             entity.PaymentMethod,
             entity.Currency,
             entity.Store,
-            entity.Tags.Select(tag => tag.Name));
+            entity.Tags.Select(tag => tag.Value));
 
         public static Option<Configuration> MapNewConfiguration(string description, NewConfigurationModel model)
         {
@@ -71,7 +70,7 @@
                 NewPaymentMethod(model.PaymentMethod),
                 NewCurrency(model.Currency),
                 NewStore(model.Store),
-                new List<Tag>(tags.Select(tag => tag.Get())));
+                Some(tags.Select(tag => tag.Get())));
         }
     }
 }
