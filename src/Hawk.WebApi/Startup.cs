@@ -1,6 +1,8 @@
 ﻿namespace Hawk.WebApi
 {
+    using Hawk.Domain;
     using Hawk.Infrastructure.Data.Neo4J;
+    using Hawk.Infrastructure.Filter;
     using Hawk.Infrastructure.Resilience;
     using Hawk.WebApi.Infrastructure.Api;
     using Hawk.WebApi.Infrastructure.Authentication;
@@ -30,6 +32,8 @@
                 .ConfigureIpRateLimiting(this.Configuration)
                 .ConfigureResilience(this.Configuration)
                 .ConfigureNeo4J(this.Configuration)
+                .ConfigureFilter()
+                .ConfigureDomain()
                 .ConfigureApi(this.Configuration)
                 .ConfigureVersioning()
                 .ConfigureMetric()

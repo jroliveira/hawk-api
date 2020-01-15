@@ -5,10 +5,9 @@
     using System.Linq;
 
     using Hawk.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.Infrastructure.Pagination;
     using Hawk.WebApi.Infrastructure.Hal.Link;
-    using Hawk.WebApi.Infrastructure.Hal.Page;
     using Hawk.WebApi.Infrastructure.Hal.Resource;
-    using Hawk.WebApi.Infrastructure.Pagination;
 
     using Microsoft.AspNetCore.Http;
 
@@ -18,13 +17,12 @@
     {
         internal PageResourceConfiguration(
             Func<HttpContext, TModel, Links> getItemsLinks,
-            Func<HttpContext, PageModel<TryModel<TModel>>, Links> getLinks) => this.GetBuilder = (context, @object) =>
+            Func<HttpContext, Page<TryModel<TModel>>, Links> getLinks) => this.GetBuilder = (context, @object) =>
         {
-            var model = (TryModel<PageModel<TryModel<TModel>>>)@object;
+            var model = (TryModel<Page<TryModel<TModel>>>)@object;
 
             return new Resource<TryModel<Page<Resource<TryModel<TModel>>>>>(
                 model.Select(page => new Page<Resource<TryModel<TModel>>>(
-                    "items",
                     page.Data.Select(item => new Resource<TryModel<TModel>>(item, item.Match(
                         _ => DocumentationLinks,
                         current => getItemsLinks(context, current)))),
@@ -35,7 +33,7 @@
                     page => new List<Link>(PaginationLinks(context, page, getLinks(context, page)))));
         };
 
-        public Type Type => typeof(TryModel<PageModel<TryModel<TModel>>>);
+        public Type Type => typeof(TryModel<Page<TryModel<TModel>>>);
 
         public Func<HttpContext, object, IResource> GetBuilder { get; }
     }

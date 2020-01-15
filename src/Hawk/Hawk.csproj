@@ -20,64 +20,65 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.ElasticSearch" Version="8.0.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.7.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Infrastructure\Data.Neo4J\Entities\Account\GetAccountByEmail.cql">
+    <None Update="Domain\Account\Data.Neo4J\GetAccountByEmail.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Data.Neo4J\Entities\Account\UpsertAccount.cql">
+    <None Update="Domain\Account\Data.Neo4J\UpsertAccount.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Data.Neo4J\Entities\Configuration\GetConfigurationByDescription.cql">
+    <None Update="Domain\Configuration\Data.Neo4J\GetConfigurationByDescription.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Data.Neo4J\Entities\Configuration\UpsertConfiguration.cql">
+    <None Update="Domain\Configuration\Data.Neo4J\UpsertConfiguration.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Data.Neo4J\Entities\PaymentMethod\GetPaymentMethods.cql">
+    <None Update="Domain\PaymentMethod\Data.Neo4J\GetPaymentMethods.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Data.Neo4J\Entities\PaymentMethod\GetPaymentMethodsByStore.cql">
+    <None Update="Domain\PaymentMethod\Data.Neo4J\GetPaymentMethodsByStore.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Data.Neo4J\Entities\Store\DeleteStore.cql">
+    <None Update="Domain\Store\Data.Neo4J\DeleteStore.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Data.Neo4J\Entities\Store\GetStoreByName.cql">
+    <None Update="Domain\Store\Data.Neo4J\GetStoreByName.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Data.Neo4J\Entities\Store\GetStores.cql">
+    <None Update="Domain\Store\Data.Neo4J\GetStores.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Data.Neo4J\Entities\Store\UpsertStore.cql">
+    <None Update="Domain\Store\Data.Neo4J\UpsertStore.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Data.Neo4J\Entities\Tag\DeleteTag.cql">
+    <None Update="Domain\Tag\Data.Neo4J\DeleteTag.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Data.Neo4J\Entities\Tag\GetTagByName.cql">
+    <None Update="Domain\Tag\Data.Neo4J\GetTagByName.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Data.Neo4J\Entities\Tag\GetTags.cql">
+    <None Update="Domain\Tag\Data.Neo4J\GetTags.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Data.Neo4J\Entities\Tag\GetTagsByStore.cql">
+    <None Update="Domain\Tag\Data.Neo4J\GetTagsByStore.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Data.Neo4J\Entities\Tag\UpsertTag.cql">
+    <None Update="Domain\Tag\Data.Neo4J\UpsertTag.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Data.Neo4J\Entities\Transaction\DeleteTransaction.cql">
+    <None Update="Domain\Transaction\Data.Neo4J\DeleteTransaction.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Data.Neo4J\Entities\Transaction\GetTransactionById.cql">
+    <None Update="Domain\Transaction\Data.Neo4J\GetTransactionById.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Data.Neo4J\Entities\Transaction\GetTransactions.cql">
+    <None Update="Domain\Transaction\Data.Neo4J\GetTransactions.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Data.Neo4J\Entities\Transaction\UpsertTransaction.cql">
+    <None Update="Domain\Transaction\Data.Neo4J\UpsertTransaction.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

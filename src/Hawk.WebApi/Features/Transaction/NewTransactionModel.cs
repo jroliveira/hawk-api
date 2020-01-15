@@ -20,8 +20,8 @@
 
     public class NewTransactionModel
     {
-        private static readonly IReadOnlyDictionary<string, Func<Option<Guid>, Option<Payment>, Option<Store>, Option<IReadOnlyCollection<Tag>>, Try<Transaction>>> Types =
-            new Dictionary<string, Func<Option<Guid>, Option<Payment>, Option<Store>, Option<IReadOnlyCollection<Tag>>, Try<Transaction>>>
+        private static readonly IReadOnlyDictionary<string, Func<Option<Guid>, Option<Payment>, Option<Store>, Option<IEnumerable<Tag>>, Try<Transaction>>> Types =
+            new Dictionary<string, Func<Option<Guid>, Option<Payment>, Option<Store>, Option<IEnumerable<Tag>>, Try<Transaction>>>
             {
                 { "Debit", NewDebit },
                 { "Credit", NewCredit },
@@ -54,10 +54,10 @@
         public static implicit operator Option<Transaction>(NewTransactionModel model) => MapNewTransaction(NewGuid(), model);
 
         public static implicit operator NewTransactionModel(Transaction entity) => new NewTransactionModel(
-            entity.GetType().Name,
+            entity.Type,
             entity.Payment,
             entity.Store,
-            entity.Tags.Select(tag => tag.Name));
+            entity.Tags.Select(tag => tag.Value));
 
         public static Option<Transaction> MapNewTransaction(Guid id, NewTransactionModel model)
         {
@@ -80,7 +80,7 @@
                 id,
                 model.Payment,
                 NewStore(model.Store),
-                new List<Tag>(tags.Select(tag => tag.Get())));
+                Some(tags.Select(tag => tag.Get())));
         }
     }
 }

@@ -2,6 +2,8 @@
 {
     using System;
 
+    using Hawk.Infrastructure.Pagination;
+
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
@@ -15,12 +17,13 @@
             {
                 { "skip", value.Skip },
                 { "limit", value.Limit },
+                { "totalItems", value.TotalItems },
                 { "pages", value.Pages },
                 {
                     "_embedded",
                     new JObject
                     {
-                        { value.Name, FromObject(value.Data, serializer) },
+                        { "items", FromObject(value.Data, serializer) },
                     }
                 },
             };

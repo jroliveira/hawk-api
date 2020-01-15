@@ -5,9 +5,9 @@
     using Hawk.Domain.Tag;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.Infrastructure.Pagination;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure.Authentication;
-    using Hawk.WebApi.Infrastructure.Pagination;
 
     using Microsoft.AspNetCore.Mvc;
 
@@ -47,7 +47,7 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet("tags")]
-        [ProducesResponseType(typeof(TryModel<PageModel<TryModel<TagModel>>>), 200)]
+        [ProducesResponseType(typeof(TryModel<Page<TryModel<TagModel>>>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(500)]
@@ -56,7 +56,7 @@
             var entities = await this.getTags.GetResult(this.GetUser(), this.Request.QueryString.Value);
 
             return entities.Match(
-                this.Error<PageModel<TryModel<TagModel>>>,
+                this.Error<Page<TryModel<TagModel>>>,
                 page => this.Ok(MapTag(page)));
         }
 
@@ -66,7 +66,7 @@
         /// <param name="store"></param>
         /// <returns></returns>
         [HttpGet("stores/{store}/tags")]
-        [ProducesResponseType(typeof(TryModel<PageModel<TryModel<TagModel>>>), 200)]
+        [ProducesResponseType(typeof(TryModel<Page<TryModel<TagModel>>>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
@@ -76,7 +76,7 @@
             var entities = await this.getTagsByStore.GetResult(this.GetUser(), store, this.Request.QueryString.Value);
 
             return entities.Match(
-                this.Error<PageModel<TryModel<TagModel>>>,
+                this.Error<Page<TryModel<TagModel>>>,
                 page => this.Ok(MapTag(page)));
         }
 
@@ -128,7 +128,7 @@
 
                     return inserted.Match(
                         this.Error<TagModel>,
-                        tag => this.Created(tag.Name, new TryModel<TagModel>(new TagModel(tag))));
+                        tag => this.Created(tag.Value, new TryModel<TagModel>(new TagModel(tag))));
                 },
                 _ => Task(this.Error<TagModel>(new AlreadyExistsException("Tag already exists."))));
         }

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Hawk.Domain.Shared;
     using Hawk.Domain.Store;
@@ -17,13 +18,15 @@
             Guid id,
             Payment payment,
             Store store,
-            IReadOnlyCollection<Tag> tags)
+            IEnumerable<Tag> tags)
             : base(id)
         {
             this.Payment = payment;
             this.Store = store;
-            this.Tags = tags;
+            this.Tags = tags.ToList();
         }
+
+        public abstract string Type { get; }
 
         public Payment Payment { get; }
 
@@ -35,8 +38,8 @@
             Option<Guid> id,
             Option<Payment> payment,
             Option<Store> store,
-            Option<IReadOnlyCollection<Tag>> tags,
-            Func<(Guid Id, Payment Payment, Store Store, IReadOnlyCollection<Tag> Tags), Try<Transaction>> createTransaction) =>
+            Option<IEnumerable<Tag>> tags,
+            Func<(Guid Id, Payment Payment, Store Store, IEnumerable<Tag> Tags), Try<Transaction>> createTransaction) =>
                 id
                 && payment
                 && store

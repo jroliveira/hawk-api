@@ -1,6 +1,7 @@
 ﻿namespace Hawk.Domain.Configuration
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     using Hawk.Domain.Currency;
     using Hawk.Domain.PaymentMethod;
@@ -19,14 +20,14 @@
             PaymentMethod paymentMethod,
             Currency currency,
             Store store,
-            IReadOnlyCollection<Tag> tags)
+            IEnumerable<Tag> tags)
         {
             this.Type = type;
             this.Description = description;
             this.PaymentMethod = paymentMethod;
             this.Currency = currency;
             this.Store = store;
-            this.Tags = tags;
+            this.Tags = tags.ToList();
         }
 
         public string Type { get; }
@@ -47,7 +48,7 @@
             Option<PaymentMethod> paymentMethod,
             Option<Currency> currency,
             Option<Store> store,
-            Option<IReadOnlyCollection<Tag>> tags) =>
+            Option<IEnumerable<Tag>> tags) =>
                 type
                 && description
                 && paymentMethod

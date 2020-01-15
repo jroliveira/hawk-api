@@ -4,10 +4,9 @@
     using System.Linq;
 
     using Hawk.Domain.Transaction;
-    using Hawk.Infrastructure;
     using Hawk.Infrastructure.ErrorHandling.TryModel;
     using Hawk.Infrastructure.Monad;
-    using Hawk.WebApi.Infrastructure.Pagination;
+    using Hawk.Infrastructure.Pagination;
 
     using static Hawk.Infrastructure.ErrorHandling.ExceptionHandler;
 
@@ -16,10 +15,10 @@
         public TransactionModel(Transaction entity)
             : this(
                 entity.Id.ToString(),
-                entity.GetType().Name,
+                entity.Type,
                 entity.Payment,
                 entity.Store,
-                entity.Tags.Select(tag => tag.Name))
+                entity.Tags.Select(tag => tag.Value))
         {
         }
 
@@ -47,7 +46,7 @@
 
         public IEnumerable<string> Tags { get; }
 
-        internal static TryModel<PageModel<TryModel<TransactionModel>>> MapTransaction(Page<Try<Transaction>> @this) => new PageModel<TryModel<TransactionModel>>(
+        internal static TryModel<Page<TryModel<TransactionModel>>> MapTransaction(Page<Try<Transaction>> @this) => new Page<TryModel<TransactionModel>>(
             @this
                 .Data
                 .Select(item => item.Match(

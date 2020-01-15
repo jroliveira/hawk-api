@@ -4,7 +4,6 @@
     using System.Threading.Tasks;
 
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
-    using Hawk.Infrastructure.Monad;
     using Hawk.WebApi.Infrastructure.Hal;
 
     using Microsoft.AspNetCore.Http;

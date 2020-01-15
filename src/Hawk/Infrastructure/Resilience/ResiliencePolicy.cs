@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Resilience.Configurations;
 
     using Microsoft.Extensions.Options;
@@ -17,9 +16,7 @@
     using static System.TimeSpan;
 
     using static Hawk.Infrastructure.ErrorHandling.ExceptionHandler;
-
     using static Hawk.Infrastructure.Logging.Logger;
-
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
     using static Polly.Policy;

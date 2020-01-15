@@ -29,7 +29,7 @@
 
         internal static Option<string> ReadCypherScript(string name)
         {
-            name = Combine("Infrastructure", "Data.Neo4J", "Entities", name);
+            name = Combine("Domain", name);
 
             if (string.IsNullOrEmpty(name))
             {
