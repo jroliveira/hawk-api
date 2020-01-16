@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Resilience;
 
@@ -47,7 +48,7 @@
             statement,
             parameters,
             records => records.Count > 1
-                ? new Exception($"Query returned {records.Count} results.")
+                ? new InternalException($"Query returned {records.Count} results.")
                 : mapping(records.FirstOrDefault()));
 
         internal Task<Try<IEnumerable<Try<TReturn>>>> ExecuteCypher<TReturn>(Func<IRecord, Try<TReturn>> mapping, Option<string> statement, object parameters) => this.ExecuteCypherAndGetRecords(
@@ -69,12 +70,12 @@
         {
             if (!statement.IsDefined)
             {
-                return new ArgumentNullException(nameof(statement), "Cypher statement is required.");
+                return new NullParameterException(nameof(statement), "Cypher statement is required.");
             }
 
             if (this.driver == default)
             {
-                return new NullReferenceException("Neo4j driver is default.");
+                return new NullObjectException("Neo4j driver is default.");
             }
 
             try
@@ -89,7 +90,7 @@
             }
             catch (Exception exception)
             {
-                return new Exception("Could not run command in Neo4j.", exception);
+                return new InternalException("Could not run command in Neo4j.", exception);
             }
         }
     }

@@ -4,13 +4,14 @@
 
     using Hawk.Domain.Configuration;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
-    using Hawk.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.Infrastructure.Monad;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure.Authentication;
 
     using Microsoft.AspNetCore.Mvc;
 
-    using static NewConfigurationModel;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
+    using static Hawk.WebApi.Features.Configuration.NewConfigurationModel;
 
     [ApiController]
     [ApiVersion("1")]
@@ -35,7 +36,7 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet("{description}")]
-        [ProducesResponseType(typeof(TryModel<ConfigurationModel>), 200)]
+        [ProducesResponseType(typeof(Try<ConfigurationModel>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
@@ -46,7 +47,7 @@
 
             return entity.Match(
                 this.Error<ConfigurationModel>,
-                configuration => this.Ok(new TryModel<ConfigurationModel>(new ConfigurationModel(configuration))));
+                configuration => this.Ok(Success(new ConfigurationModel(configuration))));
         }
 
         /// <summary>
@@ -56,7 +57,7 @@
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{description}")]
-        [ProducesResponseType(typeof(TryModel<ConfigurationModel>), 201)]
+        [ProducesResponseType(typeof(Try<ConfigurationModel>), 201)]
         [ProducesResponseType(204)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -82,7 +83,7 @@
 
                     return inserted.Match(
                         this.Error<ConfigurationModel>,
-                        configuration => this.Created(new TryModel<ConfigurationModel>(new ConfigurationModel(configuration))));
+                        configuration => this.Created(Success(new ConfigurationModel(configuration))));
                 },
                 async _ =>
                 {

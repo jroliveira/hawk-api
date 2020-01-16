@@ -1,23 +1,25 @@
-﻿namespace Hawk.Infrastructure.ErrorHandling.TryModel
+﻿namespace Hawk.Infrastructure.ErrorHandling.Try
 {
     using System;
+
+    using Hawk.Infrastructure.Monad;
 
     using Newtonsoft.Json;
 
     using static Newtonsoft.Json.Linq.JObject;
 
-    public sealed class TryModelJsonConverter : JsonConverter<ITryModel<object>>
+    public sealed class TryJsonConverter : JsonConverter<ITry<object>>
     {
-        public override void WriteJson(JsonWriter writer, ITryModel<object> value, JsonSerializer serializer) => value
+        public override void WriteJson(JsonWriter writer, ITry<object> value, JsonSerializer serializer) => value
             .Match(
                 _ => FromObject(_, serializer),
                 _ => FromObject(_, serializer))
             .WriteTo(writer);
 
-        public override ITryModel<object> ReadJson(
+        public override ITry<object> ReadJson(
             JsonReader reader,
             Type objectType,
-            ITryModel<object> existingValue,
+            ITry<object> existingValue,
             bool hasExistingValue,
             JsonSerializer serializer) => throw new NotImplementedException();
     }

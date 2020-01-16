@@ -3,6 +3,7 @@
     using System;
     using System.Security.Cryptography;
 
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     using static System.Security.Cryptography.MD5;
@@ -24,7 +25,7 @@
             }
             catch (Exception exception)
             {
-                return exception;
+                return new InternalException(exception.Message, exception);
             }
         }
     }

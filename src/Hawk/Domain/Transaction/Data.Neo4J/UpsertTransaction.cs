@@ -1,12 +1,12 @@
 ﻿namespace Hawk.Domain.Transaction.Data.Neo4J
 {
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
     using Hawk.Domain.Shared;
     using Hawk.Domain.Transaction;
     using Hawk.Infrastructure.Data.Neo4J;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
 
@@ -43,6 +43,6 @@
                     store = some.Store.Value,
                     tags = some.Tags.Select(tag => tag.Value).ToArray(),
                 }),
-            () => Task(Failure<Transaction>(new NullReferenceException("Transaction is required."))));
+            () => Task(Failure<Transaction>(new NullObjectException("Transaction is required."))));
     }
 }

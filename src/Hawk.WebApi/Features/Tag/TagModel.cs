@@ -3,7 +3,6 @@
     using System.Linq;
 
     using Hawk.Domain.Tag;
-    using Hawk.Infrastructure.ErrorHandling.TryModel;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
 
@@ -26,7 +25,7 @@
 
         public uint Total { get; }
 
-        internal static TryModel<Page<TryModel<TagModel>>> MapTag(Page<Try<(Tag Tag, uint Count)>> @this) => new Page<TryModel<TagModel>>(
+        internal static Try<Page<Try<TagModel>>> MapTag(Page<Try<(Tag Tag, uint Count)>> @this) => new Page<Try<TagModel>>(
             @this
                 .Data
                 .Select(item => item.Match(

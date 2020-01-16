@@ -1,12 +1,12 @@
 ﻿namespace Hawk.Domain.Configuration.Data.Neo4J
 {
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
     using Hawk.Domain.Configuration;
     using Hawk.Domain.Shared;
     using Hawk.Infrastructure.Data.Neo4J;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     using static System.IO.Path;
@@ -36,6 +36,6 @@
                     store = some.Store.Value,
                     tags = some.Tags.Select(tag => tag.Value).ToArray(),
                 }),
-            () => Task(Failure<Configuration>(new NullReferenceException("Configuration is required."))));
+            () => Task(Failure<Configuration>(new NullObjectException("Configuration is required."))));
     }
 }

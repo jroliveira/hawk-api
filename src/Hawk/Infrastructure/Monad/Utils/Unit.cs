@@ -2,7 +2,7 @@
 {
     public static partial class Util
     {
-        private static readonly Unit Default = default;
+        private static readonly Unit Default = new Unit();
 
         public static Unit Unit() => Default;
     }

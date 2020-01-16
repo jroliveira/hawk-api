@@ -3,7 +3,6 @@
     using System.Linq;
 
     using Hawk.Domain.PaymentMethod;
-    using Hawk.Infrastructure.ErrorHandling.TryModel;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
 
@@ -21,7 +20,7 @@
 
         public uint Total { get; }
 
-        internal static TryModel<Page<TryModel<PaymentMethodModel>>> MapPaymentMethod(Page<Try<(PaymentMethod Method, uint Count)>> @this) => new Page<TryModel<PaymentMethodModel>>(
+        internal static Try<Page<Try<PaymentMethodModel>>> MapPaymentMethod(Page<Try<(PaymentMethod Method, uint Count)>> @this) => new Page<Try<PaymentMethodModel>>(
             @this
                 .Data
                 .Select(item => item.Match(

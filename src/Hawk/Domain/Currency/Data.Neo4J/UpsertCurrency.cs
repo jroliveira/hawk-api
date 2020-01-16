@@ -1,11 +1,11 @@
 ﻿namespace Hawk.Domain.Currency.Data.Neo4J
 {
-    using System;
     using System.Threading.Tasks;
 
     using Hawk.Domain.Currency;
     using Hawk.Domain.Shared;
     using Hawk.Infrastructure.Data.Neo4J;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     using static System.IO.Path;
@@ -37,6 +37,6 @@
                     _ => _,
                     currency => currency.Currency);
             },
-            () => Task(Failure<Currency>(new NullReferenceException("Currency is required."))));
+            () => Task(Failure<Currency>(new NullObjectException("Currency is required."))));
     }
 }

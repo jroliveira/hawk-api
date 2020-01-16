@@ -6,7 +6,7 @@
 
     using FluentValidation.Results;
 
-    public sealed class InvalidObjectException : HawkException
+    public sealed class InvalidObjectException : BaseException
     {
         public InvalidObjectException(string message)
             : this(message, default)
