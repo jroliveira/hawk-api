@@ -2,6 +2,7 @@
 {
     using Hawk.Domain.Account;
     using Hawk.Domain.Configuration;
+    using Hawk.Domain.Currency;
     using Hawk.Domain.PaymentMethod;
     using Hawk.Domain.Store;
     using Hawk.Domain.Tag;
@@ -14,6 +15,7 @@
         public static IServiceCollection ConfigureDomain(this IServiceCollection @this) => @this
             .ConfigureAccount()
             .ConfigureConfiguration()
+            .ConfigureCurrency()
             .ConfigurePaymentMethod()
             .ConfigureStore()
             .ConfigureTag()
