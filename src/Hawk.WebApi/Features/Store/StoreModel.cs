@@ -3,12 +3,10 @@
     using System.Linq;
 
     using Hawk.Domain.Store;
-    using Hawk.Infrastructure.ErrorHandling.TryModel;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
 
     using static Hawk.Domain.Store.Store;
-
     using static Hawk.Infrastructure.ErrorHandling.ExceptionHandler;
 
     public sealed class StoreModel
@@ -30,7 +28,7 @@
 
         public static implicit operator Option<Store>(StoreModel model) => NewStore(model.Name);
 
-        internal static TryModel<Page<TryModel<StoreModel>>> MapStore(Page<Try<(Store Store, uint Count)>> @this) => new Page<TryModel<StoreModel>>(
+        internal static Try<Page<Try<StoreModel>>> MapStore(Page<Try<(Store Store, uint Count)>> @this) => new Page<Try<StoreModel>>(
             @this
                 .Data
                 .Select(item => item.Match(

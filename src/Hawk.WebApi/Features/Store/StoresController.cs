@@ -4,7 +4,7 @@
 
     using Hawk.Domain.Store;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
-    using Hawk.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure.Authentication;
@@ -12,8 +12,7 @@
     using Microsoft.AspNetCore.Mvc;
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
-
-    using static StoreModel;
+    using static Hawk.WebApi.Features.Store.StoreModel;
 
     [ApiController]
     [ApiVersion("1")]
@@ -44,7 +43,7 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ProducesResponseType(typeof(TryModel<Page<TryModel<StoreModel>>>), 200)]
+        [ProducesResponseType(typeof(Try<Page<Try<StoreModel>>>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(500)]
@@ -53,7 +52,7 @@
             var entities = await this.getStores.GetResult(this.GetUser(), this.Request.QueryString.Value);
 
             return entities.Match(
-                this.Error<Page<TryModel<StoreModel>>>,
+                this.Error<Page<Try<StoreModel>>>,
                 page => this.Ok(MapStore(page)));
         }
 
@@ -63,7 +62,7 @@
         /// <param name="name"></param>
         /// <returns></returns>
         [HttpGet("{name}")]
-        [ProducesResponseType(typeof(TryModel<StoreModel>), 200)]
+        [ProducesResponseType(typeof(Try<StoreModel>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
@@ -74,7 +73,7 @@
 
             return entity.Match(
                 this.Error<StoreModel>,
-                store => this.Ok(new TryModel<StoreModel>(new StoreModel(store))));
+                store => this.Ok(Success(new StoreModel(store))));
         }
 
         /// <summary>
@@ -83,7 +82,7 @@
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost]
-        [ProducesResponseType(typeof(TryModel<StoreModel>), 201)]
+        [ProducesResponseType(typeof(Try<StoreModel>), 201)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(409)]
@@ -105,7 +104,7 @@
 
                     return inserted.Match(
                         this.Error<StoreModel>,
-                        store => this.Created(store.Value, new TryModel<StoreModel>(new StoreModel(store))));
+                        store => this.Created(store.Value, Success(new StoreModel(store))));
                 },
                 _ => Task(this.Error<StoreModel>(new AlreadyExistsException("Store already exists."))));
         }
@@ -117,7 +116,7 @@
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{name}")]
-        [ProducesResponseType(typeof(TryModel<StoreModel>), 201)]
+        [ProducesResponseType(typeof(Try<StoreModel>), 201)]
         [ProducesResponseType(204)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -143,7 +142,7 @@
 
                     return inserted.Match(
                         this.Error<StoreModel>,
-                        store => this.Created(new TryModel<StoreModel>(new StoreModel(store))));
+                        store => this.Created(Success(new StoreModel(store))));
                 },
                 async _ =>
                 {

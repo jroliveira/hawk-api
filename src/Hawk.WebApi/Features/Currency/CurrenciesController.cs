@@ -4,7 +4,7 @@
 
     using Hawk.Domain.Currency;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
-    using Hawk.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure.Authentication;
@@ -43,7 +43,7 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ProducesResponseType(typeof(TryModel<Page<TryModel<CurrencyModel>>>), 200)]
+        [ProducesResponseType(typeof(Try<Page<Try<CurrencyModel>>>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(500)]
@@ -52,7 +52,7 @@
             var entities = await this.getCurrencies.GetResult(this.GetUser(), this.Request.QueryString.Value);
 
             return entities.Match(
-                this.Error<Page<TryModel<CurrencyModel>>>,
+                this.Error<Page<Try<CurrencyModel>>>,
                 page => this.Ok(MapCurrency(page)));
         }
 
@@ -62,7 +62,7 @@
         /// <param name="name"></param>
         /// <returns></returns>
         [HttpGet("{name}")]
-        [ProducesResponseType(typeof(TryModel<CurrencyModel>), 200)]
+        [ProducesResponseType(typeof(Try<CurrencyModel>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
@@ -73,7 +73,7 @@
 
             return entity.Match(
                 this.Error<CurrencyModel>,
-                currency => this.Ok(new TryModel<CurrencyModel>(new CurrencyModel(currency))));
+                currency => this.Ok(Success(new CurrencyModel(currency))));
         }
 
         /// <summary>
@@ -82,7 +82,7 @@
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost]
-        [ProducesResponseType(typeof(TryModel<CurrencyModel>), 201)]
+        [ProducesResponseType(typeof(Try<CurrencyModel>), 201)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(409)]
@@ -104,7 +104,7 @@
 
                     return inserted.Match(
                         this.Error<CurrencyModel>,
-                        currency => this.Created(currency.Value, new TryModel<CurrencyModel>(new CurrencyModel(currency))));
+                        currency => this.Created(currency.Value, Success(new CurrencyModel(currency))));
                 },
                 _ => Task(this.Error<CurrencyModel>(new AlreadyExistsException("Currency already exists."))));
         }
@@ -116,7 +116,7 @@
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{name}")]
-        [ProducesResponseType(typeof(TryModel<CurrencyModel>), 201)]
+        [ProducesResponseType(typeof(Try<CurrencyModel>), 201)]
         [ProducesResponseType(204)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -142,7 +142,7 @@
 
                     return inserted.Match(
                         this.Error<CurrencyModel>,
-                        currency => this.Created(new TryModel<CurrencyModel>(new CurrencyModel(currency))));
+                        currency => this.Created(Success(new CurrencyModel(currency))));
                 },
                 async _ =>
                 {

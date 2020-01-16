@@ -1,11 +1,11 @@
 ﻿namespace Hawk.Domain.Store.Data.Neo4J
 {
-    using System;
     using System.Threading.Tasks;
 
     using Hawk.Domain.Shared;
     using Hawk.Domain.Store;
     using Hawk.Infrastructure.Data.Neo4J;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     using static System.IO.Path;
@@ -38,6 +38,6 @@
                     _ => _,
                     store => store.Store);
             },
-            () => Task(Failure<Store>(new NullReferenceException("Store is required."))));
+            () => Task(Failure<Store>(new NullObjectException("Store is required."))));
     }
 }

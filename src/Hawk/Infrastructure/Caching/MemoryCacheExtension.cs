@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
 
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     using Microsoft.Extensions.Caching.Memory;
@@ -20,6 +21,7 @@
                 {
                     { } @try when @try => RenewCache(entry, @try),
                     { } @try => ExpireCache(entry, @try),
+                    _ => new InternalException("Cannot get or create cache."),
                 });
 
         private static Try<TOutput> RenewCache<TOutput>(ICacheEntry entry, Try<TOutput> @try)

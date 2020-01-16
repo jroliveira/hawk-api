@@ -1,10 +1,8 @@
 ﻿namespace Hawk.Infrastructure.ErrorHandling.Exceptions
 {
-    using System;
-
-    public abstract class HawkException : Exception
+    public sealed class NullObjectException : BaseException
     {
-        protected HawkException(string message)
+        public NullObjectException(string message)
             : base(message)
         {
         }

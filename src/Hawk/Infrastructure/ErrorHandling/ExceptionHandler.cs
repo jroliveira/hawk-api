@@ -2,9 +2,7 @@
 {
     using System;
 
-    using Hawk.Infrastructure.ErrorHandling.ErrorModels;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
-    using Hawk.Infrastructure.ErrorHandling.TryModel;
     using Hawk.Infrastructure.Monad;
 
     public sealed class ExceptionHandler
@@ -17,19 +15,19 @@
 
         public static void NewExceptionHandler(bool isDevelopment) => errorHandler = new ExceptionHandler(isDevelopment);
 
-        public static TryModel<Unit> HandleException(Exception exception) => HandleException<Unit>(exception);
+        public static Try<Unit> HandleException(Exception exception) => HandleException<Unit>(exception);
 
-        public static TryModel<TModel> HandleException<TModel>(Exception exception) => HandleException<TModel>(exception, false);
+        public static Try<TModel> HandleException<TModel>(Exception exception) => HandleException<TModel>(exception, false);
 
-        public static TryModel<TModel> HandleException<TModel>(Exception exception, bool forceIsDevelopment) => exception switch
+        public static Try<TModel> HandleException<TModel>(Exception exception, bool forceIsDevelopment) => exception switch
         {
-            AlreadyExistsException alreadyExists => new ConflictErrorModel(alreadyExists),
-            ForbiddenException forbidden => new ForbiddenErrorModel(forbidden),
-            InvalidObjectException invalidObject => new UnprocessableEntityErrorModel(invalidObject),
-            InvalidRequestException invalidRequest => new BadRequestErrorModel(invalidRequest),
-            NotFoundException notFound => new NotFoundErrorModel(notFound),
-            UnauthorizedException unauthorized => new UnauthorizedErrorModel(unauthorized),
-            _ => new GenericErrorModel(exception, forceIsDevelopment || (errorHandler != null && errorHandler.isDevelopment)),
+            AlreadyExistsException alreadyExists => alreadyExists,
+            ForbiddenException forbidden => forbidden,
+            InvalidObjectException invalidObject => invalidObject,
+            InvalidRequestException invalidRequest => invalidRequest,
+            NotFoundException notFound => notFound,
+            UnauthorizedException unauthorized => unauthorized,
+            _ => new GenericException(exception, forceIsDevelopment || (errorHandler != null && errorHandler.isDevelopment)),
         };
     }
 }

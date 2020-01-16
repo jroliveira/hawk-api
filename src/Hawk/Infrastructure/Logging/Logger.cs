@@ -2,7 +2,6 @@
 {
     using System;
 
-    using Hawk.Infrastructure.ErrorHandling.TryModel;
     using Hawk.Infrastructure.Monad;
 
     using static Hawk.Infrastructure.ErrorHandling.ExceptionHandler;
@@ -25,7 +24,7 @@
             LogLevel level,
             Action<LogLevel, string> logMethod) => logger = new Logger(level, logMethod);
 
-        public static void LogError<TModel>(string message, object data, TryModel<TModel> tryModel) => logger?.Log(
+        public static void LogError<TModel>(string message, object data, Try<TModel> tryModel) => logger?.Log(
             LogLevel.Error,
             message,
             new { Info = data, Error = tryModel });

@@ -5,7 +5,7 @@
     using Hawk.Domain.Account;
     using Hawk.Infrastructure.Caching;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
-    using Hawk.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.Infrastructure.Monad;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure.Authentication;
 
@@ -41,7 +41,7 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet("account")]
-        [ProducesResponseType(typeof(TryModel<AccountModel>), 200)]
+        [ProducesResponseType(typeof(Try<AccountModel>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(500)]
@@ -53,7 +53,7 @@
 
             return entity.Match(
                 this.Error<AccountModel>,
-                account => this.Ok(new TryModel<AccountModel>(new AccountModel(account))));
+                account => this.Ok(Success(new AccountModel(account))));
         }
 
         /// <summary>
@@ -63,7 +63,7 @@
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost("accounts")]
-        [ProducesResponseType(typeof(TryModel<AccountModel>), 201)]
+        [ProducesResponseType(typeof(Try<AccountModel>), 201)]
         [ProducesResponseType(409)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> CreateAccount([FromBody] NewAccountModel request)
@@ -83,7 +83,7 @@
 
                     return inserted.Match(
                         this.Error<AccountModel>,
-                        account => this.Created(account.Email, new TryModel<AccountModel>(new AccountModel(account))));
+                        account => this.Created(account.Email, Success(new AccountModel(account))));
                 },
                 _ => Task(this.Error<AccountModel>(new AlreadyExistsException("Account already exists."))));
         }

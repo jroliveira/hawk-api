@@ -3,7 +3,6 @@
     using System.Linq;
 
     using Hawk.Domain.Currency;
-    using Hawk.Infrastructure.ErrorHandling.TryModel;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
 
@@ -29,7 +28,7 @@
 
         public static implicit operator Option<Currency>(CurrencyModel model) => NewCurrency(model.Name);
 
-        internal static TryModel<Page<TryModel<CurrencyModel>>> MapCurrency(Page<Try<(Currency Currency, uint Count)>> @this) => new Page<TryModel<CurrencyModel>>(
+        internal static Try<Page<Try<CurrencyModel>>> MapCurrency(Page<Try<(Currency Currency, uint Count)>> @this) => new Page<Try<CurrencyModel>>(
             @this
                 .Data
                 .Select(item => item.Match(

@@ -1,11 +1,11 @@
 ﻿namespace Hawk.Domain.Tag.Data.Neo4J
 {
-    using System;
     using System.Threading.Tasks;
 
     using Hawk.Domain.Shared;
     using Hawk.Domain.Tag;
     using Hawk.Infrastructure.Data.Neo4J;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     using static System.IO.Path;
@@ -38,6 +38,6 @@
                     _ => _,
                     tag => tag.Tag);
             },
-            () => Task(Failure<Tag>(new NullReferenceException("Tag is required."))));
+            () => Task(Failure<Tag>(new NullObjectException("Tag is required."))));
     }
 }

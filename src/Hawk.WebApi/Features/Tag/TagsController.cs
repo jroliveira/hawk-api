@@ -4,7 +4,7 @@
 
     using Hawk.Domain.Tag;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
-    using Hawk.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure.Authentication;
@@ -12,8 +12,7 @@
     using Microsoft.AspNetCore.Mvc;
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
-
-    using static TagModel;
+    using static Hawk.WebApi.Features.Tag.TagModel;
 
     [ApiController]
     [ApiVersion("1")]
@@ -47,7 +46,7 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet("tags")]
-        [ProducesResponseType(typeof(TryModel<Page<TryModel<TagModel>>>), 200)]
+        [ProducesResponseType(typeof(Try<Page<Try<TagModel>>>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(500)]
@@ -56,7 +55,7 @@
             var entities = await this.getTags.GetResult(this.GetUser(), this.Request.QueryString.Value);
 
             return entities.Match(
-                this.Error<Page<TryModel<TagModel>>>,
+                this.Error<Page<Try<TagModel>>>,
                 page => this.Ok(MapTag(page)));
         }
 
@@ -66,7 +65,7 @@
         /// <param name="store"></param>
         /// <returns></returns>
         [HttpGet("stores/{store}/tags")]
-        [ProducesResponseType(typeof(TryModel<Page<TryModel<TagModel>>>), 200)]
+        [ProducesResponseType(typeof(Try<Page<Try<TagModel>>>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
@@ -76,7 +75,7 @@
             var entities = await this.getTagsByStore.GetResult(this.GetUser(), store, this.Request.QueryString.Value);
 
             return entities.Match(
-                this.Error<Page<TryModel<TagModel>>>,
+                this.Error<Page<Try<TagModel>>>,
                 page => this.Ok(MapTag(page)));
         }
 
@@ -86,7 +85,7 @@
         /// <param name="name"></param>
         /// <returns></returns>
         [HttpGet("tags/{name}")]
-        [ProducesResponseType(typeof(TryModel<TagModel>), 200)]
+        [ProducesResponseType(typeof(Try<TagModel>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
@@ -97,7 +96,7 @@
 
             return entity.Match(
                 this.Error<TagModel>,
-                tag => this.Ok(new TryModel<TagModel>(new TagModel(tag))));
+                tag => this.Ok(Success(new TagModel(tag))));
         }
 
         /// <summary>
@@ -106,7 +105,7 @@
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost("tags")]
-        [ProducesResponseType(typeof(TryModel<TagModel>), 201)]
+        [ProducesResponseType(typeof(Try<TagModel>), 201)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(409)]
@@ -128,7 +127,7 @@
 
                     return inserted.Match(
                         this.Error<TagModel>,
-                        tag => this.Created(tag.Value, new TryModel<TagModel>(new TagModel(tag))));
+                        tag => this.Created(tag.Value, Success(new TagModel(tag))));
                 },
                 _ => Task(this.Error<TagModel>(new AlreadyExistsException("Tag already exists."))));
         }
@@ -140,7 +139,7 @@
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("tags/{name}")]
-        [ProducesResponseType(typeof(TryModel<TagModel>), 201)]
+        [ProducesResponseType(typeof(Try<TagModel>), 201)]
         [ProducesResponseType(204)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -166,7 +165,7 @@
 
                     return inserted.Match(
                         this.Error<TagModel>,
-                        tag => this.Created(new TryModel<TagModel>(new TagModel(tag))));
+                        tag => this.Created(Success(new TagModel(tag))));
                 },
                 async _ =>
                 {

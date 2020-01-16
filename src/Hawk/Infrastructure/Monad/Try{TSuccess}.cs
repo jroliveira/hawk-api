@@ -3,31 +3,35 @@
     using System;
     using System.Runtime.Serialization;
 
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
+
+    using static Hawk.Infrastructure.Monad.Utils.Util;
+
     [Serializable]
-    public readonly struct Try<TSuccess> : ISerializable
+    public sealed class Try<TSuccess> : ITry<TSuccess>, ISerializable
     {
-        private readonly Exception? failure;
+        private readonly BaseException? failure;
         private readonly TSuccess success;
 
-        internal Try(Exception failure)
+        public Try(BaseException failure)
         {
             this.failure = failure;
             this.success = default;
         }
 
-        internal Try(TSuccess success)
+        public Try(TSuccess success)
         {
             this.failure = default;
             this.success = success;
         }
 
-        public static implicit operator Try<TSuccess>(Exception failure) => new Try<TSuccess>(failure);
+        public static implicit operator Try<TSuccess>(BaseException failure) => Failure<TSuccess>(failure);
 
-        public static implicit operator Try<TSuccess>(TSuccess success) => new Try<TSuccess>(success);
+        public static implicit operator Try<TSuccess>(TSuccess success) => Success(success);
 
         public static implicit operator bool(Try<TSuccess> @try) => @try.ToBoolean();
 
-        public TReturn Match<TReturn>(Func<Exception, TReturn> failureFunc, Func<TSuccess, TReturn> successFunc) => this.failure != default
+        public TReturn Match<TReturn>(Func<BaseException, TReturn> failureFunc, Func<TSuccess, TReturn> successFunc) => this.failure != default
             ? failureFunc(this.failure)
             : successFunc(this.success);
 

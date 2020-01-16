@@ -1,6 +1,6 @@
 ﻿namespace Hawk.WebApi.Features.Shared
 {
-    using System;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
 
     using Microsoft.AspNetCore.Http.Extensions;
     using Microsoft.AspNetCore.Mvc;
@@ -22,6 +22,6 @@
 
         internal new IActionResult NoContent() => base.NoContent();
 
-        internal IActionResult Error<TModel>(Exception exception) => ErrorResult<TModel>(exception);
+        internal IActionResult Error<TModel>(BaseException exception) => ErrorResult<TModel>(exception);
     }
 }

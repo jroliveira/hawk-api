@@ -1,10 +1,10 @@
 ﻿namespace Hawk.Domain.Account.Data.Neo4J
 {
-    using System;
     using System.Threading.Tasks;
 
     using Hawk.Domain.Account;
     using Hawk.Infrastructure.Data.Neo4J;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     using static System.Globalization.CultureInfo;
@@ -31,6 +31,6 @@
                     email = some.Email.Value,
                     creationDate = some.CreationAt.ToString(InvariantCulture),
                 }),
-            () => Task(Failure<Account>(new NullReferenceException("Account is required."))));
+            () => Task(Failure<Account>(new NullObjectException("Account is required."))));
     }
 }

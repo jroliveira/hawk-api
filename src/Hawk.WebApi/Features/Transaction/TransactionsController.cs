@@ -5,14 +5,15 @@
 
     using Hawk.Domain.Transaction;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
-    using Hawk.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure.Authentication;
 
     using Microsoft.AspNetCore.Mvc;
 
-    using static TransactionModel;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
+    using static Hawk.WebApi.Features.Transaction.TransactionModel;
 
     [ApiController]
     [ApiVersion("1")]
@@ -43,7 +44,7 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ProducesResponseType(typeof(TryModel<Page<TryModel<TransactionModel>>>), 200)]
+        [ProducesResponseType(typeof(Try<Page<Try<TransactionModel>>>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(500)]
@@ -52,7 +53,7 @@
             var entities = await this.getTransactions.GetResult(this.GetUser(), this.Request.QueryString.Value);
 
             return entities.Match(
-                this.Error<Page<TryModel<TransactionModel>>>,
+                this.Error<Page<Try<TransactionModel>>>,
                 page => this.Ok(MapTransaction(page)));
         }
 
@@ -62,7 +63,7 @@
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(TryModel<TransactionModel>), 200)]
+        [ProducesResponseType(typeof(Try<TransactionModel>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
@@ -73,7 +74,7 @@
 
             return entity.Match(
                 this.Error<TransactionModel>,
-                transaction => this.Ok(new TryModel<TransactionModel>(new TransactionModel(transaction))));
+                transaction => this.Ok(Success(new TransactionModel(transaction))));
         }
 
         /// <summary>
@@ -82,7 +83,7 @@
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost]
-        [ProducesResponseType(typeof(TryModel<TransactionModel>), 201)]
+        [ProducesResponseType(typeof(Try<TransactionModel>), 201)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(409)]
@@ -99,7 +100,7 @@
 
             return entity.Match(
                 this.Error<TransactionModel>,
-                transaction => this.Created(transaction.Id, new TryModel<TransactionModel>(new TransactionModel(transaction))));
+                transaction => this.Created(transaction.Id, Success(new TransactionModel(transaction))));
         }
 
         /// <summary>
@@ -109,7 +110,7 @@
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        [ProducesResponseType(typeof(TryModel<TransactionModel>), 201)]
+        [ProducesResponseType(typeof(Try<TransactionModel>), 201)]
         [ProducesResponseType(204)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -135,7 +136,7 @@
 
                     return inserted.Match(
                         this.Error<TransactionModel>,
-                        transaction => this.Created(new TryModel<TransactionModel>(new TransactionModel(transaction))));
+                        transaction => this.Created(Success(new TransactionModel(transaction))));
                 },
                 async _ =>
                 {

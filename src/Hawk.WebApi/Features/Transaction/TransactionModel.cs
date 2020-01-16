@@ -4,7 +4,6 @@
     using System.Linq;
 
     using Hawk.Domain.Transaction;
-    using Hawk.Infrastructure.ErrorHandling.TryModel;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
 
@@ -46,7 +45,7 @@
 
         public IEnumerable<string> Tags { get; }
 
-        internal static TryModel<Page<TryModel<TransactionModel>>> MapTransaction(Page<Try<Transaction>> @this) => new Page<TryModel<TransactionModel>>(
+        internal static Try<Page<Try<TransactionModel>>> MapTransaction(Page<Try<Transaction>> @this) => new Page<Try<TransactionModel>>(
             @this
                 .Data
                 .Select(item => item.Match(

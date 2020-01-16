@@ -3,14 +3,14 @@
     using System.Threading.Tasks;
 
     using Hawk.Domain.PaymentMethod;
-    using Hawk.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure.Authentication;
 
     using Microsoft.AspNetCore.Mvc;
 
-    using static PaymentMethodModel;
+    using static Hawk.WebApi.Features.PaymentMethod.PaymentMethodModel;
 
     [ApiController]
     [ApiVersion("1")]
@@ -33,7 +33,7 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet("payment-methods")]
-        [ProducesResponseType(typeof(TryModel<Page<TryModel<PaymentMethodModel>>>), 200)]
+        [ProducesResponseType(typeof(Try<Page<Try<PaymentMethodModel>>>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(500)]
@@ -42,7 +42,7 @@
             var entities = await this.getPaymentMethods.GetResult(this.GetUser(), this.Request.QueryString.Value);
 
             return entities.Match(
-                this.Error<Page<TryModel<PaymentMethodModel>>>,
+                this.Error<Page<Try<PaymentMethodModel>>>,
                 page => this.Ok(MapPaymentMethod(page)));
         }
 
@@ -52,7 +52,7 @@
         /// <param name="store"></param>
         /// <returns></returns>
         [HttpGet("stores/{store}/payment-methods")]
-        [ProducesResponseType(typeof(TryModel<Page<TryModel<PaymentMethodModel>>>), 200)]
+        [ProducesResponseType(typeof(Try<Page<Try<PaymentMethodModel>>>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
@@ -62,7 +62,7 @@
             var entities = await this.getPaymentMethodsByStore.GetResult(this.GetUser(), store, this.Request.QueryString.Value);
 
             return entities.Match(
-                this.Error<Page<TryModel<PaymentMethodModel>>>,
+                this.Error<Page<Try<PaymentMethodModel>>>,
                 page => this.Ok(MapPaymentMethod(page)));
         }
     }

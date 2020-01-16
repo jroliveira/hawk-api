@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Globalization;
 
-    using Hawk.Infrastructure.ErrorHandling.TryModel;
+    using Hawk.Infrastructure.ErrorHandling.Try;
     using Hawk.Infrastructure.Serialization.Converters;
 
     using Newtonsoft.Json;
@@ -26,7 +26,7 @@
                 new StringEnumConverter(),
                 new IpAddressConverter(),
                 new IpEndPointConverter(),
-                new TryModelJsonConverter(),
+                new TryJsonConverter(),
             },
         };
     }
