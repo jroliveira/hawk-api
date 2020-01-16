@@ -36,6 +36,18 @@
     <None Update="Domain\Configuration\Data.Neo4J\UpsertConfiguration.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Domain\Currency\Data.Neo4J\DeleteCurrency.cql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Domain\Currency\Data.Neo4J\GetCurrencyByName.cql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Domain\Currency\Data.Neo4J\GetCurrencies.cql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Domain\Currency\Data.Neo4J\UpsertCurrency.cql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Domain\PaymentMethod\Data.Neo4J\GetPaymentMethods.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
