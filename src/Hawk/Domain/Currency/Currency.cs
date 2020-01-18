@@ -3,19 +3,22 @@
     using Hawk.Domain.Shared;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Monad.Extensions;
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
     public sealed class Currency : ValueObject<Currency, string>
     {
-        private Currency(string name)
-            : base(name)
-        {
-        }
+        private Currency(string name, uint transactions)
+            : base(name) => this.Transactions = transactions;
 
-        public static Try<Currency> NewCurrency(Option<string> name) =>
-            name
-            ? new Currency(name.Get())
-            : Failure<Currency>(new InvalidObjectException("Invalid currency."));
+        public uint Transactions { get; }
+
+        public static Try<Currency> NewCurrency(
+            Option<string> name,
+            Option<uint> transactions = default) =>
+                name
+                ? new Currency(name.Get(), transactions.GetOrElse(default))
+                : Failure<Currency>(new InvalidObjectException("Invalid currency."));
     }
 }

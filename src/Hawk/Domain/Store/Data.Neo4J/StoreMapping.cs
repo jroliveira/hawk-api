@@ -12,26 +12,10 @@
 
     internal static class StoreMapping
     {
-        private const string Name = "name";
-        private const string Total = "total";
-
-        internal static Try<(Store Store, uint Count)> MapStore(IRecord data) => MapRecord(data, "data").Match(
-            record =>
-            {
-                var total = record.Get<uint>(Total);
-                if (!total.IsDefined)
-                {
-                    return new InvalidObjectException("Invalid store.");
-                }
-
-                return MapStore(record).Match<Try<(Store, uint)>>(
-                    _ => _,
-                    store => (store, total.Get()));
-            },
-            () => new NotFoundException("Store not found."));
+        internal static Try<Store> MapStore(IRecord data) => MapStore(MapRecord(data, "data"));
 
         internal static Try<Store> MapStore(Option<Neo4JRecord> record) => record.Match(
-            some => NewStore(some.Get<string>(Name)),
+            some => NewStore(some.Get<string>("name"), some.Get<uint>("transactions")),
             () => new NotFoundException("Store not found."));
     }
 }

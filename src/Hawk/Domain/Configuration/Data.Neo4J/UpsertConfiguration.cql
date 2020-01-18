@@ -70,7 +70,8 @@ MERGE
     description: $description
   })
 SET
-  configuration.type = $type
+  configuration.type = $type,
+  configuration.description = $newDescription
 MERGE
   (configuration)-[:BELONGS]->(account)
 MERGE
@@ -93,7 +94,7 @@ RETURN
   },
   store: CASE WHEN store IS null THEN NULL ELSE {
     name: store.name,
-	tags: collect(distinct storeTag.name)
+	tags: COLLECT(distinct storeTag.name)
   } END,
   currency: {
     name: currency.name
@@ -101,5 +102,5 @@ RETURN
   paymentMethod: CASE WHEN paymentMethod IS null THEN NULL ELSE {
 	name: paymentMethod.name
   } END,
-  tags: collect(distinct tag.name)
-} as data;
+  tags: COLLECT(distinct tag.name)
+} AS data;

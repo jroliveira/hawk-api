@@ -18,20 +18,13 @@
 
         public GetCurrencyByName(Neo4JConnection connection) => this.connection = connection;
 
-        public async Task<Try<Currency>> GetResult(Email email, string name)
-        {
-            var data = await this.connection.ExecuteCypherScalar(
-                MapCurrency,
-                Statement,
-                new
-                {
-                    email = email.Value,
-                    name,
-                });
-
-            return data.Match<Try<Currency>>(
-                _ => _,
-                currency => currency.Currency);
-        }
+        public Task<Try<Currency>> GetResult(Email email, string name) => this.connection.ExecuteCypherScalar(
+            MapCurrency,
+            Statement,
+            new
+            {
+                email = email.Value,
+                name,
+            });
     }
 }

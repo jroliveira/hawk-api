@@ -10,13 +10,10 @@
 
     internal static class PriceMapping
     {
-        private const string Value = "value";
-        private const string Currency = "currency";
-
         internal static Try<Price> MapPrice(Option<Neo4JRecord> record) => record.Match(
-            some => MapCurrency(some.GetRecord(Currency)).Match(
+            some => MapCurrency(some.GetRecord("currency")).Match(
                 _ => _,
-                currency => NewPrice(some.Get<double>(Value), currency)),
+                currency => NewPrice(some.Get<double>("value"), currency)),
             () => new NotFoundException("Price not found."));
     }
 }

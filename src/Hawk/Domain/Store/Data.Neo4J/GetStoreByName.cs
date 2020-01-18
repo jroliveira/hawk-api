@@ -19,20 +19,13 @@
 
         public GetStoreByName(Neo4JConnection connection) => this.connection = connection;
 
-        public async Task<Try<Store>> GetResult(Email email, string name)
-        {
-            var data = await this.connection.ExecuteCypherScalar(
-                MapStore,
-                Statement,
-                new
-                {
-                    email = email.Value,
-                    name,
-                });
-
-            return data.Match<Try<Store>>(
-                _ => _,
-                store => store.Store);
-        }
+        public Task<Try<Store>> GetResult(Email email, string name) => this.connection.ExecuteCypherScalar(
+            MapStore,
+            Statement,
+            new
+            {
+                email = email.Value,
+                name,
+            });
     }
 }

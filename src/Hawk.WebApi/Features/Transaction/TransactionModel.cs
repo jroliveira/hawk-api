@@ -4,35 +4,16 @@
     using System.Linq;
 
     using Hawk.Domain.Transaction;
-    using Hawk.Infrastructure.Monad;
-    using Hawk.Infrastructure.Pagination;
-
-    using static Hawk.Infrastructure.ErrorHandling.ExceptionHandler;
 
     public sealed class TransactionModel
     {
-        public TransactionModel(Transaction entity)
-            : this(
-                entity.Id.ToString(),
-                entity.Type,
-                entity.Payment,
-                entity.Store,
-                entity.Tags.Select(tag => tag.Value))
+        private TransactionModel(Transaction entity)
         {
-        }
-
-        public TransactionModel(
-            string id,
-            string type,
-            PaymentModel payment,
-            string store,
-            IEnumerable<string> tags)
-        {
-            this.Id = id;
-            this.Type = type;
-            this.Payment = payment;
-            this.Store = store;
-            this.Tags = tags;
+            this.Id = entity.Id.ToString();
+            this.Type = entity.Type;
+            this.Payment = entity.Payment;
+            this.Store = entity.Store;
+            this.Tags = entity.Tags.Select(tag => tag.Value);
         }
 
         public string Id { get; }
@@ -45,13 +26,6 @@
 
         public IEnumerable<string> Tags { get; }
 
-        internal static Try<Page<Try<TransactionModel>>> MapTransaction(Page<Try<Transaction>> @this) => new Page<Try<TransactionModel>>(
-            @this
-                .Data
-                .Select(item => item.Match(
-                    HandleException<TransactionModel>,
-                    transaction => new TransactionModel(transaction))),
-            @this.Skip,
-            @this.Limit);
+        internal static TransactionModel NewTransactionModel(Transaction entity) => new TransactionModel(entity);
     }
 }

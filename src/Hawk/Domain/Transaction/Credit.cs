@@ -16,11 +16,15 @@
 
         public override string Type => "Credit";
 
-        public static Try<Transaction> NewCredit(Option<Guid> id, Option<Payment> payment, Option<Store> store, Option<IEnumerable<Tag>> tags) => NewTransaction(
-            id,
-            payment,
-            store,
-            tags,
-            transaction => new Credit(transaction.Id, transaction.Payment, transaction.Store, transaction.Tags));
+        public static Try<Transaction> NewCredit(
+            Option<Guid> id,
+            Option<Payment> payment,
+            Option<Store> store,
+            Option<IEnumerable<Option<Tag>>> tags) => NewTransaction(
+                id,
+                payment,
+                store,
+                tags,
+                transaction => new Credit(transaction.Id, transaction.Payment, transaction.Store, transaction.Tags));
     }
 }

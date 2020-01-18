@@ -22,14 +22,15 @@
 
         public UpsertConfiguration(Neo4JConnection connection) => this.connection = connection;
 
-        public Task<Try<Configuration>> Execute(Email email, Option<Configuration> entity) => entity.Match(
+        public Task<Try<Configuration>> Execute(Email email, string description, Option<Configuration> entity) => entity.Match(
             some => this.connection.ExecuteCypherScalar(
                 MapConfiguration,
                 Statement,
                 new
                 {
                     email = email.Value,
-                    description = some.Description,
+                    description,
+                    newDescription = some.Description,
                     type = some.Type,
                     paymentMethod = some.PaymentMethod.Value,
                     currency = some.Currency.Value,

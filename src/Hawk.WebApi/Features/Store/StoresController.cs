@@ -23,7 +23,7 @@
         private readonly IGetStoreByName getStoreByName;
         private readonly IUpsertStore upsertStore;
         private readonly IDeleteStore deleteStore;
-        private readonly NewStoreModelValidator validator;
+        private readonly CreateStoreModelValidator validator;
 
         public StoresController(
             IGetStores getStores,
@@ -35,7 +35,7 @@
             this.getStoreByName = getStoreByName;
             this.upsertStore = upsertStore;
             this.deleteStore = deleteStore;
-            this.validator = new NewStoreModelValidator();
+            this.validator = new CreateStoreModelValidator();
         }
 
         /// <summary>
@@ -53,7 +53,7 @@
 
             return entities.Match(
                 this.Error<Page<Try<StoreModel>>>,
-                page => this.Ok(MapStore(page)));
+                page => this.Ok(page.ToPage(NewStoreModel)));
         }
 
         /// <summary>
@@ -73,7 +73,7 @@
 
             return entity.Match(
                 this.Error<StoreModel>,
-                store => this.Ok(Success(new StoreModel(store))));
+                store => this.Ok(Success(NewStoreModel(store))));
         }
 
         /// <summary>
@@ -87,7 +87,7 @@
         [ProducesResponseType(403)]
         [ProducesResponseType(409)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> CreateStore([FromBody] NewStoreModel request)
+        public async Task<IActionResult> CreateStore([FromBody] CreateStoreModel request)
         {
             var validated = await this.validator.ValidateAsync(request);
             if (!validated.IsValid)
@@ -104,7 +104,7 @@
 
                     return inserted.Match(
                         this.Error<StoreModel>,
-                        store => this.Created(store.Value, Success(new StoreModel(store))));
+                        store => this.Created(store.Value, Success(NewStoreModel(store))));
                 },
                 _ => Task(this.Error<StoreModel>(new AlreadyExistsException("Store already exists."))));
         }
@@ -125,7 +125,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateStore(
             [FromRoute] string name,
-            [FromBody] NewStoreModel request)
+            [FromBody] CreateStoreModel request)
         {
             var validated = await this.validator.ValidateAsync(request);
             if (!validated.IsValid)
@@ -142,7 +142,7 @@
 
                     return inserted.Match(
                         this.Error<StoreModel>,
-                        store => this.Created(Success(new StoreModel(store))));
+                        store => this.Created(Success(NewStoreModel(store))));
                 },
                 async _ =>
                 {

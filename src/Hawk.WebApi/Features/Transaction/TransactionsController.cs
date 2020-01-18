@@ -13,6 +13,7 @@
     using Microsoft.AspNetCore.Mvc;
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
+    using static Hawk.WebApi.Features.Transaction.CreateTransactionModel;
     using static Hawk.WebApi.Features.Transaction.TransactionModel;
 
     [ApiController]
@@ -24,7 +25,7 @@
         private readonly IGetTransactionById getTransactionById;
         private readonly IUpsertTransaction upsertTransaction;
         private readonly IDeleteTransaction deleteTransaction;
-        private readonly NewTransactionModelValidator validator;
+        private readonly CreateTransactionModelValidator validator;
 
         public TransactionsController(
             IGetTransactions getTransactions,
@@ -36,7 +37,7 @@
             this.getTransactionById = getTransactionById;
             this.upsertTransaction = upsertTransaction;
             this.deleteTransaction = deleteTransaction;
-            this.validator = new NewTransactionModelValidator();
+            this.validator = new CreateTransactionModelValidator();
         }
 
         /// <summary>
@@ -54,7 +55,7 @@
 
             return entities.Match(
                 this.Error<Page<Try<TransactionModel>>>,
-                page => this.Ok(MapTransaction(page)));
+                page => this.Ok(page.ToPage(NewTransactionModel)));
         }
 
         /// <summary>
@@ -74,7 +75,7 @@
 
             return entity.Match(
                 this.Error<TransactionModel>,
-                transaction => this.Ok(Success(new TransactionModel(transaction))));
+                transaction => this.Ok(Success(NewTransactionModel(transaction))));
         }
 
         /// <summary>
@@ -88,7 +89,7 @@
         [ProducesResponseType(403)]
         [ProducesResponseType(409)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> CreateTransaction([FromBody] NewTransactionModel request)
+        public async Task<IActionResult> CreateTransaction([FromBody] CreateTransactionModel request)
         {
             var validated = await this.validator.ValidateAsync(request);
             if (!validated.IsValid)
@@ -100,7 +101,7 @@
 
             return entity.Match(
                 this.Error<TransactionModel>,
-                transaction => this.Created(transaction.Id, Success(new TransactionModel(transaction))));
+                transaction => this.Created(transaction.Id, Success(NewTransactionModel(transaction))));
         }
 
         /// <summary>
@@ -119,7 +120,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateTransaction(
             [FromRoute] string id,
-            [FromBody] NewTransactionModel request)
+            [FromBody] CreateTransactionModel request)
         {
             var validated = await this.validator.ValidateAsync(request);
             if (!validated.IsValid)
@@ -132,11 +133,11 @@
             return await entity.Match(
                 async _ =>
                 {
-                    var inserted = await this.upsertTransaction.Execute(this.GetUser(), NewTransactionModel.MapNewTransaction(new Guid(id), request));
+                    var inserted = await this.upsertTransaction.Execute(this.GetUser(), MapTransaction(new Guid(id), request));
 
                     return inserted.Match(
                         this.Error<TransactionModel>,
-                        transaction => this.Created(Success(new TransactionModel(transaction))));
+                        transaction => this.Created(Success(NewTransactionModel(transaction))));
                 },
                 async _ =>
                 {

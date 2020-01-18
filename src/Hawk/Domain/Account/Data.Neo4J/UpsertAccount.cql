@@ -9,6 +9,5 @@ SET
 RETURN 
 { 
   id: account.id,
-  email: account.email,
-  creationDate: account.creationDate
-} as data;
+  email: account.email
+} AS data;

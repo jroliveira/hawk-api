@@ -19,20 +19,13 @@
 
         public GetTagByName(Neo4JConnection connection) => this.connection = connection;
 
-        public async Task<Try<Tag>> GetResult(Email email, string name)
-        {
-            var data = await this.connection.ExecuteCypherScalar(
-                MapTag,
-                Statement,
-                new
-                {
-                    email = email.Value,
-                    name,
-                });
-
-            return data.Match<Try<Tag>>(
-                _ => _,
-                tag => tag.Tag);
-        }
+        public Task<Try<Tag>> GetResult(Email email, string name) => this.connection.ExecuteCypherScalar(
+            MapTag,
+            Statement,
+            new
+            {
+                email = email.Value,
+                name,
+            });
     }
 }

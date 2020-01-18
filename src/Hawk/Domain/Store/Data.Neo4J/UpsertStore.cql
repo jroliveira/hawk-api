@@ -15,16 +15,10 @@ SET
 MERGE
   (store)-[:BELONGS]->(account)
 WITH
-  account,
   store
-
-OPTIONAL MATCH
-  (store)-[:HAS]->(tag:Tag)-[:BELONGS]->(account)
 
 RETURN
 { 
   name: store.name,
-  tags: collect(distinct tag.name),
-  total: count(store.name)
-} as data;
-
+  transactions: SIZE((:Transaction)-[:IN]->(store))
+} AS data;

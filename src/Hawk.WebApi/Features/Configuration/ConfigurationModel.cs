@@ -7,31 +7,14 @@
 
     public sealed class ConfigurationModel
     {
-        public ConfigurationModel(Configuration entity)
-            : this(
-                entity.Type,
-                entity.Description,
-                entity.PaymentMethod,
-                entity.Currency,
-                entity.Store,
-                entity.Tags.Select(tag => tag.Value))
+        private ConfigurationModel(Configuration entity)
         {
-        }
-
-        public ConfigurationModel(
-            string type,
-            string description,
-            string paymentMethod,
-            string currency,
-            string store,
-            IEnumerable<string> tags)
-        {
-            this.Type = type;
-            this.Description = description;
-            this.PaymentMethod = paymentMethod;
-            this.Currency = currency;
-            this.Store = store;
-            this.Tags = tags;
+            this.Type = entity.Type;
+            this.Description = entity.Description;
+            this.PaymentMethod = entity.PaymentMethod;
+            this.Currency = entity.Currency;
+            this.Store = entity.Store;
+            this.Tags = entity.Tags.Select(tag => tag.Value);
         }
 
         public string Type { get; }
@@ -45,5 +28,7 @@
         public string Store { get; }
 
         public IEnumerable<string> Tags { get; }
+
+        internal static ConfigurationModel NewConfigurationModel(Configuration entity) => new ConfigurationModel(entity);
     }
 }

@@ -15,12 +15,10 @@ SET
 MERGE
   (currency)-[:BELONGS]->(account)
 WITH
-  account,
   currency
 
 RETURN
 { 
   name: currency.name,
-  total: count(currency.name)
-} as data;
-
+  transactions: SIZE((:Transaction)-[:PAID_IN]->(currency))
+} AS data;

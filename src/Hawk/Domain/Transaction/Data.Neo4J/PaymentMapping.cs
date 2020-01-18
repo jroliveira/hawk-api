@@ -12,19 +12,14 @@
 
     internal static class PaymentMapping
     {
-        private const string Year = "year";
-        private const string Month = "month";
-        private const string Day = "day";
-        private const string Method = "method";
-
         internal static Try<Payment> MapPayment(Option<Neo4JRecord> record) => record.Match(
             some => NewPayment(
                 MapPrice(record),
                 Date(
-                    some.Get<int>(Year),
-                    some.Get<int>(Month),
-                    some.Get<int>(Day)),
-                MapPaymentMethod(some.GetRecord(Method))),
+                    some.Get<int>("year"),
+                    some.Get<int>("month"),
+                    some.Get<int>("day")),
+                MapPaymentMethod(some.GetRecord("method"))),
             () => new NotFoundException("Payment not found."));
     }
 }

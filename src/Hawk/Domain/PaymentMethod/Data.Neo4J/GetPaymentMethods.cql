@@ -6,8 +6,8 @@ WHERE
 RETURN
 { 
   name: paymentMethod.name,
-  total: count(paymentMethod.name)
-} as data
+  transactions: SIZE((:Transaction)-[:PAID_WITH]->(paymentMethod))
+} AS data
 
 SKIP 
   $skip 

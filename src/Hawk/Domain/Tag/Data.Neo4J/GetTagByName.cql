@@ -3,12 +3,9 @@
 WHERE
   account.email = $email
   AND tag.name = $name
-WITH
-  account,
-  tag
 
 RETURN
 { 
   name: tag.name,
-  total: count(tag.name)
-} as data;
+  transactions: SIZE((:Transaction)-[:HAS]->(tag))
+} AS data;

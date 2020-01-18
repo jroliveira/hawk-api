@@ -14,6 +14,8 @@
             new ResourceConfiguration<StoreModel>((_, model) => new List<Link>
             {
                 new Link($"/v1/stores/{model.Name}", "self", Get),
+                new Link($"/v1/stores/{model.Name}/payment-methods", "payment-methods", Get),
+                new Link($"/v1/stores/{model.Name}/tags", "tags", Get),
                 new Link("/v1/stores", "all", Get),
                 new Link("/v1/stores", "create-store", Post),
                 new Link($"/v1/stores/{model.Name}", "update-store", Put),
@@ -24,6 +26,8 @@
                 getItemsLinks: (_, model) => new List<Link>
                 {
                     new Link($"/v1/stores/{model.Name}", "self", Get),
+                    new Link($"/v1/stores/{model.Name}/payment-methods", "payment-methods", Get),
+                    new Link($"/v1/stores/{model.Name}/tags", "tags", Get),
                     new Link("/v1/stores", "all", Get),
                     new Link("/v1/stores", "create-store", Post),
                     new Link($"/v1/stores/{model.Name}", "update-store", Put),
