@@ -48,10 +48,13 @@
     <None Update="Domain\Currency\Data.Neo4J\UpsertCurrency.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Domain\PaymentMethod\Data.Neo4J\DeletePaymentMethod.cql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Domain\PaymentMethod\Data.Neo4J\GetPaymentMethods.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\PaymentMethod\Data.Neo4J\GetPaymentMethodsByStore.cql">
+    <None Update="Domain\PaymentMethod\Data.Neo4J\GetPaymentMethodsByPayee.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Domain\Payee\Data.Neo4J\DeletePayee.cql">
@@ -66,6 +69,12 @@
     <None Update="Domain\Payee\Data.Neo4J\UpsertPayee.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Domain\PaymentMethod\Data.Neo4J\GetPaymentMethodByName.cql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Domain\PaymentMethod\Data.Neo4J\UpsertPaymentMethod.cql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Domain\Tag\Data.Neo4J\DeleteTag.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -75,7 +84,7 @@
     <None Update="Domain\Tag\Data.Neo4J\GetTags.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Tag\Data.Neo4J\GetTagsByStore.cql">
+    <None Update="Domain\Tag\Data.Neo4J\GetTagsByPayee.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Domain\Tag\Data.Neo4J\UpsertTag.cql">
