@@ -18,9 +18,9 @@
                 .NotEmpty()
                 .WithMessage("Configuration currency is required.");
 
-            this.RuleFor(model => model.Store)
+            this.RuleFor(model => model.Payee)
                 .NotEmpty()
-                .WithMessage("Configuration store is required.");
+                .WithMessage("Configuration payee is required.");
 
             this.RuleFor(model => model.Tags)
                 .NotNull()

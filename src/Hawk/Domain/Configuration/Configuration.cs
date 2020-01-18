@@ -4,8 +4,8 @@
     using System.Linq;
 
     using Hawk.Domain.Currency;
+    using Hawk.Domain.Payee;
     using Hawk.Domain.PaymentMethod;
-    using Hawk.Domain.Store;
     using Hawk.Domain.Tag;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
@@ -19,14 +19,14 @@
             string description,
             PaymentMethod paymentMethod,
             Currency currency,
-            Store store,
+            Payee payee,
             IEnumerable<Tag> tags)
         {
             this.Type = type;
             this.Description = description;
             this.PaymentMethod = paymentMethod;
             this.Currency = currency;
-            this.Store = store;
+            this.Payee = payee;
             this.Tags = tags.ToList();
         }
 
@@ -38,7 +38,7 @@
 
         public Currency Currency { get; }
 
-        public Store Store { get; }
+        public Payee Payee { get; }
 
         public IReadOnlyCollection<Tag> Tags { get; }
 
@@ -47,16 +47,16 @@
             Option<string> description,
             Option<PaymentMethod> paymentMethod,
             Option<Currency> currency,
-            Option<Store> store,
+            Option<Payee> payee,
             Option<IEnumerable<Option<Tag>>> tags) =>
                 type
                 && description
                 && paymentMethod
                 && currency
-                && store
+                && payee
                 && tags
                 && tags.Get().All(_ => _)
-                ? new Configuration(type.Get(), description.Get(), paymentMethod.Get(), currency.Get(), store.Get(), tags.Get().Select(tag => tag.Get()))
+                ? new Configuration(type.Get(), description.Get(), paymentMethod.Get(), currency.Get(), payee.Get(), tags.Get().Select(tag => tag.Get()))
                 : Failure<Configuration>(new InvalidObjectException("Invalid configuration."));
     }
 }

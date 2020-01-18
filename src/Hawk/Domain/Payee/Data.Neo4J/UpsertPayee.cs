@@ -1,29 +1,29 @@
-﻿namespace Hawk.Domain.Store.Data.Neo4J
+﻿namespace Hawk.Domain.Payee.Data.Neo4J
 {
     using System.Threading.Tasks;
 
+    using Hawk.Domain.Payee;
     using Hawk.Domain.Shared;
-    using Hawk.Domain.Store;
     using Hawk.Infrastructure.Data.Neo4J;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     using static System.IO.Path;
 
-    using static Hawk.Domain.Store.Data.Neo4J.StoreMapping;
+    using static Hawk.Domain.Payee.Data.Neo4J.PayeeMapping;
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
-    internal sealed class UpsertStore : IUpsertStore
+    internal sealed class UpsertPayee : IUpsertPayee
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("Store", "Data.Neo4J", "UpsertStore.cql"));
+        private static readonly Option<string> Statement = ReadCypherScript(Combine("Payee", "Data.Neo4J", "UpsertPayee.cql"));
         private readonly Neo4JConnection connection;
 
-        public UpsertStore(Neo4JConnection connection) => this.connection = connection;
+        public UpsertPayee(Neo4JConnection connection) => this.connection = connection;
 
-        public Task<Try<Store>> Execute(Email email, string name, Option<Store> entity) => entity.Match(
+        public Task<Try<Payee>> Execute(Email email, string name, Option<Payee> entity) => entity.Match(
             some => this.connection.ExecuteCypherScalar(
-                MapStore,
+                MapPayee,
                 Statement,
                 new
                 {
@@ -31,6 +31,6 @@
                     name,
                     newName = some.Value,
                 }),
-            () => Task(Failure<Store>(new NullObjectException("Store is required."))));
+            () => Task(Failure<Payee>(new NullObjectException("Payee is required."))));
     }
 }

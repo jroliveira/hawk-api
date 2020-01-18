@@ -8,18 +8,18 @@ WITH
   transaction
 
 OPTIONAL MATCH
-  (transaction)-[:IN]->(store:Store)-[:BELONGS]->(account)
+  (transaction)-[:IN]->(payee:Payee)-[:BELONGS]->(account)
 WITH
   account,
   transaction,
-  store
+  payee
 
 OPTIONAL MATCH 
   (transaction)-[:PAID_WITH]->(paymentMethod:PaymentMethod)-[:BELONGS]->(account)
 WITH
   account,
   transaction,
-  store,
+  payee,
   paymentMethod
   
 OPTIONAL MATCH 
@@ -27,7 +27,7 @@ OPTIONAL MATCH
 WITH
   account,
   transaction,
-  store,
+  payee,
   paymentMethod,
   currency
 
@@ -36,7 +36,7 @@ OPTIONAL MATCH
 WITH
   account,
   transaction,
-  store,
+  payee,
   paymentMethod,
   currency,
   COLLECT(DISTINCT tag) AS tags
@@ -49,9 +49,9 @@ RETURN
     id: account.id,
 	email: account.email
   },
-  store: CASE WHEN store IS null THEN NULL ELSE {
-    name: store.name,
-	transactions: SIZE((:Transaction)-[:IN]->(store))
+  payee: CASE WHEN payee IS null THEN NULL ELSE {
+    name: payee.name,
+	transactions: SIZE((:Transaction)-[:IN]->(payee))
   } END,
   payment: {
     value: transaction.value,

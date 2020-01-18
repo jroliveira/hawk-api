@@ -16,14 +16,14 @@
     using static Hawk.Domain.PaymentMethod.Data.Neo4J.PaymentMethodMapping;
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
 
-    internal sealed class GetPaymentMethodsByStore : IGetPaymentMethodsByStore
+    internal sealed class GetPaymentMethodsByPayee : IGetPaymentMethodsByPayee
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("PaymentMethod", "Data.Neo4J", "GetPaymentMethodsByStore.cql"));
+        private static readonly Option<string> Statement = ReadCypherScript(Combine("PaymentMethod", "Data.Neo4J", "GetPaymentMethodsByPayee.cql"));
         private readonly Neo4JConnection connection;
         private readonly ILimit<int, Filter> limit;
         private readonly ISkip<int, Filter> skip;
 
-        public GetPaymentMethodsByStore(
+        public GetPaymentMethodsByPayee(
             Neo4JConnection connection,
             ILimit<int, Filter> limit,
             ISkip<int, Filter> skip)
@@ -33,12 +33,12 @@
             this.skip = skip;
         }
 
-        public async Task<Try<Page<Try<PaymentMethod>>>> GetResult(Email email, string store, Filter filter)
+        public async Task<Try<Page<Try<PaymentMethod>>>> GetResult(Email email, string payee, Filter filter)
         {
             var parameters = new
             {
                 email = email.Value,
-                store,
+                payee,
                 skip = this.skip.Apply(filter),
                 limit = this.limit.Apply(filter),
             };

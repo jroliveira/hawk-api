@@ -5,7 +5,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
 
-    using Hawk.Domain.Store;
+    using Hawk.Domain.Payee;
     using Hawk.Domain.Tag;
     using Hawk.Domain.Transaction;
     using Hawk.Infrastructure.Monad;
@@ -13,30 +13,30 @@
 
     using static System.Guid;
 
-    using static Hawk.Domain.Store.Store;
+    using static Hawk.Domain.Payee.Payee;
     using static Hawk.Domain.Tag.Tag;
-    using static Hawk.Domain.Transaction.Credit;
-    using static Hawk.Domain.Transaction.Debit;
+    using static Hawk.Domain.Transaction.Expense;
+    using static Hawk.Domain.Transaction.Income;
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
     public class CreateTransactionModel
     {
-        private static readonly IReadOnlyDictionary<string, Func<Option<Guid>, Option<Payment>, Option<Store>, Option<IEnumerable<Option<Tag>>>, Try<Transaction>>> Types =
-            new Dictionary<string, Func<Option<Guid>, Option<Payment>, Option<Store>, Option<IEnumerable<Option<Tag>>>, Try<Transaction>>>
+        private static readonly IReadOnlyDictionary<string, Func<Option<Guid>, Option<Payment>, Option<Payee>, Option<IEnumerable<Option<Tag>>>, Try<Transaction>>> Types =
+            new Dictionary<string, Func<Option<Guid>, Option<Payment>, Option<Payee>, Option<IEnumerable<Option<Tag>>>, Try<Transaction>>>
             {
-                { "Debit", NewDebit },
-                { "Credit", NewCredit },
+                { "Expense", NewExpense },
+                { "Income", NewIncome },
             };
 
         public CreateTransactionModel(
             string type,
             PaymentModel payment,
-            string store,
+            string payee,
             IEnumerable<string> tags)
         {
             this.Type = type;
             this.Payment = payment;
-            this.Store = store;
+            this.Payee = payee;
             this.Tags = tags;
         }
 
@@ -47,7 +47,7 @@
         public PaymentModel Payment { get; }
 
         [Required]
-        public string Store { get; }
+        public string Payee { get; }
 
         [Required]
         public IEnumerable<string> Tags { get; }
@@ -74,7 +74,7 @@
             return newTransaction(
                 id,
                 model.Payment,
-                NewStore(model.Store),
+                NewPayee(model.Payee),
                 Some(model.Tags.Select(tag => NewTag(tag).ToOption())));
         }
     }

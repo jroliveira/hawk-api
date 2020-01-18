@@ -8,8 +8,8 @@
 
     using Http.Query.Filter;
 
-    public interface IGetTagsByStore
+    public interface IGetTagsByPayee
     {
-        Task<Try<Page<Try<Tag>>>> GetResult(Email email, string store, Filter filter);
+        Task<Try<Page<Try<Tag>>>> GetResult(Email email, string payee, Filter filter);
     }
 }

@@ -4,14 +4,14 @@ MATCH
 WHERE
   account.email = $email
 
-// (:Store)
+// (:Payee)
 
 MERGE 
-  (store:Store { 
-    name: $store
+  (payee:Payee { 
+    name: $payee
   })
 MERGE
-  (store)-[:BELONGS]->(account)
+  (payee)-[:BELONGS]->(account)
 
 // (:Currency)
 
@@ -38,7 +38,7 @@ MERGE
     id: $id
   })
 REMOVE 
-  transaction:Credit:Debit
+  transaction:Income:Expense
 SET
   transaction:#type#,
   transaction.value = $value,
@@ -48,14 +48,14 @@ SET
 MERGE
   (transaction)-[:BELONGS]->(account)
 MERGE
-  (transaction)-[:IN]->(store)
+  (transaction)-[:IN]->(payee)
 MERGE
   (transaction)-[:PAID_IN]->(currency)
 MERGE
   (transaction)-[:PAID_WITH]->(paymentMethod)
 WITH
   account,
-  store,
+  payee,
   currency,
   paymentMethod,
   transaction
@@ -71,13 +71,13 @@ MERGE
 MERGE
   (tag)-[:BELONGS]->(account)
 MERGE
-  (store)-[:HAS]->(tag)
+  (payee)-[:HAS]->(tag)
 MERGE
   (transaction)-[:HAS]->(tag)
 WITH
   account,
   transaction,
-  store,
+  payee,
   paymentMethod,
   currency,
   COLLECT(DISTINCT tag) AS tags
@@ -90,9 +90,9 @@ RETURN
     id: account.id,
 	email: account.email
   },
-  store: CASE WHEN store IS null THEN NULL ELSE {
-    name: store.name,
-	transactions: SIZE((:Transaction)-[:IN]->(store))
+  payee: CASE WHEN payee IS null THEN NULL ELSE {
+    name: payee.name,
+	transactions: SIZE((:Transaction)-[:IN]->(payee))
   } END,
   payment: {
     value: transaction.value,

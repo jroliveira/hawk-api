@@ -40,7 +40,7 @@
                     day = some.Payment.Date.Day,
                     currency = some.Payment.Price.Currency.Value,
                     method = some.Payment.PaymentMethod.Value,
-                    store = some.Store.Value,
+                    payee = some.Payee.Value,
                     tags = some.Tags.Select(tag => tag.Value).ToArray(),
                 }),
             () => Task(Failure<Transaction>(new NullObjectException("Transaction is required."))));

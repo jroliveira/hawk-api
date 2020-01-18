@@ -13,9 +13,9 @@
             this.RuleFor(model => model.Payment)
                 .SetValidator(new PaymentModelValidator());
 
-            this.RuleFor(model => model.Store)
+            this.RuleFor(model => model.Payee)
                 .NotEmpty()
-                .WithMessage("Transaction store is required.");
+                .WithMessage("Transaction payee is required.");
 
             this.RuleFor(model => model.Tags)
                 .NotNull()

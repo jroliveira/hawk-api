@@ -12,7 +12,7 @@
             this.Id = entity.Id.ToString();
             this.Type = entity.Type;
             this.Payment = entity.Payment;
-            this.Store = entity.Store;
+            this.Payee = entity.Payee;
             this.Tags = entity.Tags.Select(tag => tag.Value);
         }
 
@@ -22,7 +22,7 @@
 
         public PaymentModel Payment { get; }
 
-        public string Store { get; }
+        public string Payee { get; }
 
         public IEnumerable<string> Tags { get; }
 

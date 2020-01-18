@@ -54,16 +54,16 @@
     <None Update="Domain\PaymentMethod\Data.Neo4J\GetPaymentMethodsByStore.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Store\Data.Neo4J\DeleteStore.cql">
+    <None Update="Domain\Payee\Data.Neo4J\DeletePayee.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Store\Data.Neo4J\GetStoreByName.cql">
+    <None Update="Domain\Payee\Data.Neo4J\GetPayeeByName.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Store\Data.Neo4J\GetStores.cql">
+    <None Update="Domain\Payee\Data.Neo4J\GetPayees.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Store\Data.Neo4J\UpsertStore.cql">
+    <None Update="Domain\Payee\Data.Neo4J\UpsertPayee.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Domain\Tag\Data.Neo4J\DeleteTag.cql">

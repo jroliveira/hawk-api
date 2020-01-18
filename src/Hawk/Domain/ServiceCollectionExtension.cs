@@ -3,8 +3,8 @@
     using Hawk.Domain.Account;
     using Hawk.Domain.Configuration;
     using Hawk.Domain.Currency;
+    using Hawk.Domain.Payee;
     using Hawk.Domain.PaymentMethod;
-    using Hawk.Domain.Store;
     using Hawk.Domain.Tag;
     using Hawk.Domain.Transaction;
 
@@ -16,8 +16,8 @@
             .ConfigureAccount()
             .ConfigureConfiguration()
             .ConfigureCurrency()
+            .ConfigurePayee()
             .ConfigurePaymentMethod()
-            .ConfigureStore()
             .ConfigureTag()
             .ConfigureTransaction();
     }

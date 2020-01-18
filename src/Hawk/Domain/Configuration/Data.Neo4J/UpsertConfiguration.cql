@@ -7,15 +7,15 @@ WHERE
 WITH
   account
 
-// (:Store)
+// (:Payee)
 
 MATCH
-  (store:Store)-[:BELONGS]->(account)
+  (payee:Payee)-[:BELONGS]->(account)
 WHERE
-  store.name = $store
+  payee.name = $payee
 WITH
   account,
-  store
+  payee
 
 // (:PaymentMethod)
 
@@ -25,7 +25,7 @@ WHERE
   paymentMethod.name = $paymentMethod
 WITH
   account,
-  store,
+  payee,
   paymentMethod
 
 // (:Currency)
@@ -36,7 +36,7 @@ WHERE
   currency.name = $currency
 WITH
   account,
-  store,
+  payee,
   paymentMethod,
   currency
 
@@ -48,20 +48,20 @@ WHERE
   tag.name in $tags
 WITH
   account,
-  store,
+  payee,
   paymentMethod,
   currency,
   tag
 
 OPTIONAL MATCH
-  (store)-[:HAS]->(storeTag:Tag)-[:BELONGS]->(account)
+  (payee)-[:HAS]->(payeeTag:Tag)-[:BELONGS]->(account)
 WITH
   account,
-  store,
+  payee,
   paymentMethod,
   currency,
   tag,
-  storeTag
+  payeeTag
 
 // (:Configuration)
   
@@ -75,7 +75,7 @@ SET
 MERGE
   (configuration)-[:BELONGS]->(account)
 MERGE
-  (configuration)-[:CONFIGURED_WITH]->(store)
+  (configuration)-[:CONFIGURED_WITH]->(payee)
 MERGE
   (configuration)-[:CONFIGURED_WITH]->(paymentMethod)
 MERGE
@@ -92,9 +92,9 @@ RETURN
     id: account.id,
 	email: account.email
   },
-  store: CASE WHEN store IS null THEN NULL ELSE {
-    name: store.name,
-	tags: COLLECT(distinct storeTag.name)
+  payee: CASE WHEN payee IS null THEN NULL ELSE {
+    name: payee.name,
+	tags: COLLECT(distinct payeeTag.name)
   } END,
   currency: {
     name: currency.name

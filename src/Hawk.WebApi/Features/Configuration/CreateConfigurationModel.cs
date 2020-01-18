@@ -10,8 +10,8 @@
 
     using static Hawk.Domain.Configuration.Configuration;
     using static Hawk.Domain.Currency.Currency;
+    using static Hawk.Domain.Payee.Payee;
     using static Hawk.Domain.PaymentMethod.PaymentMethod;
-    using static Hawk.Domain.Store.Store;
     using static Hawk.Domain.Tag.Tag;
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
@@ -22,14 +22,14 @@
             string type,
             string paymentMethod,
             string currency,
-            string store,
+            string payee,
             IEnumerable<string> tags)
         {
             this.Description = description;
             this.Type = type;
             this.PaymentMethod = paymentMethod;
             this.Currency = currency;
-            this.Store = store;
+            this.Payee = payee;
             this.Tags = tags;
         }
 
@@ -46,7 +46,7 @@
         public string Currency { get; }
 
         [Required]
-        public string Store { get; }
+        public string Payee { get; }
 
         [Required]
         public IEnumerable<string> Tags { get; }
@@ -56,7 +56,7 @@
             model.Description,
             NewPaymentMethod(model.PaymentMethod),
             NewCurrency(model.Currency),
-            NewStore(model.Store),
+            NewPayee(model.Payee),
             Some(model.Tags.Select(tag => NewTag(tag).ToOption())));
     }
 }

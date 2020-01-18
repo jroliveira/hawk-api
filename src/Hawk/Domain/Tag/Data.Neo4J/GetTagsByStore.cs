@@ -16,14 +16,14 @@
     using static Hawk.Domain.Tag.Data.Neo4J.TagMapping;
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
 
-    internal sealed class GetTagsByStore : IGetTagsByStore
+    internal sealed class GetTagsByPayee : IGetTagsByPayee
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("Tag", "Data.Neo4J", "GetTagsByStore.cql"));
+        private static readonly Option<string> Statement = ReadCypherScript(Combine("Tag", "Data.Neo4J", "GetTagsByPayee.cql"));
         private readonly Neo4JConnection connection;
         private readonly ILimit<int, Filter> limit;
         private readonly ISkip<int, Filter> skip;
 
-        public GetTagsByStore(
+        public GetTagsByPayee(
             Neo4JConnection connection,
             ILimit<int, Filter> limit,
             ISkip<int, Filter> skip)
@@ -33,12 +33,12 @@
             this.skip = skip;
         }
 
-        public async Task<Try<Page<Try<Tag>>>> GetResult(Email email, string store, Filter filter)
+        public async Task<Try<Page<Try<Tag>>>> GetResult(Email email, string payee, Filter filter)
         {
             var parameters = new
             {
                 email = email.Value,
-                store,
+                payee,
                 skip = this.skip.Apply(filter),
                 limit = this.limit.Apply(filter),
             };

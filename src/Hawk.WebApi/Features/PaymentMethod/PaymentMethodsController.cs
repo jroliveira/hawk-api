@@ -18,14 +18,14 @@
     public class PaymentMethodsController : BaseController
     {
         private readonly IGetPaymentMethods getPaymentMethods;
-        private readonly IGetPaymentMethodsByStore getPaymentMethodsByStore;
+        private readonly IGetPaymentMethodsByPayee getPaymentMethodsByPayee;
 
         public PaymentMethodsController(
             IGetPaymentMethods getPaymentMethods,
-            IGetPaymentMethodsByStore getPaymentMethodsByStore)
+            IGetPaymentMethodsByPayee getPaymentMethodsByPayee)
         {
             this.getPaymentMethods = getPaymentMethods;
-            this.getPaymentMethodsByStore = getPaymentMethodsByStore;
+            this.getPaymentMethodsByPayee = getPaymentMethodsByPayee;
         }
 
         /// <summary>
@@ -47,19 +47,19 @@
         }
 
         /// <summary>
-        /// Get by store.
+        /// Get by payee.
         /// </summary>
-        /// <param name="store"></param>
+        /// <param name="payee"></param>
         /// <returns></returns>
-        [HttpGet("stores/{store}/payment-methods")]
+        [HttpGet("payees/{payee}/payment-methods")]
         [ProducesResponseType(typeof(Try<Page<Try<PaymentMethodModel>>>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetPaymentMethodsByStore(string store)
+        public async Task<IActionResult> GetPaymentMethodsByPayee(string payee)
         {
-            var entities = await this.getPaymentMethodsByStore.GetResult(this.GetUser(), store, this.Request.QueryString.Value);
+            var entities = await this.getPaymentMethodsByPayee.GetResult(this.GetUser(), payee, this.Request.QueryString.Value);
 
             return entities.Match(
                 this.Error<Page<Try<PaymentMethodModel>>>,

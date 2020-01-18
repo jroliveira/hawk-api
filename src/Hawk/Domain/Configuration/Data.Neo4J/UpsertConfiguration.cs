@@ -34,7 +34,7 @@
                     type = some.Type,
                     paymentMethod = some.PaymentMethod.Value,
                     currency = some.Currency.Value,
-                    store = some.Store.Value,
+                    payee = some.Payee.Value,
                     tags = some.Tags.Select(tag => tag.Value).ToArray(),
                 }),
             () => Task(Failure<Configuration>(new NullObjectException("Configuration is required."))));
