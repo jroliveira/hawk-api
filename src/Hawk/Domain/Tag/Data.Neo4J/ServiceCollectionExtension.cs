@@ -10,7 +10,7 @@
             .AddScoped<IUpsertTag, UpsertTag>()
             .AddScoped<IDeleteTag, DeleteTag>()
             .AddScoped<IGetTags, GetTags>()
-            .AddScoped<IGetTagsByStore, GetTagsByStore>()
+            .AddScoped<IGetTagsByPayee, GetTagsByPayee>()
             .AddScoped<IGetTagByName, GetTagByName>();
     }
 }

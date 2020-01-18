@@ -1,4 +1,4 @@
-﻿namespace Hawk.Domain.Store
+﻿namespace Hawk.Domain.Payee
 {
     using System.Threading.Tasks;
 
@@ -8,8 +8,8 @@
 
     using Http.Query.Filter;
 
-    public interface IGetStores
+    public interface IGetPayees
     {
-        Task<Try<Page<Try<Store>>>> GetResult(Email email, Filter filter);
+        Task<Try<Page<Try<Payee>>>> GetResult(Email email, Filter filter);
     }
 }

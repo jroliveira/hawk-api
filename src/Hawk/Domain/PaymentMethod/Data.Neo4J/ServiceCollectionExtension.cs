@@ -8,6 +8,6 @@
     {
         public static IServiceCollection ConfigurePaymentMethodWithNeo4J(this IServiceCollection @this) => @this
             .AddScoped<IGetPaymentMethods, GetPaymentMethods>()
-            .AddScoped<IGetPaymentMethodsByStore, GetPaymentMethodsByStore>();
+            .AddScoped<IGetPaymentMethodsByPayee, GetPaymentMethodsByPayee>();
     }
 }

@@ -11,8 +11,8 @@
 
     using static Hawk.Domain.Configuration.Configuration;
     using static Hawk.Domain.Currency.Data.Neo4J.CurrencyMapping;
+    using static Hawk.Domain.Payee.Data.Neo4J.PayeeMapping;
     using static Hawk.Domain.PaymentMethod.Data.Neo4J.PaymentMethodMapping;
-    using static Hawk.Domain.Store.Data.Neo4J.StoreMapping;
     using static Hawk.Domain.Tag.Data.Neo4J.TagMapping;
     using static Hawk.Infrastructure.Data.Neo4J.Neo4JRecord;
     using static Hawk.Infrastructure.Monad.Utils.Util;
@@ -25,7 +25,7 @@
                 record.Get<string>("description"),
                 MapPaymentMethod(record.GetRecord("paymentMethod")),
                 MapCurrency(record.GetRecord("currency")),
-                MapStore(record.GetRecord("store")),
+                MapPayee(record.GetRecord("payee")),
                 Some(record.GetListOfNeo4JRecord("tags").Select(tag => MapTag(tag).ToOption()))),
             () => new NotFoundException("Configuration not found."));
     }

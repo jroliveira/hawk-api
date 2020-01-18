@@ -9,18 +9,18 @@ WITH
   transaction
 
 OPTIONAL MATCH
-  (transaction)-[:IN]->(store:Store)-[:BELONGS]->(account)
+  (transaction)-[:IN]->(payee:Payee)-[:BELONGS]->(account)
 WITH
   account,
   transaction,
-  store
+  payee
 
 OPTIONAL MATCH 
   (transaction)-[:PAID_WITH]->(paymentMethod:PaymentMethod)-[:BELONGS]->(account)
 WITH
   account,
   transaction,
-  store,
+  payee,
   paymentMethod
   
 OPTIONAL MATCH 
@@ -28,7 +28,7 @@ OPTIONAL MATCH
 WITH
   account,
   transaction,
-  store,
+  payee,
   paymentMethod,
   currency
 
@@ -36,21 +36,21 @@ OPTIONAL MATCH
   (transaction)-[:HAS]->(tag:Tag)-[:BELONGS]->(account)
 WITH
   account,
-  store,
+  payee,
   paymentMethod,
   currency,
   tag,
   transaction
 
 OPTIONAL MATCH
-  (store)-[:HAS]->(storeTag:Tag)-[:BELONGS]->(account)
+  (payee)-[:HAS]->(payeeTag:Tag)-[:BELONGS]->(account)
 WITH
   account,
-  store,
+  payee,
   paymentMethod,
   currency,
   tag,
-  storeTag,
+  payeeTag,
   transaction
   
 RETURN 
@@ -60,9 +60,9 @@ RETURN
     id: account.id,
 	email: account.email
   },
-  store: CASE WHEN store IS null THEN NULL ELSE {
-    name: store.name,
-	tags: collect(distinct storeTag.name)
+  payee: CASE WHEN payee IS null THEN NULL ELSE {
+    name: payee.name,
+	tags: collect(distinct payeeTag.name)
   } END,
   currency: {
     name: currency.name

@@ -1,4 +1,4 @@
-﻿namespace Hawk.Domain.Store
+﻿namespace Hawk.Domain.Payee
 {
     using Hawk.Domain.Shared;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
@@ -7,18 +7,18 @@
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
-    public sealed class Store : ValueObject<Store, string>
+    public sealed class Payee : ValueObject<Payee, string>
     {
-        private Store(string name, uint transactions)
+        private Payee(string name, uint transactions)
             : base(name) => this.Transactions = transactions;
 
         public uint Transactions { get; }
 
-        public static Try<Store> NewStore(
+        public static Try<Payee> NewPayee(
             Option<string> name,
             Option<uint> transactions = default) =>
                 name
-                ? new Store(name.Get(), transactions.GetOrElse(default))
-                : Failure<Store>(new InvalidObjectException("Invalid store."));
+                ? new Payee(name.Get(), transactions.GetOrElse(default))
+                : Failure<Payee>(new InvalidObjectException("Invalid payee."));
     }
 }

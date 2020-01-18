@@ -1,6 +1,6 @@
-﻿namespace Hawk.Test.Domain.Store
+﻿namespace Hawk.Test.Domain.Payee
 {
-    public class StoreTests
+    public class PayeeTests
     {
     }
 }

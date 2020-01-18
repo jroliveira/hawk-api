@@ -8,8 +8,8 @@
 
     using Http.Query.Filter;
 
-    public interface IGetPaymentMethodsByStore
+    public interface IGetPaymentMethodsByPayee
     {
-        Task<Try<Page<Try<PaymentMethod>>>> GetResult(Email email, string store, Filter filter);
+        Task<Try<Page<Try<PaymentMethod>>>> GetResult(Email email, string payee, Filter filter);
     }
 }

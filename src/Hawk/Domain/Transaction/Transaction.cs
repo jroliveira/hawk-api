@@ -4,8 +4,8 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using Hawk.Domain.Payee;
     using Hawk.Domain.Shared;
-    using Hawk.Domain.Store;
     using Hawk.Domain.Tag;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
@@ -17,12 +17,12 @@
         protected Transaction(
             Guid id,
             Payment payment,
-            Store store,
+            Payee payee,
             IEnumerable<Tag> tags)
             : base(id)
         {
             this.Payment = payment;
-            this.Store = store;
+            this.Payee = payee;
             this.Tags = tags.ToList();
         }
 
@@ -30,22 +30,22 @@
 
         public Payment Payment { get; }
 
-        public Store Store { get; }
+        public Payee Payee { get; }
 
         public IReadOnlyCollection<Tag> Tags { get; }
 
         protected static Try<Transaction> NewTransaction(
             Option<Guid> id,
             Option<Payment> payment,
-            Option<Store> store,
+            Option<Payee> payee,
             Option<IEnumerable<Option<Tag>>> tags,
-            Func<(Guid Id, Payment Payment, Store Store, IEnumerable<Tag> Tags), Try<Transaction>> createTransaction) =>
+            Func<(Guid Id, Payment Payment, Payee Payee, IEnumerable<Tag> Tags), Try<Transaction>> createTransaction) =>
                 id
                 && payment
-                && store
+                && payee
                 && tags
                 && tags.Get().All(_ => _)
-                ? createTransaction((id.Get(), payment.Get(), store.Get(), tags.Get().Select(tag => tag.Get())))
+                ? createTransaction((id.Get(), payment.Get(), payee.Get(), tags.Get().Select(tag => tag.Get())))
                 : Failure<Transaction>(new InvalidObjectException("Invalid transaction."));
     }
 }

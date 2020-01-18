@@ -1,9 +1,9 @@
-﻿namespace Hawk.Domain.Store.Data.Neo4J
+﻿namespace Hawk.Domain.Payee.Data.Neo4J
 {
     using System.Threading.Tasks;
 
+    using Hawk.Domain.Payee;
     using Hawk.Domain.Shared;
-    using Hawk.Domain.Store;
     using Hawk.Infrastructure.Data.Neo4J;
     using Hawk.Infrastructure.Monad;
 
@@ -11,12 +11,12 @@
 
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
 
-    internal sealed class DeleteStore : IDeleteStore
+    internal sealed class DeletePayee : IDeletePayee
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("Store", "Data.Neo4J", "DeleteStore.cql"));
+        private static readonly Option<string> Statement = ReadCypherScript(Combine("Payee", "Data.Neo4J", "DeletePayee.cql"));
         private readonly Neo4JConnection connection;
 
-        public DeleteStore(Neo4JConnection connection) => this.connection = connection;
+        public DeletePayee(Neo4JConnection connection) => this.connection = connection;
 
         public Task<Try<Unit>> Execute(Email email, string name) => this.connection.ExecuteCypher(
             Statement,

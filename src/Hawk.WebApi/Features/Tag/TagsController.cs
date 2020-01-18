@@ -20,7 +20,7 @@
     public class TagsController : BaseController
     {
         private readonly IGetTags getTags;
-        private readonly IGetTagsByStore getTagsByStore;
+        private readonly IGetTagsByPayee getTagsByPayee;
         private readonly IGetTagByName getTagByName;
         private readonly IUpsertTag upsertTag;
         private readonly IDeleteTag deleteTag;
@@ -28,13 +28,13 @@
 
         public TagsController(
             IGetTags getTags,
-            IGetTagsByStore getTagsByStore,
+            IGetTagsByPayee getTagsByPayee,
             IGetTagByName getTagByName,
             IUpsertTag upsertTag,
             IDeleteTag deleteTag)
         {
             this.getTags = getTags;
-            this.getTagsByStore = getTagsByStore;
+            this.getTagsByPayee = getTagsByPayee;
             this.getTagByName = getTagByName;
             this.upsertTag = upsertTag;
             this.deleteTag = deleteTag;
@@ -60,19 +60,19 @@
         }
 
         /// <summary>
-        /// Get by store.
+        /// Get by payee.
         /// </summary>
-        /// <param name="store"></param>
+        /// <param name="payee"></param>
         /// <returns></returns>
-        [HttpGet("stores/{store}/tags")]
+        [HttpGet("payees/{payee}/tags")]
         [ProducesResponseType(typeof(Try<Page<Try<TagModel>>>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetTagsByStore(string store)
+        public async Task<IActionResult> GetTagsByPayee(string payee)
         {
-            var entities = await this.getTagsByStore.GetResult(this.GetUser(), store, this.Request.QueryString.Value);
+            var entities = await this.getTagsByPayee.GetResult(this.GetUser(), payee, this.Request.QueryString.Value);
 
             return entities.Match(
                 this.Error<Page<Try<TagModel>>>,

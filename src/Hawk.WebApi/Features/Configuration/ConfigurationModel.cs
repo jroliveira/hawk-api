@@ -13,7 +13,7 @@
             this.Description = entity.Description;
             this.PaymentMethod = entity.PaymentMethod;
             this.Currency = entity.Currency;
-            this.Store = entity.Store;
+            this.Payee = entity.Payee;
             this.Tags = entity.Tags.Select(tag => tag.Value);
         }
 
@@ -25,7 +25,7 @@
 
         public string Currency { get; }
 
-        public string Store { get; }
+        public string Payee { get; }
 
         public IEnumerable<string> Tags { get; }
 

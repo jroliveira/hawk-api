@@ -1,4 +1,4 @@
-﻿namespace Hawk.WebApi.IntegrationTest.Features.Store
+﻿namespace Hawk.WebApi.IntegrationTest.Features.Payee
 {
     using System.Threading.Tasks;
 
@@ -12,15 +12,15 @@
 
     using static System.Net.HttpStatusCode;
 
-    public sealed class StoresControllerTests : ControllerBaseTests
+    public sealed class PayeesControllerTests : ControllerBaseTests
     {
         private readonly ITestOutputHelper output;
 
-        public StoresControllerTests(ITestOutputHelper output) => this.output = output;
+        public PayeesControllerTests(ITestOutputHelper output) => this.output = output;
 
         [Theory]
-        [InlineData("v1/stores")]
-        [InlineData("v1/stores/test")]
+        [InlineData("v1/payees")]
+        [InlineData("v1/payees/test")]
         public async Task Get_GivenUnauthorizedClient_WhenGetUrl_ThenStatusCodeShouldBeUnauthorized(string requestUri)
         {
             var testServer = new TestServerFixture<Startup>();
@@ -32,9 +32,9 @@
         }
 
         [Fact]
-        public async Task GetStores_GivenAuthorizedClient_WhenGetStores_ThenStatusCodeShouldBeOk()
+        public async Task GetPayees_GivenAuthorizedClient_WhenGetPayees_ThenStatusCodeShouldBeOk()
         {
-            var actual = await this.AuthorizedClient.GetAsync("v1/stores");
+            var actual = await this.AuthorizedClient.GetAsync("v1/payees");
             this.output.WriteLine(await actual.Content.ReadAsStringAsync());
 
             actual.StatusCode.Should().Be(OK);
