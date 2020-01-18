@@ -22,22 +22,15 @@
         public UpsertTag(Neo4JConnection connection) => this.connection = connection;
 
         public Task<Try<Tag>> Execute(Email email, string name, Option<Tag> entity) => entity.Match(
-            async some =>
-            {
-                var data = await this.connection.ExecuteCypherScalar(
-                    MapTag,
-                    Statement,
-                    new
-                    {
-                        email = email.Value,
-                        name,
-                        newName = some.Value,
-                    });
-
-                return data.Match<Try<Tag>>(
-                    _ => _,
-                    tag => tag.Tag);
-            },
+            some => this.connection.ExecuteCypherScalar(
+                MapTag,
+                Statement,
+                new
+                {
+                    email = email.Value,
+                    name,
+                    newName = some.Value,
+                }),
             () => Task(Failure<Tag>(new NullObjectException("Tag is required."))));
     }
 }

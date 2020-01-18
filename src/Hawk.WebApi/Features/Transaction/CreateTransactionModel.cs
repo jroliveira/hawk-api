@@ -9,6 +9,7 @@
     using Hawk.Domain.Tag;
     using Hawk.Domain.Transaction;
     using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Monad.Extensions;
 
     using static System.Guid;
 
@@ -18,16 +19,16 @@
     using static Hawk.Domain.Transaction.Debit;
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
-    public class NewTransactionModel
+    public class CreateTransactionModel
     {
-        private static readonly IReadOnlyDictionary<string, Func<Option<Guid>, Option<Payment>, Option<Store>, Option<IEnumerable<Tag>>, Try<Transaction>>> Types =
-            new Dictionary<string, Func<Option<Guid>, Option<Payment>, Option<Store>, Option<IEnumerable<Tag>>, Try<Transaction>>>
+        private static readonly IReadOnlyDictionary<string, Func<Option<Guid>, Option<Payment>, Option<Store>, Option<IEnumerable<Option<Tag>>>, Try<Transaction>>> Types =
+            new Dictionary<string, Func<Option<Guid>, Option<Payment>, Option<Store>, Option<IEnumerable<Option<Tag>>>, Try<Transaction>>>
             {
                 { "Debit", NewDebit },
                 { "Credit", NewCredit },
             };
 
-        public NewTransactionModel(
+        public CreateTransactionModel(
             string type,
             PaymentModel payment,
             string store,
@@ -51,15 +52,9 @@
         [Required]
         public IEnumerable<string> Tags { get; }
 
-        public static implicit operator Option<Transaction>(NewTransactionModel model) => MapNewTransaction(NewGuid(), model);
+        public static implicit operator Option<Transaction>(CreateTransactionModel model) => MapTransaction(NewGuid(), model);
 
-        public static implicit operator NewTransactionModel(Transaction entity) => new NewTransactionModel(
-            entity.Type,
-            entity.Payment,
-            entity.Store,
-            entity.Tags.Select(tag => tag.Value));
-
-        public static Option<Transaction> MapNewTransaction(Guid id, NewTransactionModel model)
+        public static Option<Transaction> MapTransaction(Guid id, CreateTransactionModel model)
         {
             if (!Types.TryGetValue(model.Type, out var newTransaction))
             {
@@ -80,7 +75,7 @@
                 id,
                 model.Payment,
                 NewStore(model.Store),
-                Some(tags.Select(tag => tag.Get())));
+                Some(model.Tags.Select(tag => NewTag(tag).ToOption())));
         }
     }
 }

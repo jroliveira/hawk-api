@@ -2,9 +2,9 @@
 {
     using FluentValidation;
 
-    internal sealed class NewTransactionModelValidator : AbstractValidator<NewTransactionModel>
+    internal sealed class CreateTransactionModelValidator : AbstractValidator<CreateTransactionModel>
     {
-        internal NewTransactionModelValidator()
+        internal CreateTransactionModelValidator()
         {
             this.RuleFor(model => model.Type)
                 .NotEmpty()

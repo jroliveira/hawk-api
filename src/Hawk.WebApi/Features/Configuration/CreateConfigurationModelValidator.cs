@@ -2,9 +2,9 @@
 {
     using FluentValidation;
 
-    internal sealed class NewConfigurationModelValidator : AbstractValidator<NewConfigurationModel>
+    internal sealed class CreateConfigurationModelValidator : AbstractValidator<CreateConfigurationModel>
     {
-        internal NewConfigurationModelValidator()
+        internal CreateConfigurationModelValidator()
         {
             this.RuleFor(model => model.Type)
                 .NotEmpty()

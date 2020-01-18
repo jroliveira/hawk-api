@@ -9,11 +9,12 @@
     using Hawk.Domain.Transaction;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Monad.Extensions;
 
     using Neo4j.Driver;
 
     using static Hawk.Domain.Store.Data.Neo4J.StoreMapping;
-    using static Hawk.Domain.Tag.Tag;
+    using static Hawk.Domain.Tag.Data.Neo4J.TagMapping;
     using static Hawk.Domain.Transaction.Credit;
     using static Hawk.Domain.Transaction.Data.Neo4J.PaymentMapping;
     using static Hawk.Domain.Transaction.Debit;
@@ -22,14 +23,8 @@
 
     internal static class TransactionMapping
     {
-        private const string Type = "type";
-        private const string Payment = "payment";
-        private const string Id = "id";
-        private const string Tags = "tags";
-        private const string Store = "store";
-
-        private static readonly IReadOnlyDictionary<string, Func<Option<Guid>, Option<Payment>, Option<Store>, Option<IEnumerable<Tag>>, Try<Transaction>>> Types =
-            new Dictionary<string, Func<Option<Guid>, Option<Payment>, Option<Store>, Option<IEnumerable<Tag>>, Try<Transaction>>>
+        private static readonly IReadOnlyDictionary<string, Func<Option<Guid>, Option<Payment>, Option<Store>, Option<IEnumerable<Option<Tag>>>, Try<Transaction>>> Types =
+            new Dictionary<string, Func<Option<Guid>, Option<Payment>, Option<Store>, Option<IEnumerable<Option<Tag>>>, Try<Transaction>>>
         {
             { "Debit", NewDebit },
             { "Credit", NewCredit },
@@ -39,7 +34,7 @@
             record =>
             {
                 var type = record
-                    .GetList(Type)
+                    .GetListOfString("type")
                     .Single(t => Types.ContainsKey(t.ToString()));
 
                 if (!Types.TryGetValue(type, out var newTransaction))
@@ -47,21 +42,11 @@
                     return new InvalidObjectException("Invalid transaction.");
                 }
 
-                var tags = record
-                    .GetList(Tags)
-                    .Select(tag => NewTag(tag))
-                    .ToList();
-
-                if (tags.Any(tag => !tag))
-                {
-                    return new InvalidObjectException("Invalid transaction.");
-                }
-
                 return newTransaction(
-                    record.Get<Guid>(Id),
-                    MapPayment(record.GetRecord(Payment)),
-                    MapStore(record.GetRecord(Store)),
-                    Some(tags.Select(tag => tag.Get())));
+                    record.Get<Guid>("id"),
+                    MapPayment(record.GetRecord("payment")),
+                    MapStore(record.GetRecord("store")),
+                    Some(record.GetListOfNeo4JRecord("tags").Select(tag => MapTag(tag).ToOption())));
             },
             () => new NotFoundException("Transaction not found."));
     }

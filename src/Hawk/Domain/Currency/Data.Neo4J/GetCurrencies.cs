@@ -32,7 +32,7 @@
             this.skip = skip;
         }
 
-        public async Task<Try<Page<Try<(Currency Currency, uint Count)>>>> GetResult(Email email, Filter filter)
+        public async Task<Try<Page<Try<Currency>>>> GetResult(Email email, Filter filter)
         {
             var parameters = new
             {
@@ -43,9 +43,9 @@
 
             var data = await this.connection.ExecuteCypher(MapCurrency, Statement, parameters);
 
-            return data.Match<Try<Page<Try<(Currency, uint)>>>>(
+            return data.Match<Try<Page<Try<Currency>>>>(
                 _ => _,
-                items => new Page<Try<(Currency, uint)>>(items, parameters.skip, parameters.limit));
+                items => new Page<Try<Currency>>(items, parameters.skip, parameters.limit));
         }
     }
 }

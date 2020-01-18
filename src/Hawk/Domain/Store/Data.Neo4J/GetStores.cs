@@ -33,7 +33,7 @@
             this.skip = skip;
         }
 
-        public async Task<Try<Page<Try<(Store Store, uint Count)>>>> GetResult(Email email, Filter filter)
+        public async Task<Try<Page<Try<Store>>>> GetResult(Email email, Filter filter)
         {
             var parameters = new
             {
@@ -44,9 +44,9 @@
 
             var data = await this.connection.ExecuteCypher(MapStore, Statement, parameters);
 
-            return data.Match<Try<Page<Try<(Store, uint)>>>>(
+            return data.Match<Try<Page<Try<Store>>>>(
                 _ => _,
-                items => new Page<Try<(Store, uint)>>(items, parameters.skip, parameters.limit));
+                items => new Page<Try<Store>>(items, parameters.skip, parameters.limit));
         }
     }
 }

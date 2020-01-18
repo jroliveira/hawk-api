@@ -15,12 +15,10 @@ SET
 MERGE
   (tag)-[:BELONGS]->(account)
 WITH
-  account,
   tag
 
 RETURN
 { 
   name: tag.name,
-  total: count(tag.name)
-} as data;
-
+  transactions: SIZE((:Transaction)-[:HAS]->(tag))
+} AS data;

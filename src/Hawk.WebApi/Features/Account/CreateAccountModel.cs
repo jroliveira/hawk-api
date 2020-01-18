@@ -7,13 +7,13 @@
 
     using static Hawk.Domain.Account.Account;
 
-    public sealed class NewAccountModel
+    public sealed class CreateAccountModel
     {
-        public NewAccountModel(string email) => this.Email = email;
+        public CreateAccountModel(string email) => this.Email = email;
 
         [Required]
         public string Email { get; }
 
-        public static implicit operator Option<Account>(NewAccountModel model) => NewAccount(model.Email);
+        public static implicit operator Option<Account>(CreateAccountModel model) => NewAccount(model.Email);
     }
 }

@@ -15,6 +15,7 @@
             {
                 new Link("/v1", "self", Get),
                 new Link("/v1/account", "me", Get),
+                new Link("/v1/currencies", "currencies", Get),
                 new Link("/v1/payment-methods", "payment-methods", Get),
                 new Link("/v1/stores", "stores", Get),
                 new Link("/v1/tags", "tags", Get),

@@ -55,7 +55,12 @@
             return new Neo4JRecord(this.data[key]);
         }
 
-        internal IEnumerable<string> GetList(string key) => this
+        internal IEnumerable<Neo4JRecord> GetListOfNeo4JRecord(string key) => this
+            .Get<IList<Dictionary<string, object>>>(key)
+            .GetOrElse(new List<Dictionary<string, object>>())
+            .Select(item => new Neo4JRecord(item));
+
+        internal IEnumerable<string> GetListOfString(string key) => this
             .Get<IList<object>>(key)
             .GetOrElse(new List<object>())
             .Select(item => item.ToString());

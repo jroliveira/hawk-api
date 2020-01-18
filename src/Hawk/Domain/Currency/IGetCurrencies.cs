@@ -10,6 +10,6 @@
 
     public interface IGetCurrencies
     {
-        Task<Try<Page<Try<(Currency Currency, uint Count)>>>> GetResult(Email email, Filter filter);
+        Task<Try<Page<Try<Currency>>>> GetResult(Email email, Filter filter);
     }
 }

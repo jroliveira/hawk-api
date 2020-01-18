@@ -71,4 +71,4 @@ RETURN
 	name: paymentMethod.name
   } END,
   tags: collect(distinct tag.name)
-} as data;
+} AS data;

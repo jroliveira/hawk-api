@@ -11,7 +11,7 @@
     using Microsoft.AspNetCore.Mvc;
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
-    using static Hawk.WebApi.Features.Configuration.NewConfigurationModel;
+    using static Hawk.WebApi.Features.Configuration.ConfigurationModel;
 
     [ApiController]
     [ApiVersion("1")]
@@ -20,7 +20,7 @@
     {
         private readonly IGetConfigurationByDescription getConfigurationByDescription;
         private readonly IUpsertConfiguration upsertConfiguration;
-        private readonly NewConfigurationModelValidator validator;
+        private readonly CreateConfigurationModelValidator validator;
 
         public ConfigurationsController(
             IGetConfigurationByDescription getConfigurationByDescription,
@@ -28,7 +28,7 @@
         {
             this.getConfigurationByDescription = getConfigurationByDescription;
             this.upsertConfiguration = upsertConfiguration;
-            this.validator = new NewConfigurationModelValidator();
+            this.validator = new CreateConfigurationModelValidator();
         }
 
         /// <summary>
@@ -47,7 +47,7 @@
 
             return entity.Match(
                 this.Error<ConfigurationModel>,
-                configuration => this.Ok(Success(new ConfigurationModel(configuration))));
+                configuration => this.Ok(Success(NewConfigurationModel(configuration))));
         }
 
         /// <summary>
@@ -66,7 +66,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateConfiguration(
             [FromRoute] string description,
-            [FromBody] NewConfigurationModel request)
+            [FromBody] CreateConfigurationModel request)
         {
             var validated = await this.validator.ValidateAsync(request);
             if (!validated.IsValid)
@@ -79,15 +79,15 @@
             return await entity.Match(
                 async _ =>
                 {
-                    var inserted = await this.upsertConfiguration.Execute(this.GetUser(), MapNewConfiguration(description, request));
+                    var inserted = await this.upsertConfiguration.Execute(this.GetUser(), description, request);
 
                     return inserted.Match(
                         this.Error<ConfigurationModel>,
-                        configuration => this.Created(Success(new ConfigurationModel(configuration))));
+                        configuration => this.Created(Success(NewConfigurationModel(configuration))));
                 },
                 async _ =>
                 {
-                    var updated = await this.upsertConfiguration.Execute(this.GetUser(), MapNewConfiguration(description, request));
+                    var updated = await this.upsertConfiguration.Execute(this.GetUser(), description, request);
 
                     return updated.Match(
                         this.Error<ConfigurationModel>,

@@ -7,12 +7,14 @@ MATCH
 WHERE
   account.email = $email
   AND store.name = $store
+WITH
+  DISTINCT paymentMethod
 
 RETURN
 { 
   name: paymentMethod.name,
-  total: count(paymentMethod.name)
-} as data
+  transactions: SIZE((:Transaction)-[:PAID_WITH]->(paymentMethod))
+} AS data
 
 SKIP 
   $skip 

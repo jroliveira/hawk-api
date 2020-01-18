@@ -23,7 +23,7 @@
         private readonly IGetCurrencyByName getCurrencyByName;
         private readonly IUpsertCurrency upsertCurrency;
         private readonly IDeleteCurrency deleteCurrency;
-        private readonly NewCurrencyModelValidator validator;
+        private readonly CreateCurrencyModelValidator validator;
 
         public CurrenciesController(
             IGetCurrencies getCurrencies,
@@ -35,7 +35,7 @@
             this.getCurrencyByName = getCurrencyByName;
             this.upsertCurrency = upsertCurrency;
             this.deleteCurrency = deleteCurrency;
-            this.validator = new NewCurrencyModelValidator();
+            this.validator = new CreateCurrencyModelValidator();
         }
 
         /// <summary>
@@ -53,7 +53,7 @@
 
             return entities.Match(
                 this.Error<Page<Try<CurrencyModel>>>,
-                page => this.Ok(MapCurrency(page)));
+                page => this.Ok(page.ToPage(NewCurrencyModel)));
         }
 
         /// <summary>
@@ -73,7 +73,7 @@
 
             return entity.Match(
                 this.Error<CurrencyModel>,
-                currency => this.Ok(Success(new CurrencyModel(currency))));
+                currency => this.Ok(Success(NewCurrencyModel(currency))));
         }
 
         /// <summary>
@@ -87,7 +87,7 @@
         [ProducesResponseType(403)]
         [ProducesResponseType(409)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> CreateCurrency([FromBody] NewCurrencyModel request)
+        public async Task<IActionResult> CreateCurrency([FromBody] CreateCurrencyModel request)
         {
             var validated = await this.validator.ValidateAsync(request);
             if (!validated.IsValid)
@@ -104,7 +104,7 @@
 
                     return inserted.Match(
                         this.Error<CurrencyModel>,
-                        currency => this.Created(currency.Value, Success(new CurrencyModel(currency))));
+                        currency => this.Created(currency.Value, Success(NewCurrencyModel(currency))));
                 },
                 _ => Task(this.Error<CurrencyModel>(new AlreadyExistsException("Currency already exists."))));
         }
@@ -125,7 +125,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateCurrency(
             [FromRoute] string name,
-            [FromBody] NewCurrencyModel request)
+            [FromBody] CreateCurrencyModel request)
         {
             var validated = await this.validator.ValidateAsync(request);
             if (!validated.IsValid)
@@ -142,7 +142,7 @@
 
                     return inserted.Match(
                         this.Error<CurrencyModel>,
-                        currency => this.Created(Success(new CurrencyModel(currency))));
+                        currency => this.Created(Success(NewCurrencyModel(currency))));
                 },
                 async _ =>
                 {

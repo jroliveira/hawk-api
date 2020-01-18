@@ -10,6 +10,6 @@
 
     public interface IGetTagsByStore
     {
-        Task<Try<Page<Try<(Tag Tag, uint Count)>>>> GetResult(Email email, string store, Filter filter);
+        Task<Try<Page<Try<Tag>>>> GetResult(Email email, string store, Filter filter);
     }
 }

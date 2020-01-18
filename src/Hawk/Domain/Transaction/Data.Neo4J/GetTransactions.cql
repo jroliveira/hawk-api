@@ -39,30 +39,19 @@ WITH
   store,
   paymentMethod,
   currency,
-  tag
-
-OPTIONAL MATCH
-  (store)-[:HAS]->(storeTag:Tag)-[:BELONGS]->(account)
-WITH
-  account,
-  transaction,
-  store,
-  paymentMethod,
-  currency,
-  tag,
-  storeTag
+  COLLECT(DISTINCT tag) AS tags
 
 RETURN 
 { 
   id: transaction.id,
-  type: labels(transaction),
+  type: LABELS(transaction),
   account: {
     id: account.id,
 	email: account.email
   },
   store: CASE WHEN store IS null THEN NULL ELSE {
     name: store.name,
-	tags: collect(distinct storeTag.name)
+	transactions: SIZE((:Transaction)-[:IN]->(store))
   } END,
   payment: {
     value: transaction.value,
@@ -70,14 +59,19 @@ RETURN
     month: transaction.month,
     day: transaction.day,
 	currency: {
-	  name: currency.name
+	  name: currency.name,
+      transactions: SIZE((:Transaction)-[:PAID_IN]->(currency))
 	},
     method: CASE WHEN paymentMethod IS null THEN NULL ELSE {
-	  name: paymentMethod.name
+	  name: paymentMethod.name,
+      transactions: SIZE((:Transaction)-[:PAID_WITH]->(paymentMethod))
 	} END
   },
-  tags: collect(distinct tag.name)
-} as data
+  tags: [tag IN tags | {
+    name: tag.name,
+    transactions: SIZE((:Transaction)-[:HAS]->(tag))
+  }]
+} AS data
 
 SKIP 
   $skip 

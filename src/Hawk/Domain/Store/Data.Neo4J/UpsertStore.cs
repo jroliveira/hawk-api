@@ -22,22 +22,15 @@
         public UpsertStore(Neo4JConnection connection) => this.connection = connection;
 
         public Task<Try<Store>> Execute(Email email, string name, Option<Store> entity) => entity.Match(
-            async some =>
-            {
-                var data = await this.connection.ExecuteCypherScalar(
-                    MapStore,
-                    Statement,
-                    new
-                    {
-                        email = email.Value,
-                        name,
-                        newName = some.Value,
-                    });
-
-                return data.Match<Try<Store>>(
-                    _ => _,
-                    store => store.Store);
-            },
+            some => this.connection.ExecuteCypherScalar(
+                MapStore,
+                Statement,
+                new
+                {
+                    email = email.Value,
+                    name,
+                    newName = some.Value,
+                }),
             () => Task(Failure<Store>(new NullObjectException("Store is required."))));
     }
 }

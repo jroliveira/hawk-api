@@ -43,7 +43,7 @@
 
             return entities.Match(
                 this.Error<Page<Try<PaymentMethodModel>>>,
-                page => this.Ok(MapPaymentMethod(page)));
+                page => this.Ok(page.ToPage(NewPaymentMethodModel)));
         }
 
         /// <summary>
@@ -63,7 +63,7 @@
 
             return entities.Match(
                 this.Error<Page<Try<PaymentMethodModel>>>,
-                page => this.Ok(MapPaymentMethod(page)));
+                page => this.Ok(page.ToPage(NewPaymentMethodModel)));
         }
     }
 }

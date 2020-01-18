@@ -38,13 +38,14 @@
             Option<Guid> id,
             Option<Payment> payment,
             Option<Store> store,
-            Option<IEnumerable<Tag>> tags,
+            Option<IEnumerable<Option<Tag>>> tags,
             Func<(Guid Id, Payment Payment, Store Store, IEnumerable<Tag> Tags), Try<Transaction>> createTransaction) =>
                 id
                 && payment
                 && store
                 && tags
-                ? createTransaction((id.Get(), payment.Get(), store.Get(), tags.Get()))
+                && tags.Get().All(_ => _)
+                ? createTransaction((id.Get(), payment.Get(), store.Get(), tags.Get().Select(tag => tag.Get())))
                 : Failure<Transaction>(new InvalidObjectException("Invalid transaction."));
     }
 }

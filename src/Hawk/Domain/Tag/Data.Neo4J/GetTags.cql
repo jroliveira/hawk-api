@@ -6,8 +6,8 @@ WHERE
 RETURN
 { 
   name: tag.name,
-  total: count(tag.name)
-} as data
+  transactions: SIZE((:Transaction)-[:HAS]->(tag))
+} AS data
 
 SKIP 
   $skip 

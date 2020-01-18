@@ -14,6 +14,7 @@
     using Microsoft.Extensions.Caching.Memory;
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
+    using static Hawk.WebApi.Features.Account.AccountModel;
 
     [ApiController]
     [ApiVersion("1")]
@@ -23,7 +24,7 @@
         private readonly IGetAccountByEmail getAccountByEmail;
         private readonly IUpsertAccount upsertAccount;
         private readonly IMemoryCache memoryCache;
-        private readonly NewAccountModelValidator validator;
+        private readonly CreateAccountModelValidator validator;
 
         public AccountsController(
             IGetAccountByEmail getAccountByEmail,
@@ -33,7 +34,7 @@
             this.getAccountByEmail = getAccountByEmail;
             this.upsertAccount = upsertAccount;
             this.memoryCache = memoryCache;
-            this.validator = new NewAccountModelValidator();
+            this.validator = new CreateAccountModelValidator();
         }
 
         /// <summary>
@@ -53,7 +54,7 @@
 
             return entity.Match(
                 this.Error<AccountModel>,
-                account => this.Ok(Success(new AccountModel(account))));
+                account => this.Ok(Success(NewAccountModel(account))));
         }
 
         /// <summary>
@@ -66,7 +67,7 @@
         [ProducesResponseType(typeof(Try<AccountModel>), 201)]
         [ProducesResponseType(409)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> CreateAccount([FromBody] NewAccountModel request)
+        public async Task<IActionResult> CreateAccount([FromBody] CreateAccountModel request)
         {
             var validated = await this.validator.ValidateAsync(request);
             if (!validated.IsValid)
@@ -83,7 +84,7 @@
 
                     return inserted.Match(
                         this.Error<AccountModel>,
-                        account => this.Created(account.Email, Success(new AccountModel(account))));
+                        account => this.Created(account.Email, Success(NewAccountModel(account))));
                 },
                 _ => Task(this.Error<AccountModel>(new AlreadyExistsException("Account already exists."))));
         }

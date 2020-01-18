@@ -1,37 +1,19 @@
 ﻿namespace Hawk.WebApi.Features.Tag
 {
-    using System.Linq;
-
     using Hawk.Domain.Tag;
-    using Hawk.Infrastructure.Monad;
-    using Hawk.Infrastructure.Pagination;
-
-    using static Hawk.Infrastructure.ErrorHandling.ExceptionHandler;
 
     public sealed class TagModel
     {
-        public TagModel(Tag entity)
-            : this(entity, default)
+        private TagModel(Tag entity)
         {
-        }
-
-        public TagModel(string name, uint total)
-        {
-            this.Name = name;
-            this.Total = total;
+            this.Name = entity.Value;
+            this.Transactions = entity.Transactions;
         }
 
         public string Name { get; }
 
-        public uint Total { get; }
+        public uint Transactions { get; }
 
-        internal static Try<Page<Try<TagModel>>> MapTag(Page<Try<(Tag Tag, uint Count)>> @this) => new Page<Try<TagModel>>(
-            @this
-                .Data
-                .Select(item => item.Match(
-                    HandleException<TagModel>,
-                    tag => new TagModel(tag.Tag, tag.Count))),
-            @this.Skip,
-            @this.Limit);
+        internal static TagModel NewTagModel(Tag entity) => new TagModel(entity);
     }
 }

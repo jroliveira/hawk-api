@@ -24,7 +24,7 @@
         private readonly IGetTagByName getTagByName;
         private readonly IUpsertTag upsertTag;
         private readonly IDeleteTag deleteTag;
-        private readonly NewTagModelValidator validator;
+        private readonly CreateTagModelValidator validator;
 
         public TagsController(
             IGetTags getTags,
@@ -38,7 +38,7 @@
             this.getTagByName = getTagByName;
             this.upsertTag = upsertTag;
             this.deleteTag = deleteTag;
-            this.validator = new NewTagModelValidator();
+            this.validator = new CreateTagModelValidator();
         }
 
         /// <summary>
@@ -56,7 +56,7 @@
 
             return entities.Match(
                 this.Error<Page<Try<TagModel>>>,
-                page => this.Ok(MapTag(page)));
+                page => this.Ok(page.ToPage(NewTagModel)));
         }
 
         /// <summary>
@@ -76,7 +76,7 @@
 
             return entities.Match(
                 this.Error<Page<Try<TagModel>>>,
-                page => this.Ok(MapTag(page)));
+                page => this.Ok(page.ToPage(NewTagModel)));
         }
 
         /// <summary>
@@ -96,7 +96,7 @@
 
             return entity.Match(
                 this.Error<TagModel>,
-                tag => this.Ok(Success(new TagModel(tag))));
+                tag => this.Ok(Success(NewTagModel(tag))));
         }
 
         /// <summary>
@@ -110,7 +110,7 @@
         [ProducesResponseType(403)]
         [ProducesResponseType(409)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> CreateTag([FromBody] NewTagModel request)
+        public async Task<IActionResult> CreateTag([FromBody] CreateTagModel request)
         {
             var validated = await this.validator.ValidateAsync(request);
             if (!validated.IsValid)
@@ -127,7 +127,7 @@
 
                     return inserted.Match(
                         this.Error<TagModel>,
-                        tag => this.Created(tag.Value, Success(new TagModel(tag))));
+                        tag => this.Created(tag.Value, Success(NewTagModel(tag))));
                 },
                 _ => Task(this.Error<TagModel>(new AlreadyExistsException("Tag already exists."))));
         }
@@ -148,7 +148,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateTag(
             [FromRoute] string name,
-            [FromBody] NewTagModel request)
+            [FromBody] CreateTagModel request)
         {
             var validated = await this.validator.ValidateAsync(request);
             if (!validated.IsValid)
@@ -165,7 +165,7 @@
 
                     return inserted.Match(
                         this.Error<TagModel>,
-                        tag => this.Created(Success(new TagModel(tag))));
+                        tag => this.Created(Success(NewTagModel(tag))));
                 },
                 async _ =>
                 {

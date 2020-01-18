@@ -48,14 +48,15 @@
             Option<PaymentMethod> paymentMethod,
             Option<Currency> currency,
             Option<Store> store,
-            Option<IEnumerable<Tag>> tags) =>
+            Option<IEnumerable<Option<Tag>>> tags) =>
                 type
                 && description
                 && paymentMethod
                 && currency
                 && store
                 && tags
-                ? new Configuration(type.Get(), description.Get(), paymentMethod.Get(), currency.Get(), store.Get(), tags.Get())
+                && tags.Get().All(_ => _)
+                ? new Configuration(type.Get(), description.Get(), paymentMethod.Get(), currency.Get(), store.Get(), tags.Get().Select(tag => tag.Get()))
                 : Failure<Configuration>(new InvalidObjectException("Invalid configuration."));
     }
 }

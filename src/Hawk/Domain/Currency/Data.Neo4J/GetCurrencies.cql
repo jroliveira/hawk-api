@@ -2,15 +2,12 @@
   (currency:Currency)-[:BELONGS]->(account:Account)
 WHERE
   account.email = $email
-WITH
-  account,
-  currency
 
 RETURN
 { 
   name: currency.name,
-  total: count(currency.name)
-} as data
+  transactions: SIZE((:Transaction)-[:PAID_IN]->(currency))
+} AS data
 
 SKIP 
   $skip 
