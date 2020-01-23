@@ -51,6 +51,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{1D15F9CF
 		build\run-docker-tag.cake = build\run-docker-tag.cake
 		build\run-tests.cake = build\run-tests.cake
 		build\setup-tests.cake = build\setup-tests.cake
+		build\start-analyzing-code-style.cake = build\start-analyzing-code-style.cake
+		build\stop-analyzing-code-style.cake = build\stop-analyzing-code-style.cake
 		build\up-dependencies.cake = build\up-dependencies.cake
 	EndProjectSection
 EndProject
@@ -173,10 +175,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "declarative", "declarative"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "compose", "compose", "{FFA95A70-A9F5-47FB-8E6E-BF407D23D63E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "process", "process", "{B5598B4F-CD3C-4A63-B213-4AFA581CC9FA}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sonarqube", "sonarqube", "{C09A6101-1BE3-4D2A-B456-DCB6D7B7651B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{4F2C02D4-CB53-40E2-929A-35FE8E296153}"
 	ProjectSection(SolutionItems) = preProject
-		docs\process\create configuration by transaction id.cypher = docs\process\create configuration by transaction id.cypher
-		docs\process\get transaction id by tag.cypher = docs\process\get transaction id by tag.cypher
+		compose\monitor\sonarqube\config\.gitkeep = compose\monitor\sonarqube\config\.gitkeep
 	EndProjectSection
 EndProject
 Global
@@ -234,7 +237,8 @@ Global
 		{E5C0A1CB-6F46-4881-BEA6-6C8FE2599B97} = {316572DD-34C2-4998-BEF9-C0C59C76EABE}
 		{A05A64E8-3FA1-427F-B2EF-34A4A2A623AA} = {FFA95A70-A9F5-47FB-8E6E-BF407D23D63E}
 		{5BF1B5B7-04B1-4F6D-A8A0-84653E8FAE93} = {A05A64E8-3FA1-427F-B2EF-34A4A2A623AA}
-		{B5598B4F-CD3C-4A63-B213-4AFA581CC9FA} = {057A0073-536B-4619-ACA6-76D3D2DFB0B3}
+		{C09A6101-1BE3-4D2A-B456-DCB6D7B7651B} = {9B95FA03-E0A0-4038-9572-538F4F549DF6}
+		{4F2C02D4-CB53-40E2-929A-35FE8E296153} = {C09A6101-1BE3-4D2A-B456-DCB6D7B7651B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7CB3FDF8-0DA7-4D1F-B674-0261172FE8F6}

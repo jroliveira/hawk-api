@@ -22,12 +22,17 @@ Setup<BuildData>(context =>
             EnvironmentVariable("DOCKERHUB_USERNAME"),
             EnvironmentVariable("DOCKERHUB_PASSWORD"),
             "junroliveira",
-            "hawk-api-test"));
+            "hawk-api-test"),
+        new AnalyzeData(
+            "http://localhost:9000",
+            "hawk"));
 });
 
 Task("Default")
+    .IsDependentOn("Start-Analyze-Code-Style")
     .IsDependentOn("Restore-NuGet-Packages")
-    .IsDependentOn("Build-Solution");
+    .IsDependentOn("Build-Solution")
+    .IsDependentOn("Stop-Analyze-Code-Style");
 
 Task("Test")
     .IsDependentOn("Setup-Tests");

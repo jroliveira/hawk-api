@@ -15,6 +15,16 @@ services:
     networks:
       - hawk-net
 
+  sonarqube:
+    image: sonarqube:7.9.2-community
+    container_name: hawk-sonarqube
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9092:9092"
+    volumes:
+      - ./compose/monitor/sonarqube/config:/opt/sonarqube/conf
+
   grafana:
     image: grafana/grafana:5.4.3
     container_name: hawk-grafana

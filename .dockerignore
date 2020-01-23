@@ -137,3 +137,6 @@ docker-compose.yml
 docs
 CONTRIBUTING.md
 README.md
+
+# SonarQube
+.sonarqube
