@@ -128,3 +128,6 @@ compose/monitor/elasticsearch/data
 
 # Logs
 logs/
+
+# SonarQube
+.sonarqube

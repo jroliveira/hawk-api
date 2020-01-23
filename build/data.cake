@@ -6,12 +6,14 @@ public sealed class BuildData
         Func<BuildData, Action<Exception>> errorHandler,
         RepositoryData repository,
         SolutionData solution,
-        ContainerData container)
+        ContainerData container,
+        AnalyzeData analyze)
     {
         this.Configuration = configuration;
         this.Repository = repository;
         this.Solution = solution;
         this.Container = container;
+        this.Analyze = analyze;
 
         this.DirectoriesToDelete = context
             .GetDirectories(this.Solution.ArtifactsDirectory)
@@ -28,6 +30,7 @@ public sealed class BuildData
     public RepositoryData Repository { get; }
     public SolutionData Solution { get; }
     public ContainerData Container { get; }
+    public AnalyzeData Analyze { get; }
     public IEnumerable<DirectoryPath> DirectoriesToDelete { get; }
 }
 
@@ -76,4 +79,19 @@ public sealed class ContainerData
     public string Password { get; }
     public string RegistryReference { get; }
     public string ImageReference { get; }
+}
+
+public sealed class AnalyzeData
+{
+    public AnalyzeData(
+        string host,
+        string key)
+    {
+        this.Host = host;
+        this.Key = key;
+    }
+
+    public string Host { get; }
+
+    public string Key { get; }
 }
