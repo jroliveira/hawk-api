@@ -1,6 +1,7 @@
 ﻿namespace Hawk.Domain
 {
     using Hawk.Domain.Account;
+    using Hawk.Domain.Category;
     using Hawk.Domain.Configuration;
     using Hawk.Domain.Currency;
     using Hawk.Domain.Payee;
@@ -14,6 +15,7 @@
     {
         public static IServiceCollection ConfigureDomain(this IServiceCollection @this) => @this
             .ConfigureAccount()
+            .ConfigureCategory()
             .ConfigureConfiguration()
             .ConfigureCurrency()
             .ConfigurePayee()
