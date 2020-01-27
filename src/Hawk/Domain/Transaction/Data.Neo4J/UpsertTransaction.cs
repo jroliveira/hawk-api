@@ -29,11 +29,13 @@
                 MapTransaction,
                 Statement
                     .GetOrElse(Empty)
-                    .Replace("#type#", some.Type),
+                    .Replace("#type#", some.Type.ToString()),
                 new
                 {
                     email = email.Value,
                     id = some.Id.ToString(),
+                    status = some.Status.ToString(),
+                    description = some.Description.GetOrElse(Empty),
                     value = some.Payment.Price.Value,
                     year = some.Payment.Date.Year,
                     month = some.Payment.Date.Month,
@@ -41,6 +43,7 @@
                     currency = some.Payment.Price.Currency.Value,
                     method = some.Payment.PaymentMethod.Value,
                     payee = some.Payee.Value,
+                    category = some.Category.Value,
                     tags = some.Tags.Select(tag => tag.Value).ToArray(),
                 }),
             () => Task(Failure<Transaction>(new NullObjectException("Transaction is required."))));

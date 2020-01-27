@@ -100,7 +100,7 @@
             return await entity.Match(
                 async _ =>
                 {
-                    var inserted = await this.upsertCurrency.Execute(this.GetUser(), request.Name, request);
+                    var inserted = await this.upsertCurrency.Execute(this.GetUser(), request);
 
                     return inserted.Match(
                         this.Error<CurrencyModel>,

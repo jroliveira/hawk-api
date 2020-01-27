@@ -21,6 +21,10 @@
 
         public UpsertPaymentMethod(Neo4JConnection connection) => this.connection = connection;
 
+        public Task<Try<PaymentMethod>> Execute(Email email, Option<PaymentMethod> entity) => entity.Match(
+            some => this.Execute(email, some.Value, some),
+            () => Task(Failure<PaymentMethod>(new NullObjectException("Payment method is required."))));
+
         public Task<Try<PaymentMethod>> Execute(Email email, string name, Option<PaymentMethod> entity) => entity.Match(
             some => this.connection.ExecuteCypherScalar(
                 MapPaymentMethod,

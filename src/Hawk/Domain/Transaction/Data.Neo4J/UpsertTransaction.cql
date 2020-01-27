@@ -1,35 +1,37 @@
 ﻿// (:Account)
-MATCH 
+
+MATCH
   (account:Account)
 WHERE
   account.email = $email
 
 // (:Payee)
 
-MERGE 
-  (payee:Payee { 
-    name: $payee
-  })
-MERGE
-  (payee)-[:BELONGS]->(account)
+MATCH
+  (payee:Payee)-[:BELONGS]->(account)
+WHERE
+  payee.name = $payee
+
+// (:Category)
+
+MATCH
+  (category:Category)-[:BELONGS]->(account)
+WHERE
+  category.name = $category
 
 // (:Currency)
 
-MERGE 
-  (currency:Currency { 
-    name: $currency
-  })
-MERGE
-  (currency)-[:BELONGS]->(account)
+MATCH
+  (currency:Currency)-[:BELONGS]->(account)
+WHERE
+  currency.name = $currency
 
 // (:PaymentMethod)
 
-MERGE 
-  (paymentMethod:PaymentMethod { 
-    name: $method
-  })
-MERGE
-  (paymentMethod)-[:BELONGS]->(account)
+MATCH
+  (paymentMethod:PaymentMethod)-[:BELONGS]->(account)
+WHERE
+  paymentMethod.name = $method
 
 // (:Transaction)
 
@@ -41,6 +43,8 @@ REMOVE
   transaction:Income:Expense
 SET
   transaction:#type#,
+  transaction.status = $status,
+  transaction.description = $description,
   transaction.value = $value,
   transaction.year = $year,
   transaction.month = $month,
@@ -50,12 +54,15 @@ MERGE
 MERGE
   (transaction)-[:IN]->(payee)
 MERGE
+  (transaction)-[:WITH]->(category)
+MERGE
   (transaction)-[:PAID_IN]->(currency)
 MERGE
   (transaction)-[:PAID_WITH]->(paymentMethod)
 WITH
   account,
   payee,
+  category,
   currency,
   paymentMethod,
   transaction
@@ -78,6 +85,7 @@ WITH
   account,
   transaction,
   payee,
+  category,
   paymentMethod,
   currency,
   COLLECT(DISTINCT tag) AS tags
@@ -86,6 +94,8 @@ RETURN
 { 
   id: transaction.id,
   type: LABELS(transaction),
+  status: transaction.status,
+  description: transaction.description,
   account: {
     id: account.id,
 	email: account.email
@@ -93,6 +103,10 @@ RETURN
   payee: CASE WHEN payee IS null THEN NULL ELSE {
     name: payee.name,
 	transactions: SIZE((:Transaction)-[:IN]->(payee))
+  } END,
+  category: CASE WHEN category IS null THEN NULL ELSE {
+    name: category.name,
+	transactions: SIZE((:Transaction)-[:WITH]->(category))
   } END,
   payment: {
     value: transaction.value,
