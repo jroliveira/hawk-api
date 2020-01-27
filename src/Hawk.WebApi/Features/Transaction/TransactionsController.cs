@@ -13,7 +13,6 @@
     using Microsoft.AspNetCore.Mvc;
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
-    using static Hawk.WebApi.Features.Transaction.CreateTransactionModel;
     using static Hawk.WebApi.Features.Transaction.TransactionModel;
 
     [ApiController]
@@ -133,7 +132,7 @@
             return await entity.Match(
                 async _ =>
                 {
-                    var inserted = await this.upsertTransaction.Execute(this.GetUser(), MapTransaction(new Guid(id), request));
+                    var inserted = await this.upsertTransaction.Execute(this.GetUser(), request);
 
                     return inserted.Match(
                         this.Error<TransactionModel>,

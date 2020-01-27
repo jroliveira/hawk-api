@@ -7,6 +7,8 @@
 
     public interface IUpsertTag
     {
+        Task<Try<Tag>> Execute(Email email, Option<Tag> entity);
+
         Task<Try<Tag>> Execute(Email email, string name, Option<Tag> entity);
     }
 }

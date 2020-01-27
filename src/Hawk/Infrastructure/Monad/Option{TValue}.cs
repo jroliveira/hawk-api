@@ -8,8 +8,6 @@
 
     public readonly struct Option<TValue>
     {
-        private static readonly Option<TValue> None = default;
-
         private readonly TValue value;
 
         internal Option(TValue value, bool isDefined)
@@ -22,7 +20,7 @@
 
         public static implicit operator Option<TValue>(TValue value) => Some(value);
 
-        public static implicit operator Option<TValue>(None none) => None;
+        public static implicit operator Option<TValue>(None none) => default;
 
         public static implicit operator Option<TValue>(Try<TValue> @try) => @try.ToOption();
 

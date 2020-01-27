@@ -14,12 +14,21 @@ WITH
   transaction,
   payee
 
+OPTIONAL MATCH
+  (transaction)-[:WITH]->(category:Category)-[:BELONGS]->(account)
+WITH
+  account,
+  transaction,
+  payee,
+  category
+
 OPTIONAL MATCH 
   (transaction)-[:PAID_WITH]->(paymentMethod:PaymentMethod)-[:BELONGS]->(account)
 WITH
   account,
   transaction,
   payee,
+  category,
   paymentMethod
   
 OPTIONAL MATCH 
@@ -28,6 +37,7 @@ WITH
   account,
   transaction,
   payee,
+  category,
   paymentMethod,
   currency
 
@@ -37,6 +47,7 @@ WITH
   account,
   transaction,
   payee,
+  category,
   paymentMethod,
   currency,
   COLLECT(DISTINCT tag) AS tags
@@ -45,6 +56,8 @@ RETURN
 { 
   id: transaction.id,
   type: LABELS(transaction),
+  status: transaction.status,
+  description: transaction.description,
   account: {
     id: account.id,
 	email: account.email
@@ -52,6 +65,10 @@ RETURN
   payee: CASE WHEN payee IS null THEN NULL ELSE {
     name: payee.name,
 	transactions: SIZE((:Transaction)-[:IN]->(payee))
+  } END,
+  category: CASE WHEN category IS null THEN NULL ELSE {
+    name: category.name,
+	transactions: SIZE((:Transaction)-[:WITH]->(category))
   } END,
   payment: {
     value: transaction.value,

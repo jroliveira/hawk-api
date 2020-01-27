@@ -20,6 +20,10 @@
 
         public UpsertCurrency(Neo4JConnection connection) => this.connection = connection;
 
+        public Task<Try<Currency>> Execute(Email email, Option<Currency> entity) => entity.Match(
+            some => this.Execute(email, some.Value, some),
+            () => Task(Failure<Currency>(new NullObjectException("Currency is required."))));
+
         public Task<Try<Currency>> Execute(Email email, string name, Option<Currency> entity) => entity.Match(
             some => this.connection.ExecuteCypherScalar(
                 MapCurrency,

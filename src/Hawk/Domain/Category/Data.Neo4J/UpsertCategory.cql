@@ -20,5 +20,5 @@ WITH
 RETURN
 { 
   name: category.name,
-  transactions: SIZE((:Transaction)-[:IN]->(category))
+  transactions: SIZE((:Transaction)-[:WITH]->(category))
 } AS data;

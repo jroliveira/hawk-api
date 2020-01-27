@@ -20,5 +20,5 @@ WITH
 RETURN
 { 
   name: paymentMethod.name,
-  transactions: SIZE((:Transaction)-[:HAS]->(paymentMethod))
+  transactions: SIZE((:Transaction)-[:PAID_WITH]->(paymentMethod))
 } AS data;

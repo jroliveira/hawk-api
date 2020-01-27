@@ -44,29 +44,43 @@
 
         public void Dispose() => this.driver?.Dispose();
 
-        internal Task<Try<TReturn>> ExecuteCypherScalar<TReturn>(Func<IRecord, Try<TReturn>> mapping, Option<string> statement, object parameters) => this.ExecuteCypherAndGetRecords(
-            statement,
-            parameters,
-            records => records.Count > 1
-                ? new InternalException($"Query returned {records.Count} results.")
-                : mapping(records.FirstOrDefault()));
+        internal Task<Try<TReturn>> ExecuteCypherScalar<TReturn>(
+            Func<IRecord, Try<TReturn>> mapping,
+            Option<string> statement,
+            object parameters) => this.ExecuteCypherAndGetRecords(
+                statement,
+                parameters,
+                records => records.Count > 1
+                    ? new InternalException($"Query returned {records.Count} results.")
+                    : mapping(records.FirstOrDefault()));
 
-        internal Task<Try<IEnumerable<Try<TReturn>>>> ExecuteCypher<TReturn>(Func<IRecord, Try<TReturn>> mapping, Option<string> statement, object parameters) => this.ExecuteCypherAndGetRecords(
-            statement,
-            parameters,
-            records => Success(records.Select(mapping)));
+        internal Task<Try<IEnumerable<Try<TReturn>>>> ExecuteCypher<TReturn>(
+            Func<IRecord, Try<TReturn>> mapping,
+            Option<string> statement,
+            object parameters) => this.ExecuteCypherAndGetRecords(
+                statement,
+                parameters,
+                records => Success(records.Select(mapping)));
 
-        internal Task<Try<Unit>> ExecuteCypher(Option<string> statement, object parameters) => this.ExecuteCypherAndGetRecords(
-            statement,
-            parameters,
-            _ => Success(Unit()));
+        internal Task<Try<Unit>> ExecuteCypher(
+            Option<string> statement,
+            object parameters) => this.ExecuteCypherAndGetRecords(
+                statement,
+                parameters,
+                _ => Success(Unit()));
 
-        private Task<Try<TReturn>> ExecuteCypherAndGetRecords<TReturn>(Option<string> statement, object parameters, Func<IList<IRecord>, Try<TReturn>> command) => this.ExecuteCypherAndGetCursor(
-            statement,
-            parameters,
-            async cursor => command(await cursor.ToListAsync()));
+        private Task<Try<TReturn>> ExecuteCypherAndGetRecords<TReturn>(
+            Option<string> statement,
+            object parameters,
+            Func<IList<IRecord>, Try<TReturn>> command) => this.ExecuteCypherAndGetCursor(
+                statement,
+                parameters,
+                async cursor => command(await cursor.ToListAsync()));
 
-        private async Task<Try<TReturn>> ExecuteCypherAndGetCursor<TReturn>(Option<string> statement, object parameters, Func<IResultCursor, Task<Try<TReturn>>> command)
+        private async Task<Try<TReturn>> ExecuteCypherAndGetCursor<TReturn>(
+            Option<string> statement,
+            object parameters,
+            Func<IResultCursor, Task<Try<TReturn>>> command)
         {
             if (!statement.IsDefined)
             {
