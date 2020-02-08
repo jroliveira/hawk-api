@@ -10,6 +10,6 @@
 
     public interface IGetCategories
     {
-        Task<Try<Page<Try<Category>>>> GetResult(Email email, Filter filter);
+        Task<Try<Page<Try<Category>>>> GetResult(Option<Email> email, Filter filter);
     }
 }

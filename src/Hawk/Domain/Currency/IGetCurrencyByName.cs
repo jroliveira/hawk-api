@@ -7,6 +7,6 @@
 
     public interface IGetCurrencyByName
     {
-        Task<Try<Currency>> GetResult(Email email, string name);
+        Task<Try<Currency>> GetResult(Option<Email> email, Option<string> name);
     }
 }

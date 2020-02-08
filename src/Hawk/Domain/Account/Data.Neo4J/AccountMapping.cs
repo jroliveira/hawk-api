@@ -10,6 +10,7 @@
     using Neo4j.Driver;
 
     using static Hawk.Domain.Account.Account;
+    using static Hawk.Domain.Shared.Email;
     using static Hawk.Infrastructure.Data.Neo4J.Neo4JRecord;
 
     internal static class AccountMapping
@@ -17,7 +18,9 @@
         internal static Try<Account> MapAccount(IRecord data) => MapAccount(MapRecord(data, "data"));
 
         internal static Try<Account> MapAccount(Option<Neo4JRecord> record) => record.Match(
-            some => NewAccount(some.Get<Guid>("id"), some.Get<string>("email")),
+            some => NewAccount(
+                some.Get<Guid>("id"),
+                NewEmail(some.Get<string>("email"))),
             () => new NotFoundException("Account not found."));
     }
 }

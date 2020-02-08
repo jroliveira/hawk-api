@@ -5,12 +5,14 @@
     using Hawk.Domain.Shared;
     using Hawk.Domain.Tag;
     using Hawk.Infrastructure.Data.Neo4J;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     using static System.IO.Path;
 
     using static Hawk.Domain.Tag.Data.Neo4J.TagMapping;
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal sealed class GetTagByName : IGetTagByName
     {
@@ -19,13 +21,17 @@
 
         public GetTagByName(Neo4JConnection connection) => this.connection = connection;
 
-        public Task<Try<Tag>> GetResult(Email email, string name) => this.connection.ExecuteCypherScalar(
-            MapTag,
-            Statement,
-            new
-            {
-                email = email.Value,
-                name,
-            });
+        public Task<Try<Tag>> GetResult(Option<Email> email, Option<string> name) =>
+            email
+            && name
+                ? this.connection.ExecuteCypherScalar(
+                    MapTag,
+                    Statement,
+                    new
+                    {
+                        email = email.Get().Value,
+                        name = name.Get(),
+                    })
+                : Task(Failure<Tag>(new NullObjectException("Parameters are required.")));
     }
 }

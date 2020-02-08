@@ -5,6 +5,7 @@
     using Hawk.Domain.Shared;
     using Hawk.Domain.Transaction;
     using Hawk.Infrastructure.Data.Neo4J;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Filter;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
@@ -17,6 +18,7 @@
 
     using static Hawk.Domain.Transaction.Data.Neo4J.TransactionMapping;
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal sealed class GetTransactions : IGetTransactions
     {
@@ -38,25 +40,27 @@
             this.where = where;
         }
 
-        public async Task<Try<Page<Try<Transaction>>>> GetResult(Email email, Filter filter)
-        {
-            var parameters = new
+        public Task<Try<Page<Try<Transaction>>>> GetResult(Option<Email> email, Filter filter) => email.Match(
+            async some =>
             {
-                email = email.Value,
-                skip = this.skip.Apply(filter),
-                limit = this.limit.Apply(filter),
-            };
+                var parameters = new
+                {
+                    email = some.Value,
+                    skip = this.skip.Apply(filter),
+                    limit = this.limit.Apply(filter),
+                };
 
-            var data = await this.connection.ExecuteCypher(
-                MapTransaction,
-                Statement
-                    .GetOrElse(Empty)
-                    .Replace("#where#", this.where.Apply(filter, "transaction")),
-                parameters);
+                var data = await this.connection.ExecuteCypher(
+                    MapTransaction,
+                    Statement
+                        .GetOrElse(Empty)
+                        .Replace("#where#", this.where.Apply(filter, "transaction")),
+                    parameters);
 
-            return data.Match<Try<Page<Try<Transaction>>>>(
-                _ => _,
-                items => new Page<Try<Transaction>>(items, parameters.skip, parameters.limit));
-        }
+                return data.Match<Try<Page<Try<Transaction>>>>(
+                    _ => _,
+                    items => new Page<Try<Transaction>>(items, parameters.skip, parameters.limit));
+            },
+            () => Task(Failure<Page<Try<Transaction>>>(new NullObjectException("Email is required."))));
     }
 }

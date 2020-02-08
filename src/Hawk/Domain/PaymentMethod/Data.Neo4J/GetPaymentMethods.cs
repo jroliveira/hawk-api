@@ -5,6 +5,7 @@
     using Hawk.Domain.PaymentMethod;
     using Hawk.Domain.Shared;
     using Hawk.Infrastructure.Data.Neo4J;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Filter;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
@@ -15,6 +16,7 @@
 
     using static Hawk.Domain.PaymentMethod.Data.Neo4J.PaymentMethodMapping;
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal sealed class GetPaymentMethods : IGetPaymentMethods
     {
@@ -33,20 +35,22 @@
             this.skip = skip;
         }
 
-        public async Task<Try<Page<Try<PaymentMethod>>>> GetResult(Email email, Filter filter)
-        {
-            var parameters = new
+        public Task<Try<Page<Try<PaymentMethod>>>> GetResult(Option<Email> email, Filter filter) => email.Match(
+            async some =>
             {
-                email = email.Value,
-                skip = this.skip.Apply(filter),
-                limit = this.limit.Apply(filter),
-            };
+                var parameters = new
+                {
+                    email = some.Value,
+                    skip = this.skip.Apply(filter),
+                    limit = this.limit.Apply(filter),
+                };
 
-            var data = await this.connection.ExecuteCypher(MapPaymentMethod, Statement, parameters);
+                var data = await this.connection.ExecuteCypher(MapPaymentMethod, Statement, parameters);
 
-            return data.Match<Try<Page<Try<PaymentMethod>>>>(
-                _ => _,
-                items => new Page<Try<PaymentMethod>>(items, parameters.skip, parameters.limit));
-        }
+                return data.Match<Try<Page<Try<PaymentMethod>>>>(
+                    _ => _,
+                    items => new Page<Try<PaymentMethod>>(items, parameters.skip, parameters.limit));
+            },
+            () => Task(Failure<Page<Try<PaymentMethod>>>(new NullObjectException("Email is required."))));
     }
 }

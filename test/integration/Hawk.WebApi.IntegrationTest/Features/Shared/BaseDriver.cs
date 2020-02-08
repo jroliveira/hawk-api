@@ -1,42 +1,43 @@
-﻿namespace Hawk.WebApi.IntegrationTest.Infrastructure
+﻿namespace Hawk.WebApi.IntegrationTest.Features.Shared
 {
     using System;
     using System.Net.Http;
+    using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.TestHost;
     using Microsoft.Extensions.Configuration;
 
-    using static ProjectPathFinder;
+    using static System.Threading.Tasks.Task;
 
-    public class TestServerFixture<TStartup> : IDisposable
-        where TStartup : Startup
+    public abstract class BaseDriver : IDisposable
     {
-        private static readonly string ContentRoot = GetPath("src", typeof(TStartup));
         private readonly TestServer testServer;
 
-        public TestServerFixture()
+        protected BaseDriver()
         {
             var builder = new WebHostBuilder()
-                .UseContentRoot(ContentRoot)
                 .ConfigureAppConfiguration((hostingContext, config) => config
                     .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
                     .AddJsonFile("appsettings.json", true, true)
                     .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true)
                     .AddEnvironmentVariables()
                     .Build())
-                .UseStartup<TStartup>();
+                .UseStartup<Startup>();
 
             this.testServer = new TestServer(builder);
-            this.Client = this.testServer.CreateClient();
+            this.HttpClient = this.testServer.CreateClient();
+            this.Setup().GetAwaiter().GetResult();
         }
 
-        public HttpClient Client { get; }
+        protected HttpClient HttpClient { get; }
 
         public void Dispose()
         {
             this.testServer?.Dispose();
-            this.Client?.Dispose();
+            this.HttpClient?.Dispose();
         }
+
+        protected virtual Task Setup() => CompletedTask;
     }
 }

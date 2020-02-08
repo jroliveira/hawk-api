@@ -7,6 +7,6 @@
 
     public interface IGetAccountByEmail
     {
-        Task<Try<Account>> GetResult(Email email);
+        Task<Try<Account>> GetResult(Option<Email> email);
     }
 }

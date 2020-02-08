@@ -20,8 +20,6 @@
     using static Neo4j.Driver.AuthTokens;
     using static Neo4j.Driver.GraphDatabase;
 
-    using Unit = Hawk.Infrastructure.Monad.Unit;
-
     internal sealed class Neo4JConnection : IDisposable
     {
         private readonly ResiliencePolicy resiliencePolicy;

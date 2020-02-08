@@ -5,6 +5,7 @@
     using Hawk.Domain.PaymentMethod;
     using Hawk.Domain.Shared;
     using Hawk.Infrastructure.Data.Neo4J;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Filter;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
@@ -15,6 +16,7 @@
 
     using static Hawk.Domain.PaymentMethod.Data.Neo4J.PaymentMethodMapping;
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal sealed class GetPaymentMethodsByPayee : IGetPaymentMethodsByPayee
     {
@@ -33,7 +35,13 @@
             this.skip = skip;
         }
 
-        public async Task<Try<Page<Try<PaymentMethod>>>> GetResult(Email email, string payee, Filter filter)
+        public Task<Try<Page<Try<PaymentMethod>>>> GetResult(Option<Email> email, Option<string> payee, Filter filter) =>
+            email
+            && payee
+                ? this.GetResult(email.Get(), payee.Get(), filter)
+                : Task(Failure<Page<Try<PaymentMethod>>>(new NullObjectException("Parameters are required.")));
+
+        private async Task<Try<Page<Try<PaymentMethod>>>> GetResult(Email email, string payee, Filter filter)
         {
             var parameters = new
             {

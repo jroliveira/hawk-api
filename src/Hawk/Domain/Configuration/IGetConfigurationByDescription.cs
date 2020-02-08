@@ -7,6 +7,6 @@
 
     public interface IGetConfigurationByDescription
     {
-        Task<Try<Configuration>> GetResult(Email email, string description);
+        Task<Try<Configuration>> GetResult(Option<Email> email, Option<string> description);
     }
 }

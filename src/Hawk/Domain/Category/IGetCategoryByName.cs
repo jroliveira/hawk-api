@@ -7,6 +7,6 @@
 
     public interface IGetCategoryByName
     {
-        Task<Try<Category>> GetResult(Email email, string name);
+        Task<Try<Category>> GetResult(Option<Email> email, Option<string> name);
     }
 }

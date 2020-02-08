@@ -6,12 +6,14 @@
     using Hawk.Domain.Shared;
     using Hawk.Domain.Transaction;
     using Hawk.Infrastructure.Data.Neo4J;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     using static System.IO.Path;
 
     using static Hawk.Domain.Transaction.Data.Neo4J.TransactionMapping;
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal sealed class GetTransactionById : IGetTransactionById
     {
@@ -20,13 +22,17 @@
 
         public GetTransactionById(Neo4JConnection connection) => this.connection = connection;
 
-        public Task<Try<Transaction>> GetResult(Email email, Guid id) => this.connection.ExecuteCypherScalar(
-            MapTransaction,
-            Statement,
-            new
-            {
-                email = email.Value,
-                id = id.ToString(),
-            });
+        public Task<Try<Transaction>> GetResult(Option<Email> email, Option<Guid> id) =>
+            email
+            && id
+                ? this.connection.ExecuteCypherScalar(
+                    MapTransaction,
+                    Statement,
+                    new
+                    {
+                        email = email.Get().Value,
+                        id = id.Get().ToString(),
+                    })
+                : Task(Failure<Transaction>(new NullObjectException("Parameters are required.")));
     }
 }

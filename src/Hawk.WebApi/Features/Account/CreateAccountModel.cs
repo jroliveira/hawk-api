@@ -3,9 +3,11 @@
     using System.ComponentModel.DataAnnotations;
 
     using Hawk.Domain.Account;
+    using Hawk.Domain.Shared;
     using Hawk.Infrastructure.Monad;
 
     using static Hawk.Domain.Account.Account;
+    using static Hawk.Domain.Shared.Email;
 
     public sealed class CreateAccountModel
     {
@@ -14,6 +16,8 @@
         [Required]
         public string Email { get; }
 
-        public static implicit operator Option<Account>(CreateAccountModel model) => NewAccount(model.Email);
+        public static implicit operator Option<Account>(CreateAccountModel model) => NewAccount(NewEmail(model.Email));
+
+        public static implicit operator Option<Email>(CreateAccountModel model) => NewEmail(model.Email);
     }
 }

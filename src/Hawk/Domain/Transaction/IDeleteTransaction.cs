@@ -8,6 +8,6 @@
 
     public interface IDeleteTransaction
     {
-        Task<Try<Unit>> Execute(Email email, Guid id);
+        Task<Try<Unit>> Execute(Option<Email> email, Option<Guid> id);
     }
 }

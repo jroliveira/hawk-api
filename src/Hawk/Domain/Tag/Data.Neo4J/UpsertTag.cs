@@ -21,20 +21,23 @@
 
         public UpsertTag(Neo4JConnection connection) => this.connection = connection;
 
-        public Task<Try<Tag>> Execute(Email email, Option<Tag> entity) => entity.Match(
+        public Task<Try<Tag>> Execute(Option<Email> email, Option<Tag> entity) => entity.Match(
             some => this.Execute(email, some.Value, some),
             () => Task(Failure<Tag>(new NullObjectException("Tag is required."))));
 
-        public Task<Try<Tag>> Execute(Email email, string name, Option<Tag> entity) => entity.Match(
-            some => this.connection.ExecuteCypherScalar(
-                MapTag,
-                Statement,
-                new
-                {
-                    email = email.Value,
-                    name,
-                    newName = some.Value,
-                }),
-            () => Task(Failure<Tag>(new NullObjectException("Tag is required."))));
+        public Task<Try<Tag>> Execute(Option<Email> email, Option<string> name, Option<Tag> entity) =>
+            email
+            && name
+            && entity
+                ? this.connection.ExecuteCypherScalar(
+                    MapTag,
+                    Statement,
+                    new
+                    {
+                        email = email.Get().Value,
+                        name = name.Get(),
+                        newName = entity.Get().Value,
+                    })
+                : Task(Failure<Tag>(new NullObjectException("Parameters are required.")));
     }
 }

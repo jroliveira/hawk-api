@@ -10,6 +10,6 @@
 
     public interface IGetTags
     {
-        Task<Try<Page<Try<Tag>>>> GetResult(Email email, Filter filter);
+        Task<Try<Page<Try<Tag>>>> GetResult(Option<Email> email, Filter filter);
     }
 }

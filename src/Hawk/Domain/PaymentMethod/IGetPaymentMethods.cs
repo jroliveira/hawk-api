@@ -10,6 +10,6 @@
 
     public interface IGetPaymentMethods
     {
-        Task<Try<Page<Try<PaymentMethod>>>> GetResult(Email email, Filter filter);
+        Task<Try<Page<Try<PaymentMethod>>>> GetResult(Option<Email> email, Filter filter);
     }
 }

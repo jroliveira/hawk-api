@@ -10,6 +10,6 @@
 
     public interface IGetTagsByPayee
     {
-        Task<Try<Page<Try<Tag>>>> GetResult(Email email, string payee, Filter filter);
+        Task<Try<Page<Try<Tag>>>> GetResult(Option<Email> email, Option<string> payee, Filter filter);
     }
 }

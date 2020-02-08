@@ -75,7 +75,7 @@
                 return this.Error<AccountModel>(new InvalidObjectException("Invalid account.", validated));
             }
 
-            var entity = await this.getAccountByEmail.GetResult(request.Email);
+            var entity = await this.getAccountByEmail.GetResult(request);
 
             return await entity.Match(
                 async _ =>

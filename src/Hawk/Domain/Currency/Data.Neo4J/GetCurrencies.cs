@@ -5,6 +5,7 @@
     using Hawk.Domain.Currency;
     using Hawk.Domain.Shared;
     using Hawk.Infrastructure.Data.Neo4J;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Filter;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
@@ -12,8 +13,10 @@
     using Http.Query.Filter;
 
     using static System.IO.Path;
+
     using static Hawk.Domain.Currency.Data.Neo4J.CurrencyMapping;
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal sealed class GetCurrencies : IGetCurrencies
     {
@@ -32,20 +35,22 @@
             this.skip = skip;
         }
 
-        public async Task<Try<Page<Try<Currency>>>> GetResult(Email email, Filter filter)
-        {
-            var parameters = new
+        public Task<Try<Page<Try<Currency>>>> GetResult(Option<Email> email, Filter filter) => email.Match(
+            async some =>
             {
-                email = email.Value,
-                skip = this.skip.Apply(filter),
-                limit = this.limit.Apply(filter),
-            };
+                var parameters = new
+                {
+                    email = some.Value,
+                    skip = this.skip.Apply(filter),
+                    limit = this.limit.Apply(filter),
+                };
 
-            var data = await this.connection.ExecuteCypher(MapCurrency, Statement, parameters);
+                var data = await this.connection.ExecuteCypher(MapCurrency, Statement, parameters);
 
-            return data.Match<Try<Page<Try<Currency>>>>(
-                _ => _,
-                items => new Page<Try<Currency>>(items, parameters.skip, parameters.limit));
-        }
+                return data.Match<Try<Page<Try<Currency>>>>(
+                    _ => _,
+                    items => new Page<Try<Currency>>(items, parameters.skip, parameters.limit));
+            },
+            () => Task(Failure<Page<Try<Currency>>>(new NullObjectException("Parameters are required."))));
     }
 }
