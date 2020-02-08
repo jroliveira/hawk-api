@@ -25,23 +25,19 @@
 
         public IConfiguration Configuration { get; }
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services
-                .ConfigureCache()
-                .ConfigureIpRateLimiting(this.Configuration)
-                .ConfigureResilience(this.Configuration)
-                .ConfigureNeo4J(this.Configuration)
-                .ConfigureFilter()
-                .ConfigureDomain()
-                .ConfigureApi(this.Configuration)
-                .ConfigureVersioning()
-                .ConfigureMetric()
-                .ConfigureSwagger(this.Configuration)
-                .ConfigureTracing(this.Configuration);
-
-            this.ConfigureAuthentication(services);
-        }
+        public void ConfigureServices(IServiceCollection services) => services
+            .ConfigureCache()
+            .ConfigureIpRateLimiting(this.Configuration)
+            .ConfigureResilience(this.Configuration)
+            .ConfigureNeo4J(this.Configuration)
+            .ConfigureFilter()
+            .ConfigureDomain()
+            .ConfigureApi(this.Configuration)
+            .ConfigureVersioning()
+            .ConfigureMetric()
+            .ConfigureSwagger(this.Configuration)
+            .ConfigureTracing(this.Configuration)
+            .ConfigureAuthentication(this.Configuration);
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment environment) => app
             .UseAuthentication()
@@ -50,8 +46,5 @@
             .UseMetric()
             .UseSwagger(this.Configuration)
             .UseTracing(this.Configuration);
-
-        protected virtual void ConfigureAuthentication(IServiceCollection services) => services
-            .ConfigureAuthentication(this.Configuration);
     }
 }

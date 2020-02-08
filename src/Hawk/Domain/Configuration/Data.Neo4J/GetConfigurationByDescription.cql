@@ -39,18 +39,7 @@ WITH
   payee,
   paymentMethod,
   currency,
-  tag
-
-OPTIONAL MATCH
-  (payee)-[:HAS]->(payeeTag:Tag)-[:BELONGS]->(account)
-WITH
-  account,
-  configuration,
-  payee,
-  paymentMethod,
-  currency,
-  tag,
-  payeeTag
+  COLLECT(DISTINCT tag) AS tags
 
 RETURN 
 { 
@@ -62,13 +51,18 @@ RETURN
   },
   payee: CASE WHEN payee IS null THEN NULL ELSE {
     name: payee.name,
-	tags: collect(distinct payeeTag.name)
+	transactions: SIZE((:Transaction)-[:IN]->(payee))
   } END,
   currency: {
-    name: currency.name
+	name: currency.name,
+    transactions: SIZE((:Transaction)-[:PAID_IN]->(currency))
   },
   paymentMethod: CASE WHEN paymentMethod IS null THEN NULL ELSE {
-	name: paymentMethod.name
+	name: paymentMethod.name,
+    transactions: SIZE((:Transaction)-[:PAID_WITH]->(paymentMethod))
   } END,
-  tags: collect(distinct tag.name)
+  tags: [tag IN tags | {
+    name: tag.name,
+    transactions: SIZE((:Transaction)-[:HAS]->(tag))
+  }]
 } AS data;

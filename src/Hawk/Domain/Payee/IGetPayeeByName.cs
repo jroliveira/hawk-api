@@ -7,6 +7,6 @@
 
     public interface IGetPayeeByName
     {
-        Task<Try<Payee>> GetResult(Email email, string name);
+        Task<Try<Payee>> GetResult(Option<Email> email, Option<string> name);
     }
 }

@@ -21,20 +21,23 @@
 
         public UpsertPayee(Neo4JConnection connection) => this.connection = connection;
 
-        public Task<Try<Payee>> Execute(Email email, Option<Payee> entity) => entity.Match(
+        public Task<Try<Payee>> Execute(Option<Email> email, Option<Payee> entity) => entity.Match(
             some => this.Execute(email, some.Value, some),
             () => Task(Failure<Payee>(new NullObjectException("Payee is required."))));
 
-        public Task<Try<Payee>> Execute(Email email, string name, Option<Payee> entity) => entity.Match(
-            some => this.connection.ExecuteCypherScalar(
-                MapPayee,
-                Statement,
-                new
-                {
-                    email = email.Value,
-                    name,
-                    newName = some.Value,
-                }),
-            () => Task(Failure<Payee>(new NullObjectException("Payee is required."))));
+        public Task<Try<Payee>> Execute(Option<Email> email, Option<string> name, Option<Payee> entity) =>
+            email
+            && name
+            && entity
+                ? this.connection.ExecuteCypherScalar(
+                    MapPayee,
+                    Statement,
+                    new
+                    {
+                        email = email.Get().Value,
+                        name = name.Get(),
+                        newName = entity.Get().Value,
+                    })
+                : Task(Failure<Payee>(new NullObjectException("Parameters are required.")));
     }
 }

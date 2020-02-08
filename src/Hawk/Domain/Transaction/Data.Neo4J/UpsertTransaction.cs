@@ -24,28 +24,30 @@
 
         public UpsertTransaction(Neo4JConnection connection) => this.connection = connection;
 
-        public Task<Try<Transaction>> Execute(Email email, Option<Transaction> entity) => entity.Match(
-            some => this.connection.ExecuteCypherScalar(
-                MapTransaction,
-                Statement
-                    .GetOrElse(Empty)
-                    .Replace("#type#", some.Type.ToString()),
-                new
-                {
-                    email = email.Value,
-                    id = some.Id.ToString(),
-                    status = some.Status.ToString(),
-                    description = some.Description.GetOrElse(Empty),
-                    value = some.Payment.Price.Value,
-                    year = some.Payment.Date.Year,
-                    month = some.Payment.Date.Month,
-                    day = some.Payment.Date.Day,
-                    currency = some.Payment.Price.Currency.Value,
-                    method = some.Payment.PaymentMethod.Value,
-                    payee = some.Payee.Value,
-                    category = some.Category.Value,
-                    tags = some.Tags.Select(tag => tag.Value).ToArray(),
-                }),
-            () => Task(Failure<Transaction>(new NullObjectException("Transaction is required."))));
+        public Task<Try<Transaction>> Execute(Option<Email> email, Option<Transaction> entity) =>
+            email
+            && entity
+                ? this.connection.ExecuteCypherScalar(
+                    MapTransaction,
+                    Statement
+                        .GetOrElse(Empty)
+                        .Replace("#type#", entity.Get().Type.ToString()),
+                    new
+                    {
+                        email = email.Get().Value,
+                        id = entity.Get().Id.ToString(),
+                        status = entity.Get().Status.ToString(),
+                        description = entity.Get().Description.GetOrElse(Empty),
+                        value = entity.Get().Payment.Price.Value,
+                        year = entity.Get().Payment.Date.Year,
+                        month = entity.Get().Payment.Date.Month,
+                        day = entity.Get().Payment.Date.Day,
+                        currency = entity.Get().Payment.Price.Currency.Value,
+                        method = entity.Get().Payment.PaymentMethod.Value,
+                        payee = entity.Get().Payee.Value,
+                        category = entity.Get().Category.Value,
+                        tags = entity.Get().Tags.Select(tag => tag.Value).ToArray(),
+                    })
+                : Task(Failure<Transaction>(new NullObjectException("Parameters are required.")));
     }
 }

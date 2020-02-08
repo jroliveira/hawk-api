@@ -8,6 +8,6 @@
 
     public interface IGetTransactionById
     {
-        Task<Try<Transaction>> GetResult(Email email, Guid id);
+        Task<Try<Transaction>> GetResult(Option<Email> email, Option<Guid> id);
     }
 }

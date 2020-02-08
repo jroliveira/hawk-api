@@ -12,10 +12,9 @@
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
 
-    using static System.Guid;
-
     using static Hawk.Domain.Transaction.TransactionStatus;
     using static Hawk.Infrastructure.Monad.Utils.Util;
+    using static Hawk.Infrastructure.Uid;
 
     public sealed class Transaction : Entity<Guid>
     {

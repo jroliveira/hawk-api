@@ -41,7 +41,7 @@
     <NoWarn>NU5125</NoWarn>
   </PropertyGroup>
 
-  <PropertyGroup Label="Code Analysis">
+  <PropertyGroup Label="Code Analysis" Condition="'$(MSBuildProjectName)' != 'Hawk.Test'">
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)code-analysis.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 

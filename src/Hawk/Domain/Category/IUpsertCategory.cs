@@ -7,6 +7,6 @@
 
     public interface IUpsertCategory
     {
-        Task<Try<Category>> Execute(Email email, string name, Option<Category> entity);
+        Task<Try<Category>> Execute(Option<Email> email, Option<string> name, Option<Category> entity);
     }
 }

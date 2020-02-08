@@ -7,6 +7,6 @@
 
     public interface IGetTagByName
     {
-        Task<Try<Tag>> GetResult(Email email, string name);
+        Task<Try<Tag>> GetResult(Option<Email> email, Option<string> name);
     }
 }

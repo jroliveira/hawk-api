@@ -10,6 +10,6 @@
 
     public interface IGetPaymentMethodsByPayee
     {
-        Task<Try<Page<Try<PaymentMethod>>>> GetResult(Email email, string payee, Filter filter);
+        Task<Try<Page<Try<PaymentMethod>>>> GetResult(Option<Email> email, Option<string> payee, Filter filter);
     }
 }

@@ -5,6 +5,7 @@
     using Hawk.Domain.Shared;
     using Hawk.Domain.Tag;
     using Hawk.Infrastructure.Data.Neo4J;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Filter;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
@@ -15,6 +16,7 @@
 
     using static Hawk.Domain.Tag.Data.Neo4J.TagMapping;
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal sealed class GetTagsByPayee : IGetTagsByPayee
     {
@@ -32,6 +34,12 @@
             this.limit = limit;
             this.skip = skip;
         }
+
+        public Task<Try<Page<Try<Tag>>>> GetResult(Option<Email> email, Option<string> payee, Filter filter) =>
+            email
+            && payee
+                ? this.GetResult(email.Get(), payee.Get(), filter)
+                : Task(Failure<Page<Try<Tag>>>(new NullObjectException("Parameters are required.")));
 
         public async Task<Try<Page<Try<Tag>>>> GetResult(Email email, string payee, Filter filter)
         {

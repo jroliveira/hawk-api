@@ -7,6 +7,6 @@
 
     public interface IDeletePaymentMethod
     {
-        Task<Try<Unit>> Execute(Email email, string name);
+        Task<Try<Unit>> Execute(Option<Email> email, Option<string> name);
     }
 }

@@ -5,6 +5,7 @@
     using Hawk.Domain.Shared;
     using Hawk.Domain.Tag;
     using Hawk.Infrastructure.Data.Neo4J;
+    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Filter;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
@@ -15,6 +16,7 @@
 
     using static Hawk.Domain.Tag.Data.Neo4J.TagMapping;
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal sealed class GetTags : IGetTags
     {
@@ -33,20 +35,22 @@
             this.skip = skip;
         }
 
-        public async Task<Try<Page<Try<Tag>>>> GetResult(Email email, Filter filter)
-        {
-            var parameters = new
+        public Task<Try<Page<Try<Tag>>>> GetResult(Option<Email> email, Filter filter) => email.Match(
+            async some =>
             {
-                email = email.Value,
-                skip = this.skip.Apply(filter),
-                limit = this.limit.Apply(filter),
-            };
+                var parameters = new
+                {
+                    email = email.Get().Value,
+                    skip = this.skip.Apply(filter),
+                    limit = this.limit.Apply(filter),
+                };
 
-            var data = await this.connection.ExecuteCypher(MapTag, Statement, parameters);
+                var data = await this.connection.ExecuteCypher(MapTag, Statement, parameters);
 
-            return data.Match<Try<Page<Try<Tag>>>>(
-                _ => _,
-                items => new Page<Try<Tag>>(items, parameters.skip, parameters.limit));
-        }
+                return data.Match<Try<Page<Try<Tag>>>>(
+                    _ => _,
+                    items => new Page<Try<Tag>>(items, parameters.skip, parameters.limit));
+            },
+            () => Task(Failure<Page<Try<Tag>>>(new NullObjectException("Parameters are required."))));
     }
 }

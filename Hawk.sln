@@ -114,6 +114,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{158C
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unit", "unit", "{3817E1E5-C6E2-4879-AEB9-2A1906B7A02F}"
+	ProjectSection(SolutionItems) = preProject
+		test\unit\code-analysis.ruleset = test\unit\code-analysis.ruleset
+		test\unit\Directory.Build.props = test\unit\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hawk.Test", "test\unit\Hawk.Test\Hawk.Test.csproj", "{4D213E49-9D73-4319-B737-B2EEAB432B22}"
 EndProject

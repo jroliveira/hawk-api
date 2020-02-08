@@ -7,6 +7,6 @@
 
     public interface IGetPaymentMethodByName
     {
-        Task<Try<PaymentMethod>> GetResult(Email email, string name);
+        Task<Try<PaymentMethod>> GetResult(Option<Email> email, Option<string> name);
     }
 }

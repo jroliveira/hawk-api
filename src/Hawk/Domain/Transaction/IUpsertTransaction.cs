@@ -7,6 +7,6 @@
 
     public interface IUpsertTransaction
     {
-        Task<Try<Transaction>> Execute(Email email, Option<Transaction> entity);
+        Task<Try<Transaction>> Execute(Option<Email> email, Option<Transaction> entity);
     }
 }

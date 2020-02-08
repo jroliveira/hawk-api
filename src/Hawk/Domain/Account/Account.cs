@@ -6,9 +6,8 @@
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
-    using static System.Guid;
-
     using static Hawk.Infrastructure.Monad.Utils.Util;
+    using static Hawk.Infrastructure.Uid;
 
     public sealed class Account : Entity<Guid>
     {
@@ -17,12 +16,14 @@
 
         public Email Email { get; }
 
-        public static Try<Account> NewAccount(Option<string> name) => NewAccount(NewGuid(), name);
+        public static Try<Account> NewAccount(Option<Email> email) => NewAccount(NewGuid(), email);
 
-        public static Try<Account> NewAccount(Option<Guid> id, Option<string> name) =>
+        public static Try<Account> NewAccount(Option<Guid> id, Option<Email> email) =>
             id
-            && name
-            ? new Account(id.Get(), name.Get())
+            && email
+            ? new Account(
+                id.Get(),
+                email.Get())
             : Failure<Account>(new InvalidObjectException("Invalid account."));
     }
 }

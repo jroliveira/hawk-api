@@ -7,6 +7,6 @@
 
     public interface IUpsertConfiguration
     {
-        Task<Try<Configuration>> Execute(Email email, string description, Option<Configuration> entity);
+        Task<Try<Configuration>> Execute(Option<Email> email, Option<string> description, Option<Configuration> entity);
     }
 }

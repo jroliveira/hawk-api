@@ -7,8 +7,8 @@
 
     public interface IUpsertPaymentMethod
     {
-        Task<Try<PaymentMethod>> Execute(Email email, Option<PaymentMethod> entity);
+        Task<Try<PaymentMethod>> Execute(Option<Email> email, Option<PaymentMethod> entity);
 
-        Task<Try<PaymentMethod>> Execute(Email email, string name, Option<PaymentMethod> entity);
+        Task<Try<PaymentMethod>> Execute(Option<Email> email, Option<string> name, Option<PaymentMethod> entity);
     }
 }

@@ -21,16 +21,19 @@
 
         public UpsertCategory(Neo4JConnection connection) => this.connection = connection;
 
-        public Task<Try<Category>> Execute(Email email, string name, Option<Category> entity) => entity.Match(
-            some => this.connection.ExecuteCypherScalar(
-                MapCategory,
-                Statement,
-                new
-                {
-                    email = email.Value,
-                    name,
-                    newName = some.Value,
-                }),
-            () => Task(Failure<Category>(new NullObjectException("Category is required."))));
+        public Task<Try<Category>> Execute(Option<Email> email, Option<string> name, Option<Category> entity) =>
+            email
+            && name
+            && entity
+                ? this.connection.ExecuteCypherScalar(
+                    MapCategory,
+                    Statement,
+                    new
+                    {
+                        email = email.Get().Value,
+                        name = name.Get(),
+                        newName = entity.Get().Value,
+                    })
+                : Task(Failure<Category>(new NullObjectException("Parameters are required.")));
     }
 }
