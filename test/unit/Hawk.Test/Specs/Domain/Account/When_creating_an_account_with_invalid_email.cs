@@ -22,7 +22,7 @@
         It should_be_failed = () =>
             Subject.Must().BeFalse();
 
-        private It should_have_an_exception = () =>
+        It should_have_an_exception = () =>
             Subject.Must().BeException<InvalidObjectException>().WithMessage("Invalid account.");
     }
 }

@@ -2,6 +2,7 @@
 {
     using Hawk.Domain.Shared;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
+    using Hawk.Infrastructure.Extensions;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
 
@@ -10,7 +11,7 @@
     public sealed class Category : ValueObject<Category, string>
     {
         private Category(string name, uint transactions)
-            : base(name) => this.Transactions = transactions;
+            : base(name.ToPascalCase()) => this.Transactions = transactions;
 
         public uint Transactions { get; }
 
