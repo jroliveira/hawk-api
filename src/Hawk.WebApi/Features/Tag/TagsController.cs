@@ -2,7 +2,10 @@
 {
     using System.Threading.Tasks;
 
+    using Hawk.Domain.Payee.Queries;
     using Hawk.Domain.Tag;
+    using Hawk.Domain.Tag.Commands;
+    using Hawk.Domain.Tag.Queries;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
@@ -11,6 +14,11 @@
 
     using Microsoft.AspNetCore.Mvc;
 
+    using static Hawk.Domain.Shared.Commands.DeleteParam<string>;
+    using static Hawk.Domain.Shared.Commands.UpsertParam<string, Hawk.Domain.Tag.Tag>;
+    using static Hawk.Domain.Shared.Queries.GetAllParam;
+    using static Hawk.Domain.Shared.Queries.GetByIdParam<string>;
+    using static Hawk.Domain.Tag.Queries.GetTagsByPayeeParam;
     using static Hawk.Infrastructure.Monad.Utils.Util;
     using static Hawk.WebApi.Features.Tag.TagModel;
 
@@ -24,6 +32,7 @@
         private readonly IGetTagByName getTagByName;
         private readonly IUpsertTag upsertTag;
         private readonly IDeleteTag deleteTag;
+        private readonly IGetPayeeByName getPayeeByName;
         private readonly CreateTagModelValidator validator;
 
         public TagsController(
@@ -31,13 +40,15 @@
             IGetTagsByPayee getTagsByPayee,
             IGetTagByName getTagByName,
             IUpsertTag upsertTag,
-            IDeleteTag deleteTag)
+            IDeleteTag deleteTag,
+            IGetPayeeByName getPayeeByName)
         {
             this.getTags = getTags;
             this.getTagsByPayee = getTagsByPayee;
             this.getTagByName = getTagByName;
             this.upsertTag = upsertTag;
             this.deleteTag = deleteTag;
+            this.getPayeeByName = getPayeeByName;
             this.validator = new CreateTagModelValidator();
         }
 
@@ -52,7 +63,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetTags()
         {
-            var entities = await this.getTags.GetResult(this.GetUser(), this.Request.QueryString.Value);
+            var entities = await this.getTags.GetResult(NewGetByAllParam(this.GetUser(), this.Request.QueryString.Value));
 
             return entities.Match(
                 this.Error<Page<Try<TagModel>>>,
@@ -72,7 +83,13 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetTagsByPayee(string payee)
         {
-            var entities = await this.getTagsByPayee.GetResult(this.GetUser(), payee, this.Request.QueryString.Value);
+            var payeeEntity = await this.getPayeeByName.GetResult(NewGetByIdParam(this.GetUser(), payee));
+            if (!payeeEntity)
+            {
+                return this.Error<TagModel>(new NotFoundException("Payee not found."));
+            }
+
+            var entities = await this.getTagsByPayee.GetResult(NewGetTagsByPayeeParam(this.GetUser(), payeeEntity, this.Request.QueryString.Value));
 
             return entities.Match(
                 this.Error<Page<Try<TagModel>>>,
@@ -92,7 +109,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetTagByName([FromRoute] string name)
         {
-            var entity = await this.getTagByName.GetResult(this.GetUser(), name);
+            var entity = await this.getTagByName.GetResult(NewGetByIdParam(this.GetUser(), name));
 
             return entity.Match(
                 this.Error<TagModel>,
@@ -118,18 +135,17 @@
                 return this.Error<TagModel>(new InvalidObjectException("Invalid tag.", validated));
             }
 
-            var entity = await this.getTagByName.GetResult(this.GetUser(), request.Name);
+            if (await this.getTagByName.GetResult(NewGetByIdParam(this.GetUser(), request.Name)))
+            {
+                return this.Error<TagModel>(new AlreadyExistsException("Tag already exists."));
+            }
 
-            return await entity.Match(
-                async _ =>
-                {
-                    var inserted = await this.upsertTag.Execute(this.GetUser(), request.Name, request);
+            Option<Tag> entity = request;
+            var @try = await this.upsertTag.Execute(NewUpsertParam(this.GetUser(), entity));
 
-                    return inserted.Match(
-                        this.Error<TagModel>,
-                        tag => this.Created(tag.Value, Success(NewTagModel(tag))));
-                },
-                _ => Task(this.Error<TagModel>(new AlreadyExistsException("Tag already exists."))));
+            return @try.Match(
+                this.Error<TagModel>,
+                _ => this.Created(entity.Get().Id, Success(NewTagModel(entity.Get()))));
         }
 
         /// <summary>
@@ -156,25 +172,16 @@
                 return this.Error<TagModel>(new InvalidObjectException("Invalid tag.", validated));
             }
 
-            var entity = await this.getTagByName.GetResult(this.GetUser(), name);
+            var entity = await this.getTagByName.GetResult(NewGetByIdParam(this.GetUser(), name));
 
-            return await entity.Match(
-                async _ =>
-                {
-                    var inserted = await this.upsertTag.Execute(this.GetUser(), name, request);
+            Option<Tag> newEntity = request;
+            var @try = await this.upsertTag.Execute(NewUpsertParam(this.GetUser(), name, newEntity));
 
-                    return inserted.Match(
-                        this.Error<TagModel>,
-                        tag => this.Created(Success(NewTagModel(tag))));
-                },
-                async _ =>
-                {
-                    var updated = await this.upsertTag.Execute(this.GetUser(), name, request);
-
-                    return updated.Match(
-                        this.Error<TagModel>,
-                        tag => this.NoContent());
-                });
+            return @try.Match(
+                this.Error<TagModel>,
+                _ => entity
+                    ? this.NoContent()
+                    : this.Created(newEntity.Get().Id, Success(NewTagModel(newEntity.Get()))));
         }
 
         /// <summary>
@@ -189,7 +196,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> DeleteTag([FromRoute] string name)
         {
-            var deleted = await this.deleteTag.Execute(this.GetUser(), name);
+            var deleted = await this.deleteTag.Execute(NewDeleteParam(this.GetUser(), name));
 
             return deleted.Match(
                 this.Error<TagModel>,

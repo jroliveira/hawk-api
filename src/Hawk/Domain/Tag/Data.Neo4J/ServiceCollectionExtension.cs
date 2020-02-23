@@ -1,6 +1,9 @@
 ﻿namespace Hawk.Domain.Tag.Data.Neo4J
 {
-    using Hawk.Domain.Tag;
+    using Hawk.Domain.Tag.Commands;
+    using Hawk.Domain.Tag.Data.Neo4J.Commands;
+    using Hawk.Domain.Tag.Data.Neo4J.Queries;
+    using Hawk.Domain.Tag.Queries;
 
     using Microsoft.Extensions.DependencyInjection;
 

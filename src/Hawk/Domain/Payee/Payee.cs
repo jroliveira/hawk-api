@@ -8,7 +8,7 @@
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
-    public sealed class Payee : ValueObject<Payee, string>
+    public sealed class Payee : Entity<string>
     {
         private Payee(string name, uint transactions)
             : base(name.ToPascalCase()) => this.Transactions = transactions;

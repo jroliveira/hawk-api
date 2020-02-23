@@ -5,6 +5,7 @@
     using System.Linq;
 
     using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Monad.Linq;
     using Hawk.Infrastructure.Pagination;
     using Hawk.WebApi.Infrastructure.Hal.Link;
     using Hawk.WebApi.Infrastructure.Hal.Resource;

@@ -3,6 +3,8 @@
     using System.Threading.Tasks;
 
     using Hawk.Domain.Configuration;
+    using Hawk.Domain.Configuration.Commands;
+    using Hawk.Domain.Configuration.Queries;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
     using Hawk.WebApi.Features.Shared;
@@ -10,6 +12,8 @@
 
     using Microsoft.AspNetCore.Mvc;
 
+    using static Hawk.Domain.Shared.Commands.UpsertParam<string, Hawk.Domain.Configuration.Configuration>;
+    using static Hawk.Domain.Shared.Queries.GetByIdParam<string>;
     using static Hawk.Infrastructure.Monad.Utils.Util;
     using static Hawk.WebApi.Features.Configuration.ConfigurationModel;
 
@@ -43,7 +47,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetConfigurationByDescription([FromRoute] string description)
         {
-            var entity = await this.getConfigurationByDescription.GetResult(this.GetUser(), description);
+            var entity = await this.getConfigurationByDescription.GetResult(NewGetByIdParam(this.GetUser(), description));
 
             return entity.Match(
                 this.Error<ConfigurationModel>,
@@ -74,25 +78,16 @@
                 return this.Error<ConfigurationModel>(new InvalidObjectException("Invalid configuration.", validated));
             }
 
-            var entity = await this.getConfigurationByDescription.GetResult(this.GetUser(), description);
+            var entity = await this.getConfigurationByDescription.GetResult(NewGetByIdParam(this.GetUser(), description));
 
-            return await entity.Match(
-                async _ =>
-                {
-                    var inserted = await this.upsertConfiguration.Execute(this.GetUser(), description, request);
+            Option<Configuration> newEntity = request;
+            var @try = await this.upsertConfiguration.Execute(NewUpsertParam(this.GetUser(), description, newEntity));
 
-                    return inserted.Match(
-                        this.Error<ConfigurationModel>,
-                        configuration => this.Created(Success(NewConfigurationModel(configuration))));
-                },
-                async _ =>
-                {
-                    var updated = await this.upsertConfiguration.Execute(this.GetUser(), description, request);
-
-                    return updated.Match(
-                        this.Error<ConfigurationModel>,
-                        configuration => this.NoContent());
-                });
+            return @try.Match(
+                this.Error<ConfigurationModel>,
+                _ => entity
+                    ? this.NoContent()
+                    : this.Created(newEntity.Get().Id, Success(NewConfigurationModel(newEntity.Get()))));
         }
     }
 }

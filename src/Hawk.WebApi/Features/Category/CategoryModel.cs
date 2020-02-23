@@ -6,7 +6,7 @@
     {
         private CategoryModel(Category entity)
         {
-            this.Name = entity.Value;
+            this.Name = entity.Id;
             this.Transactions = entity.Transactions;
         }
 

@@ -8,7 +8,7 @@
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
-    public sealed class Currency : ValueObject<Currency, string>
+    public sealed class Currency : Entity<string>
     {
         private Currency(string name, uint transactions)
             : base(name.ToUpperCase()) => this.Transactions = transactions;

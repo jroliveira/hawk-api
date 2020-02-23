@@ -6,13 +6,14 @@
     using Hawk.Domain.Currency;
     using Hawk.Domain.Payee;
     using Hawk.Domain.PaymentMethod;
+    using Hawk.Domain.Shared;
     using Hawk.Domain.Tag;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
-    public sealed class Configuration
+    public sealed class Configuration : Entity<string>
     {
         private Configuration(
             string type,
@@ -21,9 +22,9 @@
             Currency currency,
             Payee payee,
             IEnumerable<Tag> tags)
+            : base(description)
         {
             this.Type = type;
-            this.Description = description;
             this.PaymentMethod = paymentMethod;
             this.Currency = currency;
             this.Payee = payee;
@@ -31,8 +32,6 @@
         }
 
         public string Type { get; }
-
-        public string Description { get; }
 
         public PaymentMethod PaymentMethod { get; }
 

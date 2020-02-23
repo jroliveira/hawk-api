@@ -1,6 +1,9 @@
 ﻿namespace Hawk.Domain.Transaction.Data.Neo4J
 {
-    using Hawk.Domain.Transaction;
+    using Hawk.Domain.Transaction.Commands;
+    using Hawk.Domain.Transaction.Data.Neo4J.Commands;
+    using Hawk.Domain.Transaction.Data.Neo4J.Queries;
+    using Hawk.Domain.Transaction.Queries;
 
     using Microsoft.Extensions.DependencyInjection;
 
