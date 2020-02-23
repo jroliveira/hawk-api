@@ -3,6 +3,8 @@
     using System.Threading.Tasks;
 
     using Hawk.Domain.Currency;
+    using Hawk.Domain.Currency.Commands;
+    using Hawk.Domain.Currency.Queries;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
@@ -11,6 +13,10 @@
 
     using Microsoft.AspNetCore.Mvc;
 
+    using static Hawk.Domain.Shared.Commands.DeleteParam<string>;
+    using static Hawk.Domain.Shared.Commands.UpsertParam<string, Hawk.Domain.Currency.Currency>;
+    using static Hawk.Domain.Shared.Queries.GetAllParam;
+    using static Hawk.Domain.Shared.Queries.GetByIdParam<string>;
     using static Hawk.Infrastructure.Monad.Utils.Util;
     using static Hawk.WebApi.Features.Currency.CurrencyModel;
 
@@ -49,7 +55,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetCurrencies()
         {
-            var entities = await this.getCurrencies.GetResult(this.GetUser(), this.Request.QueryString.Value);
+            var entities = await this.getCurrencies.GetResult(NewGetByAllParam(this.GetUser(), this.Request.QueryString.Value));
 
             return entities.Match(
                 this.Error<Page<Try<CurrencyModel>>>,
@@ -69,7 +75,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetCurrencyByName([FromRoute] string name)
         {
-            var entity = await this.getCurrencyByName.GetResult(this.GetUser(), name);
+            var entity = await this.getCurrencyByName.GetResult(NewGetByIdParam(this.GetUser(), name));
 
             return entity.Match(
                 this.Error<CurrencyModel>,
@@ -95,18 +101,17 @@
                 return this.Error<CurrencyModel>(new InvalidObjectException("Invalid currency.", validated));
             }
 
-            var entity = await this.getCurrencyByName.GetResult(this.GetUser(), request.Name);
+            if (await this.getCurrencyByName.GetResult(NewGetByIdParam(this.GetUser(), request.Name)))
+            {
+                return this.Error<CurrencyModel>(new AlreadyExistsException("Currency already exists."));
+            }
 
-            return await entity.Match(
-                async _ =>
-                {
-                    var inserted = await this.upsertCurrency.Execute(this.GetUser(), request);
+            Option<Currency> entity = request;
+            var @try = await this.upsertCurrency.Execute(NewUpsertParam(this.GetUser(), entity));
 
-                    return inserted.Match(
-                        this.Error<CurrencyModel>,
-                        currency => this.Created(currency.Value, Success(NewCurrencyModel(currency))));
-                },
-                _ => Task(this.Error<CurrencyModel>(new AlreadyExistsException("Currency already exists."))));
+            return @try.Match(
+                this.Error<CurrencyModel>,
+                _ => this.Created(entity.Get().Id, Success(NewCurrencyModel(entity.Get()))));
         }
 
         /// <summary>
@@ -133,25 +138,16 @@
                 return this.Error<CurrencyModel>(new InvalidObjectException("Invalid currency.", validated));
             }
 
-            var entity = await this.getCurrencyByName.GetResult(this.GetUser(), name);
+            var entity = await this.getCurrencyByName.GetResult(NewGetByIdParam(this.GetUser(), name));
 
-            return await entity.Match(
-                async _ =>
-                {
-                    var inserted = await this.upsertCurrency.Execute(this.GetUser(), name, request);
+            Option<Currency> newEntity = request;
+            var @try = await this.upsertCurrency.Execute(NewUpsertParam(this.GetUser(), name, newEntity));
 
-                    return inserted.Match(
-                        this.Error<CurrencyModel>,
-                        currency => this.Created(Success(NewCurrencyModel(currency))));
-                },
-                async _ =>
-                {
-                    var updated = await this.upsertCurrency.Execute(this.GetUser(), name, request);
-
-                    return updated.Match(
-                        this.Error<CurrencyModel>,
-                        currency => this.NoContent());
-                });
+            return @try.Match(
+                this.Error<CurrencyModel>,
+                _ => entity
+                    ? this.NoContent()
+                    : this.Created(newEntity.Get().Id, Success(NewCurrencyModel(newEntity.Get()))));
         }
 
         /// <summary>
@@ -166,7 +162,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> DeleteCurrency([FromRoute] string name)
         {
-            var deleted = await this.deleteCurrency.Execute(this.GetUser(), name);
+            var deleted = await this.deleteCurrency.Execute(NewDeleteParam(this.GetUser(), name));
 
             return deleted.Match(
                 this.Error<CurrencyModel>,

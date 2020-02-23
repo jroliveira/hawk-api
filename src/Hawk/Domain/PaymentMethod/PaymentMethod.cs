@@ -8,7 +8,7 @@
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
-    public sealed class PaymentMethod : ValueObject<PaymentMethod, string>
+    public sealed class PaymentMethod : Entity<string>
     {
         private PaymentMethod(string name, uint transactions)
             : base(name.ToPascalCase()) => this.Transactions = transactions;

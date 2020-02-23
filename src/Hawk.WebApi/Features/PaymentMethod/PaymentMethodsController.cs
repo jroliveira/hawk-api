@@ -2,7 +2,10 @@
 {
     using System.Threading.Tasks;
 
+    using Hawk.Domain.Payee.Queries;
     using Hawk.Domain.PaymentMethod;
+    using Hawk.Domain.PaymentMethod.Commands;
+    using Hawk.Domain.PaymentMethod.Queries;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
@@ -11,6 +14,11 @@
 
     using Microsoft.AspNetCore.Mvc;
 
+    using static Hawk.Domain.PaymentMethod.Queries.GetPaymentMethodsByPayeeParam;
+    using static Hawk.Domain.Shared.Commands.DeleteParam<string>;
+    using static Hawk.Domain.Shared.Commands.UpsertParam<string, Hawk.Domain.PaymentMethod.PaymentMethod>;
+    using static Hawk.Domain.Shared.Queries.GetAllParam;
+    using static Hawk.Domain.Shared.Queries.GetByIdParam<string>;
     using static Hawk.Infrastructure.Monad.Utils.Util;
     using static Hawk.WebApi.Features.PaymentMethod.PaymentMethodModel;
 
@@ -24,6 +32,7 @@
         private readonly IGetPaymentMethodByName getPaymentMethodByName;
         private readonly IUpsertPaymentMethod upsertPaymentMethod;
         private readonly IDeletePaymentMethod deletePaymentMethod;
+        private readonly IGetPayeeByName getPayeeByName;
         private readonly CreatePaymentMethodModelValidator validator;
 
         public PaymentMethodsController(
@@ -31,13 +40,15 @@
             IGetPaymentMethodsByPayee getPaymentMethodsByPayee,
             IGetPaymentMethodByName getPaymentMethodByName,
             IUpsertPaymentMethod upsertPaymentMethod,
-            IDeletePaymentMethod deletePaymentMethod)
+            IDeletePaymentMethod deletePaymentMethod,
+            IGetPayeeByName getPayeeByName)
         {
             this.getPaymentMethods = getPaymentMethods;
             this.getPaymentMethodsByPayee = getPaymentMethodsByPayee;
             this.getPaymentMethodByName = getPaymentMethodByName;
             this.upsertPaymentMethod = upsertPaymentMethod;
             this.deletePaymentMethod = deletePaymentMethod;
+            this.getPayeeByName = getPayeeByName;
             this.validator = new CreatePaymentMethodModelValidator();
         }
 
@@ -52,7 +63,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetPaymentMethods()
         {
-            var entities = await this.getPaymentMethods.GetResult(this.GetUser(), this.Request.QueryString.Value);
+            var entities = await this.getPaymentMethods.GetResult(NewGetByAllParam(this.GetUser(), this.Request.QueryString.Value));
 
             return entities.Match(
                 this.Error<Page<Try<PaymentMethodModel>>>,
@@ -72,7 +83,13 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetPaymentMethodsByPayee(string payee)
         {
-            var entities = await this.getPaymentMethodsByPayee.GetResult(this.GetUser(), payee, this.Request.QueryString.Value);
+            var payeeEntity = await this.getPayeeByName.GetResult(NewGetByIdParam(this.GetUser(), payee));
+            if (!payeeEntity)
+            {
+                return this.Error<PaymentMethodModel>(new NotFoundException("Payee not found."));
+            }
+
+            var entities = await this.getPaymentMethodsByPayee.GetResult(NewGetPaymentMethodsByPayeeParam(this.GetUser(), payeeEntity, this.Request.QueryString.Value));
 
             return entities.Match(
                 this.Error<Page<Try<PaymentMethodModel>>>,
@@ -92,7 +109,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetPaymentMethodByName([FromRoute] string name)
         {
-            var entity = await this.getPaymentMethodByName.GetResult(this.GetUser(), name);
+            var entity = await this.getPaymentMethodByName.GetResult(NewGetByIdParam(this.GetUser(), name));
 
             return entity.Match(
                 this.Error<PaymentMethodModel>,
@@ -118,18 +135,17 @@
                 return this.Error<PaymentMethodModel>(new InvalidObjectException("Invalid payment method.", validated));
             }
 
-            var entity = await this.getPaymentMethodByName.GetResult(this.GetUser(), request.Name);
+            if (await this.getPaymentMethodByName.GetResult(NewGetByIdParam(this.GetUser(), request.Name)))
+            {
+                return this.Error<PaymentMethodModel>(new AlreadyExistsException("Payment method already exists."));
+            }
 
-            return await entity.Match(
-                async _ =>
-                {
-                    var inserted = await this.upsertPaymentMethod.Execute(this.GetUser(), request.Name, request);
+            Option<PaymentMethod> entity = request;
+            var @try = await this.upsertPaymentMethod.Execute(NewUpsertParam(this.GetUser(), entity));
 
-                    return inserted.Match(
-                        this.Error<PaymentMethodModel>,
-                        paymentMethod => this.Created(paymentMethod.Value, Success(NewPaymentMethodModel(paymentMethod))));
-                },
-                _ => Task(this.Error<PaymentMethodModel>(new AlreadyExistsException("Payment method already exists."))));
+            return @try.Match(
+                this.Error<PaymentMethodModel>,
+                _ => this.Created(entity.Get().Id, Success(NewPaymentMethodModel(entity.Get()))));
         }
 
         /// <summary>
@@ -156,25 +172,16 @@
                 return this.Error<PaymentMethodModel>(new InvalidObjectException("Invalid payment method.", validated));
             }
 
-            var entity = await this.getPaymentMethodByName.GetResult(this.GetUser(), name);
+            var entity = await this.getPaymentMethodByName.GetResult(NewGetByIdParam(this.GetUser(), name));
 
-            return await entity.Match(
-                async _ =>
-                {
-                    var inserted = await this.upsertPaymentMethod.Execute(this.GetUser(), name, request);
+            Option<PaymentMethod> newEntity = request;
+            var @try = await this.upsertPaymentMethod.Execute(NewUpsertParam(this.GetUser(), name, newEntity));
 
-                    return inserted.Match(
-                        this.Error<PaymentMethodModel>,
-                        paymentMethod => this.Created(Success(NewPaymentMethodModel(paymentMethod))));
-                },
-                async _ =>
-                {
-                    var updated = await this.upsertPaymentMethod.Execute(this.GetUser(), name, request);
-
-                    return updated.Match(
-                        this.Error<PaymentMethodModel>,
-                        paymentMethod => this.NoContent());
-                });
+            return @try.Match(
+                this.Error<PaymentMethodModel>,
+                _ => entity
+                    ? this.NoContent()
+                    : this.Created(newEntity.Get().Id, Success(NewPaymentMethodModel(newEntity.Get()))));
         }
 
         /// <summary>
@@ -189,7 +196,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> DeletePaymentMethod([FromRoute] string name)
         {
-            var deleted = await this.deletePaymentMethod.Execute(this.GetUser(), name);
+            var deleted = await this.deletePaymentMethod.Execute(NewDeleteParam(this.GetUser(), name));
 
             return deleted.Match(
                 this.Error<PaymentMethodModel>,

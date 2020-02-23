@@ -1,6 +1,9 @@
 ﻿namespace Hawk.Domain.Category.Data.Neo4J
 {
-    using Hawk.Domain.Category;
+    using Hawk.Domain.Category.Commands;
+    using Hawk.Domain.Category.Data.Neo4J.Commands;
+    using Hawk.Domain.Category.Data.Neo4J.Queries;
+    using Hawk.Domain.Category.Queries;
 
     using Microsoft.Extensions.DependencyInjection;
 

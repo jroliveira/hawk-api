@@ -1,6 +1,9 @@
 ﻿namespace Hawk.Domain.PaymentMethod.Data.Neo4J
 {
-    using Hawk.Domain.PaymentMethod;
+    using Hawk.Domain.PaymentMethod.Commands;
+    using Hawk.Domain.PaymentMethod.Data.Neo4J.Commands;
+    using Hawk.Domain.PaymentMethod.Data.Neo4J.Queries;
+    using Hawk.Domain.PaymentMethod.Queries;
 
     using Microsoft.Extensions.DependencyInjection;
 

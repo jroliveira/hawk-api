@@ -19,7 +19,7 @@
             this.Payment = entity.Payment;
             this.Payee = entity.Payee;
             this.Category = entity.Category;
-            this.Tags = entity.Tags.Select(tag => tag.Value);
+            this.Tags = entity.Tags.Select(tag => tag.Id);
         }
 
         public string Id { get; }

@@ -12,7 +12,7 @@
 
     using static Newtonsoft.Json.JsonConvert;
 
-    public static class HttpClientExtension
+    internal static class HttpClientExtension
     {
         private static readonly IReadOnlyDictionary<string, HttpMethod> Methods = new Dictionary<string, HttpMethod>
         {
@@ -22,7 +22,7 @@
             { "PUT", HttpMethod.Put },
         };
 
-        public static Task<(HttpStatusCode StatusCode, dynamic? Response)> Get(this HttpClient @this, string url) => @this.Request(new
+        internal static Task<(HttpStatusCode StatusCode, dynamic? Response)> Get(this HttpClient @this, string url) => @this.Request(new
         {
             Url = url,
             Method = "GET",
@@ -32,7 +32,7 @@
             },
         });
 
-        public static Task<(HttpStatusCode StatusCode, dynamic? Response)> Delete(this HttpClient @this, string url) => @this.Request(new
+        internal static Task<(HttpStatusCode StatusCode, dynamic? Response)> Delete(this HttpClient @this, string url) => @this.Request(new
         {
             Url = url,
             Method = "DELETE",
@@ -42,7 +42,7 @@
             },
         });
 
-        public static Task<(HttpStatusCode StatusCode, dynamic? Response)> Post(this HttpClient @this, string url, object data) => @this.Request(new
+        internal static Task<(HttpStatusCode StatusCode, dynamic? Response)> Post(this HttpClient @this, string url, object data) => @this.Request(new
         {
             Url = url,
             Method = "POST",
@@ -54,7 +54,7 @@
             Data = data,
         });
 
-        private static async Task<(HttpStatusCode StatusCode, dynamic? Response)> Request(this HttpClient @this, dynamic options)
+        internal static async Task<(HttpStatusCode StatusCode, dynamic? Response)> Request(this HttpClient @this, dynamic options)
         {
             using var request = new HttpRequestMessage(Methods[options.Method], options.Url);
             ConfigureHeaders(request, options.Headers);

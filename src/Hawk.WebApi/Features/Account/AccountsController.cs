@@ -3,6 +3,8 @@
     using System.Threading.Tasks;
 
     using Hawk.Domain.Account;
+    using Hawk.Domain.Account.Commands;
+    using Hawk.Domain.Account.Queries;
     using Hawk.Infrastructure.Caching;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
@@ -13,6 +15,8 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Caching.Memory;
 
+    using static Hawk.Domain.Account.Queries.GetAccountByEmailParam;
+    using static Hawk.Domain.Shared.Commands.UpsertParam<System.Guid, Hawk.Domain.Account.Account>;
     using static Hawk.Infrastructure.Monad.Utils.Util;
     using static Hawk.WebApi.Features.Account.AccountModel;
 
@@ -50,7 +54,7 @@
         {
             var entity = await this.memoryCache.GetOrCreateCache(
                 this.GetUser(),
-                () => this.getAccountByEmail.GetResult(this.GetUser()));
+                () => this.getAccountByEmail.GetResult(NewGetAccountByEmailParam(this.GetUser())));
 
             return entity.Match(
                 this.Error<AccountModel>,
@@ -75,18 +79,17 @@
                 return this.Error<AccountModel>(new InvalidObjectException("Invalid account.", validated));
             }
 
-            var entity = await this.getAccountByEmail.GetResult(request);
+            if (await this.getAccountByEmail.GetResult(NewGetAccountByEmailParam(this.GetUser())))
+            {
+                return this.Error<AccountModel>(new AlreadyExistsException("Account already exists."));
+            }
 
-            return await entity.Match(
-                async _ =>
-                {
-                    var inserted = await this.upsertAccount.Execute(request);
+            Option<Account> entity = request;
+            var @try = await this.upsertAccount.Execute(NewUpsertParam(this.GetUser(), entity));
 
-                    return inserted.Match(
-                        this.Error<AccountModel>,
-                        account => this.Created(account.Email, Success(NewAccountModel(account))));
-                },
-                _ => Task(this.Error<AccountModel>(new AlreadyExistsException("Account already exists."))));
+            return @try.Match(
+                this.Error<AccountModel>,
+                _ => this.Created(entity.Get().Id, Success(NewAccountModel(entity.Get()))));
         }
     }
 }

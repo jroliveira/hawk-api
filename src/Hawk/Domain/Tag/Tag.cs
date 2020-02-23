@@ -8,7 +8,7 @@
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
-    public sealed class Tag : ValueObject<Tag, string>
+    public sealed class Tag : Entity<string>
     {
         private Tag(string name, uint transactions)
             : base(name.ToKebabCase()) => this.Transactions = transactions;

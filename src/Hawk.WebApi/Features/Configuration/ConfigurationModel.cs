@@ -10,11 +10,11 @@
         private ConfigurationModel(Configuration entity)
         {
             this.Type = entity.Type;
-            this.Description = entity.Description;
+            this.Description = entity.Id;
             this.PaymentMethod = entity.PaymentMethod;
             this.Currency = entity.Currency;
             this.Payee = entity.Payee;
-            this.Tags = entity.Tags.Select(tag => tag.Value);
+            this.Tags = entity.Tags.Select(tag => tag.Id);
         }
 
         public string Type { get; }

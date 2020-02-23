@@ -24,94 +24,94 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Domain\Account\Data.Neo4J\GetAccountByEmail.cql">
+    <None Update="Domain\Account\Data.Neo4J\Queries\GetAccountByEmail.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Account\Data.Neo4J\UpsertAccount.cql">
+    <None Update="Domain\Account\Data.Neo4J\Commands\UpsertAccount.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Configuration\Data.Neo4J\GetConfigurationByDescription.cql">
+    <None Update="Domain\Configuration\Data.Neo4J\Queries\GetConfigurationByDescription.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Configuration\Data.Neo4J\UpsertConfiguration.cql">
+    <None Update="Domain\Configuration\Data.Neo4J\Commands\UpsertConfiguration.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Currency\Data.Neo4J\DeleteCurrency.cql">
+    <None Update="Domain\Currency\Data.Neo4J\Commands\DeleteCurrency.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Currency\Data.Neo4J\GetCurrencyByName.cql">
+    <None Update="Domain\Currency\Data.Neo4J\Queries\GetCurrencyByName.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Currency\Data.Neo4J\GetCurrencies.cql">
+    <None Update="Domain\Currency\Data.Neo4J\Queries\GetCurrencies.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Currency\Data.Neo4J\UpsertCurrency.cql">
+    <None Update="Domain\Currency\Data.Neo4J\Commands\UpsertCurrency.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Category\Data.Neo4J\DeleteCategory.cql">
+    <None Update="Domain\Category\Data.Neo4J\Commands\DeleteCategory.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Category\Data.Neo4J\GetCategoryByName.cql">
+    <None Update="Domain\Category\Data.Neo4J\Queries\GetCategoryByName.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Category\Data.Neo4J\GetCategories.cql">
+    <None Update="Domain\Category\Data.Neo4J\Queries\GetCategories.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Category\Data.Neo4J\UpsertCategory.cql">
+    <None Update="Domain\Category\Data.Neo4J\Commands\UpsertCategory.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\PaymentMethod\Data.Neo4J\DeletePaymentMethod.cql">
+    <None Update="Domain\PaymentMethod\Data.Neo4J\Commands\DeletePaymentMethod.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\PaymentMethod\Data.Neo4J\GetPaymentMethods.cql">
+    <None Update="Domain\PaymentMethod\Data.Neo4J\Queries\GetPaymentMethods.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\PaymentMethod\Data.Neo4J\GetPaymentMethodsByPayee.cql">
+    <None Update="Domain\PaymentMethod\Data.Neo4J\Queries\GetPaymentMethodsByPayee.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Payee\Data.Neo4J\DeletePayee.cql">
+    <None Update="Domain\Payee\Data.Neo4J\Commands\DeletePayee.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Payee\Data.Neo4J\GetPayeeByName.cql">
+    <None Update="Domain\Payee\Data.Neo4J\Queries\GetPayeeByName.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Payee\Data.Neo4J\GetPayees.cql">
+    <None Update="Domain\Payee\Data.Neo4J\Queries\GetPayees.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Payee\Data.Neo4J\UpsertPayee.cql">
+    <None Update="Domain\Payee\Data.Neo4J\Commands\UpsertPayee.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\PaymentMethod\Data.Neo4J\GetPaymentMethodByName.cql">
+    <None Update="Domain\PaymentMethod\Data.Neo4J\Queries\GetPaymentMethodByName.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\PaymentMethod\Data.Neo4J\UpsertPaymentMethod.cql">
+    <None Update="Domain\PaymentMethod\Data.Neo4J\Commands\UpsertPaymentMethod.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Tag\Data.Neo4J\DeleteTag.cql">
+    <None Update="Domain\Tag\Data.Neo4J\Commands\DeleteTag.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Tag\Data.Neo4J\GetTagByName.cql">
+    <None Update="Domain\Tag\Data.Neo4J\Queries\GetTagByName.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Tag\Data.Neo4J\GetTags.cql">
+    <None Update="Domain\Tag\Data.Neo4J\Queries\GetTags.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Tag\Data.Neo4J\GetTagsByPayee.cql">
+    <None Update="Domain\Tag\Data.Neo4J\Queries\GetTagsByPayee.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Tag\Data.Neo4J\UpsertTag.cql">
+    <None Update="Domain\Tag\Data.Neo4J\Commands\UpsertTag.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Transaction\Data.Neo4J\DeleteTransaction.cql">
+    <None Update="Domain\Transaction\Data.Neo4J\Commands\DeleteTransaction.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Transaction\Data.Neo4J\GetTransactionById.cql">
+    <None Update="Domain\Transaction\Data.Neo4J\Queries\GetTransactionById.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Transaction\Data.Neo4J\GetTransactions.cql">
+    <None Update="Domain\Transaction\Data.Neo4J\Queries\GetTransactions.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Transaction\Data.Neo4J\UpsertTransaction.cql">
+    <None Update="Domain\Transaction\Data.Neo4J\Commands\UpsertTransaction.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

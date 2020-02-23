@@ -3,10 +3,10 @@
     using System;
     using System.Net;
 
-    using Neo4j.Driver;
-
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
+
+    using static System.Convert;
 
     internal sealed class IpEndPointConverter : JsonConverter
     {
@@ -46,7 +46,7 @@
                 return default;
             }
 
-            var port = jo.GetValue("Port").As<int>();
+            var port = ToInt32(jo.GetValue("Port"));
 
             return new IPEndPoint(address, port);
         }

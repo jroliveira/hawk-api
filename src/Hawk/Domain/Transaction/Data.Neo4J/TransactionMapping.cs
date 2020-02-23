@@ -8,6 +8,7 @@
     using Hawk.Infrastructure.Extensions;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
+    using Hawk.Infrastructure.Monad.Linq;
 
     using Neo4j.Driver;
 

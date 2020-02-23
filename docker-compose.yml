@@ -61,6 +61,7 @@ services:
 
   api:
     container_name: hawk-api
+    image: hawk/api:v1
     build:
       context: .
       dockerfile: Dockerfile

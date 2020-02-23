@@ -1,6 +1,9 @@
 ﻿namespace Hawk.Domain.Account.Data.Neo4J
 {
-    using Hawk.Domain.Account;
+    using Hawk.Domain.Account.Commands;
+    using Hawk.Domain.Account.Data.Neo4J.Commands;
+    using Hawk.Domain.Account.Data.Neo4J.Queries;
+    using Hawk.Domain.Account.Queries;
 
     using Microsoft.Extensions.DependencyInjection;
 

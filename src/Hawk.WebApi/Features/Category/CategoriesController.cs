@@ -3,6 +3,8 @@
     using System.Threading.Tasks;
 
     using Hawk.Domain.Category;
+    using Hawk.Domain.Category.Commands;
+    using Hawk.Domain.Category.Queries;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
@@ -11,6 +13,10 @@
 
     using Microsoft.AspNetCore.Mvc;
 
+    using static Hawk.Domain.Shared.Commands.DeleteParam<string>;
+    using static Hawk.Domain.Shared.Commands.UpsertParam<string, Hawk.Domain.Category.Category>;
+    using static Hawk.Domain.Shared.Queries.GetAllParam;
+    using static Hawk.Domain.Shared.Queries.GetByIdParam<string>;
     using static Hawk.Infrastructure.Monad.Utils.Util;
     using static Hawk.WebApi.Features.Category.CategoryModel;
 
@@ -49,7 +55,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetCategories()
         {
-            var entities = await this.getCategories.GetResult(this.GetUser(), this.Request.QueryString.Value);
+            var entities = await this.getCategories.GetResult(NewGetByAllParam(this.GetUser(), this.Request.QueryString.Value));
 
             return entities.Match(
                 this.Error<Page<Try<CategoryModel>>>,
@@ -69,7 +75,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetCategoryByName([FromRoute] string name)
         {
-            var entity = await this.getCategoryByName.GetResult(this.GetUser(), name);
+            var entity = await this.getCategoryByName.GetResult(NewGetByIdParam(this.GetUser(), name));
 
             return entity.Match(
                 this.Error<CategoryModel>,
@@ -95,18 +101,17 @@
                 return this.Error<CategoryModel>(new InvalidObjectException("Invalid category.", validated));
             }
 
-            var entity = await this.getCategoryByName.GetResult(this.GetUser(), request.Name);
+            if (await this.getCategoryByName.GetResult(NewGetByIdParam(this.GetUser(), request.Name)))
+            {
+                return this.Error<CategoryModel>(new AlreadyExistsException("Category already exists."));
+            }
 
-            return await entity.Match(
-                async _ =>
-                {
-                    var inserted = await this.upsertCategory.Execute(this.GetUser(), request.Name, request);
+            Option<Category> entity = request;
+            var @try = await this.upsertCategory.Execute(NewUpsertParam(this.GetUser(), entity));
 
-                    return inserted.Match(
-                        this.Error<CategoryModel>,
-                        category => this.Created(category.Value, Success(NewCategoryModel(category))));
-                },
-                _ => Task(this.Error<CategoryModel>(new AlreadyExistsException("Category already exists."))));
+            return @try.Match(
+                this.Error<CategoryModel>,
+                _ => this.Created(entity.Get().Id, Success(NewCategoryModel(entity.Get()))));
         }
 
         /// <summary>
@@ -133,25 +138,16 @@
                 return this.Error<CategoryModel>(new InvalidObjectException("Invalid category.", validated));
             }
 
-            var entity = await this.getCategoryByName.GetResult(this.GetUser(), name);
+            var entity = await this.getCategoryByName.GetResult(NewGetByIdParam(this.GetUser(), name));
 
-            return await entity.Match(
-                async _ =>
-                {
-                    var inserted = await this.upsertCategory.Execute(this.GetUser(), name, request);
+            Option<Category> newEntity = request;
+            var @try = await this.upsertCategory.Execute(NewUpsertParam(this.GetUser(), name, newEntity));
 
-                    return inserted.Match(
-                        this.Error<CategoryModel>,
-                        category => this.Created(Success(NewCategoryModel(category))));
-                },
-                async _ =>
-                {
-                    var updated = await this.upsertCategory.Execute(this.GetUser(), name, request);
-
-                    return updated.Match(
-                        this.Error<CategoryModel>,
-                        category => this.NoContent());
-                });
+            return @try.Match(
+                this.Error<CategoryModel>,
+                _ => entity
+                    ? this.NoContent()
+                    : this.Created(newEntity.Get().Id, Success(NewCategoryModel(newEntity.Get()))));
         }
 
         /// <summary>
@@ -166,7 +162,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> DeleteCategory([FromRoute] string name)
         {
-            var deleted = await this.deleteCategory.Execute(this.GetUser(), name);
+            var deleted = await this.deleteCategory.Execute(NewDeleteParam(this.GetUser(), name));
 
             return deleted.Match(
                 this.Error<CategoryModel>,

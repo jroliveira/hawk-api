@@ -1,6 +1,9 @@
 ﻿namespace Hawk.Domain.Currency.Data.Neo4J
 {
-    using Hawk.Domain.Currency;
+    using Hawk.Domain.Currency.Commands;
+    using Hawk.Domain.Currency.Data.Neo4J.Commands;
+    using Hawk.Domain.Currency.Data.Neo4J.Queries;
+    using Hawk.Domain.Currency.Queries;
 
     using Microsoft.Extensions.DependencyInjection;
 

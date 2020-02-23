@@ -1,5 +1,7 @@
-﻿namespace System.Linq
+﻿namespace Hawk.Infrastructure.Monad.Linq
 {
+    using System;
+
     using Hawk.Infrastructure.Monad;
 
     public static partial class LinqExtension

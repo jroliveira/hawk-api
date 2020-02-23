@@ -1,6 +1,9 @@
 ﻿namespace Hawk.Domain.Payee.Data.Neo4J
 {
-    using Hawk.Domain.Payee;
+    using Hawk.Domain.Payee.Commands;
+    using Hawk.Domain.Payee.Data.Neo4J.Commands;
+    using Hawk.Domain.Payee.Data.Neo4J.Queries;
+    using Hawk.Domain.Payee.Queries;
 
     using Microsoft.Extensions.DependencyInjection;
 
