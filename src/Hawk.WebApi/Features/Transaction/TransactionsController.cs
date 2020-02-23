@@ -3,6 +3,13 @@
     using System;
     using System.Threading.Tasks;
 
+    using FluentValidation.Results;
+
+    using Hawk.Domain.Category.Queries;
+    using Hawk.Domain.Currency.Queries;
+    using Hawk.Domain.Payee.Queries;
+    using Hawk.Domain.PaymentMethod.Queries;
+    using Hawk.Domain.Shared;
     using Hawk.Domain.Transaction;
     using Hawk.Domain.Transaction.Commands;
     using Hawk.Domain.Transaction.Queries;
@@ -30,19 +37,35 @@
         private readonly IGetTransactionById getTransactionById;
         private readonly IUpsertTransaction upsertTransaction;
         private readonly IDeleteTransaction deleteTransaction;
-        private readonly CreateTransactionModelValidator validator;
+        private readonly Func<Try<Email>, CreateTransactionModel, Task<ValidationResult>> validate;
 
         public TransactionsController(
             IGetTransactions getTransactions,
             IGetTransactionById getTransactionById,
             IUpsertTransaction upsertTransaction,
-            IDeleteTransaction deleteTransaction)
+            IDeleteTransaction deleteTransaction,
+            IGetCategoryByName getCategoryByName,
+            IGetCurrencyByName getCurrencyByName,
+            IGetPayeeByName getPayeeByName,
+            IGetPaymentMethodByName getPaymentMethodByName)
         {
             this.getTransactions = getTransactions;
             this.getTransactionById = getTransactionById;
             this.upsertTransaction = upsertTransaction;
             this.deleteTransaction = deleteTransaction;
-            this.validator = new CreateTransactionModelValidator();
+
+            this.validate = (email, request) =>
+            {
+                var validator = new CreateTransactionModelValidator(
+                    email.Get(),
+                    getCategoryByName,
+                    getCurrencyByName,
+                    getPayeeByName,
+                    getPaymentMethodByName,
+                    getTransactions);
+
+                return validator.ValidateAsync(request);
+            };
         }
 
         /// <summary>
@@ -96,7 +119,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> CreateTransaction([FromBody] CreateTransactionModel request)
         {
-            var validated = await this.validator.ValidateAsync(request);
+            var validated = await this.validate(this.GetUser(), request);
             if (!validated.IsValid)
             {
                 return this.Error<TransactionModel>(new InvalidObjectException("Invalid transaction.", validated));
@@ -128,7 +151,7 @@
             [FromRoute] string id,
             [FromBody] CreateTransactionModel request)
         {
-            var validated = await this.validator.ValidateAsync(request);
+            var validated = await this.validate(this.GetUser(), request);
             if (!validated.IsValid)
             {
                 return this.Error<TransactionModel>(new InvalidObjectException("Invalid transaction.", validated));

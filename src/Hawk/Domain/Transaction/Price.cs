@@ -1,12 +1,14 @@
 ﻿namespace Hawk.Domain.Transaction
 {
+    using System;
+
     using Hawk.Domain.Currency;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
-    public sealed class Price
+    public sealed class Price : IEquatable<Option<Price>>
     {
         private Price(double value, Currency currency)
         {
@@ -23,5 +25,10 @@
             && currency
             ? new Price(value.Get(), currency.Get())
             : Failure<Price>(new InvalidObjectException("Invalid price."));
+
+        public bool Equals(Option<Price> other) => other.Match(
+            some => this.Value.Equals(some.Value)
+                    && this.Currency.Equals(some.Currency),
+            () => false);
     }
 }

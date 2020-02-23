@@ -8,7 +8,7 @@
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
-    public sealed class Payment
+    public sealed class Payment : IEquatable<Option<Payment>>
     {
         private Payment(Price price, DateTime date, PaymentMethod paymentMethod)
         {
@@ -29,5 +29,11 @@
             && paymentMethod
             ? new Payment(price.Get(), date.Get(), paymentMethod.Get())
             : Failure<Payment>(new InvalidObjectException("Invalid payment."));
+
+        public bool Equals(Option<Payment> other) => other.Match(
+            some => this.Price.Equals(some.Price)
+                    && this.Date.Equals(some.Date)
+                    && this.PaymentMethod.Equals(some.PaymentMethod),
+            () => false);
     }
 }

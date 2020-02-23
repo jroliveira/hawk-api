@@ -17,6 +17,7 @@
 
     using static Hawk.Domain.Account.Queries.GetAccountByEmailParam;
     using static Hawk.Domain.Shared.Commands.UpsertParam<System.Guid, Hawk.Domain.Account.Account>;
+    using static Hawk.Domain.Shared.Email;
     using static Hawk.Infrastructure.Monad.Utils.Util;
     using static Hawk.WebApi.Features.Account.AccountModel;
 
@@ -79,13 +80,13 @@
                 return this.Error<AccountModel>(new InvalidObjectException("Invalid account.", validated));
             }
 
-            if (await this.getAccountByEmail.GetResult(NewGetAccountByEmailParam(this.GetUser())))
+            if (await this.getAccountByEmail.GetResult(NewGetAccountByEmailParam(NewEmail(request.Email))))
             {
                 return this.Error<AccountModel>(new AlreadyExistsException("Account already exists."));
             }
 
             Option<Account> entity = request;
-            var @try = await this.upsertAccount.Execute(NewUpsertParam(this.GetUser(), entity));
+            var @try = await this.upsertAccount.Execute(NewUpsertParam(NewEmail(request.Email), entity));
 
             return @try.Match(
                 this.Error<AccountModel>,

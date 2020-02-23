@@ -16,7 +16,7 @@
     using static Hawk.Infrastructure.Monad.Utils.Util;
     using static Hawk.Infrastructure.Uid;
 
-    public sealed class Transaction : Entity<Guid>
+    public sealed class Transaction : Entity<Guid>, IEquatable<Option<Transaction>>
     {
         private Transaction(
             Guid id,
@@ -95,5 +95,12 @@
                         category.Get(),
                         tags.Get().Select(tag => tag.Get()))
                     : Failure<Transaction>(new InvalidObjectException("Invalid transaction."));
+
+        public bool Equals(Option<Transaction> other) => other.Match(
+            some => this.Type == some.Type
+                    && this.Payment.Equals(some.Payment)
+                    && this.Payee.Equals(some.Payee)
+                    && this.Category.Equals(some.Category),
+            () => false);
     }
 }

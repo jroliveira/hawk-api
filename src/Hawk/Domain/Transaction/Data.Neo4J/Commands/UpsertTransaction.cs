@@ -30,7 +30,7 @@
             new
             {
                 email = param.Email.Value,
-                id = param.Entity.Id.ToString(),
+                id = param.Id.ToString(),
                 status = param.Entity.Status.ToString(),
                 description = param.Entity.Description.GetOrElse(Empty),
                 value = param.Entity.Payment.Price.Value,
