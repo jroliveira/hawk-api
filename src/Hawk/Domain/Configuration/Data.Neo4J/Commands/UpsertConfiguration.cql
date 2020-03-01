@@ -4,8 +4,6 @@ MATCH
   (account:Account)
 WHERE
   account.email = $email
-WITH
-  account
 
 // (:Payee)
 
@@ -13,20 +11,13 @@ MATCH
   (payee:Payee)-[:BELONGS]->(account)
 WHERE
   payee.name = $payee
-WITH
-  account,
-  payee
 
-// (:PaymentMethod)
+// (:Category)
 
-MATCH 
-  (paymentMethod:PaymentMethod)-[:BELONGS]->(account)
+MATCH
+  (category:Category)-[:BELONGS]->(account)
 WHERE
-  paymentMethod.name = $paymentMethod
-WITH
-  account,
-  payee,
-  paymentMethod
+  category.name = $category
 
 // (:Currency)
   
@@ -34,34 +25,13 @@ MATCH
   (currency:Currency)-[:BELONGS]->(account)
 WHERE
   currency.name = $currency
-WITH
-  account,
-  payee,
-  paymentMethod,
-  currency
 
-// (:Tag)
+// (:PaymentMethod)
 
-MATCH
-  (tag:Tag)-[:BELONGS]->(account)
+MATCH 
+  (paymentMethod:PaymentMethod)-[:BELONGS]->(account)
 WHERE
-  tag.name in $tags
-WITH
-  account,
-  payee,
-  paymentMethod,
-  currency,
-  tag
-
-OPTIONAL MATCH
-  (payee)-[:HAS]->(payeeTag:Tag)-[:BELONGS]->(account)
-WITH
-  account,
-  payee,
-  paymentMethod,
-  currency,
-  tag,
-  payeeTag
+  paymentMethod.name = $paymentMethod
 
 // (:Configuration)
   
@@ -77,12 +47,41 @@ MERGE
 MERGE
   (configuration)-[:CONFIGURED_WITH]->(payee)
 MERGE
-  (configuration)-[:CONFIGURED_WITH]->(paymentMethod)
+  (configuration)-[:CONFIGURED_WITH]->(category)
 MERGE
   (configuration)-[:CONFIGURED_WITH]->(currency)
 MERGE
+  (configuration)-[:CONFIGURED_WITH]->(paymentMethod)
+WITH
+  account,
+  payee,
+  category,
+  currency,
+  paymentMethod,
+  configuration
+
+// (:Tag)
+
+UNWIND
+  $tags AS tagName
+MERGE
+  (tag:Tag { 
+    name: tagName
+  })
+MERGE
+  (tag)-[:BELONGS]->(account)
+MERGE
+  (payee)-[:HAS]->(tag)
+MERGE
   (configuration)-[:CONFIGURED_WITH]->(tag)
-  
+WITH
+  account,
+  configuration,
+  payee,
+  category,
+  paymentMethod,
+  currency,
+  COLLECT(DISTINCT tag) AS tags
 
 RETURN 
 { 
@@ -94,13 +93,22 @@ RETURN
   },
   payee: CASE WHEN payee IS null THEN NULL ELSE {
     name: payee.name,
-	tags: COLLECT(distinct payeeTag.name)
+	transactions: SIZE((:Transaction)-[:IN]->(payee))
+  } END,
+  category: CASE WHEN category IS null THEN NULL ELSE {
+    name: category.name,
+	transactions: SIZE((:Transaction)-[:WITH]->(category))
   } END,
   currency: {
-    name: currency.name
+    name: currency.name,
+    transactions: SIZE((:Transaction)-[:PAID_IN]->(currency))
   },
   paymentMethod: CASE WHEN paymentMethod IS null THEN NULL ELSE {
-	name: paymentMethod.name
+	name: paymentMethod.name,
+    transactions: SIZE((:Transaction)-[:PAID_WITH]->(paymentMethod))
   } END,
-  tags: COLLECT(distinct tag.name)
+  tags: [tag IN tags | {
+    name: tag.name,
+    transactions: SIZE((:Transaction)-[:HAS]->(tag))
+  }]
 } AS data;

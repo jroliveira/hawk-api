@@ -14,6 +14,7 @@
             this.PaymentMethod = entity.PaymentMethod;
             this.Currency = entity.Currency;
             this.Payee = entity.Payee;
+            this.Category = entity.Category;
             this.Tags = entity.Tags.Select(tag => tag.Id);
         }
 
@@ -26,6 +27,8 @@
         public string Currency { get; }
 
         public string Payee { get; }
+
+        public string Category { get; }
 
         public IEnumerable<string> Tags { get; }
 

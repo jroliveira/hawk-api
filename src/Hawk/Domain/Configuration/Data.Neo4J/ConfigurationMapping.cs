@@ -9,6 +9,7 @@
 
     using Neo4j.Driver;
 
+    using static Hawk.Domain.Category.Data.Neo4J.CategoryMapping;
     using static Hawk.Domain.Configuration.Configuration;
     using static Hawk.Domain.Currency.Data.Neo4J.CurrencyMapping;
     using static Hawk.Domain.Payee.Data.Neo4J.PayeeMapping;
@@ -26,6 +27,7 @@
                 MapPaymentMethod(record.GetRecord("paymentMethod")),
                 MapCurrency(record.GetRecord("currency")),
                 MapPayee(record.GetRecord("payee")),
+                MapCategory(record.GetRecord("category")),
                 Some(record.GetListOfNeo4JRecord("tags").Select(tag => MapTag(tag).ToOption()))),
             () => new NotFoundException("Configuration not found."));
     }

@@ -14,12 +14,21 @@ WITH
   configuration,
   payee
 
+OPTIONAL MATCH
+  (configuration)-[:CONFIGURED_WITH]->(category:Category)-[:BELONGS]->(account)
+WITH
+  account,
+  configuration,
+  payee,
+  category
+
 OPTIONAL MATCH 
   (configuration)-[:CONFIGURED_WITH]->(paymentMethod:PaymentMethod)-[:BELONGS]->(account)
 WITH
   account,
   configuration,
   payee,
+  category,
   paymentMethod
   
 OPTIONAL MATCH 
@@ -28,6 +37,7 @@ WITH
   account,
   configuration,
   payee,
+  category,
   paymentMethod,
   currency
 
@@ -37,6 +47,7 @@ WITH
   account,
   configuration,
   payee,
+  category,
   paymentMethod,
   currency,
   COLLECT(DISTINCT tag) AS tags
@@ -52,6 +63,10 @@ RETURN
   payee: CASE WHEN payee IS null THEN NULL ELSE {
     name: payee.name,
 	transactions: SIZE((:Transaction)-[:IN]->(payee))
+  } END,
+  category: CASE WHEN category IS null THEN NULL ELSE {
+    name: category.name,
+	transactions: SIZE((:Transaction)-[:WITH]->(category))
   } END,
   currency: {
 	name: currency.name,

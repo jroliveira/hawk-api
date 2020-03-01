@@ -1,7 +1,6 @@
 ﻿namespace Hawk.WebApi.Features.Transaction
 {
     using System.Linq;
-    using System.Text;
 
     using FluentValidation;
 
@@ -11,6 +10,9 @@
     using Hawk.Domain.PaymentMethod.Queries;
     using Hawk.Domain.Shared;
     using Hawk.Domain.Transaction.Queries;
+
+    using Http.Query.Filter.Client;
+    using Http.Query.Filter.Client.Filters.Condition;
 
     using static Hawk.Domain.Shared.Queries.GetAllParam;
     using static Hawk.Domain.Shared.Queries.GetByIdParam<string>;
@@ -26,23 +28,22 @@
             IGetTransactions getTransactions)
         {
             this.RuleFor(model => model)
-                .MustAsync(async (transaction, _) =>
-                {
-                    var filters = new StringBuilder();
-                    filters.Append($"&filter[where][year]={transaction.Payment.Date.Year}");
-                    filters.Append($"&filter[where][month]={transaction.Payment.Date.Month}");
-                    filters.Append($"&filter[where][day]={transaction.Payment.Date.Day}");
-                    filters.Append($"&filter[where][value]={transaction.Payment.Value}");
-                    filters.Append($"&filter[where][description]={transaction.Description}");
+                .MustAsync((transaction, _) => new Filter<bool>(async filters =>
+                    {
+                        var entities = await getTransactions.GetResult(NewGetByAllParam(
+                            email,
+                            filters));
 
-                    var entities = await getTransactions.GetResult(NewGetByAllParam(
-                        email,
-                        filters.ToString()));
-
-                    return entities.Match(
-                        _ => false,
-                        page => !page.Data.Any());
-                })
+                        return entities.Match(
+                            _ => false,
+                            page => !page.Data.Any());
+                    })
+                    .Where("year".Equal(transaction.Payment.Date.Year)
+                        .And("month".Equal(transaction.Payment.Date.Month))
+                        .And("day".Equal(transaction.Payment.Date.Day))
+                        .And("value".Equal(transaction.Payment.Value))
+                        .And("description".Equal(transaction.Description)))
+                    .Build())
                 .WithMessage("Transaction already exists.");
 
             this.RuleFor(model => model.Type)

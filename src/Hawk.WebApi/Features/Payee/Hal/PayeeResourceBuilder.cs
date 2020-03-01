@@ -14,6 +14,7 @@
             new ResourceConfiguration<PayeeModel>((_, model) => new List<Link>
             {
                 new Link($"/v1/payees/{model.Name}", "self", Get),
+                new Link($"/v1/payees/{model.Name}/categories", "categories", Get),
                 new Link($"/v1/payees/{model.Name}/payment-methods", "payment-methods", Get),
                 new Link($"/v1/payees/{model.Name}/tags", "tags", Get),
                 new Link("/v1/payees", "all", Get),
@@ -26,6 +27,7 @@
                 getItemsLinks: (_, model) => new List<Link>
                 {
                     new Link($"/v1/payees/{model.Name}", "self", Get),
+                    new Link($"/v1/payees/{model.Name}/categories", "categories", Get),
                     new Link($"/v1/payees/{model.Name}/payment-methods", "payment-methods", Get),
                     new Link($"/v1/payees/{model.Name}/tags", "tags", Get),
                     new Link("/v1/payees", "all", Get),

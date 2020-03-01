@@ -5,6 +5,7 @@
     using Hawk.Domain.Category;
     using Hawk.Domain.Category.Commands;
     using Hawk.Domain.Category.Queries;
+    using Hawk.Domain.Payee.Queries;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
@@ -13,6 +14,7 @@
 
     using Microsoft.AspNetCore.Mvc;
 
+    using static Hawk.Domain.Category.Queries.GetCategoriesByPayeeParam;
     using static Hawk.Domain.Shared.Commands.DeleteParam<string>;
     using static Hawk.Domain.Shared.Commands.UpsertParam<string, Hawk.Domain.Category.Category>;
     using static Hawk.Domain.Shared.Queries.GetAllParam;
@@ -22,25 +24,31 @@
 
     [ApiController]
     [ApiVersion("1")]
-    [Route("categories")]
+    [Route("")]
     public class CategoriesController : BaseController
     {
         private readonly IGetCategories getCategories;
+        private readonly IGetCategoriesByPayee getCategoriesByPayee;
         private readonly IGetCategoryByName getCategoryByName;
         private readonly IUpsertCategory upsertCategory;
         private readonly IDeleteCategory deleteCategory;
+        private readonly IGetPayeeByName getPayeeByName;
         private readonly CreateCategoryModelValidator validator;
 
         public CategoriesController(
             IGetCategories getCategories,
+            IGetCategoriesByPayee getCategoriesByPayee,
             IGetCategoryByName getCategoryByName,
             IUpsertCategory upsertCategory,
-            IDeleteCategory deleteCategory)
+            IDeleteCategory deleteCategory,
+            IGetPayeeByName getPayeeByName)
         {
             this.getCategories = getCategories;
+            this.getCategoriesByPayee = getCategoriesByPayee;
             this.getCategoryByName = getCategoryByName;
             this.upsertCategory = upsertCategory;
             this.deleteCategory = deleteCategory;
+            this.getPayeeByName = getPayeeByName;
             this.validator = new CreateCategoryModelValidator();
         }
 
@@ -48,7 +56,7 @@
         /// Get.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet("categories")]
         [ProducesResponseType(typeof(Try<Page<Try<CategoryModel>>>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -63,11 +71,37 @@
         }
 
         /// <summary>
+        /// Get by payee.
+        /// </summary>
+        /// <param name="payee"></param>
+        /// <returns></returns>
+        [HttpGet("payees/{payee}/categories")]
+        [ProducesResponseType(typeof(Try<Page<Try<CategoryModel>>>), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetCategoriesByPayee(string payee)
+        {
+            var payeeEntity = await this.getPayeeByName.GetResult(NewGetByIdParam(this.GetUser(), payee));
+            if (!payeeEntity)
+            {
+                return this.Error<CategoryModel>(new NotFoundException("Payee not found."));
+            }
+
+            var entities = await this.getCategoriesByPayee.GetResult(NewGetCategoriesByPayeeParam(this.GetUser(), payeeEntity, this.Request.QueryString.Value));
+
+            return entities.Match(
+                this.Error<Page<Try<CategoryModel>>>,
+                page => this.Ok(page.ToPage(NewCategoryModel)));
+        }
+
+        /// <summary>
         /// Get by name.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        [HttpGet("{name}")]
+        [HttpGet("categories/{name}")]
         [ProducesResponseType(typeof(Try<CategoryModel>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -87,7 +121,7 @@
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost("categories")]
         [ProducesResponseType(typeof(Try<CategoryModel>), 201)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -120,7 +154,7 @@
         /// <param name="name"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPut("{name}")]
+        [HttpPut("categories/{name}")]
         [ProducesResponseType(typeof(Try<CategoryModel>), 201)]
         [ProducesResponseType(204)]
         [ProducesResponseType(401)]
@@ -155,7 +189,7 @@
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        [HttpDelete("{name}")]
+        [HttpDelete("categories/{name}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]

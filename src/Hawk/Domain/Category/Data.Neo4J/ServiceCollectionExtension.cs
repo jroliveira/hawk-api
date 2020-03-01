@@ -13,6 +13,7 @@
             .AddScoped<IUpsertCategory, UpsertCategory>()
             .AddScoped<IDeleteCategory, DeleteCategory>()
             .AddScoped<IGetCategories, GetCategories>()
+            .AddScoped<IGetCategoriesByPayee, GetCategoriesByPayee>()
             .AddScoped<IGetCategoryByName, GetCategoryByName>();
     }
 }
