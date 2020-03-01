@@ -31,6 +31,7 @@
                 paymentMethod = param.Entity.PaymentMethod.Id,
                 currency = param.Entity.Currency.Id,
                 payee = param.Entity.Payee.Id,
+                category = param.Entity.Category.Id,
                 tags = param.Entity.Tags.Select(tag => tag.Id).ToArray(),
             });
     }

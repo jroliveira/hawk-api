@@ -1,10 +1,18 @@
 ﻿namespace Hawk.WebApi.Features.Configuration
 {
+    using System;
     using System.Threading.Tasks;
 
+    using FluentValidation.Results;
+
+    using Hawk.Domain.Category.Queries;
     using Hawk.Domain.Configuration;
     using Hawk.Domain.Configuration.Commands;
     using Hawk.Domain.Configuration.Queries;
+    using Hawk.Domain.Currency.Queries;
+    using Hawk.Domain.Payee.Queries;
+    using Hawk.Domain.PaymentMethod.Queries;
+    using Hawk.Domain.Shared;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
     using Hawk.WebApi.Features.Shared;
@@ -24,15 +32,30 @@
     {
         private readonly IGetConfigurationByDescription getConfigurationByDescription;
         private readonly IUpsertConfiguration upsertConfiguration;
-        private readonly CreateConfigurationModelValidator validator;
+        private readonly Func<Try<Email>, CreateConfigurationModel, Task<ValidationResult>> validate;
 
         public ConfigurationsController(
             IGetConfigurationByDescription getConfigurationByDescription,
-            IUpsertConfiguration upsertConfiguration)
+            IUpsertConfiguration upsertConfiguration,
+            IGetCategoryByName getCategoryByName,
+            IGetCurrencyByName getCurrencyByName,
+            IGetPayeeByName getPayeeByName,
+            IGetPaymentMethodByName getPaymentMethodByName)
         {
             this.getConfigurationByDescription = getConfigurationByDescription;
             this.upsertConfiguration = upsertConfiguration;
-            this.validator = new CreateConfigurationModelValidator();
+
+            this.validate = (email, request) =>
+            {
+                var validator = new CreateConfigurationModelValidator(
+                    email.Get(),
+                    getCategoryByName,
+                    getCurrencyByName,
+                    getPayeeByName,
+                    getPaymentMethodByName);
+
+                return validator.ValidateAsync(request);
+            };
         }
 
         /// <summary>
@@ -72,7 +95,7 @@
             [FromRoute] string description,
             [FromBody] CreateConfigurationModel request)
         {
-            var validated = await this.validator.ValidateAsync(request);
+            var validated = await this.validate(this.GetUser(), request);
             if (!validated.IsValid)
             {
                 return this.Error<ConfigurationModel>(new InvalidObjectException("Invalid configuration.", validated));

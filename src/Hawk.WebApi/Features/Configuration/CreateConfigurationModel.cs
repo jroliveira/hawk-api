@@ -8,6 +8,7 @@
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
 
+    using static Hawk.Domain.Category.Category;
     using static Hawk.Domain.Configuration.Configuration;
     using static Hawk.Domain.Currency.Currency;
     using static Hawk.Domain.Payee.Payee;
@@ -23,6 +24,7 @@
             string paymentMethod,
             string currency,
             string payee,
+            string category,
             IEnumerable<string> tags)
         {
             this.Description = description;
@@ -30,6 +32,7 @@
             this.PaymentMethod = paymentMethod;
             this.Currency = currency;
             this.Payee = payee;
+            this.Category = category;
             this.Tags = tags;
         }
 
@@ -49,6 +52,9 @@
         public string Payee { get; }
 
         [Required]
+        public string Category { get; }
+
+        [Required]
         public IEnumerable<string> Tags { get; }
 
         public static implicit operator Option<Configuration>(CreateConfigurationModel model) => NewConfiguration(
@@ -57,6 +63,7 @@
             NewPaymentMethod(model.PaymentMethod),
             NewCurrency(model.Currency),
             NewPayee(model.Payee),
+            NewCategory(model.Category),
             Some(model.Tags.Select(tag => NewTag(tag).ToOption())));
     }
 }

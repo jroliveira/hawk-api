@@ -29,13 +29,13 @@
                 .NotEmpty()
                 .WithMessage("Payment method is required.")
                 .MustAsync(async (method, _) => await getPaymentMethodByName.GetResult(NewGetByIdParam(email, method)))
-                .WithMessage("Payee not found.");
+                .WithMessage("Payment method not found.");
 
             this.RuleFor(model => model.Currency)
                 .NotEmpty()
                 .WithMessage("Currency is required.")
                 .MustAsync(async (currency, _) => await getCurrencyByName.GetResult(NewGetByIdParam(email, currency)))
-                .WithMessage("Payee not found.");
+                .WithMessage("Currency not found.");
         }
     }
 }
