@@ -17,7 +17,7 @@
     "dotnet-standard"
   ],
   "author": "Junior Oliveira (https://jroliveira.net)",
-  "license": "MIT",
+  "license": "AGPL-3.0",
   "bugs": {
     "url": "https://github.com/jroliveira/hawk-api/issues"
   },

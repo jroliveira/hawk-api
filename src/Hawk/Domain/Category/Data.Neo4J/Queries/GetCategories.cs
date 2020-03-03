@@ -8,6 +8,7 @@
     using Hawk.Infrastructure.Data.Neo4J;
     using Hawk.Infrastructure.Filter;
     using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Monad.Linq;
     using Hawk.Infrastructure.Pagination;
 
     using Http.Query.Filter;
@@ -45,9 +46,7 @@
 
             var data = await this.connection.ExecuteCypher(MapCategory, Statement, parameters);
 
-            return data.Match<Try<Page<Try<Category>>>>(
-                _ => _,
-                items => new Page<Try<Category>>(items, parameters.skip, parameters.limit));
+            return data.Select(items => new Page<Try<Category>>(items, parameters.skip, parameters.limit));
         }
     }
 }

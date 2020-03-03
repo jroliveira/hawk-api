@@ -9,6 +9,7 @@
     using Hawk.Infrastructure.Filter;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
+    using Hawk.Infrastructure.Monad.Linq;
     using Hawk.Infrastructure.Pagination;
 
     using Http.Query.Filter;
@@ -55,9 +56,7 @@
                     .Replace("#where#", this.where.Apply(param.Filter, "transaction")),
                 parameters);
 
-            return data.Match<Try<Page<Try<Transaction>>>>(
-                _ => _,
-                items => new Page<Try<Transaction>>(items, parameters.skip, parameters.limit));
+            return data.Select(items => new Page<Try<Transaction>>(items, parameters.skip, parameters.limit));
         }
     }
 }
