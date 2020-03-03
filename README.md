@@ -2,7 +2,7 @@
 
 # Hawk (api)
 
-[![License: AGPL-3.0](http://img.shields.io/badge/license-AGPL-3.0-red.svg)](LICENSE.txt)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE.txt)
 
 Hawk is a personal finance control. The name Hawk is the name of pig in the anime "The Seven Deadly Sins" (Nanatsu no Taizai).
 
