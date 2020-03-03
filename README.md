@@ -2,7 +2,7 @@
 
 # Hawk (api)
 
-[![License: MIT](http://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.txt)
+[![License: AGPL-3.0](http://img.shields.io/badge/license-AGPL-3.0-red.svg)](LICENSE.txt)
 
 Hawk is a personal finance control. The name Hawk is the name of pig in the anime "The Seven Deadly Sins" (Nanatsu no Taizai).
 
@@ -128,7 +128,7 @@ $ dotnet cake --target=Release
 
 ## Licensing
 
-The code is available under the [MIT license](LICENSE.txt).
+The code is available under the [AGPL-3.0 license](LICENSE.txt).
 
 [hawk_anime]: docs/images/hawk_anime.png "Hawk - logo"
 [vs2017]: https://www.visualstudio.com/vs/whatsnew/

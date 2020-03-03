@@ -54,8 +54,8 @@
 
             document.Info.License = new OpenApiLicense
             {
-                Name = "MIT",
-                Url = "https://opensource.org/licenses/MIT",
+                Name = "AGPL-3.0",
+                Url = "https://opensource.org/licenses/AGPL-3.0",
             };
 
             if (apiVersion.IsDeprecated)
