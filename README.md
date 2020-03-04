@@ -75,7 +75,7 @@ $ npm install
 ### Building
 
 ``` bash
-$ dotnet cake
+$ dotnet cake --target=Build
 ```
 
 ### Testing

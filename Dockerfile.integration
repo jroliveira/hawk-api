@@ -8,4 +8,4 @@ COPY . /app
 WORKDIR /app
 
 RUN curl https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh > /app/wait_for_it.sh \
-    && dotnet cake
+    && dotnet cake --target=Build

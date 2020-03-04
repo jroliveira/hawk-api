@@ -34,6 +34,10 @@ Task("Default")
     .IsDependentOn("Build-Solution")
     .IsDependentOn("Stop-Analyze-Code-Style");
 
+Task("Build")
+    .IsDependentOn("Restore-NuGet-Packages")
+    .IsDependentOn("Build-Solution");
+
 Task("Test")
     .IsDependentOn("Setup-Tests");
 
