@@ -18,6 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		cake.config = cake.config
 		CHANGELOG.md = CHANGELOG.md
 		code-analysis.ruleset = code-analysis.ruleset
+		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
 		commitlint.config.js = commitlint.config.js
 		CONTRIBUTING.md = CONTRIBUTING.md
 		Directory.Build.props = Directory.Build.props
@@ -69,7 +70,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{057A0073-5
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{B38F080A-96CF-4995-99CA-A990A74067F5}"
 	ProjectSection(SolutionItems) = preProject
-		docs\images\hawk_anime.png = docs\images\hawk_anime.png
+		docs\images\logo.png = docs\images\logo.png
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "monitor", "monitor", "{9B95FA03-E0A0-4038-9572-538F4F549DF6}"
@@ -186,6 +187,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{4F2C02
 		compose\monitor\sonarqube\config\.gitkeep = compose\monitor\sonarqube\config\.gitkeep
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{182859EB-ACFD-4DB0-8E43-74D274416C3B}"
+	ProjectSection(SolutionItems) = preProject
+		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISSUE_TEMPLATE", "ISSUE_TEMPLATE", "{6CE26815-88AA-4EB5-9697-3114A32F197F}"
+	ProjectSection(SolutionItems) = preProject
+		.github\ISSUE_TEMPLATE\1-bug-report.md = .github\ISSUE_TEMPLATE\1-bug-report.md
+		.github\ISSUE_TEMPLATE\2-feature-request.md = .github\ISSUE_TEMPLATE\2-feature-request.md
+		.github\ISSUE_TEMPLATE\3-help.md = .github\ISSUE_TEMPLATE\3-help.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -243,6 +256,7 @@ Global
 		{5BF1B5B7-04B1-4F6D-A8A0-84653E8FAE93} = {A05A64E8-3FA1-427F-B2EF-34A4A2A623AA}
 		{C09A6101-1BE3-4D2A-B456-DCB6D7B7651B} = {9B95FA03-E0A0-4038-9572-538F4F549DF6}
 		{4F2C02D4-CB53-40E2-929A-35FE8E296153} = {C09A6101-1BE3-4D2A-B456-DCB6D7B7651B}
+		{6CE26815-88AA-4EB5-9697-3114A32F197F} = {182859EB-ACFD-4DB0-8E43-74D274416C3B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7CB3FDF8-0DA7-4D1F-B674-0261172FE8F6}
