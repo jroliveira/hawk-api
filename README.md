@@ -2,6 +2,8 @@
 
 # Hawk (api)
 
+[![CodeFactor](https://www.codefactor.io/repository/github/jroliveira/hawk-api/badge)](https://www.codefactor.io/repository/github/jroliveira/hawk-api)
+[![Maintainability](https://api.codeclimate.com/v1/badges/67c5c7b1c529276e9c28/maintainability)](https://codeclimate.com/github/jroliveira/hawk-api/maintainability)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE.txt)
 
 Hawk is a personal finance control. The name Hawk is the name of pig in the anime "The Seven Deadly Sins" (Nanatsu no Taizai).
@@ -12,8 +14,8 @@ This step is to explain what you need to run this application without having to 
 
 ### Minimum pre requirements
 
-The minimum pre requirements you need to run this application is the [Docker Compose](https://docs.docker.com/compose/install/).  
-After you install the Docker Compose, you need to run the commands below.
+The minimum pre requirements you need to run this application is the [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/).  
+After you install the Docker and Docker Compose, you need to run the commands below.
 
 ### Running application with Docker Compose
 
@@ -31,6 +33,7 @@ $ docker-compose up
 ### Api Reference / Monitoring
 
  - [Swagger UI](http://localhost:8080/)
+ - [SonarQube](http://localhost:9000/)
  - [Graphana](http://localhost:3000/)
  - [Prometheus](http://localhost:9090/)
  - [Kibana](http://localhost:5601/)
@@ -45,9 +48,7 @@ $ docker-compose up
  - [C#](https://docs.microsoft.com/en-us/dotnet/csharp/)
  - [ASP.NET Core](https://docs.microsoft.com/en-ca/aspnet/core/)
  - [Neo4j](https://neo4j.com/developer/)
- - [Docker Compose](https://docs.docker.com/compose/)
- - [Swagger](https://swagger.io/)
- - [Node.js](https://nodejs.org/en/)
+ - [Docker](https://docs.docker.com/)
 
 ### Pre requisites
 
@@ -130,8 +131,6 @@ $ dotnet cake --target=Release
 
 The code is available under the [AGPL-3.0 license](LICENSE.txt).
 
-[hawk_anime]: docs/images/hawk_anime.png "Hawk - logo"
-[vs2017]: https://www.visualstudio.com/vs/whatsnew/
-[docker_compose]: https://docs.docker.com/compose/
+[hawk_anime]: docs/images/logo.png "Hawk - logo"
 [heroku_button]: https://www.herokucdn.com/deploy/button.svg
 [heroku_template]: https://heroku.com/deploy?template=https://github.com/jroliveira/hawk-api
