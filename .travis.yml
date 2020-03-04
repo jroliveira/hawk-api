@@ -1,0 +1,15 @@
+language: csharp
+sudo: required
+dist: xenial
+mono: none
+dotnet: 3.1
+
+branches:
+  only:
+    - master
+
+install:
+  - dotnet tool install Cake.Tool --version 0.35.0
+
+script:
+  - dotnet cake --target=Build
