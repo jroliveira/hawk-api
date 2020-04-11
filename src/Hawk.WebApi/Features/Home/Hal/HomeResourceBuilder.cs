@@ -21,6 +21,7 @@
                 new Link("/v1/payment-methods", "payment-methods", Get),
                 new Link("/v1/tags", "tags", Get),
                 new Link("/v1/transactions", "transactions", Get),
+                new Link("/v1/transaction-types", "transaction-types", Get),
             }),
         };
     }
