@@ -1,5 +1,5 @@
 #addin "Cake.Docker&version=0.9.7"
-#addin "Cake.Figlet&version=1.2.0"
+#addin "Cake.Figlet&version=1.3.1"
 
 #load "build/*.cake"
 
@@ -29,10 +29,8 @@ Setup<BuildData>(context =>
 });
 
 Task("Default")
-    .IsDependentOn("Start-Analyze-Code-Style")
     .IsDependentOn("Restore-NuGet-Packages")
-    .IsDependentOn("Build-Solution")
-    .IsDependentOn("Stop-Analyze-Code-Style");
+    .IsDependentOn("Build-Solution");
 
 Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
