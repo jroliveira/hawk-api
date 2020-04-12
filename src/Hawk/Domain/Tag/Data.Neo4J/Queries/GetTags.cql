@@ -9,6 +9,9 @@ RETURN
   transactions: SIZE((:Transaction)-[:HAS]->(tag))
 } AS data
 
+ORDER BY
+  tag.name
+
 SKIP 
   $skip 
 

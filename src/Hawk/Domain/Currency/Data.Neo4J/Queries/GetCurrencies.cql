@@ -9,6 +9,9 @@ RETURN
   transactions: SIZE((:Transaction)-[:PAID_IN]->(currency))
 } AS data
 
+ORDER BY
+  currency.name
+
 SKIP 
   $skip 
 
