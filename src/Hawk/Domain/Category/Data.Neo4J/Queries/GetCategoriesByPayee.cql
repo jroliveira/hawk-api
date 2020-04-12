@@ -16,6 +16,9 @@ RETURN
   transactions: SIZE((:Transaction)-[:WITH]->(category))
 } AS data
 
+ORDER BY
+  category.name
+
 SKIP 
   $skip 
 

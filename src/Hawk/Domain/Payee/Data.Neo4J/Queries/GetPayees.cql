@@ -9,6 +9,9 @@ RETURN
   transactions: SIZE((:Transaction)-[:IN]->(payee))
 } AS data
 
+ORDER BY
+  payee.name
+
 SKIP 
   $skip 
 

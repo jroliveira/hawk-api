@@ -16,6 +16,9 @@ RETURN
   transactions: SIZE((:Transaction)-[:PAID_WITH]->(paymentMethod))
 } AS data
 
+ORDER BY
+  paymentMethod.name
+
 SKIP 
   $skip 
 
