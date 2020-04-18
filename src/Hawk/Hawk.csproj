@@ -33,6 +33,9 @@
     <None Update="Domain\Category\Data.Neo4J\Queries\GetCategoriesByPayee.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Domain\Configuration\Data.Neo4J\Queries\GetConfigurations.cql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Domain\Configuration\Data.Neo4J\Queries\GetConfigurationByDescription.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

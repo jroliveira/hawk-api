@@ -11,6 +11,7 @@
     {
         public static IServiceCollection ConfigureConfigurationWithNeo4J(this IServiceCollection @this) => @this
             .AddScoped<IUpsertConfiguration, UpsertConfiguration>()
+            .AddScoped<IGetConfigurations, GetConfigurations>()
             .AddScoped<IGetConfigurationByDescription, GetConfigurationByDescription>();
     }
 }

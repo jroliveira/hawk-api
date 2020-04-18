@@ -15,12 +15,15 @@
     using Hawk.Domain.Shared;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Pagination;
+    using Hawk.WebApi.Features.Category;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure.Authentication;
 
     using Microsoft.AspNetCore.Mvc;
 
     using static Hawk.Domain.Shared.Commands.UpsertParam<string, Hawk.Domain.Configuration.Configuration>;
+    using static Hawk.Domain.Shared.Queries.GetAllParam;
     using static Hawk.Domain.Shared.Queries.GetByIdParam<string>;
     using static Hawk.Infrastructure.Monad.Utils.Util;
     using static Hawk.WebApi.Features.Configuration.ConfigurationModel;
@@ -30,11 +33,13 @@
     [Route("configurations")]
     public class ConfigurationsController : BaseController
     {
+        private readonly IGetConfigurations getConfigurations;
         private readonly IGetConfigurationByDescription getConfigurationByDescription;
         private readonly IUpsertConfiguration upsertConfiguration;
         private readonly Func<Try<Email>, CreateConfigurationModel, Task<ValidationResult>> validate;
 
         public ConfigurationsController(
+            IGetConfigurations getConfigurations,
             IGetConfigurationByDescription getConfigurationByDescription,
             IUpsertConfiguration upsertConfiguration,
             IGetCategoryByName getCategoryByName,
@@ -42,6 +47,7 @@
             IGetPayeeByName getPayeeByName,
             IGetPaymentMethodByName getPaymentMethodByName)
         {
+            this.getConfigurations = getConfigurations;
             this.getConfigurationByDescription = getConfigurationByDescription;
             this.upsertConfiguration = upsertConfiguration;
 
@@ -56,6 +62,24 @@
 
                 return validator.ValidateAsync(request);
             };
+        }
+
+        /// <summary>
+        /// Get.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [ProducesResponseType(typeof(Try<Page<Try<ConfigurationModel>>>), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetCategories()
+        {
+            var entities = await this.getConfigurations.GetResult(NewGetByAllParam(this.GetUser(), this.Request.QueryString.Value));
+
+            return entities.Match(
+                this.Error<Page<Try<CategoryModel>>>,
+                page => this.Ok(page.ToPage(NewConfigurationModel)));
         }
 
         /// <summary>
