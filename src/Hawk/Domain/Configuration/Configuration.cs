@@ -11,7 +11,9 @@
     using Hawk.Domain.Tag;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Monad.Extensions;
 
+    using static Hawk.Domain.Payee.Payee;
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
     public sealed class Configuration : Entity<string>
@@ -70,6 +72,6 @@
                     payee.Get(),
                     category.Get(),
                     tags.Get().Select(tag => tag.Get()))
-                : Failure<Configuration>(new InvalidObjectException("Invalid configuration."));
+                : Failure<Configuration>(new InvalidObjectException($"Invalid configuration '{description.GetOrElse("undefined")}' for payee '{payee.GetOrElse(NewPayee("undefined").Get()).Id}'."));
     }
 }
