@@ -5,12 +5,13 @@ WHERE
 
 RETURN
 { 
-  name: currency.name,
+  code: currency.code,
+  symbol: currency.symbol,
   transactions: SIZE((:Transaction)-[:PAID_IN]->(currency))
 } AS data
 
 ORDER BY
-  currency.name
+  currency.code
 
 SKIP 
   $skip 

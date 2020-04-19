@@ -8,10 +8,11 @@ WHERE
 
 MERGE 
   (currency:Currency { 
-    name: $name
+    code: $code
   })
 SET
-  currency.name = $newName
+  currency.code = $newCode,
+  currency.symbol = $symbol
 MERGE
   (currency)-[:BELONGS]->(account)
 WITH
@@ -19,6 +20,7 @@ WITH
 
 RETURN
 { 
-  name: currency.name,
+  code: currency.code,
+  symbol: currency.symbol,
   transactions: SIZE((:Transaction)-[:PAID_IN]->(currency))
 } AS data;

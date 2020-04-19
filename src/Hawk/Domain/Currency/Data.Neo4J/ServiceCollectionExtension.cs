@@ -13,6 +13,6 @@
             .AddScoped<IUpsertCurrency, UpsertCurrency>()
             .AddScoped<IDeleteCurrency, DeleteCurrency>()
             .AddScoped<IGetCurrencies, GetCurrencies>()
-            .AddScoped<IGetCurrencyByName, GetCurrencyByName>();
+            .AddScoped<IGetCurrencyByCode, GetCurrencyByCode>();
     }
 }

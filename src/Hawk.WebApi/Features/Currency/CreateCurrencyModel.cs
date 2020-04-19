@@ -9,11 +9,18 @@
 
     public class CreateCurrencyModel
     {
-        public CreateCurrencyModel(string name) => this.Name = name;
+        public CreateCurrencyModel(string code, string symbol)
+        {
+            this.Code = code;
+            this.Symbol = symbol;
+        }
 
         [Required]
-        public string Name { get; }
+        public string Code { get; }
 
-        public static implicit operator Option<Currency>(CreateCurrencyModel model) => NewCurrency(model.Name);
+        [Required]
+        public string Symbol { get; }
+
+        public static implicit operator Option<Currency>(CreateCurrencyModel model) => NewCurrency(model.Code, model.Symbol);
     }
 }

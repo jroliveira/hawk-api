@@ -24,8 +24,9 @@
             new
             {
                 email = param.Email.Value,
-                name = param.Id,
-                newName = param.Entity.Id,
+                code = param.Id,
+                newCode = param.Entity.Id,
+                newSymbol = param.Entity.Symbol,
             });
     }
 }

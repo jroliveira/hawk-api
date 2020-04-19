@@ -13,21 +13,21 @@
         {
             new ResourceConfiguration<CurrencyModel>((_, model) => new List<Link>
             {
-                new Link($"/v1/currencies/{model.Name}", "self", Get),
+                new Link($"/v1/currencies/{model.Code}", "self", Get),
                 new Link("/v1/currencies", "all", Get),
                 new Link("/v1/currencies", "create-currency", Post),
-                new Link($"/v1/currencies/{model.Name}", "update-currency", Put),
-                new Link($"/v1/currencies/{model.Name}", "delete-currency", Delete),
+                new Link($"/v1/currencies/{model.Code}", "update-currency", Put),
+                new Link($"/v1/currencies/{model.Code}", "delete-currency", Delete),
             }),
 
             new PageResourceConfiguration<CurrencyModel>(
                 getItemsLinks: (_, model) => new List<Link>
                 {
-                    new Link($"/v1/currencies/{model.Name}", "self", Get),
+                    new Link($"/v1/currencies/{model.Code}", "self", Get),
                     new Link("/v1/currencies", "all", Get),
                     new Link("/v1/currencies", "create-currency", Post),
-                    new Link($"/v1/currencies/{model.Name}", "update-currency", Put),
-                    new Link($"/v1/currencies/{model.Name}", "delete-currency", Delete),
+                    new Link($"/v1/currencies/{model.Code}", "update-currency", Put),
+                    new Link($"/v1/currencies/{model.Code}", "delete-currency", Delete),
                 },
                 getLinks: (_, model) => new List<Link>
                 {

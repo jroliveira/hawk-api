@@ -71,14 +71,17 @@ RETURN
 	transactions: SIZE((:Transaction)-[:WITH]->(category))
   } END,
   payment: {
-    value: transaction.value,
     year: transaction.year,
     month: transaction.month,
     day: transaction.day,
-	currency: {
-	  name: currency.name,
-      transactions: SIZE((:Transaction)-[:PAID_IN]->(currency))
-	},
+    cost: {
+      value: transaction.value,
+      currency: {
+	    code: currency.code,
+        symbol: currency.symbol,
+        transactions: SIZE((:Transaction)-[:PAID_IN]->(currency))
+	  }
+    },
     method: CASE WHEN paymentMethod IS null THEN NULL ELSE {
 	  name: paymentMethod.name,
       transactions: SIZE((:Transaction)-[:PAID_WITH]->(paymentMethod))

@@ -26,19 +26,19 @@
     public class CurrenciesController : BaseController
     {
         private readonly IGetCurrencies getCurrencies;
-        private readonly IGetCurrencyByName getCurrencyByName;
+        private readonly IGetCurrencyByCode getCurrencyByCode;
         private readonly IUpsertCurrency upsertCurrency;
         private readonly IDeleteCurrency deleteCurrency;
         private readonly CreateCurrencyModelValidator validator;
 
         public CurrenciesController(
             IGetCurrencies getCurrencies,
-            IGetCurrencyByName getCurrencyByName,
+            IGetCurrencyByCode getCurrencyByCode,
             IUpsertCurrency upsertCurrency,
             IDeleteCurrency deleteCurrency)
         {
             this.getCurrencies = getCurrencies;
-            this.getCurrencyByName = getCurrencyByName;
+            this.getCurrencyByCode = getCurrencyByCode;
             this.upsertCurrency = upsertCurrency;
             this.deleteCurrency = deleteCurrency;
             this.validator = new CreateCurrencyModelValidator();
@@ -63,19 +63,19 @@
         }
 
         /// <summary>
-        /// Get by name.
+        /// Get by code.
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="code"></param>
         /// <returns></returns>
-        [HttpGet("{name}")]
+        [HttpGet("{code}")]
         [ProducesResponseType(typeof(Try<CurrencyModel>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetCurrencyByName([FromRoute] string name)
+        public async Task<IActionResult> GetCurrencyByCode([FromRoute] string code)
         {
-            var entity = await this.getCurrencyByName.GetResult(NewGetByIdParam(this.GetUser(), name));
+            var entity = await this.getCurrencyByCode.GetResult(NewGetByIdParam(this.GetUser(), code));
 
             return entity.Match(
                 this.Error<CurrencyModel>,
@@ -101,7 +101,7 @@
                 return this.Error<CurrencyModel>(new InvalidObjectException("Invalid currency.", validated));
             }
 
-            if (await this.getCurrencyByName.GetResult(NewGetByIdParam(this.GetUser(), request.Name)))
+            if (await this.getCurrencyByCode.GetResult(NewGetByIdParam(this.GetUser(), request.Code)))
             {
                 return this.Error<CurrencyModel>(new AlreadyExistsException("Currency already exists."));
             }
@@ -117,10 +117,10 @@
         /// <summary>
         /// Update.
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="code"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPut("{name}")]
+        [HttpPut("{code}")]
         [ProducesResponseType(typeof(Try<CurrencyModel>), 201)]
         [ProducesResponseType(204)]
         [ProducesResponseType(401)]
@@ -129,7 +129,7 @@
         [ProducesResponseType(409)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateCurrency(
-            [FromRoute] string name,
+            [FromRoute] string code,
             [FromBody] CreateCurrencyModel request)
         {
             var validated = await this.validator.ValidateAsync(request);
@@ -138,10 +138,10 @@
                 return this.Error<CurrencyModel>(new InvalidObjectException("Invalid currency.", validated));
             }
 
-            var entity = await this.getCurrencyByName.GetResult(NewGetByIdParam(this.GetUser(), name));
+            var entity = await this.getCurrencyByCode.GetResult(NewGetByIdParam(this.GetUser(), code));
 
             Option<Currency> newEntity = request;
-            var @try = await this.upsertCurrency.Execute(NewUpsertParam(this.GetUser(), name, newEntity));
+            var @try = await this.upsertCurrency.Execute(NewUpsertParam(this.GetUser(), code, newEntity));
 
             return @try.Match(
                 this.Error<CurrencyModel>,
@@ -153,16 +153,16 @@
         /// <summary>
         /// Exclude.
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="code"></param>
         /// <returns></returns>
-        [HttpDelete("{name}")]
+        [HttpDelete("{code}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> DeleteCurrency([FromRoute] string name)
+        public async Task<IActionResult> DeleteCurrency([FromRoute] string code)
         {
-            var deleted = await this.deleteCurrency.Execute(NewDeleteParam(this.GetUser(), name));
+            var deleted = await this.deleteCurrency.Execute(NewDeleteParam(this.GetUser(), code));
 
             return deleted.Match(
                 this.Error<CurrencyModel>,

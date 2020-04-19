@@ -7,10 +7,10 @@
     using Hawk.Domain.Configuration;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
+    using Hawk.WebApi.Features.Shared.Money;
 
     using static Hawk.Domain.Category.Category;
     using static Hawk.Domain.Configuration.Configuration;
-    using static Hawk.Domain.Currency.Currency;
     using static Hawk.Domain.Payee.Payee;
     using static Hawk.Domain.PaymentMethod.PaymentMethod;
     using static Hawk.Domain.Tag.Tag;
@@ -22,7 +22,7 @@
             string description,
             string type,
             string paymentMethod,
-            string currency,
+            CurrencyModel currency,
             string payee,
             string category,
             IEnumerable<string> tags)
@@ -46,7 +46,7 @@
         public string PaymentMethod { get; }
 
         [Required]
-        public string Currency { get; }
+        public CurrencyModel Currency { get; }
 
         [Required]
         public string Payee { get; }
@@ -61,7 +61,7 @@
             model.Type,
             model.Description,
             NewPaymentMethod(model.PaymentMethod),
-            NewCurrency(model.Currency),
+            model.Currency,
             NewPayee(model.Payee),
             NewCategory(model.Category),
             Some(model.Tags.Select(tag => NewTag(tag).ToOption())));

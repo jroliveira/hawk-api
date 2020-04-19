@@ -6,7 +6,7 @@
     using Hawk.Infrastructure.Monad;
 
     using static Hawk.Domain.PaymentMethod.Data.Neo4J.PaymentMethodMapping;
-    using static Hawk.Domain.Transaction.Data.Neo4J.PriceMapping;
+    using static Hawk.Domain.Shared.Money.Data.Neo4J.MoneyMapping;
     using static Hawk.Domain.Transaction.Payment;
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
@@ -14,7 +14,7 @@
     {
         internal static Try<Payment> MapPayment(Option<Neo4JRecord> record) => record.Match(
             some => NewPayment(
-                MapPrice(record),
+                MapMoney(some.GetRecord("cost")),
                 Date(
                     some.Get<int>("year"),
                     some.Get<int>("month"),

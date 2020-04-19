@@ -24,7 +24,7 @@ WHERE
 MATCH 
   (currency:Currency)-[:BELONGS]->(account)
 WHERE
-  currency.name = $currency
+  currency.code = $currency
 
 // (:PaymentMethod)
 
@@ -100,7 +100,8 @@ RETURN
 	transactions: SIZE((:Transaction)-[:WITH]->(category))
   } END,
   currency: {
-    name: currency.name,
+    code: currency.code,
+    symbol: currency.symbol,
     transactions: SIZE((:Transaction)-[:PAID_IN]->(currency))
   },
   paymentMethod: CASE WHEN paymentMethod IS null THEN NULL ELSE {

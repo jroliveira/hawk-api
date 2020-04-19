@@ -10,16 +10,29 @@
 
     public sealed class Currency : Entity<string>
     {
-        private Currency(string name, uint transactions)
-            : base(name.ToUpperCase()) => this.Transactions = transactions;
+        private Currency(
+            string name,
+            Option<string> symbol,
+            uint transactions)
+            : base(name.ToUpperCase())
+        {
+            this.Symbol = symbol;
+            this.Transactions = transactions;
+        }
+
+        public Option<string> Symbol { get; }
 
         public uint Transactions { get; }
 
         public static Try<Currency> NewCurrency(
             Option<string> name,
+            Option<string> symbol = default,
             Option<uint> transactions = default) =>
                 name
-                ? new Currency(name.Get(), transactions.GetOrElse(default))
+                ? new Currency(
+                    name.Get(),
+                    symbol,
+                    transactions.GetOrElse(default))
                 : Failure<Currency>(new InvalidObjectException("Invalid currency."));
     }
 }

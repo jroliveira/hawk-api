@@ -45,7 +45,7 @@
     <None Update="Domain\Currency\Data.Neo4J\Commands\DeleteCurrency.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Domain\Currency\Data.Neo4J\Queries\GetCurrencyByName.cql">
+    <None Update="Domain\Currency\Data.Neo4J\Queries\GetCurrencyByCode.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Domain\Currency\Data.Neo4J\Queries\GetCurrencies.cql">
