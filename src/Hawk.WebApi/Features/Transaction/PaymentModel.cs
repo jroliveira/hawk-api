@@ -5,28 +5,25 @@
 
     using Hawk.Domain.Transaction;
     using Hawk.Infrastructure.Monad;
+    using Hawk.WebApi.Features.Shared.Money;
 
-    using static Hawk.Domain.Currency.Currency;
     using static Hawk.Domain.PaymentMethod.PaymentMethod;
     using static Hawk.Domain.Transaction.Payment;
-    using static Hawk.Domain.Transaction.Price;
 
     public sealed class PaymentModel
     {
         public PaymentModel(
-            double value,
+            MoneyModel cost,
             DateTime date,
-            string method,
-            string currency)
+            string method)
         {
-            this.Value = value;
+            this.Cost = cost;
             this.Date = date;
             this.Method = method;
-            this.Currency = currency;
         }
 
         [Required]
-        public double Value { get; }
+        public MoneyModel Cost { get; }
 
         [DataType(DataType.Date)]
         public DateTime Date { get; }
@@ -34,19 +31,13 @@
         [Required]
         public string Method { get; }
 
-        [Required]
-        public string Currency { get; }
-
         public static implicit operator PaymentModel(Payment entity) => new PaymentModel(
-            entity.Price.Value,
+            entity.Cost,
             entity.Date,
-            entity.PaymentMethod,
-            entity.Price.Currency);
+            entity.PaymentMethod);
 
         public static implicit operator Option<Payment>(PaymentModel model) => NewPayment(
-            NewPrice(
-                model.Value,
-                NewCurrency(model.Currency)),
+            model.Cost,
             model.Date,
             NewPaymentMethod(model.Method));
     }

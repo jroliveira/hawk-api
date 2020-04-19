@@ -45,7 +45,7 @@
             IUpsertTransaction upsertTransaction,
             IDeleteTransaction deleteTransaction,
             IGetCategoryByName getCategoryByName,
-            IGetCurrencyByName getCurrencyByName,
+            IGetCurrencyByCode getCurrencyByCode,
             IGetPayeeByName getPayeeByName,
             IGetPaymentMethodByName getPaymentMethodByName)
         {
@@ -59,7 +59,7 @@
                 var validator = new CreateTransactionModelValidator(
                     email.Get(),
                     getCategoryByName,
-                    getCurrencyByName,
+                    getCurrencyByCode,
                     getPayeeByName,
                     getPaymentMethodByName,
                     getTransactions);

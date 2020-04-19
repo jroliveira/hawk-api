@@ -3,6 +3,7 @@
     using System;
 
     using Hawk.Domain.PaymentMethod;
+    using Hawk.Domain.Shared.Money;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
@@ -10,28 +11,31 @@
 
     public sealed class Payment : IEquatable<Option<Payment>>
     {
-        private Payment(Price price, DateTime date, PaymentMethod paymentMethod)
+        private Payment(Money cost, DateTime date, PaymentMethod paymentMethod)
         {
-            this.Price = price;
+            this.Cost = cost;
             this.Date = date;
             this.PaymentMethod = paymentMethod;
         }
 
-        public Price Price { get; }
+        public Money Cost { get; }
 
         public DateTime Date { get; }
 
         public PaymentMethod PaymentMethod { get; }
 
-        public static Try<Payment> NewPayment(Option<Price> price, in Option<DateTime> date, Option<PaymentMethod> paymentMethod) =>
-            price
-            && date
-            && paymentMethod
-            ? new Payment(price.Get(), date.Get(), paymentMethod.Get())
-            : Failure<Payment>(new InvalidObjectException("Invalid payment."));
+        public static Try<Payment> NewPayment(
+            Option<Money> cost,
+            in Option<DateTime> date,
+            Option<PaymentMethod> paymentMethod) =>
+                cost
+                && date
+                && paymentMethod
+                ? new Payment(cost.Get(), date.Get(), paymentMethod.Get())
+                : Failure<Payment>(new InvalidObjectException("Invalid payment."));
 
         public bool Equals(Option<Payment> other) => other.Match(
-            some => this.Price.Equals(some.Price)
+            some => this.Cost.Equals(some.Cost)
                     && this.Date.Equals(some.Date)
                     && this.PaymentMethod.Equals(some.PaymentMethod),
             () => false);

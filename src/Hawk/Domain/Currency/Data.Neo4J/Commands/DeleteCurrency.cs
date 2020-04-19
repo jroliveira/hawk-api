@@ -23,7 +23,7 @@
             new
             {
                 email = param.Email.Value,
-                name = param.Id,
+                code = param.Id,
             });
     }
 }

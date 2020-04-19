@@ -13,12 +13,12 @@
     using static Hawk.Domain.Currency.Data.Neo4J.CurrencyMapping;
     using static Hawk.Infrastructure.Data.Neo4J.CypherScript;
 
-    internal sealed class GetCurrencyByName : Query<GetByIdParam<string>, Currency>, IGetCurrencyByName
+    internal sealed class GetCurrencyByCode : Query<GetByIdParam<string>, Currency>, IGetCurrencyByCode
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("Currency", "Data.Neo4J", "Queries", "GetCurrencyByName.cql"));
+        private static readonly Option<string> Statement = ReadCypherScript(Combine("Currency", "Data.Neo4J", "Queries", "GetCurrencyByCode.cql"));
         private readonly Neo4JConnection connection;
 
-        public GetCurrencyByName(Neo4JConnection connection) => this.connection = connection;
+        public GetCurrencyByCode(Neo4JConnection connection) => this.connection = connection;
 
         protected override Task<Try<Currency>> GetResult(GetByIdParam<string> param) => this.connection.ExecuteCypherScalar(
             MapCurrency,
@@ -26,7 +26,7 @@
             new
             {
                 email = param.Email.Value,
-                name = param.Id,
+                code = param.Id,
             });
     }
 }

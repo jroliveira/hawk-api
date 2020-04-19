@@ -15,7 +15,10 @@
         internal static Try<Currency> MapCurrency(IRecord data) => MapCurrency(MapRecord(data, "data"));
 
         internal static Try<Currency> MapCurrency(Option<Neo4JRecord> record) => record.Match(
-            some => NewCurrency(some.Get<string>("name"), some.Get<uint>("transactions")),
+            some => NewCurrency(
+                some.Get<string>("code"),
+                some.Get<string>("symbol"),
+                some.Get<uint>("transactions")),
             () => new NotFoundException("Currency not found."));
     }
 }

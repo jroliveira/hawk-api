@@ -16,34 +16,43 @@
 
     using static Hawk.Domain.Shared.Queries.GetAllParam;
     using static Hawk.Domain.Shared.Queries.GetByIdParam<string>;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal sealed class CreateTransactionModelValidator : AbstractValidator<CreateTransactionModel>
     {
         internal CreateTransactionModelValidator(
             Email email,
             IGetCategoryByName getCategoryByName,
-            IGetCurrencyByName getCurrencyByName,
+            IGetCurrencyByCode getCurrencyByCode,
             IGetPayeeByName getPayeeByName,
             IGetPaymentMethodByName getPaymentMethodByName,
             IGetTransactions getTransactions)
         {
             this.RuleFor(model => model)
-                .MustAsync((transaction, _) => new Filter<bool>(async filters =>
+                .MustAsync((transaction, _) =>
+                {
+                    if (transaction?.Payment?.Cost == null)
                     {
-                        var entities = await getTransactions.GetResult(NewGetByAllParam(
-                            email,
-                            filters));
+                        return Task(true);
+                    }
 
-                        return entities.Match(
-                            _ => false,
-                            page => !page.Data.Any());
-                    })
-                    .Where("year".Equal(transaction.Payment.Date.Year)
-                        .And("month".Equal(transaction.Payment.Date.Month))
-                        .And("day".Equal(transaction.Payment.Date.Day))
-                        .And("value".Equal(transaction.Payment.Value))
-                        .And("description".Equal(transaction.Description)))
-                    .Build())
+                    return new Filter<bool>(async filters =>
+                        {
+                            var entities = await getTransactions.GetResult(NewGetByAllParam(
+                                email,
+                                filters));
+
+                            return entities.Match(
+                                _ => true,
+                                page => !page.Data.Any(item => item.Get().Equals(transaction)));
+                        })
+                        .Where("year".Equal(transaction.Payment.Date.Year)
+                            .And("month".Equal(transaction.Payment.Date.Month))
+                            .And("day".Equal(transaction.Payment.Date.Day))
+                            .And("value".Equal(transaction.Payment.Cost.Value))
+                            .And("description".Equal(transaction.Description)))
+                        .Build();
+                })
                 .WithMessage("Transaction already exists.");
 
             this.RuleFor(model => model.Type)
@@ -53,7 +62,7 @@
             this.RuleFor(model => model.Payment)
                 .NotNull()
                 .WithMessage("Payment is required.")
-                .SetValidator(new PaymentModelValidator(email, getCurrencyByName, getPaymentMethodByName));
+                .SetValidator(new PaymentModelValidator(email, getCurrencyByCode, getPaymentMethodByName));
 
             this.RuleFor(model => model.Payee)
                 .NotEmpty()

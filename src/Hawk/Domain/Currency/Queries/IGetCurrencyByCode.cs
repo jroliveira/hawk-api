@@ -2,7 +2,7 @@
 {
     using Hawk.Domain.Shared.Queries;
 
-    public interface IGetCurrencyByName : IQuery<GetByIdParam<string>, Currency>
+    public interface IGetCurrencyByCode : IQuery<GetByIdParam<string>, Currency>
     {
     }
 }

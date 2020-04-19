@@ -43,7 +43,7 @@
             IGetConfigurationByDescription getConfigurationByDescription,
             IUpsertConfiguration upsertConfiguration,
             IGetCategoryByName getCategoryByName,
-            IGetCurrencyByName getCurrencyByName,
+            IGetCurrencyByCode getCurrencyByCode,
             IGetPayeeByName getPayeeByName,
             IGetPaymentMethodByName getPaymentMethodByName)
         {
@@ -56,7 +56,7 @@
                 var validator = new CreateConfigurationModelValidator(
                     email.Get(),
                     getCategoryByName,
-                    getCurrencyByName,
+                    getCurrencyByCode,
                     getPayeeByName,
                     getPaymentMethodByName);
 

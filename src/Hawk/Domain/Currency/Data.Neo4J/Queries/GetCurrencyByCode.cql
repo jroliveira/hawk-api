@@ -2,10 +2,11 @@
   (currency:Currency)-[:BELONGS]->(account:Account)
 WHERE
   account.email = $email
-  AND currency.name = $name
+  AND currency.code = $code
 
 RETURN
 { 
-  name: currency.name,
+  code: currency.code,
+  symbol: currency.symbol,
   transactions: SIZE((:Transaction)-[:PAID_IN]->(currency))
 } AS data;

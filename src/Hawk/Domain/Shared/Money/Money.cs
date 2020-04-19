@@ -1,4 +1,4 @@
-﻿namespace Hawk.Domain.Transaction
+﻿namespace Hawk.Domain.Shared.Money
 {
     using System;
 
@@ -8,9 +8,9 @@
 
     using static Hawk.Infrastructure.Monad.Utils.Util;
 
-    public sealed class Price : IEquatable<Option<Price>>
+    public sealed class Money : IEquatable<Option<Money>>
     {
-        private Price(double value, Currency currency)
+        private Money(double value, Currency currency)
         {
             this.Value = value;
             this.Currency = currency;
@@ -20,13 +20,13 @@
 
         public Currency Currency { get; }
 
-        public static Try<Price> NewPrice(Option<double> value, Option<Currency> currency) =>
+        public static Try<Money> NewMoney(Option<double> value, Option<Currency> currency) =>
             value
             && currency
-            ? new Price(value.Get(), currency.Get())
-            : Failure<Price>(new InvalidObjectException("Invalid price."));
+            ? new Money(value.Get(), currency.Get())
+            : Failure<Money>(new InvalidObjectException("Invalid money."));
 
-        public bool Equals(Option<Price> other) => other.Match(
+        public bool Equals(Option<Money> other) => other.Match(
             some => this.Value.Equals(some.Value)
                     && this.Currency.Equals(some.Currency),
             () => false);

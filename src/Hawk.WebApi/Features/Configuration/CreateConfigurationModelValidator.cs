@@ -7,6 +7,7 @@
     using Hawk.Domain.Payee.Queries;
     using Hawk.Domain.PaymentMethod.Queries;
     using Hawk.Domain.Shared;
+    using Hawk.WebApi.Features.Shared.Money;
 
     using static Hawk.Domain.Shared.Queries.GetByIdParam<string>;
 
@@ -15,7 +16,7 @@
         internal CreateConfigurationModelValidator(
             Email email,
             IGetCategoryByName getCategoryByName,
-            IGetCurrencyByName getCurrencyByName,
+            IGetCurrencyByCode getCurrencyByCode,
             IGetPayeeByName getPayeeByName,
             IGetPaymentMethodByName getPaymentMethodByName)
         {
@@ -30,10 +31,9 @@
                 .WithMessage("Payment method not found.");
 
             this.RuleFor(model => model.Currency)
-                .NotEmpty()
+                .NotNull()
                 .WithMessage("Currency is required.")
-                .MustAsync(async (currency, _) => await getCurrencyByName.GetResult(NewGetByIdParam(email, currency)))
-                .WithMessage("Currency not found.");
+                .SetValidator(new CurrencyModelValidator(email, getCurrencyByCode));
 
             this.RuleFor(model => model.Payee)
                 .NotEmpty()
