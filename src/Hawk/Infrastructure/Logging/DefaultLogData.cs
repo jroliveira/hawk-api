@@ -59,7 +59,7 @@
             }
             catch (Exception exception)
             {
-                throw new SerializationException("Cannot serialize object default log data.", exception);
+                return SerializeObject(new SerializationException("Cannot serialize object default log data.", exception), this.jsonSerializerSettings);
             }
         }
     }
