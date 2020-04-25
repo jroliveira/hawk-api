@@ -8,6 +8,9 @@
     using Http.Query.Filter;
     using Http.Query.Filter.Filters.Condition.Operators;
 
+    using static System.Globalization.CultureInfo;
+    using static System.Globalization.NumberStyles;
+
     internal sealed class Where : IWhere<string, Filter>
     {
         private static readonly IReadOnlyDictionary<Comparison, string> Operations = new Dictionary<Comparison, string>
@@ -35,7 +38,7 @@
 
         private static object GetValue(object value) => value switch
         {
-            string s when int.TryParse(s, out var i) => i,
+            string s when double.TryParse(s, Number, GetCultureInfo("en-US"), out var d) => d.ToString(CurrentCulture).Replace('.', ' ').Replace(',', '.'),
             string s => $"\"{s}\"",
             _ => value
         };

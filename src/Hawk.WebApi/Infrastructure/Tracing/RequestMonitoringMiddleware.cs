@@ -1,6 +1,5 @@
 ﻿namespace Hawk.WebApi.Infrastructure.Tracing
 {
-    using System;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Http;
@@ -16,7 +15,7 @@
 
         public RequestMonitoringMiddleware(RequestDelegate next, ITracer tracer)
         {
-            this.next = next ?? throw new ArgumentNullException(nameof(next));
+            this.next = next;
             this.tracer = tracer;
         }
 
@@ -24,21 +23,13 @@
         {
             using var scope = this.tracer.BuildSpan("HttpRequest").StartActive();
 
-            try
-            {
-                await this.next(httpContext);
+            await this.next(httpContext);
 
-                scope.Span
-                    .SetTag(SpanKind, SpanKindServer)
-                    .SetTag(HttpMethod, "GET")
-                    .SetTag(HttpUrl, httpContext.Request.Path)
-                    .SetTag(HttpStatus, httpContext.Response?.StatusCode ?? 0);
-            }
-            catch (Exception)
-            {
-                scope.Span.SetTag(Error, true);
-                throw;
-            }
+            scope.Span
+                .SetTag(SpanKind, SpanKindServer)
+                .SetTag(HttpMethod, "GET")
+                .SetTag(HttpUrl, httpContext.Request.Path)
+                .SetTag(HttpStatus, httpContext.Response?.StatusCode ?? 0);
         }
     }
 }

@@ -4,25 +4,15 @@
 
     using Microsoft.AspNetCore.Http;
 
-    using static Hawk.Infrastructure.Guard;
-
     internal sealed class SecurityHeadersMiddleware
     {
         private const int OneYearInSeconds = 60 * 60 * 24 * 365;
         private readonly RequestDelegate next;
 
-        public SecurityHeadersMiddleware(RequestDelegate next)
-        {
-            NotNull(next, nameof(next), "Security headers middleware's next cannot be default.");
-
-            this.next = next;
-        }
+        public SecurityHeadersMiddleware(RequestDelegate next) => this.next = next;
 
         public async Task Invoke(HttpContext context)
         {
-            NotNull(context, nameof(context), "SecurityHeadersMiddleware context cannot be default.");
-            NotNull(context.Response, nameof(context.Response), "SecurityHeadersMiddleware response cannot be default.");
-
             context.Response.Headers["X-Frame-Options"] = "deny";
             context.Response.Headers["X-XSS-Protection"] = "1; mode=block";
             context.Response.Headers["Strict-Transport-Security"] = $"max-age={OneYearInSeconds}; includeSubDomains; preload";
