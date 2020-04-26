@@ -22,6 +22,7 @@
 
     using Microsoft.AspNetCore.Mvc;
 
+    using static Hawk.Domain.Shared.Commands.DeleteParam<string>;
     using static Hawk.Domain.Shared.Commands.UpsertParam<string, Hawk.Domain.Configuration.Configuration>;
     using static Hawk.Domain.Shared.Queries.GetAllParam;
     using static Hawk.Domain.Shared.Queries.GetByIdParam<string>;
@@ -36,6 +37,7 @@
         private readonly IGetConfigurations getConfigurations;
         private readonly IGetConfigurationByDescription getConfigurationByDescription;
         private readonly IUpsertConfiguration upsertConfiguration;
+        private readonly IDeleteConfiguration deleteConfiguration;
         private readonly Func<Try<Email>, CreateConfigurationModel, Task<ValidationResult>> validate;
 
         public ConfigurationsController(
@@ -45,11 +47,13 @@
             IGetCategoryByName getCategoryByName,
             IGetCurrencyByCode getCurrencyByCode,
             IGetPayeeByName getPayeeByName,
-            IGetPaymentMethodByName getPaymentMethodByName)
+            IGetPaymentMethodByName getPaymentMethodByName,
+            IDeleteConfiguration deleteConfiguration)
         {
             this.getConfigurations = getConfigurations;
             this.getConfigurationByDescription = getConfigurationByDescription;
             this.upsertConfiguration = upsertConfiguration;
+            this.deleteConfiguration = deleteConfiguration;
 
             this.validate = (email, request) =>
             {
@@ -135,6 +139,25 @@
                 _ => entity
                     ? this.NoContent()
                     : this.Created(newEntity.Get().Id, Success(NewConfigurationModel(newEntity.Get()))));
+        }
+
+        /// <summary>
+        /// Exclude.
+        /// </summary>
+        /// <param name="description"></param>
+        /// <returns></returns>
+        [HttpDelete("{description}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteConfiguration([FromRoute] string description)
+        {
+            var deleted = await this.deleteConfiguration.Execute(NewDeleteParam(this.GetUser(), description));
+
+            return deleted.Match(
+                this.Error<ConfigurationModel>,
+                _ => this.NoContent());
         }
     }
 }
