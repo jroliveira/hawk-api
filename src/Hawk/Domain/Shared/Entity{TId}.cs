@@ -7,5 +7,7 @@
         public TId Id { get; }
 
         public static implicit operator TId(Entity<TId> entity) => entity.Id;
+
+        public override string? ToString() => this.Id?.ToString();
     }
 }

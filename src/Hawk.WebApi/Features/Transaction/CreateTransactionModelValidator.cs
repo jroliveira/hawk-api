@@ -37,21 +37,24 @@
                     }
 
                     return new Filter<bool>(async filters =>
-                        {
-                            var entities = await getTransactions.GetResult(NewGetByAllParam(
-                                email,
-                                filters));
+                    {
+                        var entities = await getTransactions.GetResult(NewGetByAllParam(
+                            email,
+                            filters));
 
-                            return entities.Match(
-                                _ => true,
-                                page => !page.Data.Any(item => item.Get().Equals(transaction)));
-                        })
-                        .Where("year".Equal(transaction.Payment.Date.Year)
-                            .And("month".Equal(transaction.Payment.Date.Month))
-                            .And("day".Equal(transaction.Payment.Date.Day))
-                            .And("value".Equal(transaction.Payment.Cost.Value))
-                            .And("description".Equal(transaction.Description)))
-                        .Build();
+                        return entities.Match(
+                            exception => true,
+                            page => !page.Data.Any());
+                    })
+                    .Where("year".Equal(transaction.Payment.Date.Year)
+                        .And("month".Equal(transaction.Payment.Date.Month))
+                        .And("day".Equal(transaction.Payment.Date.Day))
+                        .And("value".Equal(transaction.Payment.Cost.Value))
+                        .And("category".Equal(transaction.Category))
+                        .And("currency".Equal(transaction.Payment.Cost.Currency.Code))
+                        .And("payee".Equal(transaction.Payee))
+                        .And("paymentMethod".Equal(transaction.Payment.Method)))
+                    .Build();
                 })
                 .WithMessage("Transaction already exists.");
 

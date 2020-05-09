@@ -49,6 +49,18 @@ SET
   transaction.year = $year,
   transaction.month = $month,
   transaction.day = $day
+WITH
+  account,
+  payee,
+  category,
+  currency,
+  paymentMethod,
+  transaction
+
+OPTIONAL MATCH
+  (transaction)-[relationships]->()
+DELETE
+  relationships
 MERGE
   (transaction)-[:BELONGS]->(account)
 MERGE

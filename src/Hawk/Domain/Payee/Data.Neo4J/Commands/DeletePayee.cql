@@ -3,5 +3,6 @@
 WHERE
   account.email = $email
   AND payee.name = $name
+  AND NOT ()-->(payee)
 
 DETACH DELETE payee;
