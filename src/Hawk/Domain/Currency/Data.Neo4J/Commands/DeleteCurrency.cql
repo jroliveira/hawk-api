@@ -3,5 +3,6 @@
 WHERE
   account.email = $email
   AND currency.code = $code
+  AND NOT ()-->(currency)
 
 DETACH DELETE currency;

@@ -53,7 +53,7 @@
                 MapTransaction,
                 Statement
                     .GetOrElse(Empty)
-                    .Replace("#where#", this.where.Apply(param.Filter, "transaction")),
+                    .Replace("#where#", this.where.Apply(param.Filter)),
                 parameters);
 
             return data.Select(items => new Page<Try<Transaction>>(items, parameters.skip, parameters.limit));

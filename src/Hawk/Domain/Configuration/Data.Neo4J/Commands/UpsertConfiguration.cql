@@ -42,6 +42,18 @@ MERGE
 SET
   configuration.type = $type,
   configuration.description = $newDescription
+WITH
+  account,
+  payee,
+  category,
+  currency,
+  paymentMethod,
+  configuration
+
+OPTIONAL MATCH
+  (configuration)-[relationships]->()
+DELETE
+  relationships
 MERGE
   (configuration)-[:BELONGS]->(account)
 MERGE

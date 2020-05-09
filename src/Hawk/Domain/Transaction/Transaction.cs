@@ -94,7 +94,7 @@
                         payee.Get(),
                         category.Get(),
                         tags.Get().Select(tag => tag.Get()))
-                    : Failure<Transaction>(new InvalidObjectException("Invalid transaction."));
+                    : Failure<Transaction>(new InvalidObjectException($"Invalid transaction '{id.GetStringOrElse("undefined")}'."));
 
         public bool Equals(Option<Transaction> other) => other.Match(
             some => this.Type == some.Type

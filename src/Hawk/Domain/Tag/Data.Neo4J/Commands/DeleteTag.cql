@@ -3,5 +3,6 @@
 WHERE
   account.email = $email
   AND tag.name = $name
+  AND NOT ()-->(tag)
 
 DETACH DELETE tag;

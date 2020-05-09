@@ -4,6 +4,9 @@
     using Hawk.Domain.Transaction.Data.Neo4J.Commands;
     using Hawk.Domain.Transaction.Data.Neo4J.Queries;
     using Hawk.Domain.Transaction.Queries;
+    using Hawk.Infrastructure.Filter;
+
+    using Http.Query.Filter;
 
     using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +16,7 @@
             .AddScoped<IUpsertTransaction, UpsertTransaction>()
             .AddScoped<IDeleteTransaction, DeleteTransaction>()
             .AddScoped<IGetTransactions, GetTransactions>()
-            .AddScoped<IGetTransactionById, GetTransactionById>();
+            .AddScoped<IGetTransactionById, GetTransactionById>()
+            .AddSingleton<IWhere<string, Filter>, Where>();
     }
 }
