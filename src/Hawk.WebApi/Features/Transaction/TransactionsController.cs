@@ -15,6 +15,7 @@
     using Hawk.Domain.Transaction.Queries;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
+    using Hawk.Infrastructure.Monad.Linq;
     using Hawk.Infrastructure.Pagination;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure.Authentication;
@@ -158,15 +159,15 @@
             }
 
             var entity = await this.getTransactionById.GetResult(NewGetByIdParam(this.GetUser(), new Guid(id)));
-
-            Option<Transaction> newEntity = request;
-            var @try = await this.upsertTransaction.Execute(NewUpsertParam(this.GetUser(), new Guid(id), newEntity));
+            var @try = await entity.Select(async transaction =>
+            {
+                var inserted = await this.upsertTransaction.Execute(NewUpsertParam(this.GetUser(), new Guid(id), request));
+                return inserted.Select(_ => transaction);
+            });
 
             return @try.Match(
                 this.Error<TransactionModel>,
-                _ => entity
-                    ? this.NoContent()
-                    : this.Created(newEntity.Get().Id, Success(NewTransactionModel(newEntity.Get()))));
+                transaction => this.NoContent());
         }
 
         /// <summary>
