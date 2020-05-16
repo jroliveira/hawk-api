@@ -77,6 +77,7 @@
         /// <returns></returns>
         [HttpGet("payees/{payee}/payment-methods")]
         [ProducesResponseType(typeof(Try<Page<Try<PaymentMethodModel>>>), 200)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
@@ -103,6 +104,7 @@
         /// <returns></returns>
         [HttpGet("payment-methods/{name}")]
         [ProducesResponseType(typeof(Try<PaymentMethodModel>), 200)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
@@ -123,9 +125,11 @@
         /// <returns></returns>
         [HttpPost("payment-methods")]
         [ProducesResponseType(typeof(Try<PaymentMethodModel>), 201)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(409)]
+        [ProducesResponseType(422)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> CreatePaymentMethod([FromBody] CreatePaymentMethodModel request)
         {
@@ -157,10 +161,10 @@
         [HttpPut("payment-methods/{name}")]
         [ProducesResponseType(typeof(Try<PaymentMethodModel>), 201)]
         [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(409)]
+        [ProducesResponseType(422)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> UpdatePaymentMethod(
             [FromRoute] string name,
@@ -191,6 +195,7 @@
         /// <returns></returns>
         [HttpDelete("payment-methods/{name}")]
         [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(500)]

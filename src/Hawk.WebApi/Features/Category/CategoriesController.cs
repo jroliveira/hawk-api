@@ -77,6 +77,7 @@
         /// <returns></returns>
         [HttpGet("payees/{payee}/categories")]
         [ProducesResponseType(typeof(Try<Page<Try<CategoryModel>>>), 200)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
@@ -103,6 +104,7 @@
         /// <returns></returns>
         [HttpGet("categories/{name}")]
         [ProducesResponseType(typeof(Try<CategoryModel>), 200)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
@@ -123,9 +125,11 @@
         /// <returns></returns>
         [HttpPost("categories")]
         [ProducesResponseType(typeof(Try<CategoryModel>), 201)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(409)]
+        [ProducesResponseType(422)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryModel request)
         {
@@ -157,10 +161,10 @@
         [HttpPut("categories/{name}")]
         [ProducesResponseType(typeof(Try<CategoryModel>), 201)]
         [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(409)]
+        [ProducesResponseType(422)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateCategory(
             [FromRoute] string name,
@@ -191,6 +195,7 @@
         /// <returns></returns>
         [HttpDelete("categories/{name}")]
         [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(500)]

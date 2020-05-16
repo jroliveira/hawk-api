@@ -69,6 +69,7 @@
         /// <returns></returns>
         [HttpGet("{code}")]
         [ProducesResponseType(typeof(Try<CurrencyModel>), 200)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
@@ -89,9 +90,11 @@
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(Try<CurrencyModel>), 201)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(409)]
+        [ProducesResponseType(422)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> CreateCurrency([FromBody] CreateCurrencyModel request)
         {
@@ -123,10 +126,10 @@
         [HttpPut("{code}")]
         [ProducesResponseType(typeof(Try<CurrencyModel>), 201)]
         [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(409)]
+        [ProducesResponseType(422)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateCurrency(
             [FromRoute] string code,
@@ -157,6 +160,7 @@
         /// <returns></returns>
         [HttpDelete("{code}")]
         [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(500)]

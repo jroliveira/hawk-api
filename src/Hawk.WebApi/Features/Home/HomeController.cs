@@ -25,7 +25,6 @@
         [HttpGet]
         [ResponseCache(Duration = 60)]
         [ProducesResponseType(typeof(Try<HomeModel>), 200)]
-        [ProducesResponseType(404)]
         public IActionResult Get() => this.Ok(Success(new HomeModel(
             this.environment.ApplicationName,
             this.environment.EnvironmentName,
