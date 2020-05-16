@@ -94,6 +94,7 @@
         /// <returns></returns>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Try<TransactionModel>), 200)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
@@ -114,9 +115,11 @@
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(Try<TransactionModel>), 201)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(409)]
+        [ProducesResponseType(422)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> CreateTransaction([FromBody] CreateTransactionModel request)
         {
@@ -141,12 +144,12 @@
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        [ProducesResponseType(typeof(Try<TransactionModel>), 201)]
         [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
-        [ProducesResponseType(409)]
+        [ProducesResponseType(422)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateTransaction(
             [FromRoute] string id,
@@ -177,6 +180,7 @@
         /// <returns></returns>
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(500)]

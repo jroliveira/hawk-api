@@ -77,6 +77,7 @@
         /// <returns></returns>
         [HttpGet("payees/{payee}/tags")]
         [ProducesResponseType(typeof(Try<Page<Try<TagModel>>>), 200)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
@@ -103,6 +104,7 @@
         /// <returns></returns>
         [HttpGet("tags/{name}")]
         [ProducesResponseType(typeof(Try<TagModel>), 200)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
@@ -123,9 +125,11 @@
         /// <returns></returns>
         [HttpPost("tags")]
         [ProducesResponseType(typeof(Try<TagModel>), 201)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(409)]
+        [ProducesResponseType(422)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> CreateTag([FromBody] CreateTagModel request)
         {
@@ -157,10 +161,10 @@
         [HttpPut("tags/{name}")]
         [ProducesResponseType(typeof(Try<TagModel>), 201)]
         [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(409)]
+        [ProducesResponseType(422)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateTag(
             [FromRoute] string name,
@@ -191,6 +195,7 @@
         /// <returns></returns>
         [HttpDelete("tags/{name}")]
         [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(500)]

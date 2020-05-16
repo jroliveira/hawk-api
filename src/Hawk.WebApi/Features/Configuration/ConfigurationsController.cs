@@ -92,6 +92,7 @@
         /// <returns></returns>
         [HttpGet("{description}")]
         [ProducesResponseType(typeof(Try<ConfigurationModel>), 200)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
@@ -114,10 +115,10 @@
         [HttpPut("{description}")]
         [ProducesResponseType(typeof(Try<ConfigurationModel>), 201)]
         [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(409)]
+        [ProducesResponseType(422)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateConfiguration(
             [FromRoute] string description,
@@ -148,6 +149,7 @@
         /// <returns></returns>
         [HttpDelete("{description}")]
         [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(500)]
