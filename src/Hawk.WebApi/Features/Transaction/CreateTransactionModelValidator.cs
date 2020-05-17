@@ -11,12 +11,12 @@
     using Hawk.Domain.Shared;
     using Hawk.Domain.Transaction.Queries;
 
-    using Http.Query.Filter.Client;
     using Http.Query.Filter.Client.Filters.Condition;
 
     using static Hawk.Domain.Shared.Queries.GetAllParam;
     using static Hawk.Domain.Shared.Queries.GetByIdParam<string>;
-    using static Hawk.Infrastructure.Monad.Utils.Util;
+
+    using static Http.Query.Filter.Client.FilterBuilder;
 
     internal sealed class CreateTransactionModelValidator : AbstractValidator<CreateTransactionModel>
     {
@@ -29,32 +29,29 @@
             IGetTransactions getTransactions)
         {
             this.RuleFor(model => model)
-                .MustAsync((transaction, _) =>
+                .MustAsync(async (transaction, _) =>
                 {
                     if (transaction?.Payment?.Cost == null)
                     {
-                        return Task(true);
+                        return true;
                     }
 
-                    return new Filter<bool>(async filters =>
-                    {
-                        var entities = await getTransactions.GetResult(NewGetByAllParam(
-                            email,
-                            filters));
+                    var entities = await getTransactions.GetResult(NewGetByAllParam(
+                        email,
+                        NewFilterBuilder()
+                            .Where("year".Equal(transaction.Payment.Date.Year)
+                                .And("month".Equal(transaction.Payment.Date.Month))
+                                .And("day".Equal(transaction.Payment.Date.Day))
+                                .And("value".Equal(transaction.Payment.Cost.Value))
+                                .And("category".Equal(transaction.Category))
+                                .And("currency".Equal(transaction.Payment.Cost.Currency.Code))
+                                .And("payee".Equal(transaction.Payee))
+                                .And("paymentMethod".Equal(transaction.Payment.Method)))
+                            .Build()));
 
-                        return entities.Match(
-                            exception => true,
-                            page => !page.Data.Any());
-                    })
-                    .Where("year".Equal(transaction.Payment.Date.Year)
-                        .And("month".Equal(transaction.Payment.Date.Month))
-                        .And("day".Equal(transaction.Payment.Date.Day))
-                        .And("value".Equal(transaction.Payment.Cost.Value))
-                        .And("category".Equal(transaction.Category))
-                        .And("currency".Equal(transaction.Payment.Cost.Currency.Code))
-                        .And("payee".Equal(transaction.Payee))
-                        .And("paymentMethod".Equal(transaction.Payment.Method)))
-                    .Build();
+                    return entities.Match(
+                        exception => true,
+                        page => !page.Data.Any());
                 })
                 .WithMessage("Transaction already exists.");
 

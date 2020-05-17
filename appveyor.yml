@@ -1,0 +1,38 @@
+# Reference: https://www.appveyor.com/docs/appveyor-yml/
+#---------------------------------#
+#      general configuration      #
+#---------------------------------#
+
+branches:
+  only:
+    - master
+
+skip_tags: true
+
+
+#---------------------------------#
+#    environment configuration    #
+#---------------------------------#
+
+image: Visual Studio 2019
+
+environment:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+pull_requests:
+  do_not_increment_build_number: true
+
+
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+
+configuration:
+  - Release
+
+install:
+  - cmd: dotnet tool restore
+
+build_script:
+  - cmd: dotnet cake
