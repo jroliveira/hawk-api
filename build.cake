@@ -1,4 +1,4 @@
-#addin "Cake.Docker&version=0.9.7"
+﻿#addin "Cake.Docker&version=0.9.7"
 #addin "Cake.Figlet&version=1.3.1"
 
 #load "build/*.cake"
@@ -29,10 +29,6 @@ Setup<BuildData>(context =>
 });
 
 Task("Default")
-    .IsDependentOn("Restore-NuGet-Packages")
-    .IsDependentOn("Build-Solution");
-
-Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
     .IsDependentOn("Build-Solution");
 

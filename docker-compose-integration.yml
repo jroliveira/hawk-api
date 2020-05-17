@@ -39,6 +39,6 @@ services:
       - "7687:7687"
       - "2004:2004"
     env_file:
-      - ./database/neo4j/neo4j.env
+      - ./compose/database/neo4j/neo4j.env
     networks:
       - hawk-net

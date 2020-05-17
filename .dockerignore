@@ -116,14 +116,21 @@ Backup*/
 UpgradeLog*.XML
 .vs
 
-# App config related
-api.env
-api.integration.env
-appsettings.json
-
 # Build related
 tools/**
 !tools/packages.config
+
+# Neo4j database
+compose/database/neo4j/data
+
+# Elastic Search monitoring
+compose/monitor/elasticsearch/data
+
+# Logs
+logs/
+
+# SonarQube
+.sonarqube
 
 # Git
 .git
@@ -135,8 +142,7 @@ docker-compose.yml
 
 # Docs
 docs
+CHANGELOG.md
+CODE_OF_CONDUCT.md
 CONTRIBUTING.md
 README.md
-
-# SonarQube
-.sonarqube

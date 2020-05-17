@@ -2,6 +2,8 @@
 
 # Hawk (api)
 
+[![Build status](https://ci.appveyor.com/api/projects/status/2at6y8p0xk1h4toq/branch/master?svg=true)](https://ci.appveyor.com/project/jroliveira/hawk-api/branch/master)
+[![Build Status](https://travis-ci.org/jroliveira/hawk-api.svg?branch=master)](https://travis-ci.org/jroliveira/hawk-api)
 [![CodeFactor](https://www.codefactor.io/repository/github/jroliveira/hawk-api/badge)](https://www.codefactor.io/repository/github/jroliveira/hawk-api)
 [![Maintainability](https://api.codeclimate.com/v1/badges/67c5c7b1c529276e9c28/maintainability)](https://codeclimate.com/github/jroliveira/hawk-api/maintainability)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE.txt)
@@ -75,7 +77,7 @@ $ npm install
 ### Building
 
 ``` bash
-$ dotnet cake --target=Build
+$ dotnet cake
 ```
 
 ### Testing
