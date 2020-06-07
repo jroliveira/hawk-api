@@ -5,10 +5,6 @@
 
     using FluentValidation.Results;
 
-    using Hawk.Domain.Category.Queries;
-    using Hawk.Domain.Currency.Queries;
-    using Hawk.Domain.Payee.Queries;
-    using Hawk.Domain.PaymentMethod.Queries;
     using Hawk.Domain.Shared;
     using Hawk.Domain.Transaction;
     using Hawk.Domain.Transaction.Commands;
@@ -45,28 +41,14 @@
             IGetTransactionById getTransactionById,
             IUpsertTransaction upsertTransaction,
             IDeleteTransaction deleteTransaction,
-            IGetCategoryByName getCategoryByName,
-            IGetCurrencyByCode getCurrencyByCode,
-            IGetPayeeByName getPayeeByName,
-            IGetPaymentMethodByName getPaymentMethodByName)
+            Func<Try<Email>, CreateTransactionModel, Task<ValidationResult>> validate)
         {
             this.getTransactions = getTransactions;
             this.getTransactionById = getTransactionById;
             this.upsertTransaction = upsertTransaction;
             this.deleteTransaction = deleteTransaction;
 
-            this.validate = (email, request) =>
-            {
-                var validator = new CreateTransactionModelValidator(
-                    email.Get(),
-                    getCategoryByName,
-                    getCurrencyByCode,
-                    getPayeeByName,
-                    getPaymentMethodByName,
-                    getTransactions);
-
-                return validator.ValidateAsync(request);
-            };
+            this.validate = validate;
         }
 
         /// <summary>

@@ -4,6 +4,7 @@
     using Hawk.Infrastructure.Data.Neo4J;
     using Hawk.Infrastructure.Filter;
     using Hawk.Infrastructure.Resilience;
+    using Hawk.WebApi.Features;
     using Hawk.WebApi.Infrastructure.Api;
     using Hawk.WebApi.Infrastructure.Authentication;
     using Hawk.WebApi.Infrastructure.Caching;
@@ -32,6 +33,7 @@
             .ConfigureNeo4J(this.Configuration)
             .ConfigureFilter()
             .ConfigureDomain()
+            .ConfigureFeature()
             .ConfigureApi(this.Configuration)
             .ConfigureVersioning()
             .ConfigureMetric()

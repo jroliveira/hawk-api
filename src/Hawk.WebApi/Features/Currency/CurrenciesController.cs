@@ -1,10 +1,14 @@
 ﻿namespace Hawk.WebApi.Features.Currency
 {
+    using System;
     using System.Threading.Tasks;
+
+    using FluentValidation.Results;
 
     using Hawk.Domain.Currency;
     using Hawk.Domain.Currency.Commands;
     using Hawk.Domain.Currency.Queries;
+    using Hawk.Domain.Shared;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
@@ -29,19 +33,20 @@
         private readonly IGetCurrencyByCode getCurrencyByCode;
         private readonly IUpsertCurrency upsertCurrency;
         private readonly IDeleteCurrency deleteCurrency;
-        private readonly CreateCurrencyModelValidator validator;
+        private readonly Func<Try<Email>, string, CreateCurrencyModel, Task<ValidationResult>> validate;
 
         public CurrenciesController(
             IGetCurrencies getCurrencies,
             IGetCurrencyByCode getCurrencyByCode,
             IUpsertCurrency upsertCurrency,
-            IDeleteCurrency deleteCurrency)
+            IDeleteCurrency deleteCurrency,
+            Func<Try<Email>, string, CreateCurrencyModel, Task<ValidationResult>> validate)
         {
             this.getCurrencies = getCurrencies;
             this.getCurrencyByCode = getCurrencyByCode;
             this.upsertCurrency = upsertCurrency;
             this.deleteCurrency = deleteCurrency;
-            this.validator = new CreateCurrencyModelValidator();
+            this.validate = validate;
         }
 
         /// <summary>
@@ -98,7 +103,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> CreateCurrency([FromBody] CreateCurrencyModel request)
         {
-            var validated = await this.validator.ValidateAsync(request);
+            var validated = await this.validate(this.GetUser(), request.Code, request);
             if (!validated.IsValid)
             {
                 return this.Error<CurrencyModel>(new InvalidObjectException("Invalid currency.", validated));
@@ -129,20 +134,25 @@
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
+        [ProducesResponseType(409)]
         [ProducesResponseType(422)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateCurrency(
             [FromRoute] string code,
             [FromBody] CreateCurrencyModel request)
         {
-            var validated = await this.validator.ValidateAsync(request);
+            var validated = await this.validate(this.GetUser(), code, request);
             if (!validated.IsValid)
             {
                 return this.Error<CurrencyModel>(new InvalidObjectException("Invalid currency.", validated));
             }
 
-            var entity = await this.getCurrencyByCode.GetResult(NewGetByIdParam(this.GetUser(), code));
+            if (await this.getCurrencyByCode.GetResult(NewGetByIdParam(this.GetUser(), request.Code)))
+            {
+                return this.Error<CurrencyModel>(new AlreadyExistsException("Currency already exists."));
+            }
 
+            var entity = await this.getCurrencyByCode.GetResult(NewGetByIdParam(this.GetUser(), code));
             Option<Currency> newEntity = request;
             var @try = await this.upsertCurrency.Execute(NewUpsertParam(this.GetUser(), code, newEntity));
 

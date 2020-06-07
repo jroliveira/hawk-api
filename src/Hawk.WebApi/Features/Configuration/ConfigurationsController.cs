@@ -5,13 +5,9 @@
 
     using FluentValidation.Results;
 
-    using Hawk.Domain.Category.Queries;
     using Hawk.Domain.Configuration;
     using Hawk.Domain.Configuration.Commands;
     using Hawk.Domain.Configuration.Queries;
-    using Hawk.Domain.Currency.Queries;
-    using Hawk.Domain.Payee.Queries;
-    using Hawk.Domain.PaymentMethod.Queries;
     using Hawk.Domain.Shared;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
@@ -44,28 +40,14 @@
             IGetConfigurations getConfigurations,
             IGetConfigurationByDescription getConfigurationByDescription,
             IUpsertConfiguration upsertConfiguration,
-            IGetCategoryByName getCategoryByName,
-            IGetCurrencyByCode getCurrencyByCode,
-            IGetPayeeByName getPayeeByName,
-            IGetPaymentMethodByName getPaymentMethodByName,
-            IDeleteConfiguration deleteConfiguration)
+            IDeleteConfiguration deleteConfiguration,
+            Func<Try<Email>, CreateConfigurationModel, Task<ValidationResult>> validate)
         {
             this.getConfigurations = getConfigurations;
             this.getConfigurationByDescription = getConfigurationByDescription;
             this.upsertConfiguration = upsertConfiguration;
             this.deleteConfiguration = deleteConfiguration;
-
-            this.validate = (email, request) =>
-            {
-                var validator = new CreateConfigurationModelValidator(
-                    email.Get(),
-                    getCategoryByName,
-                    getCurrencyByCode,
-                    getPayeeByName,
-                    getPaymentMethodByName);
-
-                return validator.ValidateAsync(request);
-            };
+            this.validate = validate;
         }
 
         /// <summary>

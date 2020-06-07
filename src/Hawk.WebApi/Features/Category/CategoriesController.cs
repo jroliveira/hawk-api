@@ -1,11 +1,15 @@
 ﻿namespace Hawk.WebApi.Features.Category
 {
+    using System;
     using System.Threading.Tasks;
+
+    using FluentValidation.Results;
 
     using Hawk.Domain.Category;
     using Hawk.Domain.Category.Commands;
     using Hawk.Domain.Category.Queries;
     using Hawk.Domain.Payee.Queries;
+    using Hawk.Domain.Shared;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
@@ -33,7 +37,7 @@
         private readonly IUpsertCategory upsertCategory;
         private readonly IDeleteCategory deleteCategory;
         private readonly IGetPayeeByName getPayeeByName;
-        private readonly CreateCategoryModelValidator validator;
+        private readonly Func<Try<Email>, string, CreateCategoryModel, Task<ValidationResult>> validate;
 
         public CategoriesController(
             IGetCategories getCategories,
@@ -41,7 +45,8 @@
             IGetCategoryByName getCategoryByName,
             IUpsertCategory upsertCategory,
             IDeleteCategory deleteCategory,
-            IGetPayeeByName getPayeeByName)
+            IGetPayeeByName getPayeeByName,
+            Func<Try<Email>, string, CreateCategoryModel, Task<ValidationResult>> validate)
         {
             this.getCategories = getCategories;
             this.getCategoriesByPayee = getCategoriesByPayee;
@@ -49,7 +54,7 @@
             this.upsertCategory = upsertCategory;
             this.deleteCategory = deleteCategory;
             this.getPayeeByName = getPayeeByName;
-            this.validator = new CreateCategoryModelValidator();
+            this.validate = validate;
         }
 
         /// <summary>
@@ -133,7 +138,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryModel request)
         {
-            var validated = await this.validator.ValidateAsync(request);
+            var validated = await this.validate(this.GetUser(), request.Name, request);
             if (!validated.IsValid)
             {
                 return this.Error<CategoryModel>(new InvalidObjectException("Invalid category.", validated));
@@ -164,20 +169,25 @@
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
+        [ProducesResponseType(409)]
         [ProducesResponseType(422)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateCategory(
             [FromRoute] string name,
             [FromBody] CreateCategoryModel request)
         {
-            var validated = await this.validator.ValidateAsync(request);
+            var validated = await this.validate(this.GetUser(), name, request);
             if (!validated.IsValid)
             {
                 return this.Error<CategoryModel>(new InvalidObjectException("Invalid category.", validated));
             }
 
-            var entity = await this.getCategoryByName.GetResult(NewGetByIdParam(this.GetUser(), name));
+            if (await this.getPayeeByName.GetResult(NewGetByIdParam(this.GetUser(), request.Name)))
+            {
+                return this.Error<CategoryModel>(new AlreadyExistsException("Category already exists."));
+            }
 
+            var entity = await this.getCategoryByName.GetResult(NewGetByIdParam(this.GetUser(), name));
             Option<Category> newEntity = request;
             var @try = await this.upsertCategory.Execute(NewUpsertParam(this.GetUser(), name, newEntity));
 

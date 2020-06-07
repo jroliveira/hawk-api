@@ -1,10 +1,14 @@
 ﻿namespace Hawk.WebApi.Features.Payee
 {
+    using System;
     using System.Threading.Tasks;
+
+    using FluentValidation.Results;
 
     using Hawk.Domain.Payee;
     using Hawk.Domain.Payee.Commands;
     using Hawk.Domain.Payee.Queries;
+    using Hawk.Domain.Shared;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
@@ -29,19 +33,20 @@
         private readonly IGetPayeeByName getPayeeByName;
         private readonly IUpsertPayee upsertPayee;
         private readonly IDeletePayee deletePayee;
-        private readonly CreatePayeeModelValidator validator;
+        private readonly Func<Try<Email>, string, CreatePayeeModel, Task<ValidationResult>> validate;
 
         public PayeesController(
             IGetPayees getPayees,
             IGetPayeeByName getPayeeByName,
             IUpsertPayee upsertPayee,
-            IDeletePayee deletePayee)
+            IDeletePayee deletePayee,
+            Func<Try<Email>, string, CreatePayeeModel, Task<ValidationResult>> validate)
         {
             this.getPayees = getPayees;
             this.getPayeeByName = getPayeeByName;
             this.upsertPayee = upsertPayee;
             this.deletePayee = deletePayee;
-            this.validator = new CreatePayeeModelValidator();
+            this.validate = validate;
         }
 
         /// <summary>
@@ -98,7 +103,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> CreatePayee([FromBody] CreatePayeeModel request)
         {
-            var validated = await this.validator.ValidateAsync(request);
+            var validated = await this.validate(this.GetUser(), request.Name, request);
             if (!validated.IsValid)
             {
                 return this.Error<PayeeModel>(new InvalidObjectException("Invalid payee.", validated));
@@ -129,20 +134,25 @@
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
+        [ProducesResponseType(409)]
         [ProducesResponseType(422)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> UpdatePayee(
             [FromRoute] string name,
             [FromBody] CreatePayeeModel request)
         {
-            var validated = await this.validator.ValidateAsync(request);
+            var validated = await this.validate(this.GetUser(), name, request);
             if (!validated.IsValid)
             {
                 return this.Error<PayeeModel>(new InvalidObjectException("Invalid payee.", validated));
             }
 
-            var entity = await this.getPayeeByName.GetResult(NewGetByIdParam(this.GetUser(), name));
+            if (await this.getPayeeByName.GetResult(NewGetByIdParam(this.GetUser(), request.Name)))
+            {
+                return this.Error<PayeeModel>(new AlreadyExistsException("Payee already exists."));
+            }
 
+            var entity = await this.getPayeeByName.GetResult(NewGetByIdParam(this.GetUser(), name));
             Option<Payee> newEntity = request;
             var @try = await this.upsertPayee.Execute(NewUpsertParam(this.GetUser(), name, newEntity));
 
