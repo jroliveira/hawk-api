@@ -1,11 +1,15 @@
 ﻿namespace Hawk.WebApi.Features.PaymentMethod
 {
+    using System;
     using System.Threading.Tasks;
+
+    using FluentValidation.Results;
 
     using Hawk.Domain.Payee.Queries;
     using Hawk.Domain.PaymentMethod;
     using Hawk.Domain.PaymentMethod.Commands;
     using Hawk.Domain.PaymentMethod.Queries;
+    using Hawk.Domain.Shared;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
@@ -33,7 +37,7 @@
         private readonly IUpsertPaymentMethod upsertPaymentMethod;
         private readonly IDeletePaymentMethod deletePaymentMethod;
         private readonly IGetPayeeByName getPayeeByName;
-        private readonly CreatePaymentMethodModelValidator validator;
+        private readonly Func<Try<Email>, string, CreatePaymentMethodModel, Task<ValidationResult>> validate;
 
         public PaymentMethodsController(
             IGetPaymentMethods getPaymentMethods,
@@ -41,7 +45,8 @@
             IGetPaymentMethodByName getPaymentMethodByName,
             IUpsertPaymentMethod upsertPaymentMethod,
             IDeletePaymentMethod deletePaymentMethod,
-            IGetPayeeByName getPayeeByName)
+            IGetPayeeByName getPayeeByName,
+            Func<Try<Email>, string, CreatePaymentMethodModel, Task<ValidationResult>> validate)
         {
             this.getPaymentMethods = getPaymentMethods;
             this.getPaymentMethodsByPayee = getPaymentMethodsByPayee;
@@ -49,7 +54,7 @@
             this.upsertPaymentMethod = upsertPaymentMethod;
             this.deletePaymentMethod = deletePaymentMethod;
             this.getPayeeByName = getPayeeByName;
-            this.validator = new CreatePaymentMethodModelValidator();
+            this.validate = validate;
         }
 
         /// <summary>
@@ -133,7 +138,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> CreatePaymentMethod([FromBody] CreatePaymentMethodModel request)
         {
-            var validated = await this.validator.ValidateAsync(request);
+            var validated = await this.validate(this.GetUser(), request.Name, request);
             if (!validated.IsValid)
             {
                 return this.Error<PaymentMethodModel>(new InvalidObjectException("Invalid payment method.", validated));
@@ -164,20 +169,25 @@
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
+        [ProducesResponseType(409)]
         [ProducesResponseType(422)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> UpdatePaymentMethod(
             [FromRoute] string name,
             [FromBody] CreatePaymentMethodModel request)
         {
-            var validated = await this.validator.ValidateAsync(request);
+            var validated = await this.validate(this.GetUser(), name, request);
             if (!validated.IsValid)
             {
                 return this.Error<PaymentMethodModel>(new InvalidObjectException("Invalid payment method.", validated));
             }
 
-            var entity = await this.getPaymentMethodByName.GetResult(NewGetByIdParam(this.GetUser(), name));
+            if (await this.getPayeeByName.GetResult(NewGetByIdParam(this.GetUser(), request.Name)))
+            {
+                return this.Error<PaymentMethodModel>(new AlreadyExistsException("Payment method already exists."));
+            }
 
+            var entity = await this.getPaymentMethodByName.GetResult(NewGetByIdParam(this.GetUser(), name));
             Option<PaymentMethod> newEntity = request;
             var @try = await this.upsertPaymentMethod.Execute(NewUpsertParam(this.GetUser(), name, newEntity));
 

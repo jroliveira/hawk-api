@@ -1,8 +1,12 @@
 ﻿namespace Hawk.WebApi.Features.Tag
 {
+    using System;
     using System.Threading.Tasks;
 
+    using FluentValidation.Results;
+
     using Hawk.Domain.Payee.Queries;
+    using Hawk.Domain.Shared;
     using Hawk.Domain.Tag;
     using Hawk.Domain.Tag.Commands;
     using Hawk.Domain.Tag.Queries;
@@ -33,7 +37,7 @@
         private readonly IUpsertTag upsertTag;
         private readonly IDeleteTag deleteTag;
         private readonly IGetPayeeByName getPayeeByName;
-        private readonly CreateTagModelValidator validator;
+        private readonly Func<Try<Email>, string, CreateTagModel, Task<ValidationResult>> validate;
 
         public TagsController(
             IGetTags getTags,
@@ -41,7 +45,8 @@
             IGetTagByName getTagByName,
             IUpsertTag upsertTag,
             IDeleteTag deleteTag,
-            IGetPayeeByName getPayeeByName)
+            IGetPayeeByName getPayeeByName,
+            Func<Try<Email>, string, CreateTagModel, Task<ValidationResult>> validate)
         {
             this.getTags = getTags;
             this.getTagsByPayee = getTagsByPayee;
@@ -49,7 +54,7 @@
             this.upsertTag = upsertTag;
             this.deleteTag = deleteTag;
             this.getPayeeByName = getPayeeByName;
-            this.validator = new CreateTagModelValidator();
+            this.validate = validate;
         }
 
         /// <summary>
@@ -133,7 +138,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> CreateTag([FromBody] CreateTagModel request)
         {
-            var validated = await this.validator.ValidateAsync(request);
+            var validated = await this.validate(this.GetUser(), request.Name, request);
             if (!validated.IsValid)
             {
                 return this.Error<TagModel>(new InvalidObjectException("Invalid tag.", validated));
@@ -164,22 +169,27 @@
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
+        [ProducesResponseType(409)]
         [ProducesResponseType(422)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateTag(
             [FromRoute] string name,
             [FromBody] CreateTagModel request)
         {
-            var validated = await this.validator.ValidateAsync(request);
+            var validated = await this.validate(this.GetUser(), name, request);
             if (!validated.IsValid)
             {
                 return this.Error<TagModel>(new InvalidObjectException("Invalid tag.", validated));
             }
 
-            var entity = await this.getTagByName.GetResult(NewGetByIdParam(this.GetUser(), name));
+            if (await this.getTagByName.GetResult(NewGetByIdParam(this.GetUser(), request.Name)))
+            {
+                return this.Error<TagModel>(new AlreadyExistsException("Tag already exists."));
+            }
 
+            var entity = await this.getTagByName.GetResult(NewGetByIdParam(this.GetUser(), name));
             Option<Tag> newEntity = request;
-            var @try = await this.upsertTag.Execute(NewUpsertParam(this.GetUser(), name, newEntity));
+            var @try = await this.upsertTag.Execute(NewUpsertParam(this.GetUser(), name, request));
 
             return @try.Match(
                 this.Error<TagModel>,
