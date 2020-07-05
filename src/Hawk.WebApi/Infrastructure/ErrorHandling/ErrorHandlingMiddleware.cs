@@ -30,7 +30,7 @@
                 switch (context.Response.StatusCode)
                 {
                     case 404:
-                        await WriteResponse(context, new NotFoundException($"The HTTP resource that matches the request URI '{context.Request.Scheme}:/{context.Request.Path.Value}' not found."), 404);
+                        await WriteResponse(context, new NotFoundException($"The HTTP resource that matches the request URI '{context.Request.Scheme}://{context.Request.Host.Value}{context.Request.Path.Value}{context.Request.QueryString.Value}' not found."), 404);
                         break;
                 }
             }
@@ -43,9 +43,7 @@
         private static async Task WriteResponse(HttpContext context, Exception exception, int statusCode)
         {
             context.Response.StatusCode = statusCode;
-            context.Response.ContentType = context.Request.Headers.TryGetValue("Accept", out var accept)
-                ? accept.ToString()
-                : "application/json";
+            context.Response.ContentType = "application/json";
 
             var serializerSettings = JsonSerializerSettings;
             serializerSettings.AddHal();
