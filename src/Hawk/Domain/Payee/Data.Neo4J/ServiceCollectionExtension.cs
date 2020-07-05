@@ -13,6 +13,7 @@
             .AddScoped<IUpsertPayee, UpsertPayee>()
             .AddScoped<IDeletePayee, DeletePayee>()
             .AddScoped<IGetPayees, GetPayees>()
+            .AddScoped<IGetPayeesByCategory, GetPayeesByCategory>()
             .AddScoped<IGetPayeeByName, GetPayeeByName>();
     }
 }

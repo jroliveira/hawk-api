@@ -5,6 +5,7 @@
 
     using FluentValidation.Results;
 
+    using Hawk.Domain.Category.Queries;
     using Hawk.Domain.Payee;
     using Hawk.Domain.Payee.Commands;
     using Hawk.Domain.Payee.Queries;
@@ -17,6 +18,7 @@
 
     using Microsoft.AspNetCore.Mvc;
 
+    using static Hawk.Domain.Payee.Queries.GetPayeesByCategoryParam;
     using static Hawk.Domain.Shared.Commands.DeleteParam<string>;
     using static Hawk.Domain.Shared.Commands.UpsertParam<string, Hawk.Domain.Payee.Payee>;
     using static Hawk.Domain.Shared.Queries.GetAllParam;
@@ -26,26 +28,32 @@
 
     [ApiController]
     [ApiVersion("1")]
-    [Route("payees")]
+    [Route("")]
     public class PayeesController : BaseController
     {
         private readonly IGetPayees getPayees;
+        private readonly IGetPayeesByCategory getPayeesByCategory;
         private readonly IGetPayeeByName getPayeeByName;
         private readonly IUpsertPayee upsertPayee;
         private readonly IDeletePayee deletePayee;
+        private readonly IGetCategoryByName getCategoryByName;
         private readonly Func<Try<Email>, string, CreatePayeeModel, Task<ValidationResult>> validate;
 
         public PayeesController(
             IGetPayees getPayees,
+            IGetPayeesByCategory getPayeesByCategory,
             IGetPayeeByName getPayeeByName,
             IUpsertPayee upsertPayee,
             IDeletePayee deletePayee,
+            IGetCategoryByName getCategoryByName,
             Func<Try<Email>, string, CreatePayeeModel, Task<ValidationResult>> validate)
         {
             this.getPayees = getPayees;
+            this.getPayeesByCategory = getPayeesByCategory;
             this.getPayeeByName = getPayeeByName;
             this.upsertPayee = upsertPayee;
             this.deletePayee = deletePayee;
+            this.getCategoryByName = getCategoryByName;
             this.validate = validate;
         }
 
@@ -53,7 +61,7 @@
         /// Get.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet("payees")]
         [ProducesResponseType(typeof(Try<Page<Try<PayeeModel>>>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -68,11 +76,38 @@
         }
 
         /// <summary>
+        /// Get by category.
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        [HttpGet("categories/{category}/payees")]
+        [ProducesResponseType(typeof(Try<Page<Try<PayeeModel>>>), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetPayeesByCategory(string category)
+        {
+            var categoryEntity = await this.getCategoryByName.GetResult(NewGetByIdParam(this.GetUser(), category));
+            if (!categoryEntity)
+            {
+                return this.Error<PayeeModel>(new NotFoundException("Category not found."));
+            }
+
+            var entities = await this.getPayeesByCategory.GetResult(NewGetPayeesByCategoryParam(this.GetUser(), categoryEntity, this.Request.QueryString.Value));
+
+            return entities.Match(
+                this.Error<Page<Try<PayeeModel>>>,
+                page => this.Ok(page.ToPage(NewPayeeModel)));
+        }
+
+        /// <summary>
         /// Get by name.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        [HttpGet("{name}")]
+        [HttpGet("payees/{name}")]
         [ProducesResponseType(typeof(Try<PayeeModel>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
@@ -93,7 +128,7 @@
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost("payees")]
         [ProducesResponseType(typeof(Try<PayeeModel>), 201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
@@ -128,7 +163,7 @@
         /// <param name="name"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPut("{name}")]
+        [HttpPut("payees/{name}")]
         [ProducesResponseType(typeof(Try<PayeeModel>), 201)]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
@@ -168,7 +203,7 @@
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        [HttpDelete("{name}")]
+        [HttpDelete("payees/{name}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
