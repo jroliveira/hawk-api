@@ -72,7 +72,7 @@
 
             return entities.Match(
                 this.Error<Page<Try<TagModel>>>,
-                page => this.Ok(page.ToPage(NewTagModel)));
+                page => this.Ok(page.ToPage(entity => NewTagModel(entity))));
         }
 
         /// <summary>
@@ -99,7 +99,7 @@
 
             return entities.Match(
                 this.Error<Page<Try<TagModel>>>,
-                page => this.Ok(page.ToPage(NewTagModel)));
+                page => this.Ok(page.ToPage(entity => NewTagModel(entity))));
         }
 
         /// <summary>

@@ -10,9 +10,9 @@
         where TEntity : Entity<TId>
     {
         private UpsertParam(
-            Email email,
-            TId id,
-            TEntity entity)
+            in Email email,
+            in TId id,
+            in TEntity entity)
             : base(email)
         {
             this.Id = id;
@@ -23,26 +23,25 @@
 
         public TEntity Entity { get; }
 
-        public static Try<UpsertParam<TId, TEntity>> NewUpsertParam(
-            Option<Email> email,
-            Option<TEntity> entity) => entity.Match(
-                some => NewUpsertParam(
-                    email,
-                    some.Id,
-                    entity),
-                () => Failure<UpsertParam<TId, TEntity>>(new InvalidObjectException("Invalid upsert param.")));
+        public static Try<UpsertParam<TId, TEntity>> NewUpsertParam(in Option<Email> emailOption, in Option<TEntity> entityOption) =>
+            entityOption
+                ? NewUpsertParam(
+                    emailOption,
+                    entityOption.Get().Id,
+                    entityOption)
+                : Failure<UpsertParam<TId, TEntity>>(new InvalidObjectException("Invalid upsert param."));
 
         public static Try<UpsertParam<TId, TEntity>> NewUpsertParam(
-            Option<Email> email,
-            Option<TId> id,
-            Option<TEntity> entity) =>
-                email
-                && id
-                && entity
+            in Option<Email> emailOption,
+            in Option<TId> idOption,
+            in Option<TEntity> entityOption) =>
+                emailOption
+                && idOption
+                && entityOption
                     ? new UpsertParam<TId, TEntity>(
-                        email.Get(),
-                        id.Get(),
-                        entity.Get())
+                        emailOption.Get(),
+                        idOption.Get(),
+                        entityOption.Get())
                     : Failure<UpsertParam<TId, TEntity>>(new InvalidObjectException("Invalid upsert param."));
     }
 }

@@ -5,12 +5,12 @@
 
     public abstract class BaseException : Exception
     {
-        protected BaseException(string message)
+        protected BaseException(in string message)
             : base(message)
         {
         }
 
-        protected BaseException(string message, Exception innerException)
+        protected BaseException(in string message, in Exception innerException)
             : base(message, innerException)
         {
         }

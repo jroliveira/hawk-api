@@ -15,14 +15,14 @@
 
     internal sealed class GetCurrencyByCode : Query<GetByIdParam<string>, Currency>, IGetCurrencyByCode
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("Currency", "Data.Neo4J", "Queries", "GetCurrencyByCode.cql"));
+        private static readonly Option<string> StatementOption = ReadCypherScript(Combine("Currency", "Data.Neo4J", "Queries", "GetCurrencyByCode.cql"));
         private readonly Neo4JConnection connection;
 
         public GetCurrencyByCode(Neo4JConnection connection) => this.connection = connection;
 
         protected override Task<Try<Currency>> GetResult(GetByIdParam<string> param) => this.connection.ExecuteCypherScalar(
-            MapCurrency,
-            Statement,
+            record => MapCurrency(record),
+            StatementOption,
             new
             {
                 email = param.Email.Value,

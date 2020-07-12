@@ -12,9 +12,9 @@
     public class GetTagsByPayeeParam : Param
     {
         private GetTagsByPayeeParam(
-            Email email,
-            Payee payee,
-            Filter filter)
+            in Email email,
+            in Payee payee,
+            in Filter filter)
             : base(email)
         {
             this.Payee = payee;
@@ -26,14 +26,14 @@
         public Filter Filter { get; }
 
         public static Try<GetTagsByPayeeParam> NewGetTagsByPayeeParam(
-            Option<Email> email,
-            Option<Payee> payee,
-            Filter filter) =>
-                email
-                && payee
+            in Option<Email> emailOption,
+            in Option<Payee> payeeOption,
+            in Filter filter) =>
+                emailOption
+                && payeeOption
                     ? new GetTagsByPayeeParam(
-                        email.Get(),
-                        payee.Get(),
+                        emailOption.Get(),
+                        payeeOption.Get(),
                         filter)
                     : Failure<GetTagsByPayeeParam>(new InvalidObjectException("Invalid get tags by payee param."));
     }

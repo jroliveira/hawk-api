@@ -4,8 +4,8 @@
 
     public static partial class Util
     {
-        public static Try<TSuccess> Success<TSuccess>(TSuccess success) => new Try<TSuccess>(success);
+        public static Try<TSuccess> Success<TSuccess>(in TSuccess success) => new Try<TSuccess>(success);
 
-        public static Try<TValue> Failure<TValue>(BaseException exception) => new Try<TValue>(exception);
+        public static Try<TValue> Failure<TValue>(in BaseException exception) => new Try<TValue>(exception);
     }
 }

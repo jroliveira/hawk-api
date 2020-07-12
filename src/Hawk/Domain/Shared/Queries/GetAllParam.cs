@@ -9,19 +9,15 @@
 
     public sealed class GetAllParam : Param
     {
-        private GetAllParam(
-            Email email,
-            Filter filter)
+        private GetAllParam(in Email email, in Filter filter)
             : base(email) => this.Filter = filter;
 
         public Filter Filter { get; }
 
-        public static Try<GetAllParam> NewGetByAllParam(
-            Option<Email> email,
-            Filter filter) => email
-                ? new GetAllParam(
-                    email.Get(),
-                    filter)
-                : Failure<GetAllParam>(new InvalidObjectException("Invalid get all param."));
+        public static Try<GetAllParam> NewGetByAllParam(in Option<Email> emailOption, in Filter filter) => emailOption
+            ? new GetAllParam(
+                emailOption.Get(),
+                filter)
+            : Failure<GetAllParam>(new InvalidObjectException("Invalid get all param."));
     }
 }

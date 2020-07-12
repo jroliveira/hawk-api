@@ -32,7 +32,10 @@
             return result.ToList();
         }
 
-        private static string GetCondition(string field, string @operator, object value)
+        private static string GetCondition(
+            in string field,
+            in string @operator,
+            in object value)
         {
             switch (field)
             {

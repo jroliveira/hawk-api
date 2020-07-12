@@ -19,13 +19,13 @@
     public sealed class Configuration : Entity<string>
     {
         private Configuration(
-            string type,
-            string description,
-            PaymentMethod paymentMethod,
-            Currency currency,
-            Payee payee,
-            Category category,
-            IEnumerable<Tag> tags)
+            in string type,
+            in string description,
+            in PaymentMethod paymentMethod,
+            in Currency currency,
+            in Payee payee,
+            in Category category,
+            in IEnumerable<Tag> tags)
             : base(description)
         {
             this.Type = type;
@@ -49,29 +49,29 @@
         public IReadOnlyCollection<Tag> Tags { get; }
 
         public static Try<Configuration> NewConfiguration(
-            Option<string> type,
-            Option<string> description,
-            Option<PaymentMethod> paymentMethod,
-            Option<Currency> currency,
-            Option<Payee> payee,
-            Option<Category> category,
-            Option<IEnumerable<Option<Tag>>> tags) =>
-                type
-                && description
-                && paymentMethod
-                && currency
-                && payee
-                && category
-                && tags
-                && tags.Get().All(_ => _)
-                ? new Configuration(
-                    type.Get(),
-                    description.Get(),
-                    paymentMethod.Get(),
-                    currency.Get(),
-                    payee.Get(),
-                    category.Get(),
-                    tags.Get().Select(tag => tag.Get()))
-                : Failure<Configuration>(new InvalidObjectException($"Invalid configuration '{description.GetOrElse("undefined")}' for payee '{payee.GetOrElse(NewPayee("undefined").Get()).Id}'."));
+            in Option<string> typeOption,
+            in Option<string> descriptionOption,
+            in Option<PaymentMethod> paymentMethodOption,
+            in Option<Currency> currencyOption,
+            in Option<Payee> payeeOption,
+            in Option<Category> categoryOption,
+            in Option<IEnumerable<Option<Tag>>> tagsOption) =>
+                typeOption
+                && descriptionOption
+                && paymentMethodOption
+                && currencyOption
+                && payeeOption
+                && categoryOption
+                && tagsOption
+                && tagsOption.Get().All(_ => _)
+                    ? new Configuration(
+                        typeOption.Get(),
+                        descriptionOption.Get(),
+                        paymentMethodOption.Get(),
+                        currencyOption.Get(),
+                        payeeOption.Get(),
+                        categoryOption.Get(),
+                        tagsOption.Get().Select(tag => tag.Get()))
+                    : Failure<Configuration>(new InvalidObjectException($"Invalid configuration '{descriptionOption.GetOrElse("undefined")}' for payee '{payeeOption.GetOrElse(NewPayee("undefined").Get()).Id}'."));
     }
 }

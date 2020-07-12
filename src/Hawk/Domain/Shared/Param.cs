@@ -2,7 +2,7 @@
 {
     public abstract class Param
     {
-        protected Param(Email email) => this.Email = email;
+        protected Param(in Email email) => this.Email = email;
 
         public Email Email { get; }
     }

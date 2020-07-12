@@ -7,11 +7,14 @@
 
     public static partial class Util
     {
-        public static Try<DateTime> Date(Option<int> year, Option<int> month, Option<int> day) =>
-            year
-            && month
-            && day
-            ? new DateTime(year.Get(), month.Get(), day.Get())
-            : Failure<DateTime>(new InvalidObjectException("Invalid date."));
+        public static Try<DateTime> Date(
+            in Option<int> yearOption,
+            in Option<int> monthOption,
+            in Option<int> dayOption) =>
+                yearOption
+                && monthOption
+                && dayOption
+                    ? new DateTime(yearOption.Get(), monthOption.Get(), dayOption.Get())
+                    : Failure<DateTime>(new InvalidObjectException("Invalid date."));
     }
 }

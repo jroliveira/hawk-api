@@ -29,6 +29,6 @@
         [ProducesResponseType(500)]
         public IActionResult GetTags() => this.Ok(GetValues(typeof(TransactionType))
             .Cast<TransactionType>()
-            .Select(NewTransactionTypeModel));
+            .Select(entity => NewTransactionTypeModel(entity)));
     }
 }

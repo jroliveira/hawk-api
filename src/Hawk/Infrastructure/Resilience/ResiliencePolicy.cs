@@ -43,27 +43,27 @@
                 .WaitAndRetryAsync(retryCount, sleepDurationProvider, WriteLog);
         }
 
-        internal Task Execute(Func<Context?, Task> func) => this.Execute(new Dictionary<string, object>(), func);
+        internal Task Execute(in Func<Context?, Task> func) => this.Execute(new Dictionary<string, object>(), func);
 
-        internal Task Execute(
-            IDictionary<string, object> contextData,
-            Func<Context?, Task> func) => this.Execute(contextData, _ =>
-            {
-                func(_);
-                return FromResult(Unit());
-            });
+        internal Task Execute(in IDictionary<string, object> contextData, Func<Context?, Task> func) => this.Execute(contextData, _ =>
+        {
+            func(_);
+            return FromResult(Unit());
+        });
 
-        internal Task<TResult> Execute<TResult>(Func<Context?, Task<TResult>> func) => this.Execute(new Dictionary<string, object>(), func);
+        internal Task<TResult> Execute<TResult>(in Func<Context?, Task<TResult>> func) => this.Execute(new Dictionary<string, object>(), func);
 
-        internal Task<TResult> Execute<TResult>(
-            IDictionary<string, object> contextData,
-            Func<Context?, Task<TResult>> func) => this.policy == default
-                ? func(default)
-                : this.policy.ExecuteAsync(func, contextData);
+        internal Task<TResult> Execute<TResult>(in IDictionary<string, object> contextData, in Func<Context?, Task<TResult>> func) => this.policy == default
+            ? func(default)
+            : this.policy.ExecuteAsync(func, contextData);
 
         private static Func<int, TimeSpan> GetSleepDurationProvider(int timeInMs) => count => FromMilliseconds(timeInMs * count);
 
-        private static Task WriteLog(Exception exception, TimeSpan timeSpan, int retryCount, Context context)
+        private static Task WriteLog(
+            Exception exception,
+            TimeSpan timeSpan,
+            int retryCount,
+            Context context)
         {
             var logInfo = new { RetryCount = retryCount, context.PolicyKey };
 

@@ -1,5 +1,6 @@
 ﻿namespace Hawk.Domain.Tag.Data.Neo4J.Queries
 {
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Hawk.Domain.Shared.Queries;
@@ -8,7 +9,6 @@
     using Hawk.Infrastructure.Data.Neo4J;
     using Hawk.Infrastructure.Filter;
     using Hawk.Infrastructure.Monad;
-    using Hawk.Infrastructure.Monad.Linq;
     using Hawk.Infrastructure.Pagination;
 
     using Http.Query.Filter;
@@ -20,7 +20,7 @@
 
     internal sealed class GetTags : Query<GetAllParam, Page<Try<Tag>>>, IGetTags
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("Tag", "Data.Neo4J", "Queries", "GetTags.cql"));
+        private static readonly Option<string> StatementOption = ReadCypherScript(Combine("Tag", "Data.Neo4J", "Queries", "GetTags.cql"));
         private readonly Neo4JConnection connection;
         private readonly ILimit<int, Filter> limit;
         private readonly ISkip<int, Filter> skip;
@@ -44,7 +44,10 @@
                 limit = this.limit.Apply(param.Filter),
             };
 
-            var data = await this.connection.ExecuteCypher(MapTag, Statement, parameters);
+            var data = await this.connection.ExecuteCypher(
+                record => MapTag(record),
+                StatementOption,
+                parameters);
 
             return data.Select(items => new Page<Try<Tag>>(items, parameters.skip, parameters.limit));
         }

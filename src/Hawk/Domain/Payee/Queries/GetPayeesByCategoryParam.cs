@@ -12,9 +12,9 @@
     public class GetPayeesByCategoryParam : Param
     {
         private GetPayeesByCategoryParam(
-            Email email,
-            Category category,
-            Filter filter)
+            in Email email,
+            in Category category,
+            in Filter filter)
             : base(email)
         {
             this.Category = category;
@@ -26,14 +26,14 @@
         public Filter Filter { get; }
 
         public static Try<GetPayeesByCategoryParam> NewGetPayeesByCategoryParam(
-            Option<Email> email,
-            Option<Category> category,
-            Filter filter) =>
-                email
-                && category
+            in Option<Email> emailOption,
+            in Option<Category> categoryOption,
+            in Filter filter) =>
+                emailOption
+                && categoryOption
                     ? new GetPayeesByCategoryParam(
-                        email.Get(),
-                        category.Get(),
+                        emailOption.Get(),
+                        categoryOption.Get(),
                         filter)
                     : Failure<GetPayeesByCategoryParam>(new InvalidObjectException("Invalid get payees by category param."));
     }

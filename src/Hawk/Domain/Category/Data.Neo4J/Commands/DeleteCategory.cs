@@ -13,13 +13,13 @@
 
     internal sealed class DeleteCategory : Command<DeleteParam<string>>, IDeleteCategory
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("Category", "Data.Neo4J", "Commands", "DeleteCategory.cql"));
+        private static readonly Option<string> StatementOption = ReadCypherScript(Combine("Category", "Data.Neo4J", "Commands", "DeleteCategory.cql"));
         private readonly Neo4JConnection connection;
 
         public DeleteCategory(Neo4JConnection connection) => this.connection = connection;
 
         protected override Task<Try<Unit>> Execute(DeleteParam<string> param) => this.connection.ExecuteCypher(
-            Statement,
+            StatementOption,
             new
             {
                 email = param.Email.Value,

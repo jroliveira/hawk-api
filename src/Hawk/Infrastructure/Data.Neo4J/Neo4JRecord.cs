@@ -19,7 +19,7 @@
     {
         private readonly IDictionary<string, object> data;
 
-        internal Neo4JRecord(object record)
+        internal Neo4JRecord(in object record)
         {
             switch (record)
             {
@@ -35,7 +35,7 @@
             }
         }
 
-        internal static Option<Neo4JRecord> MapRecord(IRecord record, string key)
+        internal static Option<Neo4JRecord> MapRecord(in IRecord record, in string key)
         {
             if (record == default || !record.Keys.Contains(key))
             {
@@ -45,7 +45,7 @@
             return new Neo4JRecord(record[key]);
         }
 
-        internal Option<Neo4JRecord> GetRecord(string key)
+        internal Option<Neo4JRecord> GetRecord(in string key)
         {
             if (!this.Has(key))
             {
@@ -55,17 +55,17 @@
             return new Neo4JRecord(this.data[key]);
         }
 
-        internal IEnumerable<Neo4JRecord> GetListOfNeo4JRecord(string key) => this
+        internal IEnumerable<Neo4JRecord> GetListOfNeo4JRecord(in string key) => this
             .Get<IList<Dictionary<string, object>>>(key)
             .GetOrElse(new List<Dictionary<string, object>>())
             .Select(item => new Neo4JRecord(item));
 
-        internal IEnumerable<string> GetListOfString(string key) => this
+        internal IEnumerable<string> GetListOfString(in string key) => this
             .Get<IList<object>>(key)
             .GetOrElse(new List<object>())
             .Select(item => item.ToString());
 
-        internal Option<TValue> Get<TValue>(string key)
+        internal Option<TValue> Get<TValue>(in string key)
         {
             if (!this.Has(key))
             {
@@ -76,7 +76,7 @@
             {
                 return typeof(TValue) switch
                 {
-                    { } guidType when guidType == typeof(Guid) => (TValue)GetConverter(typeof(Guid)).ConvertFromInvariantString(this.data[key].As<string>()),
+                    var guidType when guidType == typeof(Guid) => (TValue)GetConverter(typeof(Guid)).ConvertFromInvariantString(this.data[key].As<string>()),
                     _ => this.data[key].As<TValue>()
                 };
             }
@@ -87,6 +87,6 @@
             }
         }
 
-        private bool Has(string key) => this.data != default && this.data.ContainsKey(key);
+        private bool Has(in string key) => this.data != default && this.data.ContainsKey(key);
     }
 }

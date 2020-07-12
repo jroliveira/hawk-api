@@ -1,6 +1,7 @@
 ﻿namespace Hawk.WebApi.Features.Transaction
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using FluentValidation.Results;
@@ -11,7 +12,6 @@
     using Hawk.Domain.Transaction.Queries;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
-    using Hawk.Infrastructure.Monad.Linq;
     using Hawk.Infrastructure.Pagination;
     using Hawk.WebApi.Features.Shared;
     using Hawk.WebApi.Infrastructure.Authentication;
@@ -66,7 +66,7 @@
 
             return entities.Match(
                 this.Error<Page<Try<TransactionModel>>>,
-                page => this.Ok(page.ToPage(NewTransactionModel)));
+                page => this.Ok(page.ToPage(entity => NewTransactionModel(entity))));
         }
 
         /// <summary>

@@ -15,14 +15,14 @@
 
     internal sealed class GetTagByName : Query<GetByIdParam<string>, Tag>, IGetTagByName
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("Tag", "Data.Neo4J", "Queries", "GetTagByName.cql"));
+        private static readonly Option<string> StatementOption = ReadCypherScript(Combine("Tag", "Data.Neo4J", "Queries", "GetTagByName.cql"));
         private readonly Neo4JConnection connection;
 
         public GetTagByName(Neo4JConnection connection) => this.connection = connection;
 
         protected override Task<Try<Tag>> GetResult(GetByIdParam<string> param) => this.connection.ExecuteCypherScalar(
-            MapTag,
-            Statement,
+            record => MapTag(record),
+            StatementOption,
             new
             {
                 email = param.Email.Value,

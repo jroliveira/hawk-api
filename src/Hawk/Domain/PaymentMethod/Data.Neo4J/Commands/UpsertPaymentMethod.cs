@@ -14,13 +14,13 @@
 
     internal sealed class UpsertPaymentMethod : Command<UpsertParam<string, PaymentMethod>>, IUpsertPaymentMethod
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("PaymentMethod", "Data.Neo4J", "Commands", "UpsertPaymentMethod.cql"));
+        private static readonly Option<string> StatementOption = ReadCypherScript(Combine("PaymentMethod", "Data.Neo4J", "Commands", "UpsertPaymentMethod.cql"));
         private readonly Neo4JConnection connection;
 
         public UpsertPaymentMethod(Neo4JConnection connection) => this.connection = connection;
 
         protected override Task<Try<Unit>> Execute(UpsertParam<string, PaymentMethod> param) => this.connection.ExecuteCypher(
-            Statement,
+            StatementOption,
             new
             {
                 email = param.Email.Value,

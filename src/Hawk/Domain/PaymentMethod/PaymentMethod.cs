@@ -10,16 +10,14 @@
 
     public sealed class PaymentMethod : Entity<string>
     {
-        private PaymentMethod(string name, uint transactions)
+        private PaymentMethod(in string name, in uint transactions)
             : base(name.ToPascalCase()) => this.Transactions = transactions;
 
         public uint Transactions { get; }
 
-        public static Try<PaymentMethod> NewPaymentMethod(
-            Option<string> name,
-            Option<uint> transactions = default) =>
-                name
-                ? new PaymentMethod(name.Get(), transactions.GetOrElse(default))
+        public static Try<PaymentMethod> NewPaymentMethod(in Option<string> nameOption, in Option<uint> transactionsOption = default) =>
+            nameOption
+                ? new PaymentMethod(nameOption.Get(), transactionsOption.GetOrElse(default))
                 : Failure<PaymentMethod>(new InvalidObjectException("Invalid payment method."));
     }
 }

@@ -4,7 +4,7 @@
 
     public sealed class GenericException : BaseException
     {
-        public GenericException(Exception exception, bool isDevelopment)
+        public GenericException(in Exception exception, in bool isDevelopment)
             : base("An error has occurred.")
         {
             if (isDevelopment)

@@ -10,16 +10,16 @@
 
     public sealed class Tag : Entity<string>
     {
-        private Tag(string name, uint transactions)
+        private Tag(in string name, in uint transactions)
             : base(name.ToKebabCase()) => this.Transactions = transactions;
 
         public uint Transactions { get; }
 
-        public static Try<Tag> NewTag(
-            Option<string> name,
-            Option<uint> transactions = default) =>
-                name
-                ? new Tag(name.Get(), transactions.GetOrElse(default))
+        public static Try<Tag> NewTag(in Option<string> nameOption, in Option<uint> transactionsOption = default) =>
+            nameOption
+                ? new Tag(
+                    nameOption.Get(),
+                    transactionsOption.GetOrElse(default))
                 : Failure<Tag>(new InvalidObjectException("Invalid tag."));
     }
 }

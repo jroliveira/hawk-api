@@ -1,5 +1,6 @@
 ﻿namespace Hawk.Domain.Transaction.Data.Neo4J.Queries
 {
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Hawk.Domain.Shared.Queries;
@@ -9,7 +10,6 @@
     using Hawk.Infrastructure.Filter;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
-    using Hawk.Infrastructure.Monad.Linq;
     using Hawk.Infrastructure.Pagination;
 
     using Http.Query.Filter;
@@ -22,7 +22,7 @@
 
     internal sealed class GetTransactions : Query<GetAllParam, Page<Try<Transaction>>>, IGetTransactions
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("Transaction", "Data.Neo4J", "Queries", "GetTransactions.cql"));
+        private static readonly Option<string> StatementOption = ReadCypherScript(Combine("Transaction", "Data.Neo4J", "Queries", "GetTransactions.cql"));
         private readonly Neo4JConnection connection;
         private readonly ILimit<int, Filter> limit;
         private readonly ISkip<int, Filter> skip;
@@ -50,8 +50,8 @@
             };
 
             var data = await this.connection.ExecuteCypher(
-                MapTransaction,
-                Statement
+                record => MapTransaction(record),
+                StatementOption
                     .GetOrElse(Empty)
                     .Replace("#where#", this.where.Apply(param.Filter)),
                 parameters);

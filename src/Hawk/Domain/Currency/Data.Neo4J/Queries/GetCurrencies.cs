@@ -1,5 +1,6 @@
 ﻿namespace Hawk.Domain.Currency.Data.Neo4J.Queries
 {
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Hawk.Domain.Currency;
@@ -8,7 +9,6 @@
     using Hawk.Infrastructure.Data.Neo4J;
     using Hawk.Infrastructure.Filter;
     using Hawk.Infrastructure.Monad;
-    using Hawk.Infrastructure.Monad.Linq;
     using Hawk.Infrastructure.Pagination;
 
     using Http.Query.Filter;
@@ -20,7 +20,7 @@
 
     internal sealed class GetCurrencies : Query<GetAllParam, Page<Try<Currency>>>, IGetCurrencies
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("Currency", "Data.Neo4J", "Queries", "GetCurrencies.cql"));
+        private static readonly Option<string> StatementOption = ReadCypherScript(Combine("Currency", "Data.Neo4J", "Queries", "GetCurrencies.cql"));
         private readonly Neo4JConnection connection;
         private readonly ILimit<int, Filter> limit;
         private readonly ISkip<int, Filter> skip;
@@ -44,7 +44,10 @@
                 limit = this.limit.Apply(param.Filter),
             };
 
-            var data = await this.connection.ExecuteCypher(MapCurrency, Statement, parameters);
+            var data = await this.connection.ExecuteCypher(
+                record => MapCurrency(record),
+                StatementOption,
+                parameters);
 
             return data.Select(items => new Page<Try<Currency>>(items, parameters.skip, parameters.limit));
         }

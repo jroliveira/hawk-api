@@ -14,6 +14,6 @@
 
         public uint Transactions { get; }
 
-        internal static PaymentMethodModel NewPaymentMethodModel(PaymentMethod entity) => new PaymentMethodModel(entity);
+        internal static PaymentMethodModel NewPaymentMethodModel(in PaymentMethod entity) => new PaymentMethodModel(entity);
     }
 }

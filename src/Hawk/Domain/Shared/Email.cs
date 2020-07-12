@@ -2,6 +2,7 @@
 {
     using System;
     using System.Globalization;
+    using System.Linq;
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
@@ -13,6 +14,7 @@
     using static System.Text.RegularExpressions.RegexOptions;
     using static System.TimeSpan;
 
+    using static Hawk.Infrastructure.Constants.ErrorMessages;
     using static Hawk.Infrastructure.Monad.Utils.Util;
     using static Hawk.Infrastructure.Security.Md5HashAlgorithm;
 
@@ -22,26 +24,25 @@
         private const string NormalizePattern = @"(@)(.+)$";
         private const string ValidationPattern = @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-0-9a-z]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$";
 
-        private Email(string value)
+        private Email(in string value)
             : base(value.ToLowerCase())
         {
         }
 
-        public static Try<Email> NewEmail(Option<string> value) => value.Match(
-            some =>
+        public static Try<Email> NewEmail(in Option<string> valueOption) => valueOption
+            .Fold(Failure<Email>(IsRequired(nameof(Email))))(value =>
             {
-                if (IsValid(Normalize(some)))
+                if (IsValid(Normalize(value)))
                 {
-                    return new Email(some);
+                    return new Email(value);
                 }
 
                 return new InvalidObjectException("Invalid email.");
-            },
-            () => Failure<Email>(new NullObjectException("Email is required.")));
+            });
 
         public void GetObjectData(SerializationInfo info, StreamingContext context) => info.AddValue(nameof(Email).ToLower(), ComputeHash(this));
 
-        private static string Normalize(string @this)
+        private static string Normalize(in string @this)
         {
             return Replace(@this, NormalizePattern, DomainMapper, RegexOptions.None, FromMilliseconds(200));
 
@@ -54,6 +55,6 @@
             }
         }
 
-        private static bool IsValid(string @this) => IsMatch(@this, ValidationPattern, IgnoreCase, FromMilliseconds(250));
+        private static bool IsValid(in string @this) => IsMatch(@this, ValidationPattern, IgnoreCase, FromMilliseconds(250));
     }
 }

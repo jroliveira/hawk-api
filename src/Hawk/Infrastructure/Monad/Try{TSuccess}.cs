@@ -13,23 +13,23 @@
         private readonly BaseException? failure;
         private readonly TSuccess success;
 
-        public Try(BaseException failure)
+        public Try(in BaseException failure)
         {
             this.failure = failure;
             this.success = default;
         }
 
-        public Try(TSuccess success)
+        public Try(in TSuccess success)
         {
             this.failure = default;
             this.success = success;
         }
 
-        public static implicit operator Try<TSuccess>(BaseException failure) => Failure<TSuccess>(failure);
+        public static implicit operator Try<TSuccess>(in BaseException failure) => Failure<TSuccess>(failure);
 
-        public static implicit operator Try<TSuccess>(TSuccess success) => Success(success);
+        public static implicit operator Try<TSuccess>(in TSuccess success) => Success(success);
 
-        public static implicit operator bool(Try<TSuccess> @try) => @try.ToBoolean();
+        public static implicit operator bool(in Try<TSuccess> @try) => @try.ToBoolean();
 
         public TReturn Match<TReturn>(Func<BaseException, TReturn> failureFunc, Func<TSuccess, TReturn> successFunc) => this.failure != default
             ? failureFunc(this.failure)

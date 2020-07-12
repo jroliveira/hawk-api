@@ -2,7 +2,7 @@
 {
     public sealed class NotFoundException : BaseException
     {
-        public NotFoundException(string message)
+        public NotFoundException(in string message)
             : base(message)
         {
         }

@@ -15,14 +15,14 @@
 
     internal sealed class GetPayeeByName : Query<GetByIdParam<string>, Payee>, IGetPayeeByName
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("Payee", "Data.Neo4J", "Queries", "GetPayeeByName.cql"));
+        private static readonly Option<string> StatementOption = ReadCypherScript(Combine("Payee", "Data.Neo4J", "Queries", "GetPayeeByName.cql"));
         private readonly Neo4JConnection connection;
 
         public GetPayeeByName(Neo4JConnection connection) => this.connection = connection;
 
         protected override Task<Try<Payee>> GetResult(GetByIdParam<string> param) => this.connection.ExecuteCypherScalar(
-            MapPayee,
-            Statement,
+            record => MapPayee(record),
+            StatementOption,
             new
             {
                 email = param.Email.Value,

@@ -15,14 +15,14 @@
 
     internal sealed class GetCategoryByName : Query<GetByIdParam<string>, Category>, IGetCategoryByName
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("Category", "Data.Neo4J", "Queries", "GetCategoryByName.cql"));
+        private static readonly Option<string> StatementOption = ReadCypherScript(Combine("Category", "Data.Neo4J", "Queries", "GetCategoryByName.cql"));
         private readonly Neo4JConnection connection;
 
         public GetCategoryByName(Neo4JConnection connection) => this.connection = connection;
 
         protected override Task<Try<Category>> GetResult(GetByIdParam<string> param) => this.connection.ExecuteCypherScalar(
-            MapCategory,
-            Statement,
+            record => MapCategory(record),
+            StatementOption,
             new
             {
                 email = param.Email.Value,

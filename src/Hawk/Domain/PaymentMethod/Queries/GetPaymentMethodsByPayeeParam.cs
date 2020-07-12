@@ -12,9 +12,9 @@
     public class GetPaymentMethodsByPayeeParam : Param
     {
         private GetPaymentMethodsByPayeeParam(
-            Email email,
-            Payee payee,
-            Filter filter)
+            in Email email,
+            in Payee payee,
+            in Filter filter)
             : base(email)
         {
             this.Payee = payee;
@@ -26,14 +26,14 @@
         public Filter Filter { get; }
 
         public static Try<GetPaymentMethodsByPayeeParam> NewGetPaymentMethodsByPayeeParam(
-            Option<Email> email,
-            Option<Payee> payee,
-            Filter filter) =>
-                email
-                && payee
+            in Option<Email> emailOption,
+            in Option<Payee> payeeOption,
+            in Filter filter) =>
+                emailOption
+                && payeeOption
                     ? new GetPaymentMethodsByPayeeParam(
-                        email.Get(),
-                        payee.Get(),
+                        emailOption.Get(),
+                        payeeOption.Get(),
                         filter)
                     : Failure<GetPaymentMethodsByPayeeParam>(new InvalidObjectException("Invalid get payment methods by payee param."));
     }

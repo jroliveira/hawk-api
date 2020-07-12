@@ -8,40 +8,40 @@
 
     public sealed class InvalidObjectException : BaseException
     {
-        public InvalidObjectException(string message)
+        public InvalidObjectException(in string message)
             : this(message, default)
         {
         }
 
-        public InvalidObjectException(string message, InvalidProperties? invalidProperties)
+        public InvalidObjectException(in string message, in InvalidProperties? invalidProperties)
             : base(message) => this.Properties = invalidProperties;
 
         public InvalidProperties? Properties { get; }
 
-        public static implicit operator InvalidObjectException(ValidationResult validated) => new InvalidObjectException(
+        public static implicit operator InvalidObjectException(in ValidationResult validated) => new InvalidObjectException(
             "Invalid object.",
             validated);
 
         public class InvalidProperties : ReadOnlyCollection<InvalidProperty>
         {
-            public InvalidProperties(IList<InvalidProperty> invalidProperties)
+            public InvalidProperties(in IList<InvalidProperty> invalidProperties)
                 : base(invalidProperties)
             {
             }
 
-            public static implicit operator InvalidProperties(ValidationResult validated) => new InvalidProperties(validated
+            public static implicit operator InvalidProperties(in ValidationResult validated) => new InvalidProperties(validated
                 .Errors
                 .Select(error => new InvalidProperty(error.PropertyName, error.ErrorMessage))
                 .ToList());
 
-            public static implicit operator InvalidProperties(List<(string PropertyName, string ErrorMessage)> errors) => new InvalidProperties(errors
+            public static implicit operator InvalidProperties(in List<(string PropertyName, string ErrorMessage)> errors) => new InvalidProperties(errors
                 .Select(error => new InvalidProperty(error.PropertyName, error.ErrorMessage))
                 .ToList());
         }
 
         public class InvalidProperty
         {
-            public InvalidProperty(string name, string message)
+            public InvalidProperty(in string name, in string message)
             {
                 this.Name = name;
                 this.Message = message;

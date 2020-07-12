@@ -1,5 +1,6 @@
 ﻿namespace Hawk.Domain.Category.Data.Neo4J.Queries
 {
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Hawk.Domain.Category.Queries;
@@ -7,7 +8,6 @@
     using Hawk.Infrastructure.Data.Neo4J;
     using Hawk.Infrastructure.Filter;
     using Hawk.Infrastructure.Monad;
-    using Hawk.Infrastructure.Monad.Linq;
     using Hawk.Infrastructure.Pagination;
 
     using Http.Query.Filter;
@@ -19,7 +19,7 @@
 
     internal sealed class GetCategoriesByPayee : Query<GetCategoriesByPayeeParam, Page<Try<Category>>>, IGetCategoriesByPayee
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("Category", "Data.Neo4J", "Queries", "GetCategoriesByPayee.cql"));
+        private static readonly Option<string> StatementOption = ReadCypherScript(Combine("Category", "Data.Neo4J", "Queries", "GetCategoriesByPayee.cql"));
         private readonly Neo4JConnection connection;
         private readonly ILimit<int, Filter> limit;
         private readonly ISkip<int, Filter> skip;
@@ -44,7 +44,10 @@
                 limit = this.limit.Apply(param.Filter),
             };
 
-            var data = await this.connection.ExecuteCypher(MapCategory, Statement, parameters);
+            var data = await this.connection.ExecuteCypher(
+                record => MapCategory(record),
+                StatementOption,
+                parameters);
 
             return data.Select(items => new Page<Try<Category>>(items, parameters.skip, parameters.limit));
         }

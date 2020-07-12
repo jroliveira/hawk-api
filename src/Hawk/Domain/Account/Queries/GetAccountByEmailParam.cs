@@ -8,14 +8,14 @@
 
     public class GetAccountByEmailParam : Param
     {
-        private GetAccountByEmailParam(Email email)
+        private GetAccountByEmailParam(in Email email)
             : base(email)
         {
         }
 
-        public static Try<GetAccountByEmailParam> NewGetAccountByEmailParam(Option<Email> email) =>
-                email
-                    ? new GetAccountByEmailParam(email.Get())
-                    : Failure<GetAccountByEmailParam>(new InvalidObjectException("Invalid get account by email param."));
+        public static Try<GetAccountByEmailParam> NewGetAccountByEmailParam(in Option<Email> emailOption) =>
+            emailOption
+                ? new GetAccountByEmailParam(emailOption.Get())
+                : Failure<GetAccountByEmailParam>(new InvalidObjectException("Invalid get account by email param."));
     }
 }

@@ -10,16 +10,16 @@
 
     public sealed class Category : Entity<string>
     {
-        private Category(string name, uint transactions)
+        private Category(in string name, in uint transactions)
             : base(name.ToPascalCase()) => this.Transactions = transactions;
 
         public uint Transactions { get; }
 
-        public static Try<Category> NewCategory(
-            Option<string> name,
-            Option<uint> transactions = default) =>
-                name
-                ? new Category(name.Get(), transactions.GetOrElse(default))
+        public static Try<Category> NewCategory(in Option<string> nameOption, in Option<uint> transactionsOption = default) =>
+            nameOption
+                ? new Category(
+                    nameOption.Get(),
+                    transactionsOption.GetOrElse(default))
                 : Failure<Category>(new InvalidObjectException("Invalid category."));
     }
 }

@@ -72,7 +72,7 @@
 
             return entities.Match(
                 this.Error<Page<Try<CategoryModel>>>,
-                page => this.Ok(page.ToPage(NewCategoryModel)));
+                page => this.Ok(page.ToPage(entity => NewCategoryModel(entity))));
         }
 
         /// <summary>
@@ -99,7 +99,7 @@
 
             return entities.Match(
                 this.Error<Page<Try<CategoryModel>>>,
-                page => this.Ok(page.ToPage(NewCategoryModel)));
+                page => this.Ok(page.ToPage(entity => NewCategoryModel(entity))));
         }
 
         /// <summary>

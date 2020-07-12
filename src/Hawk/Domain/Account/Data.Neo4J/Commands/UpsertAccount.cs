@@ -16,13 +16,13 @@
 
     internal sealed class UpsertAccount : Command<UpsertParam<Guid, Account>>, IUpsertAccount
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("Account", "Data.Neo4J", "Commands", "UpsertAccount.cql"));
+        private static readonly Option<string> StatementOption = ReadCypherScript(Combine("Account", "Data.Neo4J", "Commands", "UpsertAccount.cql"));
         private readonly Neo4JConnection connection;
 
         public UpsertAccount(Neo4JConnection connection) => this.connection = connection;
 
         protected override Task<Try<Unit>> Execute(UpsertParam<Guid, Account> param) => this.connection.ExecuteCypher(
-            Statement,
+            StatementOption,
             new
             {
                 id = param.Id.ToString(),

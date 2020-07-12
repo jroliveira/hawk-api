@@ -44,9 +44,9 @@
 
         internal Task<Try<TReturn>> ExecuteCypherScalar<TReturn>(
             Func<IRecord, Try<TReturn>> mapping,
-            Option<string> statement,
+            Option<string> statementOption,
             object parameters) => this.ExecuteCypherAndGetRecords(
-                statement,
+                statementOption,
                 parameters,
                 records => records.Count > 1
                     ? new InternalException($"Query returned {records.Count} results.")
@@ -54,35 +54,35 @@
 
         internal Task<Try<IEnumerable<Try<TReturn>>>> ExecuteCypher<TReturn>(
             Func<IRecord, Try<TReturn>> mapping,
-            Option<string> statement,
+            Option<string> statementOption,
             object parameters) => this.ExecuteCypherAndGetRecords(
-                statement,
+                statementOption,
                 parameters,
                 records => Success(records.Select(mapping)));
 
         internal Task<Try<Unit>> ExecuteCypher(
-            Option<string> statement,
+            Option<string> statementOption,
             object parameters) => this.ExecuteCypherAndGetRecords(
-                statement,
+                statementOption,
                 parameters,
                 _ => Success(Unit()));
 
         private Task<Try<TReturn>> ExecuteCypherAndGetRecords<TReturn>(
-            Option<string> statement,
+            Option<string> statementOption,
             object parameters,
             Func<IList<IRecord>, Try<TReturn>> command) => this.ExecuteCypherAndGetCursor(
-                statement,
+                statementOption,
                 parameters,
                 async cursor => command(await cursor.ToListAsync()));
 
         private async Task<Try<TReturn>> ExecuteCypherAndGetCursor<TReturn>(
-            Option<string> statement,
+            Option<string> statementOption,
             object parameters,
             Func<IResultCursor, Task<Try<TReturn>>> command)
         {
-            if (!statement.IsDefined)
+            if (!statementOption.IsDefined)
             {
-                return new NullParameterException(nameof(statement), "Cypher statement is required.");
+                return new NullParameterException(nameof(statementOption), "Cypher statement is required.");
             }
 
             if (this.driver == default)
@@ -94,8 +94,8 @@
             {
                 return await this.resiliencePolicy.Execute(async _ =>
                 {
-                    var session = this.driver.AsyncSession(o => o.WithDatabase("neo4j"));
-                    var cursor = await session.RunAsync(statement.Get(), parameters);
+                    var session = this.driver.AsyncSession(builder => builder.WithDatabase("neo4j"));
+                    var cursor = await session.RunAsync(statementOption.Get(), parameters);
 
                     return await command(cursor);
                 });

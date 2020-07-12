@@ -18,13 +18,13 @@
 
     internal sealed class UpsertTransaction : Command<UpsertParam<Guid, Transaction>>, IUpsertTransaction
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("Transaction", "Data.Neo4J", "Commands", "UpsertTransaction.cql"));
+        private static readonly Option<string> StatementOption = ReadCypherScript(Combine("Transaction", "Data.Neo4J", "Commands", "UpsertTransaction.cql"));
         private readonly Neo4JConnection connection;
 
         public UpsertTransaction(Neo4JConnection connection) => this.connection = connection;
 
         protected override Task<Try<Unit>> Execute(UpsertParam<Guid, Transaction> param) => this.connection.ExecuteCypher(
-            Statement
+            StatementOption
                 .GetOrElse(Empty)
                 .Replace("#type#", param.Entity.Type.ToString()),
             new
@@ -32,7 +32,7 @@
                 email = param.Email.Value,
                 id = param.Id.ToString(),
                 status = param.Entity.Status.ToString(),
-                description = param.Entity.Description.GetOrElse(Empty),
+                description = param.Entity.DescriptionOption.GetOrElse(Empty),
                 value = param.Entity.Payment.Cost.Value,
                 year = param.Entity.Payment.Date.Year,
                 month = param.Entity.Payment.Date.Month,

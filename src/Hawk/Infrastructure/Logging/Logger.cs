@@ -12,7 +12,7 @@
 
         private readonly Action<LogLevel, string> logMethod;
 
-        private Logger(LogLevel level, Action<LogLevel, string> logMethod)
+        private Logger(in LogLevel level, in Action<LogLevel, string> logMethod)
         {
             this.logMethod = logMethod;
             this.Level = level;
@@ -20,49 +20,53 @@
 
         public LogLevel Level { get; }
 
-        public static void NewLogger(
-            LogLevel level,
-            Action<LogLevel, string> logMethod) => logger = new Logger(level, logMethod);
+        public static void NewLogger(in LogLevel level, in Action<LogLevel, string> logMethod) => logger = new Logger(level, logMethod);
 
-        public static void LogError<TModel>(string message, object data, Try<TModel> tryModel) => logger?.Log(
+        public static void LogError<TModel>(
+            in string message,
+            in object data,
+            in Try<TModel> tryModel) => logger?.Log(
             LogLevel.Error,
             message,
             new { Info = data, Error = tryModel });
 
-        public static void LogError(string message, Exception exception) => LogError<Unit>(message, exception);
+        public static void LogError(in string message, in Exception exception) => LogError<Unit>(message, exception);
 
-        public static void LogError<TModel>(string message, Exception exception) => logger?.Log(
+        public static void LogError<TModel>(in string message, in Exception exception) => logger?.Log(
             LogLevel.Error,
             message,
             new { Error = HandleException<TModel>(exception, true) });
 
-        public static void LogError(string message, object data) => logger?.Log(
+        public static void LogError(in string message, in object data) => logger?.Log(
             LogLevel.Error,
             message,
             new { Info = data });
 
-        public static void LogInfo(string message, object data) => logger?.Log(
+        public static void LogInfo(in string message, in object data) => logger?.Log(
             LogLevel.Info,
             new DefaultLogData(
                 LogLevel.Info,
                 message,
                 new { Info = data }));
 
-        public static void LogWarning(string message, object data) => logger?.Log(
+        public static void LogWarning(in string message, in object data) => logger?.Log(
             LogLevel.Warn,
             new DefaultLogData(
                 LogLevel.Warn,
                 message,
                 new { Info = data }));
 
-        private void Log(LogLevel level, string message, object data) => this.Log(
+        private void Log(
+            in LogLevel level,
+            in string message,
+            in object data) => this.Log(
             level,
             new DefaultLogData(
                 level,
                 message,
                 data));
 
-        private void Log(LogLevel level, ILogData data)
+        private void Log(in LogLevel level, in ILogData data)
         {
             if (this.Level < level || level == LogLevel.Verb)
             {

@@ -2,7 +2,7 @@
 {
     public sealed class BusinessException : BaseException
     {
-        public BusinessException(string message)
+        public BusinessException(in string message)
             : base(message)
         {
         }

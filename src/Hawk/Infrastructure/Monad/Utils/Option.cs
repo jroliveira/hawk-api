@@ -4,6 +4,6 @@
     {
         public static None None() => default;
 
-        public static Option<TValue> Some<TValue>(TValue value) => new Option<TValue>(value, value != null);
+        public static Option<TValue> Some<TValue>(in TValue value) => new Option<TValue>(value, value != null);
     }
 }

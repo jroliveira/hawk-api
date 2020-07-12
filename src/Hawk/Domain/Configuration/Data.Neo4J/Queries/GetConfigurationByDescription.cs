@@ -15,14 +15,14 @@
 
     internal sealed class GetConfigurationByDescription : Query<GetByIdParam<string>, Configuration>, IGetConfigurationByDescription
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("Configuration", "Data.Neo4J", "Queries", "GetConfigurationByDescription.cql"));
+        private static readonly Option<string> StatementOption = ReadCypherScript(Combine("Configuration", "Data.Neo4J", "Queries", "GetConfigurationByDescription.cql"));
         private readonly Neo4JConnection connection;
 
         public GetConfigurationByDescription(Neo4JConnection connection) => this.connection = connection;
 
         protected override Task<Try<Configuration>> GetResult(GetByIdParam<string> param) => this.connection.ExecuteCypherScalar(
-            MapConfiguration,
-            Statement,
+            record => MapConfiguration(record),
+            StatementOption,
             new
             {
                 email = param.Email.Value,
