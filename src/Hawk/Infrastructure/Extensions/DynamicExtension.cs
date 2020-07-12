@@ -5,7 +5,7 @@
 
     public static class DynamicExtension
     {
-        public static bool IsPropertyExist(dynamic @this, string name)
+        public static bool IsPropertyExist(in dynamic @this, in string name)
         {
             if (@this is ExpandoObject)
             {

@@ -31,12 +31,12 @@
         [Required]
         public string Method { get; }
 
-        public static implicit operator PaymentModel(Payment entity) => new PaymentModel(
+        public static implicit operator PaymentModel(in Payment entity) => new PaymentModel(
             entity.Cost,
             entity.Date,
             entity.PaymentMethod);
 
-        public static implicit operator Option<Payment>(PaymentModel model) => NewPayment(
+        public static implicit operator Option<Payment>(in PaymentModel model) => NewPayment(
             model.Cost,
             model.Date,
             NewPaymentMethod(model.Method));

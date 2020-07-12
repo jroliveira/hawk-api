@@ -1,18 +1,21 @@
 ﻿namespace Hawk.Domain.Shared.Money.Data.Neo4J
 {
+    using System.Linq;
+
     using Hawk.Infrastructure.Data.Neo4J;
-    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     using static Hawk.Domain.Currency.Data.Neo4J.CurrencyMapping;
     using static Hawk.Domain.Shared.Money.Money;
+    using static Hawk.Infrastructure.Constants.ErrorMessages;
+    using static Hawk.Infrastructure.Monad.Utils.Util;
 
     internal static class MoneyMapping
     {
-        internal static Try<Money> MapMoney(Option<Neo4JRecord> record) => record.Match(
-            some => MapCurrency(some.GetRecord("currency")).Match(
-                _ => _,
-                currency => NewMoney(some.Get<double>("value"), currency)),
-            () => new NotFoundException("Money not found."));
+        internal static Try<Money> MapMoney(in Option<Neo4JRecord> recordOption) => recordOption
+            .Fold(Failure<Money>(NotFound(nameof(Money))))(record => MapCurrency(record.GetRecord("currency"))
+                .Select(currency => NewMoney(
+                    record.Get<double>("value"),
+                    currency)));
     }
 }

@@ -3,7 +3,6 @@
     using System;
     using System.Threading.Tasks;
 
-    using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;
 
     using Microsoft.Extensions.Caching.Memory;
@@ -14,23 +13,24 @@
     {
         private static readonly Random Random = new Random(1);
 
-        public static Task<Try<TOutput>> GetOrCreateCache<TInput, TOutput>(this IMemoryCache @this, TInput input, Func<Task<Try<TOutput>>> func) => @this
-            .GetOrCreateAsync(
+        public static Task<Try<TOutput>> GetOrCreateCache<TInput, TOutput>(
+            this IMemoryCache @this,
+            in TInput input,
+            Func<Task<Try<TOutput>>> func) => @this.GetOrCreateAsync(
                 input,
                 async entry => await func() switch
                 {
-                    { } @try when @try => RenewCache(entry, @try),
-                    { } @try => ExpireCache(entry, @try),
-                    _ => new InternalException("Cannot get or create cache."),
+                    var @try when @try => RenewCache(entry, @try),
+                    var @try => ExpireCache(entry, @try),
                 });
 
-        private static Try<TOutput> RenewCache<TOutput>(ICacheEntry entry, Try<TOutput> @try)
+        private static Try<TOutput> RenewCache<TOutput>(in ICacheEntry entry, in Try<TOutput> @try)
         {
             entry.SetSlidingExpiration(FromMinutes(5 + Random.Next(1, 5)));
             return @try;
         }
 
-        private static Try<TOutput> ExpireCache<TOutput>(ICacheEntry entry, Try<TOutput> @try)
+        private static Try<TOutput> ExpireCache<TOutput>(in ICacheEntry entry, in Try<TOutput> @try)
         {
             entry.SetAbsoluteExpiration(FromMilliseconds(1));
             return @try;

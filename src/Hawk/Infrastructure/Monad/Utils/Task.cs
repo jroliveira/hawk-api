@@ -6,6 +6,6 @@
 
     public static partial class Util
     {
-        public static Task<TReturn> Task<TReturn>(TReturn @return) => FromResult(@return);
+        public static Task<TReturn> Task<TReturn>(in TReturn @return) => FromResult(@return);
     }
 }

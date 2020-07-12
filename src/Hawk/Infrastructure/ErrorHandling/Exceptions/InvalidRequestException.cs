@@ -2,7 +2,7 @@
 {
     public sealed class InvalidRequestException : BaseException
     {
-        public InvalidRequestException(string message)
+        public InvalidRequestException(in string message)
             : base(message)
         {
         }

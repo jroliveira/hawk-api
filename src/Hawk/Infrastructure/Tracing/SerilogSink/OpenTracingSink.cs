@@ -15,7 +15,7 @@
         private readonly ITracer tracer;
         private readonly IFormatProvider? formatProvider;
 
-        public OpenTracingSink(ITracer tracer, IFormatProvider? formatProvider)
+        public OpenTracingSink(in ITracer tracer, in IFormatProvider? formatProvider)
         {
             this.tracer = tracer;
             this.formatProvider = formatProvider;

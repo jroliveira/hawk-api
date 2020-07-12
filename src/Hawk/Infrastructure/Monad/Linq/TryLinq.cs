@@ -1,4 +1,4 @@
-﻿namespace Hawk.Infrastructure.Monad.Linq
+﻿namespace System.Linq
 {
     using System;
     using System.Threading.Tasks;
@@ -13,8 +13,24 @@
             _ => _,
             success => selector(success));
 
+        public static Try<TReturn> Select<TSuccess, TReturn>(this Try<TSuccess> @this, Func<TSuccess, Try<TReturn>> selector) => @this.Match(
+            _ => _,
+            selector);
+
         public static Task<Try<TReturn>> Select<TSuccess, TReturn>(this Try<TSuccess> @this, Func<TSuccess, Task<Try<TReturn>>> selector) => @this.Match(
             _ => Task(Failure<TReturn>(_)),
             selector);
+
+        public static Func<Func<TSuccess, TReturn>, TReturn> Fold<TSuccess, TReturn>(this Try<TSuccess> @this, TReturn ifEmpty) => selector => @this.Match(
+            _ => ifEmpty,
+            selector);
+
+        public static Unit ForEach<TSuccess>(this Try<TSuccess> @this, Action<TSuccess> selector) => @this.Match(
+            _ => Unit(),
+            success =>
+            {
+                selector(success);
+                return Unit();
+            });
     }
 }

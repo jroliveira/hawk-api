@@ -14,6 +14,6 @@
 
         public uint Transactions { get; }
 
-        internal static PayeeModel NewPayeeModel(Payee entity) => new PayeeModel(entity);
+        internal static PayeeModel NewPayeeModel(in Payee entity) => new PayeeModel(entity);
     }
 }

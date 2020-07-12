@@ -14,6 +14,6 @@
 
         public uint Transactions { get; }
 
-        internal static TagModel NewTagModel(Tag entity) => new TagModel(entity);
+        internal static TagModel NewTagModel(in Tag entity) => new TagModel(entity);
     }
 }

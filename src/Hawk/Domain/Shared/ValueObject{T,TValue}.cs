@@ -4,11 +4,11 @@
 
     public abstract class ValueObject<T, TValue> : IEquatable<ValueObject<T, TValue>>
     {
-        protected ValueObject(TValue value) => this.Value = value;
+        protected ValueObject(in TValue value) => this.Value = value;
 
         public TValue Value { get; }
 
-        public static implicit operator TValue(ValueObject<T, TValue> valueObject) => valueObject.Value;
+        public static implicit operator TValue(in ValueObject<T, TValue> valueObject) => valueObject.Value;
 
         public override bool Equals(object obj)
         {

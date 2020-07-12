@@ -10,16 +10,16 @@
 
     public sealed class Payee : Entity<string>
     {
-        private Payee(string name, uint transactions)
+        private Payee(in string name, in uint transactions)
             : base(name.ToPascalCase()) => this.Transactions = transactions;
 
         public uint Transactions { get; }
 
-        public static Try<Payee> NewPayee(
-            Option<string> name,
-            Option<uint> transactions = default) =>
-                name
-                ? new Payee(name.Get(), transactions.GetOrElse(default))
+        public static Try<Payee> NewPayee(in Option<string> nameOption, in Option<uint> transactionsOption = default) =>
+            nameOption
+                ? new Payee(
+                    nameOption.Get(),
+                    transactionsOption.GetOrElse(default))
                 : Failure<Payee>(new InvalidObjectException("Invalid payee."));
     }
 }

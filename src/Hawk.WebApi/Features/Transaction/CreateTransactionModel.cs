@@ -55,7 +55,7 @@
         [Required]
         public IEnumerable<string> Tags { get; }
 
-        public static implicit operator Option<Transaction>(CreateTransactionModel model) => NewTransaction(
+        public static implicit operator Option<Transaction>(in CreateTransactionModel model) => NewTransaction(
             model.Type.ToEnum<TransactionType>(),
             model.Status.ToEnum<TransactionStatus>(),
             model.Description,

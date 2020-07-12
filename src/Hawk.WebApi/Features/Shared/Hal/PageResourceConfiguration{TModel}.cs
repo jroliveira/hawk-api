@@ -5,7 +5,6 @@
     using System.Linq;
 
     using Hawk.Infrastructure.Monad;
-    using Hawk.Infrastructure.Monad.Linq;
     using Hawk.Infrastructure.Pagination;
     using Hawk.WebApi.Infrastructure.Hal.Link;
     using Hawk.WebApi.Infrastructure.Hal.Resource;
@@ -24,14 +23,18 @@
 
             return new Resource<Try<Page<Resource<Try<TModel>>>>>(
                 model.Select(page => new Page<Resource<Try<TModel>>>(
-                    page.Data.Select(item => new Resource<Try<TModel>>(item, item.Match(
-                        _ => DocumentationLinks,
-                        current => getItemsLinks(context, current)))),
+                    page.Data.Select(item => new Resource<Try<TModel>>(
+                        item,
+                        item.Fold(DocumentationLinks)(current => getItemsLinks(
+                            context,
+                            current)))),
                     page.Skip,
                     page.Limit)),
-                model.Match(
-                    _ => DocumentationLinks,
-                    page => new List<Link>(PaginationLinks(context, page, getLinks(context, page)))));
+                model
+                    .Fold(DocumentationLinks)(page => new List<Link>(PaginationLinks(
+                        context,
+                        page,
+                        getLinks(context, page)))));
         };
 
         public Type Type => typeof(Try<Page<Try<TModel>>>);

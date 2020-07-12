@@ -23,11 +23,11 @@
 
         public string Symbol { get; }
 
-        public static implicit operator CurrencyModel(Currency entity) => new CurrencyModel(
+        public static implicit operator CurrencyModel(in Currency entity) => new CurrencyModel(
             entity.Id,
-            entity.Symbol.GetOrElse(Empty));
+            entity.SymbolOption.GetOrElse(Empty));
 
-        public static implicit operator Option<Currency>(CurrencyModel model) => NewCurrency(
+        public static implicit operator Option<Currency>(in CurrencyModel model) => NewCurrency(
             model.Code,
             model.Symbol);
     }

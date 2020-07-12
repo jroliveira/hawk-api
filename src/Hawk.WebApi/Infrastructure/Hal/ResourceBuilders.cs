@@ -17,7 +17,10 @@
 
         public static void NewResourceBuilders(IDictionary<Type, Func<HttpContext, object, IResource>> dictionary) => resourceBuilders = new ResourceBuilders(dictionary);
 
-        internal static object GetResource(HttpContext httpContext, object @object, Type objectType)
+        internal static object GetResource(
+            HttpContext httpContext,
+            object @object,
+            Type objectType)
         {
             if (resourceBuilders == default)
             {

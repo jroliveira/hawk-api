@@ -27,22 +27,22 @@
             return default;
         };
 
-        internal static Option<string> ReadCypherScript(string name)
+        internal static Option<string> ReadCypherScript(in string name)
         {
-            name = Combine("Domain", name);
+            var file = Combine("Domain", name);
 
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(file))
             {
-                LogError("Cypher script is default or empty.", new { File = name });
+                LogError("Cypher script is default or empty.", new { File = file });
                 return None();
             }
 
             try
             {
-                using var stream = ReadFile(name);
+                using var stream = ReadFile(file);
                 if (stream == default)
                 {
-                    LogError("Cypher stream is default.", new { File = name });
+                    LogError("Cypher stream is default.", new { File = file });
                     return None();
                 }
 
@@ -51,7 +51,7 @@
             }
             catch (Exception exception)
             {
-                LogError("Cannot load cypher script.", new { File = name }, HandleException(exception));
+                LogError("Cannot load cypher script.", new { File = file }, HandleException(exception));
                 return None();
             }
         }

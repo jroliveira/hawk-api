@@ -15,7 +15,7 @@
                 @this
                     .Data
                     .Select(item => item.Match(
-                        HandleException<TDestination>,
+                        exception => HandleException<TDestination>(exception),
                         origin => mapDestination(origin))),
                 @this.Skip,
                 @this.Limit);

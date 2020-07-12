@@ -57,7 +57,7 @@
         [Required]
         public IEnumerable<string> Tags { get; }
 
-        public static implicit operator Option<Configuration>(CreateConfigurationModel model) => NewConfiguration(
+        public static implicit operator Option<Configuration>(in CreateConfigurationModel model) => NewConfiguration(
             model.Type,
             model.Description,
             NewPaymentMethod(model.PaymentMethod),

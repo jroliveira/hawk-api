@@ -9,7 +9,10 @@
 
     internal sealed class ResourceJsonConverter : JsonConverter<IResource<object>>
     {
-        public override void WriteJson(JsonWriter writer, IResource<object> resource, JsonSerializer serializer)
+        public override void WriteJson(
+            JsonWriter writer,
+            IResource<object> resource,
+            JsonSerializer serializer)
         {
             var jsonObject = FromObject(resource.Get(), serializer);
 

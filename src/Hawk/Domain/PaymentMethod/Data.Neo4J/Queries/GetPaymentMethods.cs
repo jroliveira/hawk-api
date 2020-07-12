@@ -1,5 +1,6 @@
 ﻿namespace Hawk.Domain.PaymentMethod.Data.Neo4J.Queries
 {
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Hawk.Domain.PaymentMethod;
@@ -8,7 +9,6 @@
     using Hawk.Infrastructure.Data.Neo4J;
     using Hawk.Infrastructure.Filter;
     using Hawk.Infrastructure.Monad;
-    using Hawk.Infrastructure.Monad.Linq;
     using Hawk.Infrastructure.Pagination;
 
     using Http.Query.Filter;
@@ -20,7 +20,7 @@
 
     internal sealed class GetPaymentMethods : Query<GetAllParam, Page<Try<PaymentMethod>>>, IGetPaymentMethods
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("PaymentMethod", "Data.Neo4J", "Queries", "GetPaymentMethods.cql"));
+        private static readonly Option<string> StatementOption = ReadCypherScript(Combine("PaymentMethod", "Data.Neo4J", "Queries", "GetPaymentMethods.cql"));
         private readonly Neo4JConnection connection;
         private readonly ILimit<int, Filter> limit;
         private readonly ISkip<int, Filter> skip;
@@ -44,7 +44,10 @@
                 limit = this.limit.Apply(param.Filter),
             };
 
-            var data = await this.connection.ExecuteCypher(MapPaymentMethod, Statement, parameters);
+            var data = await this.connection.ExecuteCypher(
+                record => MapPaymentMethod(record),
+                StatementOption,
+                parameters);
 
             return data.Select(items => new Page<Try<PaymentMethod>>(items, parameters.skip, parameters.limit));
         }

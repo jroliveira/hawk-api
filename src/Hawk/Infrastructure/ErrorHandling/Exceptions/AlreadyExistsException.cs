@@ -2,7 +2,7 @@
 {
     public sealed class AlreadyExistsException : BaseException
     {
-        public AlreadyExistsException(string message)
+        public AlreadyExistsException(in string message)
             : base(message)
         {
         }

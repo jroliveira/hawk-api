@@ -72,7 +72,7 @@
 
             return entities.Match(
                 this.Error<Page<Try<PaymentMethodModel>>>,
-                page => this.Ok(page.ToPage(NewPaymentMethodModel)));
+                page => this.Ok(page.ToPage(entity => NewPaymentMethodModel(entity))));
         }
 
         /// <summary>
@@ -99,7 +99,7 @@
 
             return entities.Match(
                 this.Error<Page<Try<PaymentMethodModel>>>,
-                page => this.Ok(page.ToPage(NewPaymentMethodModel)));
+                page => this.Ok(page.ToPage(entity => NewPaymentMethodModel(entity))));
         }
 
         /// <summary>

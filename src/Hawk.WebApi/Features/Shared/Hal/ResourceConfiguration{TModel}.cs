@@ -1,6 +1,7 @@
 ﻿namespace Hawk.WebApi.Features.Shared.Hal
 {
     using System;
+    using System.Linq;
 
     using Hawk.Infrastructure.Monad;
     using Hawk.WebApi.Infrastructure.Hal.Link;
@@ -18,9 +19,7 @@
 
             return new Resource<Try<TModel>>(
                 model,
-                model.Match(
-                    _ => DocumentationLinks,
-                    item => getLinks(context, item)));
+                model.Fold(DocumentationLinks)(item => getLinks(context, item)));
         };
 
         public Type Type => typeof(Try<TModel>);

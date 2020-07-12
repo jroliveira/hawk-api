@@ -11,7 +11,10 @@
 
     internal sealed class PageJsonConverter : JsonConverter<IPage<object>>
     {
-        public override void WriteJson(JsonWriter writer, IPage<object> value, JsonSerializer serializer)
+        public override void WriteJson(
+            JsonWriter writer,
+            IPage<object> value,
+            JsonSerializer serializer)
         {
             var obj = new JObject
             {

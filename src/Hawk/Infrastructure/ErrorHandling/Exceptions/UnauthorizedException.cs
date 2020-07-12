@@ -2,7 +2,7 @@
 {
     public sealed class UnauthorizedException : BaseException
     {
-        public UnauthorizedException(string message)
+        public UnauthorizedException(in string message)
             : base(message)
         {
         }

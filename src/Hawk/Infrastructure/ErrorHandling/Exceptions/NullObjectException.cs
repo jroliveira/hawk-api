@@ -2,7 +2,7 @@
 {
     public sealed class NullObjectException : BaseException
     {
-        public NullObjectException(string message)
+        public NullObjectException(in string message)
             : base(message)
         {
         }

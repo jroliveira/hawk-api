@@ -7,6 +7,6 @@
     public interface IQuery<TParam, TReturn>
         where TParam : Param
     {
-        Task<Try<TReturn>> GetResult(Option<TParam> param);
+        Task<Try<TReturn>> GetResult(Option<TParam> paramOption);
     }
 }

@@ -2,7 +2,7 @@
 {
     public sealed class NullParameterException : BaseException
     {
-        public NullParameterException(string message, string parameter)
+        public NullParameterException(in string message, in string parameter)
             : base(message) => this.Parameter = parameter;
 
         public string Parameter { get; }

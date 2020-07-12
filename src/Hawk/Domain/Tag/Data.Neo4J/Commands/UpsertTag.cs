@@ -14,13 +14,13 @@
 
     internal sealed class UpsertTag : Command<UpsertParam<string, Tag>>, IUpsertTag
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("Tag", "Data.Neo4J", "Commands", "UpsertTag.cql"));
+        private static readonly Option<string> StatementOption = ReadCypherScript(Combine("Tag", "Data.Neo4J", "Commands", "UpsertTag.cql"));
         private readonly Neo4JConnection connection;
 
         public UpsertTag(Neo4JConnection connection) => this.connection = connection;
 
         protected override Task<Try<Unit>> Execute(UpsertParam<string, Tag> param) => this.connection.ExecuteCypher(
-            Statement,
+            StatementOption,
             new
             {
                 email = param.Email.Value,

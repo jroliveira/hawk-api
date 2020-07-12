@@ -14,6 +14,6 @@
         [Required]
         public string Name { get; }
 
-        public static implicit operator Option<PaymentMethod>(CreatePaymentMethodModel model) => NewPaymentMethod(model.Name);
+        public static implicit operator Option<PaymentMethod>(in CreatePaymentMethodModel model) => NewPaymentMethod(model.Name);
     }
 }

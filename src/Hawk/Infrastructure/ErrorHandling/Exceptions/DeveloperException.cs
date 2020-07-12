@@ -4,7 +4,7 @@
 
     public sealed class DeveloperException : BaseException
     {
-        public DeveloperException(Exception exception)
+        public DeveloperException(in Exception exception)
             : base(exception.Message)
         {
             this.StackTrace = exception.StackTrace;

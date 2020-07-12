@@ -15,7 +15,7 @@
             this.Id = entity.Id.ToString();
             this.Type = entity.Type.ToString();
             this.Status = entity.Status.ToString();
-            this.Description = entity.Description.GetOrElse(Empty);
+            this.Description = entity.DescriptionOption.GetOrElse(Empty);
             this.Payment = entity.Payment;
             this.Payee = entity.Payee;
             this.Category = entity.Category;
@@ -38,6 +38,6 @@
 
         public IEnumerable<string> Tags { get; }
 
-        internal static TransactionModel NewTransactionModel(Transaction entity) => new TransactionModel(entity);
+        internal static TransactionModel NewTransactionModel(in Transaction entity) => new TransactionModel(entity);
     }
 }

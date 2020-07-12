@@ -15,14 +15,14 @@
 
     internal sealed class GetAccountByEmail : Query<GetAccountByEmailParam, Account>, IGetAccountByEmail
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("Account", "Data.Neo4J", "Queries", "GetAccountByEmail.cql"));
+        private static readonly Option<string> StatementOption = ReadCypherScript(Combine("Account", "Data.Neo4J", "Queries", "GetAccountByEmail.cql"));
         private readonly Neo4JConnection connection;
 
         public GetAccountByEmail(Neo4JConnection connection) => this.connection = connection;
 
         protected override Task<Try<Account>> GetResult(GetAccountByEmailParam param) => this.connection.ExecuteCypherScalar(
-            MapAccount,
-            Statement,
+            record => MapAccount(record),
+            StatementOption,
             new
             {
                 email = param.Email.Value,

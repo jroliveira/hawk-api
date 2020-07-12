@@ -14,7 +14,7 @@
     {
         private static readonly MD5 Algorithm = Create();
 
-        public static Try<string> ComputeHash(string text)
+        public static Try<string> ComputeHash(in string text)
         {
             try
             {

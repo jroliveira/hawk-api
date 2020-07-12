@@ -2,7 +2,7 @@
 {
     public sealed class ForbiddenException : BaseException
     {
-        public ForbiddenException(string message)
+        public ForbiddenException(in string message)
             : base(message)
         {
         }

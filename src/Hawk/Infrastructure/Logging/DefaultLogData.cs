@@ -36,7 +36,10 @@
             },
         };
 
-        public DefaultLogData(LogLevel level, string message, object data)
+        public DefaultLogData(
+            in LogLevel level,
+            in string message,
+            in object data)
         {
             this.Level = level;
             this.Message = message;

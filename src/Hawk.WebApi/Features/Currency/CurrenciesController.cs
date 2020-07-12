@@ -64,7 +64,7 @@
 
             return entities.Match(
                 this.Error<Page<Try<CurrencyModel>>>,
-                page => this.Ok(page.ToPage(NewCurrencyModel)));
+                page => this.Ok(page.ToPage(entity => NewCurrencyModel(entity))));
         }
 
         /// <summary>

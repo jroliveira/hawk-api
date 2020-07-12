@@ -49,9 +49,7 @@
                                 .And("paymentMethod".Equal(transaction.Payment.Method)))
                             .Build()));
 
-                    return entities.Match(
-                        exception => true,
-                        page => !page.Data.Any());
+                    return entities.Fold(true)(page => !page.Data.Any());
                 })
                 .WithMessage("Transaction already exists.");
 

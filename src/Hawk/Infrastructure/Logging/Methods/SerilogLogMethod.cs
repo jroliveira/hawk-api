@@ -25,7 +25,7 @@
 
         private readonly ILogger logger;
 
-        public SerilogLogMethod(LogConfiguration config)
+        public SerilogLogMethod(in LogConfiguration config)
         {
             var loggerConfig = new LoggerConfiguration();
             var (_, (console, file, elasticSearch, tracing)) = config;
@@ -60,6 +60,6 @@
             this.logger = loggerConfig.CreateLogger();
         }
 
-        public void Write(LogLevel logLevel, string data) => this.logger.Write(Levels[logLevel], "{Json:l}", data);
+        public void Write(in LogLevel logLevel, in string data) => this.logger.Write(Levels[logLevel], "{Json:l}", data);
     }
 }

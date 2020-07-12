@@ -7,6 +7,6 @@
     public interface ICommand<TParam>
         where TParam : Param
     {
-        Task<Try<Unit>> Execute(Option<TParam> param);
+        Task<Try<Unit>> Execute(Option<TParam> paramOption);
     }
 }

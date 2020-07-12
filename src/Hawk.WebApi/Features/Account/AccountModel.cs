@@ -8,6 +8,6 @@
 
         public string Email { get; }
 
-        internal static AccountModel NewAccountModel(Account entity) => new AccountModel(entity);
+        internal static AccountModel NewAccountModel(in Account entity) => new AccountModel(entity);
     }
 }

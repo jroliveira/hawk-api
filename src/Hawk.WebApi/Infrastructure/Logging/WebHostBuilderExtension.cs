@@ -32,7 +32,7 @@
 
                 NewLogger(
                     level,
-                    new SerilogLogMethod(logConfig).Write);
+                    (logLevel, data) => new SerilogLogMethod(logConfig).Write(logLevel, data));
             });
     }
 }

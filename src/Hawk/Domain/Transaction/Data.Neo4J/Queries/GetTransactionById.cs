@@ -16,14 +16,14 @@
 
     internal sealed class GetTransactionById : Query<GetByIdParam<Guid>, Transaction>, IGetTransactionById
     {
-        private static readonly Option<string> Statement = ReadCypherScript(Combine("Transaction", "Data.Neo4J", "Queries", "GetTransactionById.cql"));
+        private static readonly Option<string> StatementOption = ReadCypherScript(Combine("Transaction", "Data.Neo4J", "Queries", "GetTransactionById.cql"));
         private readonly Neo4JConnection connection;
 
         public GetTransactionById(Neo4JConnection connection) => this.connection = connection;
 
         protected override Task<Try<Transaction>> GetResult(GetByIdParam<Guid> param) => this.connection.ExecuteCypherScalar(
-            MapTransaction,
-            Statement,
+            record => MapTransaction(record),
+            StatementOption,
             new
             {
                 email = param.Email.Value,

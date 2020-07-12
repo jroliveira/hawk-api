@@ -14,6 +14,6 @@
         [Required]
         public string Name { get; }
 
-        public static implicit operator Option<Payee>(CreatePayeeModel model) => NewPayee(model.Name);
+        public static implicit operator Option<Payee>(in CreatePayeeModel model) => NewPayee(model.Name);
     }
 }

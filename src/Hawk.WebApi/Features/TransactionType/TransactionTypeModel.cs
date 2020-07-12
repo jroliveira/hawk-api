@@ -24,6 +24,6 @@
 
         public char Symbol { get; }
 
-        internal static TransactionTypeModel NewTransactionTypeModel(TransactionType entity) => new TransactionTypeModel(entity);
+        internal static TransactionTypeModel NewTransactionTypeModel(in TransactionType entity) => new TransactionTypeModel(entity);
     }
 }

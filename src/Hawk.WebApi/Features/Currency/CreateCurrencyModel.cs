@@ -21,6 +21,6 @@
         [Required]
         public string Symbol { get; }
 
-        public static implicit operator Option<Currency>(CreateCurrencyModel model) => NewCurrency(model.Code, model.Symbol);
+        public static implicit operator Option<Currency>(in CreateCurrencyModel model) => NewCurrency(model.Code, model.Symbol);
     }
 }

@@ -6,7 +6,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
-    using static Policies;
+    using static Hawk.WebApi.Infrastructure.Authentication.Policies;
 
     internal static class MvcCoreBuilderExtension
     {

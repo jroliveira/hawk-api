@@ -14,6 +14,6 @@
         [Required]
         public string Name { get; }
 
-        public static implicit operator Option<Tag>(CreateTagModel model) => NewTag(model.Name);
+        public static implicit operator Option<Tag>(in CreateTagModel model) => NewTag(model.Name);
     }
 }

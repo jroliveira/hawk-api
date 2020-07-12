@@ -4,12 +4,12 @@
 
     public sealed class InternalException : BaseException
     {
-        public InternalException(string message)
+        public InternalException(in string message)
             : base(message)
         {
         }
 
-        public InternalException(string message, Exception innerException)
+        public InternalException(in string message, in Exception innerException)
             : base(message, innerException)
         {
         }

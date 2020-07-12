@@ -14,6 +14,6 @@
         [Required]
         public string Name { get; }
 
-        public static implicit operator Option<Category>(CreateCategoryModel model) => NewCategory(model.Name);
+        public static implicit operator Option<Category>(in CreateCategoryModel model) => NewCategory(model.Name);
     }
 }

@@ -33,6 +33,6 @@
 
         public IEnumerable<string> Tags { get; }
 
-        internal static ConfigurationModel NewConfigurationModel(Configuration entity) => new ConfigurationModel(entity);
+        internal static ConfigurationModel NewConfigurationModel(in Configuration entity) => new ConfigurationModel(entity);
     }
 }

@@ -65,7 +65,7 @@
 
             return entities.Match(
                 this.Error<Page<Try<CategoryModel>>>,
-                page => this.Ok(page.ToPage(NewConfigurationModel)));
+                page => this.Ok(page.ToPage(entity => NewConfigurationModel(entity))));
         }
 
         /// <summary>

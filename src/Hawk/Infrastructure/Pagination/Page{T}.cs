@@ -6,7 +6,10 @@
 
     public sealed class Page<T> : IPage<T>
     {
-        public Page(IEnumerable<T> data, int skip, int limit)
+        public Page(
+            in IEnumerable<T> data,
+            in int skip,
+            in int limit)
         {
             this.Data = data.ToList();
             this.Skip = skip;

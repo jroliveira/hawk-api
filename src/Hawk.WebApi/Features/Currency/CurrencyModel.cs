@@ -10,7 +10,7 @@
         private CurrencyModel(Currency entity)
         {
             this.Code = entity.Id;
-            this.Symbol = entity.Symbol.GetOrElse(Empty);
+            this.Symbol = entity.SymbolOption.GetOrElse(Empty);
             this.Transactions = entity.Transactions;
         }
 
@@ -20,6 +20,6 @@
 
         public uint Transactions { get; }
 
-        internal static CurrencyModel NewCurrencyModel(Currency entity) => new CurrencyModel(entity);
+        internal static CurrencyModel NewCurrencyModel(in Currency entity) => new CurrencyModel(entity);
     }
 }

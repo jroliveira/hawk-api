@@ -11,15 +11,15 @@
 
         private readonly bool isDevelopment;
 
-        private ExceptionHandler(bool isDevelopment) => this.isDevelopment = isDevelopment;
+        private ExceptionHandler(in bool isDevelopment) => this.isDevelopment = isDevelopment;
 
-        public static void NewExceptionHandler(bool isDevelopment) => errorHandler = new ExceptionHandler(isDevelopment);
+        public static void NewExceptionHandler(in bool isDevelopment) => errorHandler = new ExceptionHandler(isDevelopment);
 
-        public static Try<Unit> HandleException(Exception exception) => HandleException<Unit>(exception);
+        public static Try<Unit> HandleException(in Exception exception) => HandleException<Unit>(exception);
 
-        public static Try<TModel> HandleException<TModel>(Exception exception) => HandleException<TModel>(exception, false);
+        public static Try<TModel> HandleException<TModel>(in Exception exception) => HandleException<TModel>(exception, false);
 
-        public static Try<TModel> HandleException<TModel>(Exception exception, bool forceIsDevelopment) => exception switch
+        public static Try<TModel> HandleException<TModel>(in Exception exception, in bool forceIsDevelopment) => exception switch
         {
             AlreadyExistsException alreadyExists => alreadyExists,
             ForbiddenException forbidden => forbidden,

@@ -23,11 +23,11 @@
         [Required]
         public CurrencyModel Currency { get; }
 
-        public static implicit operator MoneyModel(Money entity) => new MoneyModel(
+        public static implicit operator MoneyModel(in Money entity) => new MoneyModel(
             entity.Value,
             entity.Currency);
 
-        public static implicit operator Option<Money>(MoneyModel model) => NewMoney(
+        public static implicit operator Option<Money>(in MoneyModel model) => NewMoney(
             model.Value,
             model.Currency);
     }

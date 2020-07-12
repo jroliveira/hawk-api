@@ -11,19 +11,19 @@
 
     public sealed class Account : Entity<Guid>
     {
-        private Account(Guid id, Email email)
+        private Account(in Guid id, in Email email)
             : base(id) => this.Email = email;
 
         public Email Email { get; }
 
-        public static Try<Account> NewAccount(Option<Email> email) => NewAccount(NewGuid(), email);
+        public static Try<Account> NewAccount(in Option<Email> emailOption) => NewAccount(NewGuid(), emailOption);
 
-        public static Try<Account> NewAccount(Option<Guid> id, Option<Email> email) =>
-            id
-            && email
-            ? new Account(
-                id.Get(),
-                email.Get())
-            : Failure<Account>(new InvalidObjectException("Invalid account."));
+        public static Try<Account> NewAccount(in Option<Guid> idOption, in Option<Email> emailOption) =>
+            idOption
+            && emailOption
+                ? new Account(
+                    idOption.Get(),
+                    emailOption.Get())
+                : Failure<Account>(new InvalidObjectException("Invalid account."));
     }
 }

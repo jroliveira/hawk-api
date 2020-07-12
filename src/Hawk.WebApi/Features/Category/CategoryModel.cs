@@ -14,6 +14,6 @@
 
         public uint Transactions { get; }
 
-        internal static CategoryModel NewCategoryModel(Category entity) => new CategoryModel(entity);
+        internal static CategoryModel NewCategoryModel(in Category entity) => new CategoryModel(entity);
     }
 }

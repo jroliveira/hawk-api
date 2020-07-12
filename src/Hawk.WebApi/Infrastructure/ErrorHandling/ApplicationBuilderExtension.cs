@@ -3,7 +3,7 @@
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
 
-    using static ErrorHandler;
+    using static Hawk.WebApi.Infrastructure.ErrorHandling.ErrorHandler;
 
     internal static class ApplicationBuilderExtension
     {
