@@ -12,7 +12,7 @@
     using Newtonsoft.Json.Converters;
     using Newtonsoft.Json.Serialization;
 
-    using static Clock;
+    using static Hawk.Infrastructure.Clock;
 
     using static Newtonsoft.Json.JsonConvert;
 

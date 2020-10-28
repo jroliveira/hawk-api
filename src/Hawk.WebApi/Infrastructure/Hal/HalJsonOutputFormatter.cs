@@ -10,11 +10,11 @@
 
     using static System.Text.Encoding;
 
+    using static Hawk.WebApi.Infrastructure.Hal.ResourceBuilders;
+
     using static Microsoft.Net.Http.Headers.MediaTypeHeaderValue;
 
     using static Newtonsoft.Json.JsonConvert;
-
-    using static ResourceBuilders;
 
     internal sealed class HalJsonOutputFormatter : TextOutputFormatter
     {

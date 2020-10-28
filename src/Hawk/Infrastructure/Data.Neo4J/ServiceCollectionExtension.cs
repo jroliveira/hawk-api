@@ -6,7 +6,8 @@
     public static class ServiceCollectionExtension
     {
         public static IServiceCollection ConfigureNeo4J(this IServiceCollection @this, IConfiguration configuration) => @this
-            .AddScoped<Neo4JConnection>()
-            .Configure<Neo4JConfiguration>(configuration.GetSection("neo4j"));
+            .Configure<Neo4JConfiguration>(configuration.GetSection("neo4j"))
+            .AddScoped<ICheckNeo4J, CheckNeo4J>()
+            .AddScoped<Neo4JConnection>();
     }
 }

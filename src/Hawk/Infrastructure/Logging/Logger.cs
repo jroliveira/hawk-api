@@ -30,6 +30,11 @@
             message,
             new { Info = data, Error = tryModel });
 
+        public static void LogError(in string message) => logger?.Log(
+            LogLevel.Error,
+            message,
+            new { });
+
         public static void LogError(in string message, in Exception exception) => LogError<Unit>(message, exception);
 
         public static void LogError<TModel>(in string message, in Exception exception) => logger?.Log(
@@ -48,6 +53,11 @@
                 LogLevel.Info,
                 message,
                 new { Info = data }));
+
+        public static void LogWarning<TModel>(in string message, in Exception exception) => logger?.Log(
+            LogLevel.Warn,
+            message,
+            new { Info = HandleException<TModel>(exception, true) });
 
         public static void LogWarning(in string message, in object data) => logger?.Log(
             LogLevel.Warn,

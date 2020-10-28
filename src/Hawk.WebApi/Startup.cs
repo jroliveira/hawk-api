@@ -8,7 +8,10 @@
     using Hawk.WebApi.Infrastructure.Api;
     using Hawk.WebApi.Infrastructure.Authentication;
     using Hawk.WebApi.Infrastructure.Caching;
+    using Hawk.WebApi.Infrastructure.Data.Neo4J;
     using Hawk.WebApi.Infrastructure.ErrorHandling;
+    using Hawk.WebApi.Infrastructure.Hal;
+    using Hawk.WebApi.Infrastructure.HealthCheck;
     using Hawk.WebApi.Infrastructure.IpRateLimiting;
     using Hawk.WebApi.Infrastructure.Metric;
     using Hawk.WebApi.Infrastructure.Swagger;
@@ -19,6 +22,10 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+
+    using static Hawk.Infrastructure.Logging.Logger;
+    using static Hawk.Infrastructure.Serialization.JsonSettings;
 
     public class Startup
     {
@@ -34,19 +41,40 @@
             .ConfigureFilter()
             .ConfigureDomain()
             .ConfigureFeature()
-            .ConfigureApi(this.Configuration)
+            .ConfigureApi(
+                mvcCoreBuilder => mvcCoreBuilder
+                    .AddAuthorization(this.Configuration)
+                    .AddHal(JsonSerializerSettings),
+                mvcOptions => mvcOptions
+                    .AddApiVersionRoutePrefixConvention()
+                    .AddAuthorizeFilter(services, this.Configuration))
+            .ConfigureHealthCheck(healthChecksBuilder => healthChecksBuilder
+                .AddNeo4JCheck()
+                .AddAuthenticationCheck(this.Configuration))
             .ConfigureVersioning()
             .ConfigureMetric()
             .ConfigureSwagger(this.Configuration)
             .ConfigureTracing(this.Configuration)
             .ConfigureAuthentication(this.Configuration);
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment environment) => app
-            .UseAuthentication()
-            .UseErrorHandling(environment)
-            .UseApi()
-            .UseMetric()
-            .UseSwagger(this.Configuration)
-            .UseTracing(this.Configuration);
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment environment, IHostApplicationLifetime lifetime)
+        {
+            app
+                .UseAuthentication()
+                .UseErrorHandling(environment)
+                .UseApi()
+                .UseHealthCheck()
+                .UseMetric()
+                .UseSwagger(this.Configuration)
+                .UseTracing(this.Configuration);
+
+            lifetime.ApplicationStarted.Register(() => LogInfo("Web Api started", new
+            {
+                Environment = environment.EnvironmentName,
+                Port = this.Configuration["app:port"],
+            }));
+
+            lifetime.ApplicationStopped.Register(() => LogError("Web Api stopped"));
+        }
     }
 }

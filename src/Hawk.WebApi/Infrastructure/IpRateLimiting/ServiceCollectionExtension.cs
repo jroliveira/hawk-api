@@ -8,7 +8,6 @@
     internal static class ServiceCollectionExtension
     {
         internal static IServiceCollection ConfigureIpRateLimiting(this IServiceCollection @this, IConfiguration configuration) => @this
-            .AddMemoryCache()
             .Configure<IpRateLimitOptions>(configuration.GetSection("ipRateLimiting"))
             .Configure<IpRateLimitPolicies>(configuration.GetSection("IpRateLimitPolicies"))
             .AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>()

@@ -12,7 +12,6 @@
     internal static class ControllerBaseExtension
     {
         private const string Claim = "email";
-        private const string Header = "X-Email";
 
         internal static Try<Email> GetUser(this ControllerBase @this)
         {
@@ -24,7 +23,7 @@
                     .Value);
             }
 
-            if (@this.Request.Headers.TryGetValue(Header, out var email))
+            if (@this.Request.Headers.TryGetValue("X-Email", out var email))
             {
                 return NewEmail(email.ToString());
             }

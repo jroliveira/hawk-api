@@ -6,7 +6,7 @@
 
     using static System.AttributeTargets;
 
-    using static Logger;
+    using static Hawk.Infrastructure.Logging.Logger;
 
     [AttributeUsage(Method)]
     public sealed class LogWhenInvokeAttribute : Attribute
