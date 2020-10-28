@@ -23,7 +23,7 @@
     internal sealed class Neo4JConnection : IDisposable
     {
         private readonly ResiliencePolicy resiliencePolicy;
-        private readonly IDriver? driver;
+        private readonly Lazy<IDriver>? driver;
 
         public Neo4JConnection(IOptions<Neo4JConfiguration> config, ResiliencePolicy resiliencePolicy)
         {
@@ -32,7 +32,7 @@
 
             try
             {
-                this.driver = Driver(config.Value.Uri, auth);
+                this.driver = new Lazy<IDriver>(Driver(config.Value.Uri, auth));
             }
             catch (Exception exception)
             {
@@ -40,12 +40,12 @@
             }
         }
 
-        public void Dispose() => this.driver?.Dispose();
+        public void Dispose() => this.driver?.Value.Dispose();
 
         internal Task<Try<TReturn>> ExecuteCypherScalar<TReturn>(
             Func<IRecord, Try<TReturn>> mapping,
             Option<string> statementOption,
-            object parameters) => this.ExecuteCypherAndGetRecords(
+            object? parameters) => this.ExecuteCypherAndGetRecords(
                 statementOption,
                 parameters,
                 records => records.Count > 1
@@ -69,7 +69,7 @@
 
         private Task<Try<TReturn>> ExecuteCypherAndGetRecords<TReturn>(
             Option<string> statementOption,
-            object parameters,
+            object? parameters,
             Func<IList<IRecord>, Try<TReturn>> command) => this.ExecuteCypherAndGetCursor(
                 statementOption,
                 parameters,
@@ -77,7 +77,7 @@
 
         private async Task<Try<TReturn>> ExecuteCypherAndGetCursor<TReturn>(
             Option<string> statementOption,
-            object parameters,
+            object? parameters,
             Func<IResultCursor, Task<Try<TReturn>>> command)
         {
             if (!statementOption.IsDefined)
@@ -94,7 +94,7 @@
             {
                 return await this.resiliencePolicy.Execute(async _ =>
                 {
-                    var session = this.driver.AsyncSession(builder => builder.WithDatabase("neo4j"));
+                    var session = this.driver.Value.AsyncSession(builder => builder.WithDatabase("neo4j"));
                     var cursor = await session.RunAsync(statementOption.Get(), parameters);
 
                     return await command(cursor);

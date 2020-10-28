@@ -9,7 +9,7 @@
 
     using Microsoft.AspNetCore.Http;
 
-    using static DefaultLinks;
+    using static Hawk.WebApi.Features.Shared.Hal.DefaultLinks;
 
     internal sealed class ResourceConfiguration<TModel> : IResourceConfiguration
     {

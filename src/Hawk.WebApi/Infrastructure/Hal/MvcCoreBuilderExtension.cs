@@ -11,7 +11,7 @@
     using static System.Activator;
     using static System.AppDomain;
 
-    using static ResourceBuilders;
+    using static Hawk.WebApi.Infrastructure.Hal.ResourceBuilders;
 
     internal static class MvcCoreBuilderExtension
     {

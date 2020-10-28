@@ -1,12 +1,10 @@
 ﻿namespace Hawk.WebApi.Infrastructure.Api
 {
-    using Hawk.WebApi.Infrastructure.Authentication;
-    using Hawk.WebApi.Infrastructure.Hal;
-    using Hawk.WebApi.Infrastructure.Versioning;
+    using System;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.Configuration;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -14,11 +12,14 @@
 
     internal static class ServiceCollectionExtension
     {
-        internal static IServiceCollection ConfigureApi(this IServiceCollection @this, IConfiguration configuration)
+        internal static IServiceCollection ConfigureApi(
+            this IServiceCollection @this,
+            Action<IMvcCoreBuilder>? mvcCoreBuilderSetup = null,
+            Action<MvcOptions>? mvcOptionsSetup = null)
         {
             @this.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            @this
+            var mvcCoreBuilder = @this
                 .AddResponseCompression()
                 .AddResponseCaching()
                 .AddCors(options => options.AddPolicy("CorsPolicy", builder => builder
@@ -28,11 +29,9 @@
                 .AddMvcCore(options =>
                 {
                     options.EnableEndpointRouting = false;
-                    options.AddApiVersionRoutePrefixConvention();
-                    options.AddAuthorizeFilter(@this, configuration);
+                    mvcOptionsSetup?.Invoke(options);
                 })
                 .AddApiExplorer()
-                .AddAuthorization(configuration)
                 .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.ContractResolver = JsonSerializerSettings.ContractResolver;
@@ -47,8 +46,9 @@
                     {
                         options.SerializerSettings.Converters.Add(converter);
                     }
-                })
-                .AddHal(JsonSerializerSettings);
+                });
+
+            mvcCoreBuilderSetup?.Invoke(mvcCoreBuilder);
 
             return @this;
         }

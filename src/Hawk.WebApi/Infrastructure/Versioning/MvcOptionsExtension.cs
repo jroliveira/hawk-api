@@ -4,8 +4,13 @@
 
     internal static class MvcOptionsExtension
     {
-        internal static void AddApiVersionRoutePrefixConvention(this MvcOptions @this) => @this
-            .Conventions
-            .Add(new ApiVersionRoutePrefixConvention());
+        internal static MvcOptions AddApiVersionRoutePrefixConvention(this MvcOptions @this)
+        {
+            @this
+                .Conventions
+                .Add(new ApiVersionRoutePrefixConvention());
+
+            return @this;
+        }
     }
 }

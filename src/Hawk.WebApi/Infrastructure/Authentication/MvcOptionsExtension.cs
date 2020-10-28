@@ -11,7 +11,7 @@
 
     internal static class MvcOptionsExtension
     {
-        internal static void AddAuthorizeFilter(
+        internal static MvcOptions AddAuthorizeFilter(
             this MvcOptions @this,
             IServiceCollection serviceCollection,
             IConfiguration configuration)
@@ -22,13 +22,15 @@
 
             if (!authConfig.IsEnabled())
             {
-                return;
+                return @this;
             }
 
             using var provider = serviceCollection.BuildServiceProvider();
             var authorizationService = provider.GetRequiredService<IAuthorizationService>();
 
             @this.Filters.Add(new CustomAuthorizeFilter(authorizationService, AdminPolicy));
+
+            return @this;
         }
     }
 }

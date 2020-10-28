@@ -8,6 +8,8 @@
 
     using Microsoft.AspNetCore.Http;
 
+    using static System.Net.Mime.MediaTypeNames.Application;
+
     using static Hawk.Infrastructure.ErrorHandling.ExceptionHandler;
     using static Hawk.Infrastructure.Logging.Logger;
     using static Hawk.Infrastructure.Serialization.JsonSettings;
@@ -43,7 +45,7 @@
         private static async Task WriteResponse(HttpContext context, Exception exception, int statusCode)
         {
             context.Response.StatusCode = statusCode;
-            context.Response.ContentType = "application/json";
+            context.Response.ContentType = Json;
 
             var serializerSettings = JsonSerializerSettings;
             serializerSettings.AddHal();

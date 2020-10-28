@@ -2,6 +2,7 @@
 {
     using System;
 
+    using Hawk.Infrastructure.Logging;
     using Hawk.Infrastructure.Logging.Configurations;
     using Hawk.Infrastructure.Logging.Methods;
 
@@ -14,11 +15,10 @@
 
     using static Hawk.Infrastructure.Logging.Logger;
 
-    using LogLevel = Hawk.Infrastructure.Logging.LogLevel;
-
     internal static class WebHostBuilderExtension
     {
         internal static IWebHostBuilder ConfigureLogging(this IWebHostBuilder @this) => @this
+            .SuppressStatusMessages(true)
             .UseSerilog((hostingContext, _) =>
             {
                 var logConfig = hostingContext.Configuration
@@ -30,9 +30,11 @@
                     throw new InvalidCastException($"Log level '{logConfig.Level}' is not valid.");
                 }
 
+                var logMethod = new SerilogLogMethod(logConfig);
+
                 NewLogger(
                     level,
-                    (logLevel, data) => new SerilogLogMethod(logConfig).Write(logLevel, data));
+                    (logLevel, data) => logMethod.Write(logLevel, data));
             });
     }
 }

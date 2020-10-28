@@ -18,7 +18,18 @@
 
         internal static IActionResult ErrorResult<TModel>(BaseException exception)
         {
-            LogError<TModel>("An error has occurred.", exception);
+            switch (exception)
+            {
+                case ForbiddenException _:
+                case NotFoundException _:
+                case UnauthorizedException _:
+                    LogWarning<TModel>("A warning has occurred.", exception);
+                    break;
+
+                default:
+                    LogError<TModel>("An error has occurred.", exception);
+                    break;
+            }
 
             var @try = HandleException<TModel>(exception);
 

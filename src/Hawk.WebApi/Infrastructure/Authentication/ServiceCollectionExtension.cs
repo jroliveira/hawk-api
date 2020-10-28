@@ -14,6 +14,8 @@
             this IServiceCollection @this,
             IConfiguration configuration)
         {
+            @this.Configure<AuthConfiguration>(configuration.GetSection("authentication"));
+
             var authConfig = configuration
                 .GetSection("authentication")
                 .Get<AuthConfiguration>();
