@@ -48,6 +48,8 @@
                     return $"transaction.{field} {@operator} {value}";
                 case "status":
                     return $"transaction.{field} {@operator} {value.ToString().ToPascalCase()}";
+                case "type":
+                    return $"{value} IN labels(transaction)";
                 case "category":
                     return $"EXISTS {{ MATCH(transaction)-[:WITH]->(n:Category) WHERE n.name {@operator} {NewCategory(value.ToString()).GetStringOrElse(Empty)} }}";
                 case "tag":

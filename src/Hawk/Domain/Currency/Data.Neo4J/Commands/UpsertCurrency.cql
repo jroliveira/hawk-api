@@ -12,7 +12,7 @@ MERGE
   })
 SET
   currency.code = $newCode,
-  currency.symbol = $symbol
+  currency.symbol = $newSymbol
 MERGE
   (currency)-[:BELONGS]->(account)
 WITH
