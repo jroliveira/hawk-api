@@ -1,5 +1,6 @@
 ﻿namespace Hawk.WebApi.Features.Transaction
 {
+    using System;
     using System.Linq;
 
     using FluentValidation;
@@ -13,6 +14,8 @@
 
     using Http.Query.Filter.Client.Filters.Condition;
 
+    using static System.Globalization.CultureInfo;
+
     using static Hawk.Domain.Shared.Queries.GetAllParam;
     using static Hawk.Domain.Shared.Queries.GetByIdParam<string>;
 
@@ -22,6 +25,7 @@
     {
         internal CreateTransactionModelValidator(
             Email email,
+            string? id,
             IGetCategoryByName getCategoryByName,
             IGetCurrencyByCode getCurrencyByCode,
             IGetPayeeByName getPayeeByName,
@@ -42,14 +46,16 @@
                             .Where("year".Equal(transaction.Payment.Date.Year)
                                 .And("month".Equal(transaction.Payment.Date.Month))
                                 .And("day".Equal(transaction.Payment.Date.Day))
-                                .And("value".Equal(transaction.Payment.Cost.Value))
+                                .And("value".Equal(transaction.Payment.Cost.Value.ToString(GetCultureInfo("en-US"))))
                                 .And("category".Equal(transaction.Category))
                                 .And("currency".Equal(transaction.Payment.Cost.Currency.Code))
                                 .And("payee".Equal(transaction.Payee))
                                 .And("paymentMethod".Equal(transaction.Payment.Method)))
                             .Build()));
 
-                    return entities.Fold(true)(page => !page.Data.Any());
+                    return entities
+                        .Fold(true)(page => page.Data.All(@try => @try
+                            .Fold(true)(item => id != default && item.Id.Equals(new Guid(id)))));
                 })
                 .WithMessage("Transaction already exists.");
 

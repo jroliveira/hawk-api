@@ -7,6 +7,7 @@
     using Hawk.Domain.Category;
     using Hawk.Domain.Payee;
     using Hawk.Domain.Shared;
+    using Hawk.Domain.Shared.Transaction;
     using Hawk.Domain.Tag;
     using Hawk.Infrastructure.ErrorHandling.Exceptions;
     using Hawk.Infrastructure.Monad;

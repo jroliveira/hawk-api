@@ -1,5 +1,6 @@
 ﻿namespace Hawk.Domain.Transaction.Data.Neo4J.Queries
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -32,12 +33,12 @@
             Neo4JConnection connection,
             ILimit<int, Filter> limit,
             ISkip<int, Filter> skip,
-            IWhere<string, Filter> where)
+            IEnumerable<IWhere<string, Filter>> where)
         {
             this.connection = connection;
             this.limit = limit;
             this.skip = skip;
-            this.where = where;
+            this.where = where.First(item => item.Name == typeof(Where).FullName);
         }
 
         protected override async Task<Try<Page<Try<Transaction>>>> GetResult(GetAllParam param)

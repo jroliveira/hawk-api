@@ -5,6 +5,8 @@
     internal interface IWhere<out TReturn, in TFilter>
         where TFilter : IFilter
     {
+        string Name { get; }
+
         TReturn Apply(TFilter filter);
     }
 }
