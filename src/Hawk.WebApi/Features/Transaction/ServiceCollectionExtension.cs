@@ -18,8 +18,9 @@
     public static class ServiceCollectionExtension
     {
         public static IServiceCollection ConfigureTransaction(this IServiceCollection @this) => @this
-            .AddScoped<Func<Try<Email>, CreateTransactionModel, Task<ValidationResult>>>(factory => (email, request) => new CreateTransactionModelValidator(
+            .AddScoped<Func<Try<Email>, string?, CreateTransactionModel, Task<ValidationResult>>>(factory => (email, id, request) => new CreateTransactionModelValidator(
                 email.Get(),
+                id,
                 factory.GetService<IGetCategoryByName>(),
                 factory.GetService<IGetCurrencyByCode>(),
                 factory.GetService<IGetPayeeByName>(),

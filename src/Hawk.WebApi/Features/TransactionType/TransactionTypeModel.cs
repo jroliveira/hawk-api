@@ -2,9 +2,9 @@
 {
     using System.Collections.Generic;
 
-    using Hawk.Domain.Transaction;
+    using Hawk.Domain.Shared.Transaction;
 
-    using static Hawk.Domain.Transaction.TransactionType;
+    using static Hawk.Domain.Shared.Transaction.TransactionType;
 
     public sealed class TransactionTypeModel
     {

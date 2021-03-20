@@ -19,6 +19,8 @@
 
     internal sealed class Where : BaseWhere
     {
+        public override string Name => typeof(Where).FullName;
+
         protected override IReadOnlyCollection<string> Apply(Filter filter, IReadOnlyCollection<string> initialConditions)
         {
             var result = new List<string>(initialConditions);

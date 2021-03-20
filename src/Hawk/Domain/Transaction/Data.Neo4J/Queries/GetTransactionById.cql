@@ -60,15 +60,15 @@ RETURN
   description: transaction.description,
   account: {
     id: account.id,
-	email: account.email
+    email: account.email
   },
   payee: CASE WHEN payee IS null THEN NULL ELSE {
     name: payee.name,
-	transactions: SIZE((:Transaction)-[:IN]->(payee))
+    transactions: SIZE((:Transaction)-[:IN]->(payee))
   } END,
   category: CASE WHEN category IS null THEN NULL ELSE {
     name: category.name,
-	transactions: SIZE((:Transaction)-[:WITH]->(category))
+    transactions: SIZE((:Transaction)-[:WITH]->(category))
   } END,
   payment: {
     year: transaction.year,
@@ -77,15 +77,15 @@ RETURN
     cost: {
       value: transaction.value,
       currency: {
-	    code: currency.code,
+        code: currency.code,
         symbol: currency.symbol,
         transactions: SIZE((:Transaction)-[:PAID_IN]->(currency))
-	  }
+      }
     },
     method: CASE WHEN paymentMethod IS null THEN NULL ELSE {
-	  name: paymentMethod.name,
+      name: paymentMethod.name,
       transactions: SIZE((:Transaction)-[:PAID_WITH]->(paymentMethod))
-	} END
+    } END
   },
   tags: [tag IN tags | {
     name: tag.name,

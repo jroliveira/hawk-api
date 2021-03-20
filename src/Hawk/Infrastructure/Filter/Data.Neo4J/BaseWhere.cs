@@ -22,6 +22,8 @@
             { Equal, "=" },
         };
 
+        public abstract string Name { get; }
+
         public string Apply(Filter filter) => filter.HasCondition
             ? Join(" AND ", this.Apply(filter, new[] { "1=1" }))
             : "1=1";

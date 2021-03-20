@@ -2,7 +2,7 @@
 {
     using System.Linq;
 
-    using Hawk.Domain.Transaction;
+    using Hawk.Domain.Shared.Transaction;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Pagination;
     using Hawk.WebApi.Features.Shared;

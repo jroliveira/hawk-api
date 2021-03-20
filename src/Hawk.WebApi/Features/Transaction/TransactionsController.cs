@@ -34,14 +34,14 @@
         private readonly IGetTransactionById getTransactionById;
         private readonly IUpsertTransaction upsertTransaction;
         private readonly IDeleteTransaction deleteTransaction;
-        private readonly Func<Try<Email>, CreateTransactionModel, Task<ValidationResult>> validate;
+        private readonly Func<Try<Email>, string?, CreateTransactionModel, Task<ValidationResult>> validate;
 
         public TransactionsController(
             IGetTransactions getTransactions,
             IGetTransactionById getTransactionById,
             IUpsertTransaction upsertTransaction,
             IDeleteTransaction deleteTransaction,
-            Func<Try<Email>, CreateTransactionModel, Task<ValidationResult>> validate)
+            Func<Try<Email>, string?, CreateTransactionModel, Task<ValidationResult>> validate)
         {
             this.getTransactions = getTransactions;
             this.getTransactionById = getTransactionById;
@@ -105,7 +105,7 @@
         [ProducesResponseType(500)]
         public async Task<IActionResult> CreateTransaction([FromBody] CreateTransactionModel request)
         {
-            var validated = await this.validate(this.GetUser(), request);
+            var validated = await this.validate(this.GetUser(), default, request);
             if (!validated.IsValid)
             {
                 return this.Error<TransactionModel>(new InvalidObjectException("Invalid transaction.", validated));
@@ -137,7 +137,7 @@
             [FromRoute] string id,
             [FromBody] CreateTransactionModel request)
         {
-            var validated = await this.validate(this.GetUser(), request);
+            var validated = await this.validate(this.GetUser(), id, request);
             if (!validated.IsValid)
             {
                 return this.Error<TransactionModel>(new InvalidObjectException("Invalid transaction.", validated));

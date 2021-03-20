@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
 
+    using Hawk.Domain.Shared.Transaction;
     using Hawk.Domain.Transaction;
     using Hawk.Infrastructure.Extensions;
     using Hawk.Infrastructure.Monad;
