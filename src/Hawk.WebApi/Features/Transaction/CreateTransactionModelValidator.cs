@@ -49,7 +49,7 @@
                                 .And("value".Equal(transaction.Payment.Cost.Value.ToString(GetCultureInfo("en-US"))))
                                 .And("category".Equal(transaction.Category))
                                 .And("currency".Equal(transaction.Payment.Cost.Currency.Code))
-                                .And("payee".Equal(transaction.Payee))
+                                .And("payee".Equal(transaction.Payee.Name))
                                 .And("paymentMethod".Equal(transaction.Payment.Method)))
                             .Build()));
 
@@ -71,7 +71,7 @@
             this.RuleFor(model => model.Payee)
                 .NotEmpty()
                 .WithMessage("Payee is required.")
-                .MustAsync(async (payee, _) => await getPayeeByName.GetResult(NewGetByIdParam(email, payee)))
+                .MustAsync(async (payee, _) => await getPayeeByName.GetResult(NewGetByIdParam(email, payee.Name)))
                 .WithMessage("Payee not found.");
 
             this.RuleFor(model => model.Category)

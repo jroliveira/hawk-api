@@ -12,6 +12,9 @@ MATCH
 WHERE
   payee.name = $payee
 
+OPTIONAL MATCH
+  (payee)-[:AT]->(coordinate:Coordinate)
+
 // (:Category)
 
 MATCH
@@ -52,6 +55,7 @@ SET
 WITH
   account,
   payee,
+  COLLECT(DISTINCT coordinate) AS coordinates,
   category,
   currency,
   paymentMethod,
@@ -74,6 +78,7 @@ MERGE
 WITH
   account,
   payee,
+  coordinates,
   category,
   currency,
   paymentMethod,
@@ -97,6 +102,7 @@ WITH
   account,
   transaction,
   payee,
+  coordinates,
   category,
   paymentMethod,
   currency,
@@ -114,6 +120,12 @@ RETURN
   },
   payee: CASE WHEN payee IS null THEN NULL ELSE {
     name: payee.name,
+    location: {
+      coordinates: [coordinate IN coordinates | {
+        latitude: coordinate.latitude,
+        longitude: coordinate.longitude
+      }]
+    },
     transactions: SIZE((:Transaction)-[:IN]->(payee))
   } END,
   category: CASE WHEN category IS null THEN NULL ELSE {

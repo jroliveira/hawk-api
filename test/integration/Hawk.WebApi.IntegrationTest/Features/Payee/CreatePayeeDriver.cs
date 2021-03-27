@@ -14,7 +14,7 @@
 
     public sealed class CreatePayeeDriver : BaseDriver
     {
-        private readonly CreatePayeeModel model = new CreatePayeeModel("Test");
+        private readonly CreatePayeeModel model = new CreatePayeeModel("Test", default);
         private (HttpStatusCode StatusCode, dynamic? Response) response;
 
         public async Task PostNewPayee() => this.response = await this.HttpClient.Post("v1/payees", this.model);

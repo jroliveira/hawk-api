@@ -9,11 +9,21 @@
 
     public class CreatePayeeModel
     {
-        public CreatePayeeModel(string name) => this.Name = name;
+        public CreatePayeeModel(
+            string name,
+            LocationModel? location)
+        {
+            this.Name = name;
+            this.Location = location;
+        }
 
         [Required]
         public string Name { get; }
 
-        public static implicit operator Option<Payee>(in CreatePayeeModel model) => NewPayee(model.Name);
+        public LocationModel? Location { get; }
+
+        public static implicit operator Option<Payee>(in CreatePayeeModel model) => NewPayee(
+            model.Name,
+            model.Location);
     }
 }
