@@ -10,16 +10,29 @@
 
     public sealed class Payee : Entity<string>
     {
-        private Payee(in string name, in uint transactions)
-            : base(name.ToPascalCase()) => this.Transactions = transactions;
+        private Payee(
+            in string name,
+            in Option<Location> locationOption,
+            in uint transactions)
+            : base(name.ToPascalCase())
+        {
+            this.Transactions = transactions;
+            this.LocationOption = locationOption;
+        }
+
+        public Option<Location> LocationOption { get; }
 
         public uint Transactions { get; }
 
-        public static Try<Payee> NewPayee(in Option<string> nameOption, in Option<uint> transactionsOption = default) =>
-            nameOption
-                ? new Payee(
-                    nameOption.Get(),
-                    transactionsOption.GetOrElse(default))
-                : Failure<Payee>(new InvalidObjectException("Invalid payee."));
+        public static Try<Payee> NewPayee(
+            in Option<string> nameOption,
+            in Option<Location> locationOption = default,
+            in Option<uint> transactionsOption = default) =>
+                nameOption
+                    ? new Payee(
+                        nameOption.Get(),
+                        locationOption,
+                        transactionsOption.GetOrElse(default))
+                    : Failure<Payee>(new InvalidObjectException("Invalid payee."));
     }
 }

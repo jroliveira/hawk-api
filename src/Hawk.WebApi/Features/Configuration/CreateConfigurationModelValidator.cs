@@ -38,7 +38,7 @@
             this.RuleFor(model => model.Payee)
                 .NotEmpty()
                 .WithMessage("Payee is required.")
-                .MustAsync(async (payee, _) => await getPayeeByName.GetResult(NewGetByIdParam(email, payee)))
+                .MustAsync(async (payee, _) => await getPayeeByName.GetResult(NewGetByIdParam(email, payee.Name)))
                 .WithMessage("Payee not found.");
 
             this.RuleFor(model => model.Category)

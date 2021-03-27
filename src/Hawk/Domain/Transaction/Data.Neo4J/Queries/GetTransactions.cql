@@ -15,11 +15,20 @@ WITH
   payee
 
 OPTIONAL MATCH
+  (payee)-[:AT]->(coordinate:Coordinate)
+WITH
+  account,
+  transaction,
+  payee,
+  COLLECT(DISTINCT coordinate) AS coordinates
+
+OPTIONAL MATCH
   (transaction)-[:WITH]->(category:Category)-[:BELONGS]->(account)
 WITH
   account,
   transaction,
   payee,
+  coordinates,
   category
 
 OPTIONAL MATCH 
@@ -28,6 +37,7 @@ WITH
   account,
   transaction,
   payee,
+  coordinates,
   category,
   paymentMethod
   
@@ -37,6 +47,7 @@ WITH
   account,
   transaction,
   payee,
+  coordinates,
   category,
   paymentMethod,
   currency
@@ -47,6 +58,7 @@ WITH
   account,
   transaction,
   payee,
+  coordinates,
   category,
   paymentMethod,
   currency,
@@ -64,6 +76,12 @@ RETURN
   },
   payee: CASE WHEN payee IS null THEN NULL ELSE {
     name: payee.name,
+    location: {
+      coordinates: [coordinate IN coordinates | {
+        latitude: coordinate.latitude,
+        longitude: coordinate.longitude
+      }]
+    },
     transactions: SIZE((:Transaction)-[:IN]->(payee))
   } END,
   category: CASE WHEN category IS null THEN NULL ELSE {

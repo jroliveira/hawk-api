@@ -1,19 +1,45 @@
 ﻿namespace Hawk.WebApi.Features.Payee
 {
     using Hawk.Domain.Payee;
+    using Hawk.Infrastructure.Monad;
+
+    using static Hawk.Domain.Payee.Payee;
 
     public sealed class PayeeModel
     {
-        private PayeeModel(Payee entity)
+        public PayeeModel(string name)
+            : this(name, default, default)
         {
-            this.Name = entity.Id;
-            this.Transactions = entity.Transactions;
+        }
+
+        private PayeeModel(
+            string name,
+            LocationModel? location,
+            uint transactions)
+        {
+            this.Name = name;
+            this.Location = location;
+            this.Transactions = transactions;
         }
 
         public string Name { get; }
 
+        public LocationModel? Location { get; }
+
         public uint Transactions { get; }
 
-        internal static PayeeModel NewPayeeModel(in Payee entity) => new PayeeModel(entity);
+        public static implicit operator Option<Payee>(in PayeeModel model) => NewPayee(
+            model.Name,
+            model.Location);
+
+        public static implicit operator PayeeModel(in Payee entity) => new PayeeModel(
+            entity.Id,
+            entity.LocationOption,
+            entity.Transactions);
+
+        internal static PayeeModel NewPayeeModel(in Payee entity) => new PayeeModel(
+            entity.Id,
+            entity.LocationOption,
+            entity.Transactions);
     }
 }

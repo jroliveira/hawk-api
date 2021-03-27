@@ -4,6 +4,7 @@
     using System.Linq;
 
     using Hawk.Domain.Configuration;
+    using Hawk.WebApi.Features.Payee;
     using Hawk.WebApi.Features.Shared.Money;
 
     public sealed class ConfigurationModel
@@ -27,7 +28,7 @@
 
         public CurrencyModel Currency { get; }
 
-        public string Payee { get; }
+        public PayeeModel Payee { get; }
 
         public string Category { get; }
 
