@@ -77,7 +77,7 @@
             this.RuleFor(model => model.Category)
                 .NotEmpty()
                 .WithMessage("Category is required.")
-                .MustAsync(async (category, _) => await getCategoryByName.GetResult(NewGetByIdParam(email, category)))
+                .MustAsync(async (category, _) => await getCategoryByName.GetResult(NewGetByIdParam(email, category.Name)))
                 .WithMessage("Category not found.");
 
             this.RuleFor(model => model.Tags)

@@ -9,9 +9,9 @@
     using Hawk.Infrastructure.Extensions;
     using Hawk.Infrastructure.Monad;
     using Hawk.Infrastructure.Monad.Extensions;
+    using Hawk.WebApi.Features.Category;
     using Hawk.WebApi.Features.Payee;
 
-    using static Hawk.Domain.Category.Category;
     using static Hawk.Domain.Tag.Tag;
     using static Hawk.Domain.Transaction.Transaction;
     using static Hawk.Infrastructure.Monad.Utils.Util;
@@ -24,7 +24,7 @@
             string description,
             PaymentModel payment,
             PayeeModel payee,
-            string category,
+            CategoryModel category,
             IEnumerable<string> tags)
         {
             this.Type = type;
@@ -51,7 +51,7 @@
         public PayeeModel Payee { get; }
 
         [Required]
-        public string Category { get; }
+        public CategoryModel Category { get; }
 
         [Required]
         public IEnumerable<string> Tags { get; }
@@ -62,7 +62,7 @@
             model.Description,
             model.Payment,
             model.Payee,
-            NewCategory(model.Category),
+            model.Category,
             Some(model.Tags.Select(tag => NewTag(tag).ToOption())));
     }
 }

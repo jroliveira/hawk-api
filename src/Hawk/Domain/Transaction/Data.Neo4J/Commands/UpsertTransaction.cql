@@ -130,6 +130,7 @@ RETURN
   } END,
   category: CASE WHEN category IS null THEN NULL ELSE {
     name: category.name,
+    icon: category.icon,
     transactions: SIZE((:Transaction)-[:WITH]->(category))
   } END,
   payment: {

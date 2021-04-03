@@ -5,6 +5,7 @@
 
     using Hawk.Domain.Transaction;
     using Hawk.Infrastructure.Monad.Extensions;
+    using Hawk.WebApi.Features.Category;
     using Hawk.WebApi.Features.Payee;
 
     using static System.String;
@@ -35,7 +36,7 @@
 
         public PayeeModel Payee { get; }
 
-        public string Category { get; }
+        public CategoryModel Category { get; }
 
         public IEnumerable<string> Tags { get; }
 
