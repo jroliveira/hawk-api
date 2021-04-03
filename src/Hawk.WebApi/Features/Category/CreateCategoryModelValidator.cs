@@ -12,10 +12,17 @@
         internal CreateCategoryModelValidator(
             Email email,
             string category,
-            IGetCategoryByName getCategoryByName) => this.RuleFor(model => model.Name)
+            IGetCategoryByName getCategoryByName)
+        {
+            this.RuleFor(model => model.Name)
                 .NotEmpty()
                 .WithMessage("Category name is required.")
                 .MustAsync(async (name, _) => await getCategoryByName.GetResult(NewGetByIdParam(email, category)) || category.Equals(name))
                 .WithMessage("Path category must be equal to body category.");
+
+            this.RuleFor(model => model.Icon)
+                .NotEmpty()
+                .WithMessage("Category icon is required.");
+        }
     }
 }

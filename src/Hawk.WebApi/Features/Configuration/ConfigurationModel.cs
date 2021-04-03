@@ -4,6 +4,7 @@
     using System.Linq;
 
     using Hawk.Domain.Configuration;
+    using Hawk.WebApi.Features.Category;
     using Hawk.WebApi.Features.Payee;
     using Hawk.WebApi.Features.Shared.Money;
 
@@ -30,7 +31,7 @@
 
         public PayeeModel Payee { get; }
 
-        public string Category { get; }
+        public CategoryModel Category { get; }
 
         public IEnumerable<string> Tags { get; }
 

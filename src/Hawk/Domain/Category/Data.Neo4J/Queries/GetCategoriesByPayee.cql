@@ -13,6 +13,7 @@ WITH
 RETURN
 { 
   name: category.name,
+  icon: category.icon,
   transactions: SIZE((:Transaction)-[:WITH]->(category))
 } AS data
 

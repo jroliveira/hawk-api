@@ -9,6 +9,7 @@
     using Neo4j.Driver;
 
     using static Hawk.Domain.Category.Category;
+    using static Hawk.Domain.Category.Icon;
     using static Hawk.Infrastructure.Constants.ErrorMessages;
     using static Hawk.Infrastructure.Data.Neo4J.Neo4JRecord;
     using static Hawk.Infrastructure.Monad.Utils.Util;
@@ -20,6 +21,7 @@
         internal static Try<Category> MapCategory(in Option<Neo4JRecord> recordOption) => recordOption
             .Fold(Failure<Category>(NotFound(nameof(Category))))(record => NewCategory(
                 record.Get<string>("name"),
+                NewIcon(record.Get<string>("icon")),
                 record.Get<uint>("transactions")));
     }
 }

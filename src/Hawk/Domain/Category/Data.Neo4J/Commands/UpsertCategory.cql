@@ -11,7 +11,8 @@ MERGE
     name: $name
   })
 SET
-  category.name = $newName
+  category.name = $newName,
+  category.icon = $icon
 MERGE
   (category)-[:BELONGS]->(account)
 WITH
@@ -20,5 +21,6 @@ WITH
 RETURN
 { 
   name: category.name,
+  icon: category.icon,
   transactions: SIZE((:Transaction)-[:WITH]->(category))
 } AS data;
