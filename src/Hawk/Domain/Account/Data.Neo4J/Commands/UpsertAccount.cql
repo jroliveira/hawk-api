@@ -4,10 +4,20 @@
   })
 SET 
   account.id = $id,
-  account.creationDate = $creationDate
+  account.creationDate = $creationDate,
+  account.hiddenMoney = $hiddenMoney,
+  account.currencyCode = $currencyCode
 
 RETURN 
 { 
   id: account.id,
-  email: account.email
+  email: account.email,
+  setting: {
+    money: {
+      hidden: account.hiddenMoney,
+      currency: {
+        code: account.currencyCode
+      }
+    }
+  }
 } AS data;

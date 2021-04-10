@@ -11,10 +11,17 @@
 
     public sealed class CreateAccountModel
     {
-        public CreateAccountModel(string email) => this.Email = email;
+        public CreateAccountModel(string email, SettingModel setting)
+        {
+            this.Email = email;
+            this.Setting = setting;
+        }
 
         [Required]
         public string Email { get; }
+
+        [Required]
+        public SettingModel Setting { get; }
 
         public static implicit operator Option<Account>(in CreateAccountModel model) => NewAccount(NewEmail(model.Email));
 

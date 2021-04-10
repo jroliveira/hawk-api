@@ -23,7 +23,7 @@
 
     [ApiController]
     [ApiVersion("1")]
-    [Route("")]
+    [Route("accounts")]
     public class AccountsController : BaseController
     {
         private readonly IGetAccountByEmail getAccountByEmail;
@@ -46,12 +46,12 @@
         /// Get by email.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("account")]
+        [HttpGet("me")]
         [ProducesResponseType(typeof(Try<AccountModel>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetAccountByEmail()
+        public async Task<IActionResult> GetMe()
         {
             var entity = await this.memoryCache.GetOrCreateCache(
                 this.GetUser(),
@@ -68,7 +68,7 @@
         /// <param name="request"></param>
         /// <returns></returns>
         [AllowAnonymous]
-        [HttpPost("accounts")]
+        [HttpPost]
         [ProducesResponseType(typeof(Try<AccountModel>), 201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(409)]

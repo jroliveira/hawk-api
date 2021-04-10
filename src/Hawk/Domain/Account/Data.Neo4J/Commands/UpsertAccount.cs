@@ -28,6 +28,8 @@
                 id = param.Id.ToString(),
                 email = param.Email.Value,
                 creationDate = param.Entity.CreationAt.ToString(InvariantCulture),
+                hiddenMoney = param.Entity.Setting.Money.Hidden,
+                currencyCode = param.Entity.Setting.Money.Currency.Id,
             });
     }
 }

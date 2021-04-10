@@ -6,5 +6,13 @@ WHERE
 RETURN 
 { 
   id: account.id,
-  email: account.email
+  email: account.email,
+  setting: {
+    money: {
+      hidden: account.hiddenMoney,
+      currency: {
+        code: account.currencyCode
+      }
+    }
+  }
 } AS data;
