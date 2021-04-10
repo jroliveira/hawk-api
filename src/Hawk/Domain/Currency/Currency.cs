@@ -20,6 +20,8 @@
             this.Transactions = transactions;
         }
 
+        public static Currency DefaultCurrency => new Currency("EUR", default, default);
+
         public Option<string> SymbolOption { get; }
 
         public uint Transactions { get; }
