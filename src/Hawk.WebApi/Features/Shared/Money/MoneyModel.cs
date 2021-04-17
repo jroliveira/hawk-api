@@ -1,6 +1,7 @@
 ﻿namespace Hawk.WebApi.Features.Shared.Money
 {
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
 
     using Hawk.Domain.Shared.Money;
     using Hawk.Infrastructure.Monad;
@@ -26,6 +27,11 @@
         public static implicit operator MoneyModel(in Money entity) => new MoneyModel(
             entity.Value,
             entity.Currency);
+
+        public static implicit operator MoneyModel?(in Try<Money> entityOption) => entityOption
+            .Fold(default(MoneyModel))(entity => new MoneyModel(
+                entity.Value,
+                entity.Currency));
 
         public static implicit operator Option<Money>(in MoneyModel model) => NewMoney(
             model.Value,

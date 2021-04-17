@@ -1,5 +1,6 @@
 ﻿namespace Hawk.WebApi.Features
 {
+    using Hawk.WebApi.Features.Budget;
     using Hawk.WebApi.Features.Category;
     using Hawk.WebApi.Features.Configuration;
     using Hawk.WebApi.Features.Currency;
@@ -13,6 +14,7 @@
     public static class ServiceCollectionExtension
     {
         public static IServiceCollection ConfigureFeature(this IServiceCollection @this) => @this
+            .ConfigureBudget()
             .ConfigureCategory()
             .ConfigureConfiguration()
             .ConfigureCurrency()

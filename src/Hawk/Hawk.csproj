@@ -113,6 +113,18 @@
     <None Update="Domain\Tag\Data.Neo4J\Commands\UpsertTag.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Domain\Budget\Data.Neo4J\Commands\DeleteBudget.cql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Domain\Budget\Data.Neo4J\Commands\UpsertBudget.cql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Domain\Budget\Data.Neo4J\Queries\GetBudgetById.cql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Domain\Budget\Data.Neo4J\Queries\GetBudgets.cql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Domain\Transaction\Data.Neo4J\Commands\DeleteTransaction.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

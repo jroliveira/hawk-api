@@ -1,5 +1,7 @@
 ﻿namespace Hawk.WebApi.Features.Category
 {
+    using System.Linq;
+
     using Hawk.Domain.Category;
     using Hawk.Infrastructure.Monad;
 
