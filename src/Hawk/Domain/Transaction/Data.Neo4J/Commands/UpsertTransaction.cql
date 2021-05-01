@@ -108,6 +108,32 @@ WITH
   currency,
   COLLECT(DISTINCT tag) AS tags
 
+// (:Installment)
+
+UNWIND 
+  $installment AS installmentParams
+MERGE 
+  (installment:Installment { 
+    id: installmentParams.id
+  })
+SET
+  installment.frequency = installmentParams.frequency,
+  installment.total = installmentParams.total
+MERGE
+  (installment)-[:BELONGS]->(account)
+MERGE
+  (transaction)-[:IS_LINKED]->(installment)
+WITH
+  account,
+  payee,
+  coordinates,
+  category,
+  currency,
+  paymentMethod,
+  transaction,
+  tags,
+  installment
+
 RETURN 
 { 
   id: transaction.id,
@@ -150,6 +176,14 @@ RETURN
       transactions: SIZE((:Transaction)-[:PAID_WITH]->(paymentMethod))
     } END
   },
+  installment: CASE WHEN installment IS null THEN NULL ELSE {
+    id: installment.id,
+    frequency: installment.frequency,
+    installments: {
+      total: CASE WHEN installment.total IS null THEN 0 ELSE installment.total END,
+      current: SIZE((:Transaction)-[:IS_LINKED]->(installment))
+    }
+  } END,
   tags: [tag IN tags | {
     name: tag.name,
     transactions: SIZE((:Transaction)-[:HAS]->(tag))

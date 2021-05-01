@@ -6,6 +6,7 @@
     using Hawk.Domain.Transaction;
     using Hawk.Infrastructure.Monad.Extensions;
     using Hawk.WebApi.Features.Category;
+    using Hawk.WebApi.Features.Installment;
     using Hawk.WebApi.Features.Payee;
 
     using static System.String;
@@ -22,6 +23,7 @@
             this.Payee = entity.Payee;
             this.Category = entity.Category;
             this.Tags = entity.Tags.Select(tag => tag.Id);
+            this.Installment = entity.InstallmentOption;
         }
 
         public string Id { get; }
@@ -37,6 +39,8 @@
         public PayeeModel Payee { get; }
 
         public CategoryModel Category { get; }
+
+        public InstallmentModel? Installment { get; }
 
         public IEnumerable<string> Tags { get; }
 

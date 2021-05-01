@@ -64,6 +64,19 @@ WITH
   currency,
   COLLECT(DISTINCT tag) AS tags
 
+OPTIONAL MATCH 
+  (transaction)-[:IS_LINKED]->(installment:Installment)-[:BELONGS]->(account)
+WITH
+  account,
+  transaction,
+  payee,
+  coordinates,
+  category,
+  paymentMethod,
+  currency,
+  tags,
+  installment
+
 RETURN 
 { 
   id: transaction.id,
@@ -106,6 +119,14 @@ RETURN
       transactions: SIZE((:Transaction)-[:PAID_WITH]->(paymentMethod))
     } END
   },
+  installment: CASE WHEN installment IS null THEN NULL ELSE {
+    id: installment.id,
+    frequency: installment.frequency,
+    installments: {
+      total: CASE WHEN installment.total IS null THEN 0 ELSE installment.total END,
+      current: SIZE((:Transaction)-[:IS_LINKED]->(installment))
+    }
+  } END,
   tags: [tag IN tags | {
     name: tag.name,
     transactions: SIZE((:Transaction)-[:HAS]->(tag))

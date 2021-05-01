@@ -18,6 +18,7 @@
                 new Link("/v1/budgets", "budgets", Get),
                 new Link("/v1/categories", "categories", Get),
                 new Link("/v1/currencies", "currencies", Get),
+                new Link("/v1/installments", "installments", Get),
                 new Link("/v1/payees", "payees", Get),
                 new Link("/v1/payment-methods", "payment-methods", Get),
                 new Link("/v1/tags", "tags", Get),
