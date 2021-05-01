@@ -1,5 +1,6 @@
 ﻿namespace Hawk.Domain.Transaction.Data.Neo4J.Queries
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -13,6 +14,7 @@
 
     using static Hawk.Domain.Category.Category;
     using static Hawk.Domain.Currency.Currency;
+    using static Hawk.Domain.Installment.Installment;
     using static Hawk.Domain.Payee.Payee;
     using static Hawk.Domain.PaymentMethod.PaymentMethod;
     using static Hawk.Domain.Tag.Tag;
@@ -48,20 +50,31 @@
                 case "value":
                 case "description":
                     return $"transaction.{field} {@operator} {value}";
+
                 case "status":
                     return $"transaction.{field} {@operator} {value.ToString().ToPascalCase()}";
+
                 case "type":
                     return $"{value} IN labels(transaction)";
+
+                case "installment":
+                    return $"EXISTS {{ MATCH(transaction)-[:IS_LINKED]->(n:Installment) WHERE n.id {@operator} {value} }}";
+
                 case "category":
                     return $"EXISTS {{ MATCH(transaction)-[:WITH]->(n:Category) WHERE n.name {@operator} {NewCategory(value.ToString()).GetStringOrElse(Empty)} }}";
+
                 case "tag":
                     return $"EXISTS {{ MATCH(transaction)-[:HAS]->(n:Tag) WHERE n.name {@operator} {NewTag(value.ToString()).GetStringOrElse(Empty)} }}";
+
                 case "currency":
                     return $"EXISTS {{ MATCH(transaction)-[:PAID_IN]->(n:Currency) WHERE n.code {@operator} {NewCurrency(value.ToString()).GetStringOrElse(Empty)} }}";
+
                 case "payee":
                     return $"EXISTS {{ MATCH(transaction)-[:IN]->(n:Payee) WHERE n.name {@operator} {NewPayee(value.ToString()).GetStringOrElse(Empty)} }}";
+
                 case "paymentmethod":
                     return $"EXISTS {{ MATCH(transaction)-[:PAID_WITH]->(n:PaymentMethod) WHERE n.name {@operator} {NewPaymentMethod(value.ToString()).GetStringOrElse(Empty)} }}";
+
                 default:
                     return "1=1";
             }

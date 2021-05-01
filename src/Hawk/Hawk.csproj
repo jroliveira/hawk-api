@@ -68,6 +68,9 @@
     <None Update="Domain\Category\Data.Neo4J\Commands\UpsertCategory.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Domain\Installment\Data.Neo4J\Commands\DeleteInstallment.cql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Domain\Payee\Data.Neo4J\Queries\GetPayeesByCategory.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -123,6 +126,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Domain\Budget\Data.Neo4J\Queries\GetBudgets.cql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Domain\Installment\Data.Neo4J\Queries\GetInstallmentById.cql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Domain\Installment\Data.Neo4J\Queries\GetInstallments.cql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Domain\Transaction\Data.Neo4J\Commands\DeleteTransaction.cql">

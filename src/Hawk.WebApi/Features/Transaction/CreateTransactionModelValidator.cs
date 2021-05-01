@@ -68,6 +68,9 @@
                 .WithMessage("Payment is required.")
                 .SetValidator(new PaymentModelValidator(email, getCurrencyByCode, getPaymentMethodByName));
 
+            this.RuleFor(model => model.Installment)
+                .SetValidator(new CreateInstallmentModelValidator());
+
             this.RuleFor(model => model.Payee)
                 .NotEmpty()
                 .WithMessage("Payee is required.")

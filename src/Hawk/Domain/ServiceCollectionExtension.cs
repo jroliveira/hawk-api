@@ -5,6 +5,7 @@
     using Hawk.Domain.Category;
     using Hawk.Domain.Configuration;
     using Hawk.Domain.Currency;
+    using Hawk.Domain.Installment;
     using Hawk.Domain.Payee;
     using Hawk.Domain.PaymentMethod;
     using Hawk.Domain.Tag;
@@ -20,6 +21,7 @@
             .ConfigureCategory()
             .ConfigureConfiguration()
             .ConfigureCurrency()
+            .ConfigureInstallment()
             .ConfigurePayee()
             .ConfigurePaymentMethod()
             .ConfigureTag()

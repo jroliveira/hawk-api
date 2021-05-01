@@ -5,6 +5,7 @@
     using System.Linq;
 
     using Hawk.Domain.Category;
+    using Hawk.Domain.Installment;
     using Hawk.Domain.Payee;
     using Hawk.Domain.Shared;
     using Hawk.Domain.Shared.Transaction;
@@ -27,6 +28,7 @@
             in Payment payment,
             in Payee payee,
             in Category category,
+            in Option<Installment> installmentOption,
             in IEnumerable<Tag> tags)
             : base(id)
         {
@@ -36,6 +38,7 @@
             this.Category = category;
             this.Status = status;
             this.DescriptionOption = descriptionOption;
+            this.InstallmentOption = installmentOption;
             this.Tags = tags.ToList();
         }
 
@@ -51,6 +54,8 @@
 
         public Category Category { get; }
 
+        public Option<Installment> InstallmentOption { get; }
+
         public IReadOnlyCollection<Tag> Tags { get; }
 
         public static Try<Transaction> NewTransaction(
@@ -60,6 +65,7 @@
             in Option<Payment> paymentOption,
             in Option<Payee> payeeOption,
             in Option<Category> categoryOption,
+            in Option<Installment> installmentOption,
             in Option<IEnumerable<Option<Tag>>> tagsOption) => NewTransaction(
                 idOption: NewGuid(),
                 typeOption,
@@ -68,7 +74,26 @@
                 paymentOption,
                 payeeOption,
                 categoryOption,
+                installmentOption,
                 tagsOption);
+
+        public static Try<Transaction> NewTransaction(
+            in Option<TransactionType> type,
+            in Option<string> description,
+            in Option<Payment> payment,
+            in Option<Payee> payee,
+            in Option<Category> category,
+            in Option<Installment> installment,
+            in Option<IEnumerable<Option<Tag>>> tags) => NewTransaction(
+                idOption: NewGuid(),
+                type,
+                statusOption: Pending,
+                description,
+                payment,
+                payee,
+                category,
+                installment,
+                tags);
 
         public static Try<Transaction> NewTransaction(
             in Option<Guid> idOption,
@@ -78,6 +103,7 @@
             in Option<Payment> paymentOption,
             in Option<Payee> payeeOption,
             in Option<Category> categoryOption,
+            in Option<Installment> installmentOption,
             in Option<IEnumerable<Option<Tag>>> tagsOption) =>
                 idOption
                 && typeOption
@@ -94,6 +120,7 @@
                         paymentOption.Get(),
                         payeeOption.Get(),
                         categoryOption.Get(),
+                        installmentOption,
                         tagsOption.Get().Select(tag => tag.Get()))
                     : Failure<Transaction>(new InvalidObjectException($"Invalid transaction '{idOption.GetStringOrElse("undefined")}'."));
 

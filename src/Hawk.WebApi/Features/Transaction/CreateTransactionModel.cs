@@ -25,14 +25,18 @@
             PaymentModel payment,
             PayeeModel payee,
             CategoryModel category,
+            CreateInstallmentModel installment,
             IEnumerable<string> tags)
         {
             this.Type = type;
             this.Status = status;
             this.Description = description;
+            this.Type = type;
+            this.Status = status;
             this.Payment = payment;
             this.Payee = payee;
             this.Category = category;
+            this.Installment = installment;
             this.Tags = tags;
         }
 
@@ -53,6 +57,8 @@
         [Required]
         public CategoryModel Category { get; }
 
+        public CreateInstallmentModel Installment { get; }
+
         [Required]
         public IEnumerable<string> Tags { get; }
 
@@ -63,6 +69,7 @@
             model.Payment,
             model.Payee,
             model.Category,
+            model.Installment,
             Some(model.Tags.Select(tag => NewTag(tag).ToOption())));
     }
 }
